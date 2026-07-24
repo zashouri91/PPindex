@@ -1,0 +1,31 @@
+dimension,item,n,mean_importance,mean_support,importance_100,support_100,composite,friction,friction_pct,ryg
+Work Activity,Focused individual work that requires concentration and minimal interruption,3242,4.184,3.306,79.6,57.7,57.7,28.5,55.0,Under Supported
+Work Activity,Tasks requiring discretion,3242,3.757,3.304,68.9,57.6,57.6,22.6,44.0,Under Supported
+Work Activity,Planned in-person meetings at a PulsePoint,3242,2.057,3.78,26.4,69.5,69.5,1.1,3.0,Over Supported
+Work Activity,Informal or spontaneous collaboration with colleagues,3242,2.585,3.513,39.6,62.8,62.8,5.4,13.0,Target
+Work Activity,Working with others on shared tasks or problem-solving,3242,2.883,3.458,47.1,61.5,61.5,8.4,20.0,Target
+Work Activity,Virtual collaboration with remote or hybrid colleagues,3242,4.013,3.646,75.3,66.1,66.1,19.3,40.0,Under Supported
+Work Activity,"Learning, training, or skill development",3242,3.262,3.502,56.6,62.5,62.5,10.2,24.0,Target
+Physical Feature,Availability of spaces that support focused work,3040,4.249,3.367,81.2,59.2,59.2,27.3,52.0,Under Supported
+Physical Feature,Availability of spaces that support discretion,3040,4.042,3.272,76.1,56.8,56.8,27.2,50.0,Under Supported
+Physical Feature,Availability of meeting and collaboration spaces (individual and group),3040,3.138,3.712,53.4,67.8,67.8,7.8,19.0,Target
+Physical Feature,"Availability of community spaces (i.e. gathering, event spaces, café)",3040,2.661,3.923,41.5,73.1,73.1,2.0,5.0,Target
+Physical Feature,Furniture comfort and ergonomics (including adjustability of chair and workstation),3040,3.891,3.771,72.3,69.3,69.3,13.2,33.0,Under Supported
+Physical Feature,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",3040,3.166,3.638,54.1,66.0,66.0,8.7,20.0,Target
+Physical Feature,Lighting comfort (natural and artificial),3040,3.784,3.799,69.6,70.0,70.0,11.1,27.0,Target
+Physical Feature,Thermal / temperature comfort,3040,3.984,3.449,74.6,61.2,61.2,20.8,43.0,Under Supported
+Physical Feature,Ease of navigating and finding spaces (directions and signage),3040,3.557,3.775,63.9,69.4,69.4,9.3,23.0,Target
+Service Level,Entry and reception,2962,2.891,4.324,47.3,83.1,83.1,1.3,3.0,Target
+Service Level,Ability to get help resolving workplace or technology issues while on site,2596,3.971,4.136,74.3,78.4,78.4,7.1,20.0,Target
+Service Level,Support from a community manager,2684,2.967,3.958,49.2,73.9,73.9,1.8,5.0,Target
+Service Level,Availability of on-site food and beverage options,2962,3.29,3.402,57.3,60.1,60.1,14.6,29.0,Target
+Service Level,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",2962,3.028,3.757,50.7,68.9,68.9,4.8,12.0,Target
+Service Level,Cleanliness and upkeep of PulsePoint,2962,4.139,4.256,78.5,81.4,81.4,7.8,21.0,Target
+Service Level,"Reliability of building operations (e.g., elevators, restrooms, etc.)",2962,4.251,4.235,81.3,80.9,80.9,8.1,23.0,Target
+Service Level,"Communication about workplace updates, changes, or disruptions",2962,3.939,4.106,73.5,77.7,77.7,6.5,20.0,Target
+Digital & Tech,"I can connect and start working at a PulsePoint without unnecessary technical friction (WiFi, power or cabling, monitors or peripherals, log-in/system access)",2940,,3.848,,71.2,71.2,28.8,71.0,
+Digital & Tech,Video conferencing and meeting room technology reliably support in-person and virtual meetings,2940,,3.718,,68.0,68.0,32.0,79.0,
+Digital & Tech,"Workplace-provided hardware (e.g., monitors, keyboards, mice, power) is readily available and works as expected",2940,,3.799,,70.0,70.0,30.0,75.0,
+Digital & Tech,"Digital collaboration tools (e.g., Microsoft tools) support effective work with remote or hybrid colleagues",2940,,4.055,,76.4,76.4,23.6,70.0,
+Digital & Tech,Technical issues that affect my ability to work are resolved in a timely manner,2940,,3.805,,70.1,70.1,29.9,78.0,
+Digital & Tech,Reservation tools are easy to use,2940,,4.03,,75.7,75.7,24.3,69.0,

@@ -124,28 +124,53 @@ def load_all():
 
 comments_full, meta, GAPS = load_all()
 
+@st.cache_data
+def load_scores():
+    """Official Tableau-spec scores (Friction/Composite/RYG) for both populations."""
+    numcols = ["n", "mean_importance", "mean_support", "importance_100", "support_100",
+               "composite", "friction", "friction_pct", "weight"]
+    def rd(fn):
+        p = os.path.join(DATA, fn)
+        if not os.path.exists(p):
+            return pd.DataFrame()
+        d = pd.read_csv(p)
+        for c in numcols:
+            if c in d.columns:
+                d[c] = pd.to_numeric(d[c], errors="coerce")
+        return d
+    return {
+        "comp": rd("scores_overall.csv"), "comp_site": rd("scores_by_site.csv"), "comp_dim": rd("scores_dimension.csv"),
+        "all": rd("scores_overall_all.csv"), "all_site": rd("scores_by_site_all.csv"), "all_dim": rd("scores_dimension_all.csv"),
+    }
+
+SCORES = load_scores()
 THEME_TO_CAT = meta["theme_to_category"]
 
 # ---------------------------------------------------------------------------
-# Gap attributed to themes / categories (feeds the Action Priorities matrix)
+# Friction (Tableau spec) attributed to themes / categories — feeds priorities
 # ---------------------------------------------------------------------------
-def _theme_gap_from(gdf):
+def _theme_friction_from(sdf):
     tmp = defaultdict(list)
-    for _, r in gdf.iterrows():
+    if sdf is None or sdf.empty:
+        return {}
+    for _, r in sdf.iterrows():
+        fr = r.get("friction")
+        if pd.isna(fr):
+            continue
         for th in themes_for_item(r["item"]):
-            tmp[th].append(r["gap"])
+            tmp[th].append(float(fr))
     return {th: float(np.mean(v)) for th, v in tmp.items()}
 
-def theme_gap_map(site=None):
-    """Theme->gap. Site-specific when a single site is selected, else org-wide."""
-    if site and site in set(gap_site["site"]):
-        m = _theme_gap_from(gap_site[gap_site["site"] == site])
-        return {**THEME_GAP_ALL, **m}
-    return THEME_GAP_ALL
+def theme_friction_map(site=None):
+    """Theme->Friction (0-100). Site-specific when a single site is selected."""
+    if site and not scores_site.empty and site in set(scores_site["site"]):
+        m = _theme_friction_from(scores_site[scores_site["site"] == site])
+        return {**THEME_FRICTION_ALL, **m}
+    return THEME_FRICTION_ALL
 
-def category_gap_map(tgap):
+def category_friction_map(tfric):
     tmp = defaultdict(list)
-    for th, g in tgap.items():
+    for th, g in tfric.items():
         tmp[THEME_TO_CAT.get(th, "Uncategorized")].append(g)
     return {c: float(np.mean(v)) for c, v in tmp.items()}
 
@@ -160,23 +185,23 @@ def explode_level(df, level):
     # reset index: explode leaves duplicate labels, which break crosstab/alignment
     return t.rename(columns={"_k": "key"}).reset_index(drop=True)
 
-def build_priority(df, level, tgap):
+def build_priority(df, level, tfric):
     real = df[~df["eff_junk"]]
     if real.empty:
         return pd.DataFrame()
     ex = explode_level(real, level)
-    gmap = category_gap_map(tgap) if level == "Categories" else tgap
+    fmap = category_friction_map(tfric) if level == "Categories" else tfric
     rows = []
     for k, gg in ex.groupby("key"):
         rows.append((k, gg["comment_id"].nunique(),
-                     (gg["eff_sentiment"] == "Negative").mean(), gmap.get(k, np.nan)))
-    P = pd.DataFrame(rows, columns=["key", "volume", "neg_share", "gap"])
+                     (gg["eff_sentiment"] == "Negative").mean(), fmap.get(k, np.nan)))
+    P = pd.DataFrame(rows, columns=["key", "volume", "neg_share", "friction"])
     P["vol_norm"] = P["volume"] / P["volume"].max()
-    posgap = P["gap"].clip(lower=0)
-    denom = posgap.max() if posgap.max() and posgap.max() > 0 else 1.0
-    gn = posgap / denom
-    P["gap_norm"] = gn.fillna(gn.median() if gn.notna().any() else 0.0)
-    P["Priority"] = (0.40 * P["vol_norm"] + 0.35 * P["neg_share"] + 0.25 * P["gap_norm"]) * 100
+    fr = P["friction"].clip(lower=0)
+    denom = fr.max() if fr.max() and fr.max() > 0 else 1.0
+    fn = fr / denom
+    P["fric_norm"] = fn.fillna(fn.median() if fn.notna().any() else 0.0)
+    P["Priority"] = (0.40 * P["vol_norm"] + 0.35 * P["neg_share"] + 0.25 * P["fric_norm"]) * 100
     return P.sort_values("Priority", ascending=False)
 
 def exemplars(df, key, level, n=3):
@@ -329,7 +354,7 @@ def site_report_data(site, completers_flag):
     data["pos"] = float((real["eff_sentiment"] == "Positive").mean() * 100)
     data["neu"] = 100 - data["neg"] - data["pos"]
     # priorities (categories) + top themes
-    data["P"] = build_priority(sc, "Categories", theme_gap_map(site)).head(5)
+    data["P"] = build_priority(sc, "Categories", theme_friction_map(site)).head(5)
     tex = explode_level(real, "Themes")
     tcounts = tex["key"].value_counts()
     data["top_themes"] = tcounts.head(8)
@@ -341,9 +366,11 @@ def site_report_data(site, completers_flag):
     strengths = [(t, int(tvol[t]), float(1 - tsent.get(t, 1))) for t in tvol.index
                  if tvol[t] >= 5 and tsent.get(t, 1) <= 0.30][:5]
     data["fixes"], data["strengths"] = fixes, strengths
-    # gaps
-    gs = gap_site[gap_site["site"] == site].sort_values("gap", ascending=False)
-    data["under"] = gs.head(4); data["over"] = gs.tail(2).iloc[::-1]
+    # official Friction scores (Tableau spec) — only exist for the 10 in-scope sites
+    ss = scores_site[scores_site["site"] == site].dropna(subset=["friction"]) if not scores_site.empty else pd.DataFrame()
+    data["under"] = ss.sort_values("friction", ascending=False).head(4) if len(ss) else pd.DataFrame()
+    data["over"] = ss[ss["ryg"] == "Over Supported"].head(2) if len(ss) else pd.DataFrame()
+    data["in_scope"] = len(ss) > 0
     # benchmark vs org: theme rate lift
     org_real = comments[~comments["eff_junk"]]
     org_tot = len(org_real)
@@ -406,15 +433,13 @@ def _site_charts(d):
     ax.set_xlabel("mentions", fontsize=8); ax.tick_params(axis="x", labelsize=8)
     for s in ["top", "right"]: ax.spines[s].set_visible(False)
     charts["themes"] = _b64png(fig)
-    # gap bars
+    # friction bars (Tableau spec)
     if len(d["under"]):
-        gg = pd.concat([d["under"], d["over"]]).drop_duplicates("item")
-        gg = gg.sort_values("gap")
+        gg = d["under"].sort_values("friction")
         fig, ax = plt.subplots(figsize=(4.4, 2.8))
-        colors = ["#D1495B" if v > 0 else "#4C78A8" for v in gg["gap"]]
-        ax.barh(range(len(gg)), gg["gap"], color=colors)
+        ax.barh(range(len(gg)), gg["friction"], color="#D1495B")
         ax.set_yticks(range(len(gg))); ax.set_yticklabels([str(i)[:30] for i in gg["item"]], fontsize=7)
-        ax.axvline(0, color="#999", lw=0.8); ax.set_xlabel("gap (→ under-supported)", fontsize=8)
+        ax.set_xlabel("Friction (0–100, higher = worse)", fontsize=8)
         ax.tick_params(axis="x", labelsize=8)
         for s in ["top", "right"]: ax.spines[s].set_visible(False)
         charts["gap"] = _b64png(fig)
@@ -437,16 +462,21 @@ def build_site_report(site):
         narrative += ". "
     if len(d["under"]):
         u0 = d["under"].iloc[0]
-        narrative += f"The biggest importance-vs-support gap is <b>{_html.escape(str(u0['item']))}</b> (gap {u0['gap']:+.2f})."
+        narrative += (f"The highest-Friction item is <b>{_html.escape(str(u0['item']))}</b> "
+                      f"(Friction {u0['friction']:.0f}/100, {int(u0['friction_pct'])}% feel under-supported).")
 
     prio_rows = "".join(
         f"<tr><td>{_html.escape(r['key'])}</td><td>{int(r['volume'])}</td>"
         f"<td>{int(r['neg_share']*100)}%</td><td>{int(round(r['Priority']))}</td></tr>"
         for _, r in P.iterrows()) or "<tr><td colspan='4'>Not enough tagged comments to rank.</td></tr>"
-    gap_rows = "".join(
-        f"<tr><td>{_html.escape(str(r['item']))}</td><td>{r['mean_importance']:.2f}</td>"
-        f"<td>{r['mean_delivery']:.2f}</td><td>{r['gap']:+.2f}</td></tr>"
-        for _, r in d["under"].iterrows()) or "<tr><td colspan='4'>Too few responses for a reliable gap breakdown.</td></tr>"
+    def _gap_row(r):
+        comp = "" if pd.isna(r["support_100"]) else f"{r['support_100']:.0f}"
+        fpct = "" if pd.isna(r["friction_pct"]) else f"{int(r['friction_pct'])}%"
+        return (f"<tr><td>{_html.escape(str(r['item']))}</td><td>{comp}</td>"
+                f"<td>{r['friction']:.0f}</td><td>{fpct}</td></tr>")
+    gap_rows = "".join(_gap_row(r) for _, r in d["under"].iterrows()) or (
+        "<tr><td colspan='4'>Not one of the 10 in-scope sites — no official scores. "
+        "The comment analysis above still applies.</td></tr>")
     fix_rows = "".join(f"<li><b>{_html.escape(t)}</b> — {v} comments, {int(ns*100)}% negative</li>"
                        for t, v, ns in d["fixes"]) or "<li>No clearly negative themes.</li>"
     str_rows = "".join(f"<li><b>{_html.escape(t)}</b> — {v} comments, {int(ps*100)}% positive</li>"
@@ -500,8 +530,8 @@ def build_site_report(site):
 <div class="two"><div>
 <h3>⚠️ What to fix</h3><ul>{fix_rows}</ul></div><div>
 <h3>✅ What's working</h3><ul>{str_rows}</ul></div></div>
-<h3>Largest importance-vs-support gaps</h3>
-<table><tr><th>Item</th><th>importance</th><th>support/sat</th><th>gap</th></tr>{gap_rows}</table>
+<h3>Highest-Friction items (Tableau spec)</h3>
+<table><tr><th>Item</th><th>composite</th><th>friction</th><th>% w/ friction</th></tr>{gap_rows}</table>
 <div class="two"><div>
 <h3>Vs. org — theme rates</h3>
 <table><tr><th>Theme</th><th>site</th><th>org</th><th>lift</th></tr>{bench_rows}</table></div><div>
@@ -509,7 +539,7 @@ def build_site_report(site):
 <table><tr><th>Area</th><th>site</th><th>org</th><th>Δ</th></tr>{score_rows}</table></div></div>
 <h3>In their words — what to fix</h3>{neg_quotes}
 {('<h3>In their words — what’s working</h3>'+pos_quotes) if pos_quotes else ''}
-<div class="foot">Generated by the PulsePoint Open-Ended Response Analyzer · {'completed responses only' if completers_only else 'all responses'} · Priority = 40% volume + 35% share negative + 25% importance-gap.</div>
+<div class="foot">Generated by the PulsePoint Open-Ended Response Analyzer · {'completed responses only' if completers_only else 'all responses'} · Friction &amp; Composite per the official Tableau spec · Priority = 40% volume + 35% share negative + 25% Friction.</div>
 </body></html>"""
 
 @st.cache_data(show_spinner=False)
@@ -565,10 +595,13 @@ def build_site_pdf(site, completers_flag):
                   [[r["key"], int(r["volume"]), f"{int(r['neg_share']*100)}%", int(round(r["Priority"]))]
                    for _, r in d["P"].iterrows()], [2.6*inch, 1.1*inch, 0.9*inch, 0.9*inch])]
     if len(d["under"]):
-        story += [Paragraph("Largest importance-vs-support gaps", h3),
-                  tbl(["Item", "imp", "sup", "gap"],
-                      [[str(r["item"])[:60], f"{r['mean_importance']:.2f}", f"{r['mean_delivery']:.2f}", f"{r['gap']:+.2f}"]
-                       for _, r in d["under"].iterrows()], [3.6*inch, 0.7*inch, 0.7*inch, 0.7*inch])]
+        story += [Paragraph("Highest-Friction items (Tableau spec)", h3),
+                  tbl(["Item", "composite", "friction", "% w/ friction"],
+                      [[str(r["item"])[:56],
+                        "" if pd.isna(r["support_100"]) else f"{r['support_100']:.0f}",
+                        f"{r['friction']:.0f}",
+                        "" if pd.isna(r["friction_pct"]) else f"{int(r['friction_pct'])}%"]
+                       for _, r in d["under"].iterrows()], [3.4*inch, 0.9*inch, 0.8*inch, 0.9*inch])]
     if d["quotes"]:
         story.append(Paragraph("In their words — what to fix", h3))
         for q in d["quotes"][:4]:
@@ -666,7 +699,9 @@ def build_excel_workbook(completers_flag):
         site_theme.to_excel(w, sheet_name="Site x Theme")
         sent_theme.to_excel(w, sheet_name="Sentiment x Theme")
         verbatim_export().to_excel(w, sheet_name="Verbatims by theme", index=False)
-        gap.to_excel(w, sheet_name="Gaps", index=False)
+        if not scores.empty:
+            scores.to_excel(w, sheet_name="Scores & Friction", index=False)
+            scores_dim.to_excel(w, sheet_name="Dimension scores", index=False)
     return buf.getvalue()
 
 @st.cache_data(show_spinner=False)
@@ -762,13 +797,15 @@ if completers_only:
     comments = comments_full[comments_full["reached_end"] == 1].copy()
     resp_scores = resp_scores_full[resp_scores_full["reached_end"] == 1].copy()
     gap, gap_site = GAPS["comp"], GAPS["comp_site"]
+    scores, scores_site, scores_dim = SCORES["comp"], SCORES["comp_site"], SCORES["comp_dim"]
     st.sidebar.caption(f"✓ Completed only · {n_comp:,} respondents")
 else:
     comments = comments_full.copy()
     resp_scores = resp_scores_full.copy()
     gap, gap_site = GAPS["all"], GAPS["all_site"]
+    scores, scores_site, scores_dim = SCORES["all"], SCORES["all_site"], SCORES["all_dim"]
     st.sidebar.caption(f"Including all {meta['n_responses']:,} respondents")
-THEME_GAP_ALL = _theme_gap_from(gap)
+THEME_FRICTION_ALL = _theme_friction_from(scores)
 
 st.sidebar.divider()
 st.sidebar.caption("Filters below apply to Overview, Priorities & Explorer tabs")
@@ -824,7 +861,7 @@ st.caption(f"{_nresp:,} commenters · {_nreal:,} comments with content · {comme
 
 (tab_over, tab_prio, tab_gap, tab_expl, tab_browse, tab_diag,
  tab_report, tab_tag) = st.tabs(
-    ["📊 Overview", "🎯 Action Priorities", "⚖️ Gap Analysis",
+    ["📊 Overview", "🎯 Action Priorities", "⚖️ Scores & Friction",
      "🏷️ Theme & Sentiment Explorer", "🔎 Browse & Pivot", "🔥 Hotspots & Drivers",
      "📄 Site Reports", "✏️ Tagging Workspace"])
 
@@ -880,15 +917,15 @@ with tab_over:
 with tab_prio:
     st.subheader("Action Priorities — where to focus")
     st.caption("Ranks each theme/category by combining how many people raised it, "
-               "how negative they were, and the importance-vs-support gap. "
+               "how negative they were, and the Tableau-spec **Friction** score. "
                "Respects the sidebar filters — filter to one site to get that site's list.")
     pc = st.columns([1, 2])
     lvl = pc[0].radio("Granularity", ["Categories", "Themes"], horizontal=True, key="prio_lvl")
     single_site = f_site[0] if len(f_site) == 1 else None
     if single_site:
-        pc[1].info(f"Showing priorities for **{single_site}** (gap is site-specific).")
-    tgap = theme_gap_map(single_site)
-    P = build_priority(fdf, lvl, tgap)
+        pc[1].info(f"Showing priorities for **{single_site}** (Friction is site-specific).")
+    tfric = theme_friction_map(single_site)
+    P = build_priority(fdf, lvl, tfric)
 
     if P.empty:
         st.info("No comments match the current filters.")
@@ -902,21 +939,21 @@ with tab_prio:
             tooltip=[alt.Tooltip("key:N", title=lvl[:-1]),
                      alt.Tooltip("volume:Q", title="# comments"),
                      alt.Tooltip("neg_share:Q", title="% negative", format=".0%"),
-                     alt.Tooltip("gap:Q", title="importance gap", format="+.2f"),
+                     alt.Tooltip("friction:Q", title="Friction (0–100)", format=".0f"),
                      alt.Tooltip("Priority:Q", format=".0f")])
         st.altair_chart(bar, use_container_width=True)
 
         disp = show.assign(**{
             "# comments": show["volume"],
             "% negative": (show["neg_share"] * 100).round(0).astype(int),
-            "importance gap": show["gap"].round(2),
+            "Friction": show["friction"].round(0),
             "priority": show["Priority"].round(0).astype(int),
-        })[["key", "# comments", "% negative", "importance gap", "priority"]] \
+        })[["key", "# comments", "% negative", "Friction", "priority"]] \
             .rename(columns={"key": lvl[:-1]})
         st.dataframe(disp, hide_index=True, use_container_width=True)
-        st.caption("Priority = 40% comment volume + 35% share negative + 25% importance-gap "
-                   "(each rescaled 0–1). A blank/median gap is used for themes with no matching "
-                   "rating item (e.g. RTO policy). Gap is org-wide unless one site is selected.")
+        st.caption("Priority = 40% comment volume + 35% share negative + 25% Friction "
+                   "(each rescaled 0–1). Friction is the Tableau-spec under-support score (0–100); "
+                   "themes with no matching rating item use the median. Org-wide unless one site is selected.")
 
         st.markdown("##### 🗣️ Representative comments")
         pick = st.selectbox(f"Show negative examples for:", show["key"].tolist(), key="prio_pick")
@@ -930,90 +967,106 @@ with tab_prio:
 # ===========================================================================
 # TAB — GAP ANALYSIS
 # ===========================================================================
+RYG_COLORS = {"Under Supported": "#D1495B", "Target": "#E9C46A",
+              "Over Supported": "#4C78A8", "Agreement-only": "#9AA0A6"}
+
 with tab_gap:
-    st.subheader("Importance vs. Support — where the gaps are")
-    st.caption("Gap = mean Importance − mean Support/Satisfaction (1–5 scales). "
-               "Higher gap = **under-supported** (important but not delivered). "
-               "Negative = **over-supported**. Comments below explain the *why*.")
+    st.subheader("Scores & Friction — matches the Tableau dashboard")
+    st.caption("**Composite** = average Support on a 0–100 scale (Importance not factored). "
+               "**Friction** = each respondent's shortfall of Support vs Importance, floored at 0, then averaged — "
+               "so over-supported areas can't mask under-supported ones. Scope per the official spec: "
+               "completed responses across the 10 in-scope sites.")
 
-    blocks = ["All"] + sorted(gap["block"].unique().tolist())
-    gsel1, gsel2 = st.columns([1,1])
-    bsel = gsel1.selectbox("Category block", blocks)
-    site_opts = ["All sites (overall)"] + meta["sites"]
-    ssel = gsel2.selectbox("Site view", site_opts)
-
-    if ssel == "All sites (overall)":
-        gd = gap.copy()
+    if scores.empty:
+        st.info("Scores not available — rebuild with build_data.py.")
     else:
-        gd = gap_site[gap_site["site"] == ssel].copy()
-    if bsel != "All":
-        gd = gd[gd["block"] == bsel]
-    gd = gd.sort_values("gap", ascending=False)
-
-    if len(gd) == 0:
-        st.info("Not enough responses for this site/block combination (small cells suppressed).")
-    else:
-        # Diverging bar of gaps
-        bar = alt.Chart(gd).mark_bar().encode(
-            x=alt.X("gap:Q", title="Gap  (under-supported →)"),
-            y=alt.Y("item:N", sort="-x", title=None),
-            color=alt.Color("gap:Q", scale=alt.Scale(scheme=GAP_SCHEME, reverse=True,
-                            domainMid=0), legend=None),
-            tooltip=[alt.Tooltip("item:N"), alt.Tooltip("block:N"),
-                     alt.Tooltip("mean_importance:Q", format=".2f"),
-                     alt.Tooltip("mean_delivery:Q", title="mean support/sat", format=".2f"),
-                     alt.Tooltip("gap:Q", format=".2f"),
-                     alt.Tooltip("classification:N"), alt.Tooltip("n:Q")])
-        st.altair_chart(bar, use_container_width=True)
-
-        st.markdown("**Importance vs. delivery (each dot = one item)**")
-        scat = alt.Chart(gd).mark_circle(size=120, opacity=0.8).encode(
-            x=alt.X("mean_delivery:Q", title="Mean support / satisfaction (1–5)",
-                    scale=alt.Scale(domain=[1,5])),
-            y=alt.Y("mean_importance:Q", title="Mean importance (1–5)",
-                    scale=alt.Scale(domain=[1,5])),
-            color=alt.Color("gap:Q", scale=alt.Scale(scheme=GAP_SCHEME, reverse=True, domainMid=0)),
-            tooltip=["item","block",alt.Tooltip("gap:Q",format=".2f"),"classification","n"])
-        diag = alt.Chart(pd.DataFrame({"x":[1,5],"y":[1,5]})).mark_line(
-            strokeDash=[4,4], color="#bbb").encode(x="x", y="y")
-        st.altair_chart(diag + scat, use_container_width=True)
+        dimr = scores_dim[~scores_dim["dimension"].astype(str).str.startswith("OVERALL")]
+        ow = scores_dim[scores_dim["dimension"] == "OVERALL (weighted)"]
+        mcols = st.columns(len(dimr) + 1)
+        for i, (_, r) in enumerate(dimr.iterrows()):
+            mcols[i].metric(r["dimension"], f"{r['composite']:.0f}",
+                            help=f"Composite (avg support, 0–100) · weight {int(r['weight'])}%")
+        if len(ow):
+            mcols[-1].metric("Overall (weighted)", f"{ow['composite'].iloc[0]:.0f}",
+                             help="Work 35 · Service 25 · Physical 20 · Digital & Tech 20")
 
         st.divider()
-        st.markdown("### 🔗 Why? — comments behind a category")
-        item_sel = st.selectbox("Pick an item to see the comments that explain its gap",
-                                gd["item"].tolist())
-        row = gd[gd["item"] == item_sel].iloc[0]
-        m1,m2,m3,m4 = st.columns(4)
-        m1.metric("Mean importance", f"{row['mean_importance']:.2f}")
-        m2.metric("Mean support/sat", f"{row['mean_delivery']:.2f}")
-        m3.metric("Gap", f"{row['gap']:+.2f}")
-        m4.metric("Status", row["classification"])
+        gsel1, gsel2 = st.columns(2)
+        dsel = gsel1.selectbox("Dimension", ["All dimensions"] + dimr["dimension"].tolist())
+        ssel = gsel2.selectbox("Site view", ["All 10 sites (overall)"] + meta.get("ten_sites", []))
+        src = scores if ssel.startswith("All 10") else scores_site[scores_site["site"] == ssel]
+        sd = src if dsel == "All dimensions" else src[src["dimension"] == dsel]
+        sd = sd.dropna(subset=["friction"]).sort_values("friction", ascending=False).copy()
+        sd["ryg"] = sd["ryg"].fillna("Agreement-only").replace("", "Agreement-only")
 
-        rel_themes = themes_for_item(item_sel)
-        st.caption("Related comment themes: " + (", ".join(rel_themes) if rel_themes else "—"))
-
-        link = comments[~comments["eff_junk"]].copy()
-        if ssel != "All sites (overall)":
-            link = link[link["site"] == ssel]
-        if rel_themes:
-            pat = "|".join([t.replace("(","\\(").replace(")","\\)").replace("/","\\/") for t in rel_themes])
-            link = link[link["eff_themes"].str.contains(pat, case=False, na=False, regex=True)]
-        # sentiment split
-        if len(link):
-            sc = link["eff_sentiment"].value_counts()
-            st.write(f"**{len(link):,} related comments** · "
-                     f"🟢 {sc.get('Positive',0)}  ⚪ {sc.get('Neutral / Mixed',0)}  "
-                     f"🔴 {sc.get('Negative',0)}")
-            sent_pick = st.radio("Show", ["All","Negative","Positive","Neutral / Mixed"],
-                                 horizontal=True, key="gap_sent")
-            show = link if sent_pick=="All" else link[link["eff_sentiment"]==sent_pick]
-            show = show.sort_values("sentiment_score")
-            st.dataframe(
-                show[["site","role","source_question","eff_sentiment","eff_themes","comment"]]
-                    .rename(columns={"eff_sentiment":"sentiment","eff_themes":"themes"}),
-                use_container_width=True, height=380, hide_index=True)
+        if len(sd) == 0:
+            st.info("No data for this selection.")
         else:
-            st.info("No matching comments for this item / site.")
+            st.markdown("**Friction by item** (0–100, higher = more under-supported)")
+            bar = alt.Chart(sd).mark_bar().encode(
+                x=alt.X("friction:Q", title="Friction (0–100)"),
+                y=alt.Y("item:N", sort="-x", title=None),
+                color=alt.Color("ryg:N", scale=alt.Scale(domain=list(RYG_COLORS), range=list(RYG_COLORS.values())),
+                                legend=alt.Legend(title="Support vs Importance")),
+                tooltip=["dimension", "item",
+                         alt.Tooltip("composite:Q", title="Composite (support)", format=".0f"),
+                         alt.Tooltip("friction:Q", format=".0f"),
+                         alt.Tooltip("friction_pct:Q", title="% feeling friction", format=".0f"),
+                         "ryg", alt.Tooltip("n:Q")])
+            st.altair_chart(bar, use_container_width=True)
+            st.caption("Digital & Tech has no Importance rating, so its Friction = 100 − Support "
+                       "(every tech item shows some friction unless respondents fully agree) — not directly "
+                       "comparable to the other three dimensions.")
+
+            sca = sd.dropna(subset=["importance_100", "support_100"])
+            if len(sca):
+                xmid = float(scores["support_100"].dropna().mean())
+                ymid = float(scores["importance_100"].dropna().mean())
+                st.markdown(f"**Importance vs. Support quadrant** (0–100; crosshairs = org avg "
+                            f"support {xmid:.0f} / importance {ymid:.0f})")
+                pts = alt.Chart(sca).mark_circle(size=140, opacity=0.85).encode(
+                    x=alt.X("support_100:Q", title="Support / satisfaction (0–100)", scale=alt.Scale(domain=[0, 100])),
+                    y=alt.Y("importance_100:Q", title="Importance (0–100)", scale=alt.Scale(domain=[0, 100])),
+                    color=alt.Color("ryg:N", scale=alt.Scale(domain=list(RYG_COLORS), range=list(RYG_COLORS.values())), legend=None),
+                    tooltip=["item", alt.Tooltip("importance_100:Q", format=".0f"),
+                             alt.Tooltip("support_100:Q", format=".0f"),
+                             alt.Tooltip("friction:Q", format=".0f"), "ryg"])
+                vline = alt.Chart(pd.DataFrame({"x": [xmid]})).mark_rule(color="#bbb", strokeDash=[4, 4]).encode(x="x")
+                hline = alt.Chart(pd.DataFrame({"y": [ymid]})).mark_rule(color="#bbb", strokeDash=[4, 4]).encode(y="y")
+                st.altair_chart(vline + hline + pts, use_container_width=True)
+                st.caption("High importance + low support (upper-left of the crosshair) = *Immediate Attention*.")
+
+            st.divider()
+            st.markdown("### 🔗 Why? — comments behind an item")
+            item_sel = st.selectbox("Pick an item to see the comments that explain its Friction", sd["item"].tolist())
+            row = sd[sd["item"] == item_sel].iloc[0]
+            m1, m2, m3, m4 = st.columns(4)
+            m1.metric("Composite (support)", f"{row['composite']:.0f}" if pd.notna(row["composite"]) else "—")
+            m2.metric("Friction", f"{row['friction']:.0f}")
+            m3.metric("% feeling friction", f"{row['friction_pct']:.0f}%" if pd.notna(row["friction_pct"]) else "—")
+            m4.metric("Status", row["ryg"] if row["ryg"] else "n/a (Tech)")
+
+            rel_themes = themes_for_item(item_sel)
+            st.caption("Related comment themes: " + (", ".join(rel_themes) if rel_themes else "—"))
+            link = comments[~comments["eff_junk"]].copy()
+            if not ssel.startswith("All 10"):
+                link = link[link["site"] == ssel]
+            if rel_themes:
+                pat = "|".join([t.replace("(", "\\(").replace(")", "\\)").replace("/", "\\/") for t in rel_themes])
+                link = link[link["eff_themes"].str.contains(pat, case=False, na=False, regex=True)]
+            if len(link):
+                sc = link["eff_sentiment"].value_counts()
+                st.write(f"**{len(link):,} related comments** · "
+                         f"🟢 {sc.get('Positive',0)}  ⚪ {sc.get('Neutral / Mixed',0)}  🔴 {sc.get('Negative',0)}")
+                sent_pick = st.radio("Show", ["All", "Negative", "Positive", "Neutral / Mixed"],
+                                     horizontal=True, key="gap_sent")
+                showc = link if sent_pick == "All" else link[link["eff_sentiment"] == sent_pick]
+                showc = showc.sort_values("sentiment_score")
+                st.dataframe(showc[["site", "role", "source_question", "eff_sentiment", "eff_themes", "comment"]]
+                             .rename(columns={"eff_sentiment": "sentiment", "eff_themes": "themes"}),
+                             use_container_width=True, height=360, hide_index=True)
+            else:
+                st.info("No matching comments for this item / site.")
 
 # ===========================================================================
 # TAB 3 — THEME & SENTIMENT EXPLORER
@@ -1255,14 +1308,16 @@ with tab_diag:
 # ===========================================================================
 with tab_report:
     st.subheader("Site one-pagers")
-    st.caption("A leadership-ready summary for a single site — its top priorities, biggest gaps, "
-               "and representative quotes, with an auto-written recap. Download as a self-contained "
-               "HTML page you can email or open in any browser.")
+    st.caption("A leadership-ready summary for a single site — top priorities, highest-Friction items, "
+               "org benchmark, and representative quotes, with an auto-written recap. The 10 in-scope "
+               "sites (per the Tableau spec) carry official Friction/Composite scores; others show the "
+               "comment analysis only. Download as HTML, PDF, or PowerPoint.")
+    report_sites = meta.get("ten_sites", meta["sites"])
     rc = st.columns([2, 1])
-    _order = comments[~comments["eff_junk"]]["site"].value_counts()
-    _default = _order.index[0] if len(_order) else meta["sites"][0]
-    _idx = meta["sites"].index(_default) if _default in meta["sites"] else 0
-    rsite = rc[0].selectbox("Site (defaults to largest)", meta["sites"], index=_idx, key="rep_site")
+    _order = comments[comments["site"].isin(report_sites) & ~comments["eff_junk"]]["site"].value_counts()
+    _default = _order.index[0] if len(_order) else report_sites[0]
+    _idx = report_sites.index(_default) if _default in report_sites else 0
+    rsite = rc[0].selectbox("Site (10 in-scope, defaults to largest)", report_sites, index=_idx, key="rep_site")
     safe = rsite.replace("/", "-")
     report_html = build_site_report(rsite)
     with rc[1]:
@@ -1278,15 +1333,15 @@ with tab_report:
     st.divider()
     st.markdown("**Bulk exports & verbatims**")
     bc = st.columns(3)
-    if bc[0].button("📦 All sites — HTML (zip)", use_container_width=True):
+    if bc[0].button("📦 All 10 sites — HTML (zip)", use_container_width=True):
         buf = io.BytesIO()
         with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as z:
-            for s in meta["sites"]:
+            for s in report_sites:
                 z.writestr(f"pulsepoint_{s.replace('/', '-')}.html", build_site_report(s))
         st.download_button("⬇️ Download HTML zip", buf.getvalue(),
                            "pulsepoint_site_reports.zip", "application/zip")
-    if bc[1].button("📊 All sites — PowerPoint deck", use_container_width=True):
-        st.download_button("⬇️ Download deck (.pptx)", build_site_pptx(meta["sites"], completers_only),
+    if bc[1].button("📊 All 10 sites — PowerPoint deck", use_container_width=True):
+        st.download_button("⬇️ Download deck (.pptx)", build_site_pptx(report_sites, completers_only),
                            "pulsepoint_all_sites.pptx",
                            "application/vnd.openxmlformats-officedocument.presentationml.presentation")
     with bc[2]:
@@ -1392,8 +1447,9 @@ with tab_tag:
         buf = BytesIO()
         with pd.ExcelWriter(buf, engine="openpyxl") as w:
             df.to_excel(w, index=False, sheet_name="Tagged comments")
-            gap.to_excel(w, index=False, sheet_name="Gap overall")
+            if not scores.empty:
+                scores.to_excel(w, index=False, sheet_name="Scores & Friction")
         return buf.getvalue()
-    cdl2.download_button("⬇️ Export to Excel (comments + gaps)",
+    cdl2.download_button("⬇️ Export to Excel (comments + scores)",
         to_xlsx(full_export), "pulsepoint_analysis.xlsx",
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")

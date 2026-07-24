@@ -154,5 +154,23 @@
     "Policy / Experience": "composite",
     "Uncategorized": "composite"
   },
-  "n_emerging_clusters": 8
+  "n_emerging_clusters": 8,
+  "ten_sites": [
+    "CA-Woodland Hills",
+    "FL-Miami",
+    "FL-Tampa",
+    "GA-Atlanta",
+    "IL-Chicago-Willis Tower",
+    "IN-Indianapolis",
+    "NY-New York (Penn1)",
+    "OH-Mason",
+    "VA-Norfolk",
+    "VA-Richmond"
+  ],
+  "dim_weights": {
+    "Work Activity": 35,
+    "Service Level": 25,
+    "Physical Feature": 20,
+    "Digital & Tech": 20
+  }
 }

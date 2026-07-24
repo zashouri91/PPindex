@@ -11,6 +11,7 @@ Run:  python build_data.py <raw_xlsx_path>
 """
 import sys, os, json, re
 import pandas as pd
+import numpy as np
 from taxonomy import tag_themes, is_junk, CATEGORIES, THEMES, THEME_TO_CATEGORY
 from sentiment import score_sentiment  # domain-tuned ensemble (VADER + facilities lexicon)
 
@@ -129,6 +130,122 @@ gap_df.to_csv(os.path.join(DATA, "gap_overall.csv"), index=False)
 gap_site_df.to_csv(os.path.join(DATA, "gap_by_site.csv"), index=False)
 gap_all_df.to_csv(os.path.join(DATA, "gap_overall_all.csv"), index=False)
 gap_site_all_df.to_csv(os.path.join(DATA, "gap_by_site_all.csv"), index=False)
+
+# ===========================================================================
+# 2b. OFFICIAL Tableau-spec scores: Friction, Composite, RYG, Quadrant, weights
+#     Mirrors "Tableau Survey Analytics & Dashboard Design Specification".
+# ===========================================================================
+AGREEMENT = {"Strongly Disagree":1, "Disagree":2, "Neutral":3, "Agree":4, "Strongly Agree":5}
+TEN_SITES = ["CA-Woodland Hills", "FL-Miami", "FL-Tampa", "GA-Atlanta",
+             "IL-Chicago-Willis Tower", "IN-Indianapolis", "NY-New York (Penn1)",
+             "OH-Mason", "VA-Norfolk", "VA-Richmond"]
+# dimension: (importance_block|None, delivery_block, delivery_map, dimension_name, n_items)
+DIMENSIONS = [
+    (block("6", 7),  block("7", 7),  SUPPORT,      "Work Activity",   7),
+    (block("10", 9), block("11", 9), SATISFACTION, "Physical Feature", 9),
+    (block("14", 8), block("15", 8), SATISFACTION, "Service Level",   8),
+    (None,           block("18", 6), AGREEMENT,    "Digital & Tech",  6),
+]
+DIM_WEIGHTS = {"Work Activity": 35, "Service Level": 25, "Physical Feature": 20, "Digital & Tech": 20}
+
+def ryg_class(support_minus_importance):
+    v = support_minus_importance
+    if v < -0.049:  return "Under Supported"
+    if v <= 1.5:    return "Target"
+    return "Over Supported"
+
+def to100(numeric_series):
+    return (numeric_series - 1) / 4 * 100
+
+def official_scores(sub):
+    """Per-item + per-site Friction/Composite/RYG for a respondent subset (10 sites)."""
+    item_rows, site_rows, dim_pool = [], [], {}
+    for imp_block, del_block, del_map, dim, n_items in DIMENSIONS:
+        has_imp = imp_block is not None
+        for idx, (del_col, item) in enumerate(del_block):
+            imp_col = imp_block[idx][0] if has_imp else None
+            sup = to_num(sub[del_col], del_map)
+            sup_ok = sup.notna()
+            sup100 = to100(sup)
+            composite = float(sup100[sup_ok].mean()) if sup_ok.any() else np.nan
+            dim_pool.setdefault(dim, []).append(sup100[sup_ok])
+            if has_imp:
+                imp = to_num(sub[imp_col], IMPORTANCE)
+                both = imp.notna() & sup_ok
+                imp100 = to100(imp)
+                fric_ind = (imp100 - sup100)[both].clip(lower=0)
+                friction = float(fric_ind.mean()) if both.any() else np.nan
+                fpct = float((fric_ind > 0).mean() * 100) if both.any() else np.nan
+                mean_imp = float(imp[both].mean()); mean_sup = float(sup[both].mean())
+                ryg = ryg_class(mean_sup - mean_imp)
+                n = int(both.sum())
+            else:  # Digital & Tech: friction = 100 - support, no importance
+                friction = float((100 - sup100)[sup_ok].mean()) if sup_ok.any() else np.nan
+                fpct = float((sup100 < 100)[sup_ok].mean() * 100) if sup_ok.any() else np.nan
+                mean_imp = np.nan; mean_sup = float(sup[sup_ok].mean())
+                ryg = ""; n = int(sup_ok.sum())
+            row = {"dimension": dim, "item": item, "n": n,
+                   "mean_importance": round(mean_imp, 3) if has_imp else "",
+                   "mean_support": round(mean_sup, 3),
+                   "importance_100": round(to100(imp[both]).mean(), 1) if has_imp and both.any() else "",
+                   "support_100": round(composite, 1) if pd.notna(composite) else "",
+                   "composite": round(composite, 1) if pd.notna(composite) else "",
+                   "friction": round(friction, 1) if pd.notna(friction) else "",
+                   "friction_pct": round(fpct, 0) if pd.notna(fpct) else "",
+                   "ryg": ryg}
+            item_rows.append(row)
+            # per site
+            for site, g in sub.groupby(site_col):
+                gsup = to_num(g[del_col], del_map); gok = gsup.notna(); gsup100 = to100(gsup)
+                comp_s = float(gsup100[gok].mean()) if gok.any() else np.nan
+                if has_imp:
+                    gimp = to_num(g[imp_col], IMPORTANCE); gboth = gimp.notna() & gok
+                    if not gboth.any():
+                        continue
+                    fr = float((to100(gimp) - gsup100)[gboth].clip(lower=0).mean())
+                    fp = float(((to100(gimp) - gsup100)[gboth].clip(lower=0) > 0).mean() * 100)
+                    ry = ryg_class(float(gsup[gboth].mean()) - float(gimp[gboth].mean()))
+                    site_rows.append({"dimension": dim, "item": item, "site": site,
+                        "n": int(gboth.sum()), "mean_importance": round(float(gimp[gboth].mean()), 3),
+                        "mean_support": round(float(gsup[gboth].mean()), 3),
+                        "importance_100": round(to100(gimp[gboth]).mean(), 1),
+                        "support_100": round(comp_s, 1), "composite": round(comp_s, 1),
+                        "friction": round(fr, 1), "friction_pct": round(fp, 0), "ryg": ry})
+                else:
+                    if not gok.any():
+                        continue
+                    site_rows.append({"dimension": dim, "item": item, "site": site,
+                        "n": int(gok.sum()), "mean_importance": "", "mean_support": round(float(gsup[gok].mean()), 3),
+                        "importance_100": "", "support_100": round(comp_s, 1), "composite": round(comp_s, 1),
+                        "friction": round(float((100 - gsup100)[gok].mean()), 1),
+                        "friction_pct": round(float((gsup100 < 100)[gok].mean() * 100), 0), "ryg": ""})
+    # dimension composites (pooled avg support#) + weighted overall
+    dim_rows = []
+    for dim, series_list in dim_pool.items():
+        allv = pd.concat(series_list) if series_list else pd.Series(dtype=float)
+        dim_rows.append({"dimension": dim, "composite": round(float(allv.mean()), 1) if len(allv) else np.nan,
+                         "weight": DIM_WEIGHTS[dim]})
+    dim_df = pd.DataFrame(dim_rows)
+    tot = dim_df["weight"].sum()
+    weighted = float((dim_df["composite"] * dim_df["weight"] / tot).sum())
+    nonweighted = float(dim_df["composite"].mean())
+    dim_df = pd.concat([dim_df, pd.DataFrame([
+        {"dimension": "OVERALL (weighted)", "composite": round(weighted, 1), "weight": tot},
+        {"dimension": "OVERALL (equal)", "composite": round(nonweighted, 1), "weight": ""}])],
+        ignore_index=True)
+    return pd.DataFrame(item_rows), pd.DataFrame(site_rows), dim_df
+
+# Official population = completers, 10 in-scope sites
+comp10 = df[(df["_reached"] == 1) & (df[site_col].isin(TEN_SITES))]
+all10  = df[df[site_col].isin(TEN_SITES)]
+sc_item, sc_site, sc_dim = official_scores(comp10)
+sa_item, sa_site, sa_dim = official_scores(all10)
+sc_item.to_csv(os.path.join(DATA, "scores_overall.csv"), index=False)
+sc_site.to_csv(os.path.join(DATA, "scores_by_site.csv"), index=False)
+sc_dim.to_csv(os.path.join(DATA, "scores_dimension.csv"), index=False)
+sa_item.to_csv(os.path.join(DATA, "scores_overall_all.csv"), index=False)
+sa_site.to_csv(os.path.join(DATA, "scores_by_site_all.csv"), index=False)
+sa_dim.to_csv(os.path.join(DATA, "scores_dimension_all.csv"), index=False)
 
 # ---------------------------------------------------------------------------
 # 3. Open-ended -> long, tagged
@@ -269,6 +386,8 @@ meta = {
     "score_cols": score_cols,
     "category_score": CATEGORY_SCORE,
     "n_emerging_clusters": len(emerging),
+    "ten_sites": TEN_SITES,
+    "dim_weights": DIM_WEIGHTS,
 }
 with open(os.path.join(DATA, "meta.json"), "w") as f:
     json.dump(meta, f, indent=2)

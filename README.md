@@ -17,10 +17,12 @@ pulsepoint_tool/
 ├── data/
 │   ├── raw.xlsx               # your raw survey export
 │   ├── comments.csv           # one row per comment, auto-tagged (theme, sentiment, junk)
-│   ├── gap_overall.csv        # importance vs support gap per item (completers)
-│   ├── gap_by_site.csv        # same, broken out by site (completers)
-│   ├── gap_overall_all.csv    # gap per item (all responses — for the toggle)
-│   ├── gap_by_site_all.csv    # gap by site (all responses)
+│   ├── scores_overall.csv     # Tableau-spec Friction/Composite/RYG per item (completers, 10 sites)
+│   ├── scores_by_site.csv     # same, per in-scope site
+│   ├── scores_dimension.csv   # dimension composites + weighted/equal overall
+│   ├── scores_*_all.csv       # same three, all-responses population (for the toggle)
+│   ├── gap_overall.csv        # legacy signed gap (retained; app now uses Friction)
+│   ├── gap_by_site.csv        # legacy signed gap by site
 │   ├── respondent_scores.csv  # per-respondent overall-agreement scores (key drivers)
 │   ├── emerging_themes.json   # auto-discovered clusters of Unclassified comments
 │   └── meta.json              # filter option lists
@@ -67,11 +69,16 @@ negative quotes per item. Filter to one site in the sidebar to get that site's o
 priority list (the gap becomes site-specific too). Score = 40% volume + 35% share
 negative + 25% importance-gap, each rescaled 0–1.
 
-**⚖️ Gap Analysis** — Gap = mean Importance − mean Support/Satisfaction (both on 1–5
-scales). A **high positive gap = under-supported** (people say it matters but the
-space doesn't deliver); **negative = over-supported**. Switch between overall and any
-single site. Then pick an item and the tool pulls up the actual comments whose themes
-explain that gap — split by positive / negative / neutral so you can read the *why*.
+**⚖️ Scores & Friction** — matches the official **Tableau dashboard methodology**
+exactly. **Composite** = average Support on a 0–100 scale (Importance not factored).
+**Friction** = each respondent's shortfall of Support vs Importance, floored at 0, then
+averaged — so over-supported areas can't mask under-supported ones. Items are colored by
+the **Red/Yellow/Green** status (Under Supported / Target / Over Supported) and plotted
+on the **Importance-vs-Support quadrant**. Dimension composites roll up to a weighted
+**Overall** score (Work 35 · Service 25 · Physical 20 · Digital & Tech 20). Digital &
+Tech uses Agreement only, so its Friction = 100 − Support. Pick any item to pull up the
+comments whose themes explain its Friction. **Scope: completed responses across the 10
+in-scope sites**, per the spec — so the numbers reconcile with the Tableau report.
 
 **🏷️ Theme & Sentiment Explorer** — three controls drive everything: **View by**
 Categories (the 7 roll-ups) or Themes (the 28 granular tags); **Break down by** Site,
