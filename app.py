@@ -697,6 +697,13 @@ def build_site_report(site):
 <h1>PulsePoint Experience — {_html.escape(site)}</h1>
 <div class="sub">Workplace experience report card · completed responses</div>
 {card_html}
+<h3>Dimension summary — Importance vs Support (1–5)</h3>
+<table><tr><th>Dimension</th><th>Importance</th><th>Support</th><th>Gap</th></tr>{dsum_rows}</table>
+<h3>Dimension detail — by question</h3>
+<table class="detail"><tr><th>Dimension topic (question)</th><th>Importance</th><th>Support</th><th>Gap</th><th>Status</th></tr>{detail_rows}</table>
+<p class="lgd">Gap = Support − Importance (1–5). <span style="color:#C0392B">■</span> Under Supported ·
+<span style="color:#2E7D32">■</span> Target · <span style="color:#E67E22">■</span> Over Supported.
+Digital &amp; Tech (Agreement-only) is excluded from this Importance/Support view.</p>
 <div class="narr">{narrative}</div>
 <div class="charts">{img('donut')}{img('themes')}{img('gap')}</div>
 <h3>Top priorities to address</h3>
@@ -704,13 +711,6 @@ def build_site_report(site):
 <div class="two"><div>
 <h3>What needs attention</h3><ul>{fix_rows}</ul></div><div>
 <h3>What's working</h3><ul>{str_rows}</ul></div></div>
-<h3>Dimension detail — by question</h3>
-<table class="detail"><tr><th>Dimension topic (question)</th><th>Importance</th><th>Support</th><th>Gap</th><th>Status</th></tr>{detail_rows}</table>
-<p class="lgd">Gap = Support − Importance (1–5). <span style="color:#C0392B">■</span> Under Supported ·
-<span style="color:#2E7D32">■</span> Target · <span style="color:#E67E22">■</span> Over Supported.
-Digital &amp; Tech (Agreement-only) is excluded from this Importance/Support view.</p>
-<h3>Dimension summary — Importance vs Support (1–5)</h3>
-<table><tr><th>Dimension</th><th>Importance</th><th>Support</th><th>Gap</th></tr>{dsum_rows}</table>
 <div class="two"><div>
 <h3>Vs. org — theme rates</h3>
 <table><tr><th>Theme</th><th>site</th><th>org</th><th>lift</th></tr>{bench_rows}</table></div><div>
@@ -787,34 +787,7 @@ def build_site_pdf(site, completers_flag):
                   Paragraph("<font size=7.5 color='#999'>Grades reflect workplace-support scores (0–100): "
                             "A 80+ · B 72–79 · C 64–71 · D 56–63 · F below 56. (+/−) shows the site vs. the "
                             "company average.</font>", body)]
-    tops = d["P"]["key"].tolist()
-    narr = (f"Overall sentiment is <b>{d['neg']:.0f}% negative</b> and {d['pos']:.0f}% positive. "
-            f"Top area to address: <b>{tops[0] if tops else '—'}</b>.")
-    story += [Spacer(1, 8), Paragraph(narr, body)]
-    charts = d["charts"]
-    imgs = []
-    for k in ("donut", "themes", "gap"):
-        if k in charts:
-            imgs.append(RLImage(io.BytesIO(base64.b64decode(charts[k])),
-                                width=2.1*inch, height=1.7*inch, kind="proportional"))
-    if imgs:
-        story += [Spacer(1, 6), Table([imgs], colWidths=[2.3*inch]*len(imgs))]
-
-    def tbl(header, rows, widths):
-        data = [header] + rows
-        t = Table(data, colWidths=widths, hAlign="LEFT")
-        t.setStyle(TableStyle([
-            ("FONTSIZE", (0, 0), (-1, -1), 8.5), ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
-            ("TOPPADDING", (0, 0), (-1, -1), 3),
-            ("TEXTCOLOR", (0, 0), (-1, 0), rc.HexColor("#555")),
-            ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
-            ("LINEBELOW", (0, 0), (-1, -1), 0.4, rc.HexColor("#e6e6e6")),
-            ("ALIGN", (1, 0), (-1, -1), "RIGHT")]))
-        return t
-    story += [Paragraph("Top priorities to address", h3),
-              tbl(["Category", "# comments", "% neg", "priority"],
-                  [[r["key"], int(r["volume"]), f"{int(r['neg_share']*100)}%", int(round(r["Priority"]))]
-                   for _, r in d["P"].iterrows()], [2.6*inch, 1.1*inch, 0.9*inch, 0.9*inch])]
+    # Dimension summary + detail near the top (Importance vs Support, 1–5)
     if len(d["dim_summary"]):
         srows, sstyle = [["Dimension", "Importance", "Support", "Gap"]], []
         for i, (_, r) in enumerate(d["dim_summary"].iterrows(), 1):
@@ -843,8 +816,36 @@ def build_site_pdf(site, completers_flag):
             ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
             ("LINEBELOW", (0, 0), (-1, -1), 0.3, rc.HexColor("#eee")),
             ("ALIGN", (1, 0), (3, -1), "RIGHT"), ("ALIGN", (4, 0), (4, -1), "LEFT")] + dstyle))
-        story += [Paragraph("Dimension detail — by question (Gap = Support − Importance)", h3), dt,
-                  Paragraph("Dimension summary — Importance vs Support (1–5)", h3), st_]
+        story += [Spacer(1, 6), Paragraph("Dimension summary — Importance vs Support (1–5)", h3), st_,
+                  Paragraph("Dimension detail — by question (Gap = Support − Importance)", h3), dt]
+    tops = d["P"]["key"].tolist()
+    narr = (f"Overall sentiment is <b>{d['neg']:.0f}% negative</b> and {d['pos']:.0f}% positive. "
+            f"Top area to address: <b>{tops[0] if tops else '—'}</b>.")
+    story += [Spacer(1, 8), Paragraph(narr, body)]
+    charts = d["charts"]
+    imgs = []
+    for k in ("donut", "themes", "gap"):
+        if k in charts:
+            imgs.append(RLImage(io.BytesIO(base64.b64decode(charts[k])),
+                                width=2.1*inch, height=1.7*inch, kind="proportional"))
+    if imgs:
+        story += [Spacer(1, 6), Table([imgs], colWidths=[2.3*inch]*len(imgs))]
+
+    def tbl(header, rows, widths):
+        data = [header] + rows
+        t = Table(data, colWidths=widths, hAlign="LEFT")
+        t.setStyle(TableStyle([
+            ("FONTSIZE", (0, 0), (-1, -1), 8.5), ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
+            ("TOPPADDING", (0, 0), (-1, -1), 3),
+            ("TEXTCOLOR", (0, 0), (-1, 0), rc.HexColor("#555")),
+            ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+            ("LINEBELOW", (0, 0), (-1, -1), 0.4, rc.HexColor("#e6e6e6")),
+            ("ALIGN", (1, 0), (-1, -1), "RIGHT")]))
+        return t
+    story += [Paragraph("Top priorities to address", h3),
+              tbl(["Category", "# comments", "% neg", "priority"],
+                  [[r["key"], int(r["volume"]), f"{int(r['neg_share']*100)}%", int(round(r["Priority"]))]
+                   for _, r in d["P"].iterrows()], [2.6*inch, 1.1*inch, 0.9*inch, 0.9*inch])]
     if d["quotes"]:
         story.append(Paragraph("In their words — what to fix", h3))
         for q in d["quotes"][:4]:
