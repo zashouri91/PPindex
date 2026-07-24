@@ -433,6 +433,10 @@ def site_report_data(site, completers_flag):
 
     # Report card: dimension composites (0–100) -> grades, vs org average
     data["participation"] = int((resp_scores["site"] == site).sum()) if not resp_scores.empty else data["n"]
+    _insc = resp_scores[resp_scores["site"].isin(meta.get("ten_sites", []))] if not resp_scores.empty else pd.DataFrame()
+    data["all_participants"] = int(len(_insc))
+    # full comment log for the appendix (all real comments at this site)
+    data["real_df"] = real[["respondent", "comment", "eff_sentiment", "eff_themes", "role", "tenure"]].reset_index(drop=True)
     if len(ss):
         dcomp = ss.groupby("dimension")["support_100"].mean()
         orgd = scores_dim.set_index("dimension")["composite"] if not scores_dim.empty else pd.Series(dtype=float)
@@ -585,16 +589,45 @@ def build_site_report(site):
                        f"<div class='as'>{a['score']:.0f}/100</div>"
                        f"<div class='am'>{vs_mark(a['score'], a['org'])}</div></div>")
         org_str = f"Company average {cc['org_overall']:.0f}/100 · " if pd.notna(cc.get("org_overall")) else ""
+        allp = d.get("all_participants") or 0
+        part_str = (f"<b>{d['participation']:,}</b> of {allp:,} respondents (this site vs. all 10 sites)"
+                    if allp else f"{d['participation']:,} survey participants")
         card_html = (
             f"<div class='rc'><div class='rc-o'>"
             f"<div class='rc-badge' style='background:{oh}'>{ol}</div>"
             f"<div><div class='rc-t'>Overall grade — {ow}</div>"
             f"<div class='rc-s'>{cc['overall']:.0f} / 100 &nbsp; {ovm}</div>"
-            f"<div class='rc-p'>{org_str}{d['participation']} survey participants · {d['n']} written comments</div>"
+            f"<div class='rc-p'>{org_str}{part_str} · {d['n']:,} written comments</div>"
             f"</div></div>"
             f"<div class='rc-areas'>{badges}</div>"
             f"<div class='rc-key'>Grades reflect workplace-support scores (0–100): A 80+ · B 72–79 · "
             f"C 64–71 · D 56–63 · F below 56. &#9650;/&#9660; = vs. company average.</div></div>")
+
+    # All-comments appendix — by category then sentiment (collapsible)
+    appendix_html = ""
+    rdf = d.get("real_df")
+    if rdf is not None and len(rdf):
+        _r = rdf.reset_index(drop=True).copy(); _r["_rid"] = range(len(_r))
+        ex = _r.assign(_cat=_r["eff_themes"].str.split("|")).explode("_cat")
+        ex["_cat"] = ex["_cat"].str.strip().map(lambda t: THEME_TO_CAT.get(t, "Uncategorized"))
+        ex = ex[ex["_cat"] != "Uncategorized"].drop_duplicates(subset=["respondent", "comment", "_cat"])
+        cat_order = [c for c in (meta.get("categories") or []) if c in set(ex["_cat"])]
+        SENTS = [("Negative", "#C0392B"), ("Neutral / Mixed", "#7A7A7A"), ("Positive", "#2E7D32")]
+        for cat in cat_order:
+            sub = ex[ex["_cat"] == cat]
+            groups = ""
+            for sname, scol in SENTS:
+                ssub = sub[sub["eff_sentiment"] == sname]
+                if not len(ssub):
+                    continue
+                lis = "".join(
+                    f"<li>{_html.escape(str(r['comment']))}"
+                    f"<span class='cmeta'> — {_html.escape(str(r['role']))}, {_html.escape(str(r['tenure']))}</span></li>"
+                    for _, r in ssub.iterrows())
+                groups += (f"<div class='sgrp'><div class='slab' style='color:{scol}'>"
+                           f"{sname} · {len(ssub)}</div><ul class='clist'>{lis}</ul></div>")
+            appendix_html += (f"<details class='catblk'><summary>{_html.escape(cat)} "
+                              f"<span class='cct'>({len(sub)})</span></summary>{groups}</details>")
     fix_rows = "".join(f"<li><b>{_html.escape(t)}</b> — {v} comments, {int(ns*100)}% negative</li>"
                        for t, v, ns in d["fixes"]) or "<li>No clearly negative themes.</li>"
     str_rows = "".join(f"<li><b>{_html.escape(t)}</b> — {v} comments, {int(ps*100)}% positive</li>"
@@ -653,6 +686,12 @@ def build_site_report(site):
    display:flex;align-items:center;justify-content:center;margin:0 auto}}
  .as{{font-size:13px;margin-top:5px;font-weight:600}} .am{{font-size:11px;margin-top:2px}}
  .rc-key{{font-size:10.5px;color:#999;margin-top:12px;border-top:1px solid #eee;padding-top:8px}}
+ details.catblk{{border:1px solid #e6e8ee;border-radius:7px;margin:6px 0;padding:2px 10px;background:#fcfcfd}}
+ details.catblk>summary{{cursor:pointer;font-weight:700;color:#2b3a67;padding:7px 0;font-size:13px}}
+ .cct{{color:#999;font-weight:400;font-size:12px}}
+ .sgrp{{margin:4px 0 8px}} .slab{{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;margin:6px 0 2px}}
+ ul.clist{{margin:2px 0 6px;padding-left:18px}} ul.clist li{{font-size:12.5px;margin:3px 0;line-height:1.45}}
+ .cmeta{{color:#999;font-size:11px}}
  .foot{{color:#aaa;font-size:11px;margin-top:24px}}
 </style></head><body>
 <h1>PulsePoint Experience — {_html.escape(site)}</h1>
@@ -665,13 +704,13 @@ def build_site_report(site):
 <div class="two"><div>
 <h3>What needs attention</h3><ul>{fix_rows}</ul></div><div>
 <h3>What's working</h3><ul>{str_rows}</ul></div></div>
-<h3>Dimension summary — Importance vs Support (1–5)</h3>
-<table><tr><th>Dimension</th><th>Importance</th><th>Support</th><th>Gap</th></tr>{dsum_rows}</table>
 <h3>Dimension detail — by question</h3>
 <table class="detail"><tr><th>Dimension topic (question)</th><th>Importance</th><th>Support</th><th>Gap</th><th>Status</th></tr>{detail_rows}</table>
 <p class="lgd">Gap = Support − Importance (1–5). <span style="color:#C0392B">■</span> Under Supported ·
 <span style="color:#2E7D32">■</span> Target · <span style="color:#E67E22">■</span> Over Supported.
 Digital &amp; Tech (Agreement-only) is excluded from this Importance/Support view.</p>
+<h3>Dimension summary — Importance vs Support (1–5)</h3>
+<table><tr><th>Dimension</th><th>Importance</th><th>Support</th><th>Gap</th></tr>{dsum_rows}</table>
 <div class="two"><div>
 <h3>Vs. org — theme rates</h3>
 <table><tr><th>Theme</th><th>site</th><th>org</th><th>lift</th></tr>{bench_rows}</table></div><div>
@@ -679,6 +718,10 @@ Digital &amp; Tech (Agreement-only) is excluded from this Importance/Support vie
 <table><tr><th>Area</th><th>site</th><th>org</th><th>Δ</th></tr>{score_rows}</table></div></div>
 <h3>In their words — what to fix</h3>{neg_quotes}
 {('<h3>In their words — what’s working</h3>'+pos_quotes) if pos_quotes else ''}
+<h3>All comments — by category &amp; sentiment</h3>
+<p class="lgd">Every open-ended comment at this site, grouped by category then sentiment. Click a category to expand.
+A comment that touches more than one category appears under each.</p>
+{appendix_html or '<p style="color:#888">No comments to list.</p>'}
 <div class="foot">Generated by the PulsePoint Open-Ended Response Analyzer · {'completed responses only' if completers_only else 'all responses'} · Friction &amp; Composite per the official Tableau spec · Priority = 40% volume + 35% share negative + 25% Friction.</div>
 </body></html>"""
 
@@ -717,9 +760,12 @@ def build_site_pdf(site, completers_flag):
         return "<font color='#888'>(on par)</font>"
     if d.get("card"):
         cc = d["card"]; ol, ow, oh = grade_of(cc["overall"])
+        _allp = d.get("all_participants") or 0
+        _pstr = (f"{d['participation']:,} of {_allp:,} respondents (this site vs. all 10 sites)"
+                 if _allp else f"{d['participation']:,} participants")
         og = Table([[Paragraph(f"<font size=22 color='white'><b>{ol}</b></font>", body),
                      Paragraph(f"<b>Overall grade — {ow}</b>  ·  {cc['overall']:.0f} / 100  {_mark_txt(cc['overall'], cc.get('org_overall'))}<br/>"
-                               f"<font size=8 color='#777'>{d['participation']} survey participants · {d['n']} written comments</font>", body)]],
+                               f"<font size=8 color='#777'>{_pstr} · {d['n']:,} written comments</font>", body)]],
                     colWidths=[0.62*inch, 5.9*inch])
         og.setStyle(TableStyle([("BACKGROUND", (0, 0), (0, 0), rc.HexColor(oh)),
             ("VALIGN", (0, 0), (-1, -1), "MIDDLE"), ("ALIGN", (0, 0), (0, 0), "CENTER"),
@@ -779,8 +825,6 @@ def build_site_pdf(site, completers_flag):
             ("TOPPADDING", (0, 0), (-1, -1), 3), ("TEXTCOLOR", (0, 0), (-1, 0), rc.HexColor("#555")),
             ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"), ("FONTNAME", (3, 1), (3, -1), "Helvetica-Bold"),
             ("LINEBELOW", (0, 0), (-1, -1), 0.4, rc.HexColor("#e6e6e6")), ("ALIGN", (1, 0), (-1, -1), "RIGHT")] + sstyle))
-        story += [Paragraph("Dimension summary — Importance vs Support (1–5)", h3), st_]
-
         drows, dstyle, ri = [["Dimension topic (question)", "Imp", "Sup", "Gap", "Status"]], [], 1
         for dim in d["detail"]["dimension"].drop_duplicates():
             drows.append([dim, "", "", "", ""])
@@ -799,7 +843,8 @@ def build_site_pdf(site, completers_flag):
             ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
             ("LINEBELOW", (0, 0), (-1, -1), 0.3, rc.HexColor("#eee")),
             ("ALIGN", (1, 0), (3, -1), "RIGHT"), ("ALIGN", (4, 0), (4, -1), "LEFT")] + dstyle))
-        story += [Paragraph("Dimension detail — by question (Gap = Support − Importance)", h3), dt]
+        story += [Paragraph("Dimension detail — by question (Gap = Support − Importance)", h3), dt,
+                  Paragraph("Dimension summary — Importance vs Support (1–5)", h3), st_]
     if d["quotes"]:
         story.append(Paragraph("In their words — what to fix", h3))
         for q in d["quotes"][:4]:
@@ -808,6 +853,40 @@ def build_site_pdf(site, completers_flag):
                       Paragraph(f"— {q['role']}, {q['tenure']} · <b>{q['theme']}</b>{rep}",
                                 ParagraphStyle("c", parent=body, fontSize=7.5, textColor=rc.HexColor("#888"))),
                       Spacer(1, 4)]
+    # ---- Appendix: all comments by category & sentiment ----
+    # In the PDF we include a capped sample per category so it stays a shareable
+    # report card; the HTML report and the per-site CSV carry the complete log.
+    rdf = d.get("real_df")
+    if rdf is not None and len(rdf):
+        from reportlab.platypus import PageBreak
+        CAP = 8  # comments shown per sentiment per category in the PDF
+        catst = ParagraphStyle("catst", parent=body, fontSize=11, textColor=rc.HexColor("#2b3a67"),
+                               fontName="Helvetica-Bold", spaceBefore=8, spaceAfter=2)
+        slabst = ParagraphStyle("slab", parent=body, fontSize=8, fontName="Helvetica-Bold", spaceBefore=4)
+        cmt = ParagraphStyle("cmt", parent=body, fontSize=8, leading=10.5, leftIndent=8, spaceAfter=1)
+        _r = rdf.reset_index(drop=True).copy(); _r["_rid"] = range(len(_r))
+        ex = _r.assign(_cat=_r["eff_themes"].str.split("|")).explode("_cat")
+        ex["_cat"] = ex["_cat"].str.strip().map(lambda t: THEME_TO_CAT.get(t, "Uncategorized"))
+        ex = ex[ex["_cat"] != "Uncategorized"].drop_duplicates(subset=["respondent", "comment", "_cat"])
+        cats = [c for c in (meta.get("categories") or []) if c in set(ex["_cat"])]
+        story += [PageBreak(), Paragraph("Appendix — Comments by category &amp; sentiment", h1),
+                  Paragraph(f"Up to {CAP} comments per category/sentiment shown here to keep the report "
+                            f"shareable. The <b>complete</b> log of all {len(rdf):,} comments is in the HTML "
+                            f"report (expandable) and the per-site verbatim CSV export.", body), Spacer(1, 6)]
+        SENTS = [("Negative", "#C0392B"), ("Neutral / Mixed", "#7A7A7A"), ("Positive", "#2E7D32")]
+        for cat in cats:
+            sub = ex[ex["_cat"] == cat]
+            story.append(Paragraph(f"{_html.escape(cat)} &nbsp;<font size=8 color='#999'>({len(sub)} total)</font>", catst))
+            for sname, scol in SENTS:
+                ssub = sub[sub["eff_sentiment"] == sname]
+                if not len(ssub):
+                    continue
+                extra = f" &nbsp;<font color='#999'>(+{len(ssub)-CAP} more in HTML/CSV)</font>" if len(ssub) > CAP else ""
+                story.append(Paragraph(f"<font color='{scol}'>{sname.upper()} · {len(ssub)}</font>{extra}", slabst))
+                for _, r in ssub.head(CAP).iterrows():
+                    story.append(Paragraph(
+                        f"• {_html.escape(str(r['comment']))} "
+                        f"<font size=6.5 color='#999'>— {_html.escape(str(r['role']))}, {_html.escape(str(r['tenure']))}</font>", cmt))
     doc.build(story)
     return buf.getvalue()
 
