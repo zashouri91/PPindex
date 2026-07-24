@@ -355,6 +355,34 @@ def ryg_of(gap5):
         return "Over Supported"
     return "Target"
 
+# --- Report-card grading (Composite 0–100 support score -> letter grade) -----
+GRADE_BANDS = [(80, "A", "Excellent"), (72, "B", "Good"), (64, "C", "Fair"),
+               (56, "D", "Needs Work"), (0, "F", "Poor")]
+GRADE_HEX = {"A": "#1E7D32", "B": "#5A9E3A", "C": "#E0A400", "D": "#E67E22", "F": "#C0392B"}
+# lay-language status words for the RYG classification (kept alongside the numbers)
+STATUS_WORD = {"Under Supported": "Needs attention", "Target": "On track",
+               "Over Supported": "Exceeds needs", "Agreement-only": "—"}
+
+def grade_of(score):
+    """Return (letter, word, hex) for a 0–100 composite score."""
+    if pd.isna(score):
+        return ("—", "", "#999999")
+    for lo, letter, word in GRADE_BANDS:
+        if score >= lo:
+            return (letter, word, GRADE_HEX[letter])
+    return ("F", "Poor", GRADE_HEX["F"])
+
+def vs_mark(site_val, org_val, thresh=2.0):
+    """Professional vs-average indicator (▲/▼/~) with color — no emoji."""
+    if pd.isna(site_val) or pd.isna(org_val):
+        return ""
+    d = site_val - org_val
+    if d >= thresh:
+        return f"<span style='color:#1E7D32'>&#9650; +{d:.0f}</span>"      # ▲
+    if d <= -thresh:
+        return f"<span style='color:#C0392B'>&#9660; {d:.0f}</span>"       # ▼
+    return "<span style='color:#888'>&#8776; on par</span>"                # ≈
+
 @st.cache_data(show_spinner=False)
 def site_report_data(site, completers_flag):
     """All computed pieces for a site's report (cached per site+filter)."""
@@ -402,6 +430,24 @@ def site_report_data(site, completers_flag):
         data["detail"], data["dim_summary"] = det, dsum
     else:
         data["detail"], data["dim_summary"] = pd.DataFrame(), pd.DataFrame()
+
+    # Report card: dimension composites (0–100) -> grades, vs org average
+    data["participation"] = int((resp_scores["site"] == site).sum()) if not resp_scores.empty else data["n"]
+    if len(ss):
+        dcomp = ss.groupby("dimension")["support_100"].mean()
+        orgd = scores_dim.set_index("dimension")["composite"] if not scores_dim.empty else pd.Series(dtype=float)
+        weights = meta.get("dim_weights", {"Work Activity": 35, "Service Level": 25,
+                                           "Physical Feature": 20, "Digital & Tech": 20})
+        wt = sum(weights.get(dm, 0) for dm in dcomp.index)
+        site_overall = (sum(dcomp[dm] * weights.get(dm, 0) for dm in dcomp.index) / wt) if wt else float(dcomp.mean())
+        areas = [{"dim": dm, "score": float(dcomp[dm]), "org": float(orgd.get(dm, np.nan))}
+                 for dm in ["Work Activity", "Physical Feature", "Service Level", "Digital & Tech"]
+                 if dm in dcomp.index]
+        data["card"] = {"overall": site_overall,
+                        "org_overall": float(orgd.get("OVERALL (weighted)", np.nan)),
+                        "areas": areas}
+    else:
+        data["card"] = None
     # benchmark vs org: theme rate lift
     org_real = comments[~comments["eff_junk"]]
     org_tot = len(org_real)
@@ -510,16 +556,45 @@ def build_site_report(site):
     if len(d["detail"]):
         detail_rows = ""
         for dim in d["detail"]["dimension"].drop_duplicates():
-            detail_rows += f"<tr class='dh'><td colspan='4'>{_html.escape(dim)}</td></tr>"
+            detail_rows += f"<tr class='dh'><td colspan='5'>{_html.escape(dim)}</td></tr>"
             for _, r in d["detail"][d["detail"]["dimension"] == dim].iterrows():
                 col = _c(r["gap5"])
+                status = STATUS_WORD.get(ryg_of(r["gap5"]), "")
                 detail_rows += (f"<tr><td class='tp'>{_html.escape(str(r['item']))}</td>"
                                 f"<td style='color:{col}'>{r['mean_importance']:.1f}</td>"
                                 f"<td style='color:{col}'>{r['mean_support']:.1f}</td>"
-                                f"<td style='color:{col};font-weight:700'>{r['gap5']:+.1f}</td></tr>")
+                                f"<td style='color:{col};font-weight:700'>{r['gap5']:+.1f}</td>"
+                                f"<td style='color:{col};font-weight:600'>{status}</td></tr>")
     else:
-        detail_rows = ("<tr><td colspan='4'>Not one of the 10 in-scope sites — no official "
+        detail_rows = ("<tr><td colspan='5'>Not one of the 10 in-scope sites — no official "
                        "scores. The comment analysis above still applies.</td></tr>")
+
+    # Report-card grade header
+    AREA_SHORT = {"Work Activity": "Work Activity", "Physical Feature": "Physical",
+                  "Service Level": "Services", "Digital & Tech": "Technology"}
+    card_html = ""
+    if d.get("card"):
+        cc = d["card"]
+        ol, ow, oh = grade_of(cc["overall"])
+        ovm = vs_mark(cc["overall"], cc["org_overall"])
+        badges = ""
+        for a in cc["areas"]:
+            gl, gw, gh = grade_of(a["score"])
+            badges += (f"<div class='area'><div class='an'>{_html.escape(AREA_SHORT.get(a['dim'], a['dim']))}</div>"
+                       f"<div class='ab' style='background:{gh}'>{gl}</div>"
+                       f"<div class='as'>{a['score']:.0f}/100</div>"
+                       f"<div class='am'>{vs_mark(a['score'], a['org'])}</div></div>")
+        org_str = f"Company average {cc['org_overall']:.0f}/100 · " if pd.notna(cc.get("org_overall")) else ""
+        card_html = (
+            f"<div class='rc'><div class='rc-o'>"
+            f"<div class='rc-badge' style='background:{oh}'>{ol}</div>"
+            f"<div><div class='rc-t'>Overall grade — {ow}</div>"
+            f"<div class='rc-s'>{cc['overall']:.0f} / 100 &nbsp; {ovm}</div>"
+            f"<div class='rc-p'>{org_str}{d['participation']} survey participants · {d['n']} written comments</div>"
+            f"</div></div>"
+            f"<div class='rc-areas'>{badges}</div>"
+            f"<div class='rc-key'>Grades reflect workplace-support scores (0–100): A 80+ · B 72–79 · "
+            f"C 64–71 · D 56–63 · F below 56. &#9650;/&#9660; = vs. company average.</div></div>")
     fix_rows = "".join(f"<li><b>{_html.escape(t)}</b> — {v} comments, {int(ns*100)}% negative</li>"
                        for t, v, ns in d["fixes"]) or "<li>No clearly negative themes.</li>"
     str_rows = "".join(f"<li><b>{_html.escape(t)}</b> — {v} comments, {int(ps*100)}% positive</li>"
@@ -563,23 +638,37 @@ def build_site_report(site):
  blockquote.pos{{border-left-color:#2E9E6B}}
  cite{{display:block;font-style:normal;color:#888;font-size:11px;margin-top:4px}}
  tr.dh td{{background:#eef1f7;font-weight:700;color:#2b3a67;text-align:left}}
- table.detail td.tp{{max-width:430px}}
+ table.detail td.tp{{max-width:380px}}
  .lgd{{font-size:11px;color:#888;margin-top:5px}}
+ .rc{{border:1px solid #e3e6ec;border-radius:10px;padding:16px 18px;margin:4px 0 16px;background:#fbfcfe}}
+ .rc-o{{display:flex;align-items:center;gap:14px}}
+ .rc-badge{{width:58px;height:58px;border-radius:10px;color:#fff;font-size:30px;font-weight:800;
+   display:flex;align-items:center;justify-content:center;flex-shrink:0}}
+ .rc-t{{font-size:15px;font-weight:700;color:#2b3a67}} .rc-s{{font-size:14px;margin-top:1px}}
+ .rc-p{{font-size:12px;color:#777;margin-top:3px}}
+ .rc-areas{{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}}
+ .area{{flex:1;min-width:104px;text-align:center;border:1px solid #eee;border-radius:8px;padding:9px 6px}}
+ .an{{font-size:11.5px;color:#555;margin-bottom:6px;height:26px;display:flex;align-items:center;justify-content:center}}
+ .ab{{width:34px;height:34px;border-radius:7px;color:#fff;font-weight:800;font-size:18px;
+   display:flex;align-items:center;justify-content:center;margin:0 auto}}
+ .as{{font-size:13px;margin-top:5px;font-weight:600}} .am{{font-size:11px;margin-top:2px}}
+ .rc-key{{font-size:10.5px;color:#999;margin-top:12px;border-top:1px solid #eee;padding-top:8px}}
  .foot{{color:#aaa;font-size:11px;margin-top:24px}}
 </style></head><body>
 <h1>PulsePoint Experience — {_html.escape(site)}</h1>
-<div class="sub">Open-ended comment summary · {d['n']} substantive comments</div>
+<div class="sub">Workplace experience report card · completed responses</div>
+{card_html}
 <div class="narr">{narrative}</div>
 <div class="charts">{img('donut')}{img('themes')}{img('gap')}</div>
 <h3>Top priorities to address</h3>
 <table><tr><th>Category</th><th>#&nbsp;comments</th><th>%&nbsp;negative</th><th>priority</th></tr>{prio_rows}</table>
 <div class="two"><div>
-<h3>⚠️ What to fix</h3><ul>{fix_rows}</ul></div><div>
-<h3>✅ What's working</h3><ul>{str_rows}</ul></div></div>
+<h3>What needs attention</h3><ul>{fix_rows}</ul></div><div>
+<h3>What's working</h3><ul>{str_rows}</ul></div></div>
 <h3>Dimension summary — Importance vs Support (1–5)</h3>
 <table><tr><th>Dimension</th><th>Importance</th><th>Support</th><th>Gap</th></tr>{dsum_rows}</table>
 <h3>Dimension detail — by question</h3>
-<table class="detail"><tr><th>Dimension topic (question)</th><th>Importance</th><th>Support</th><th>Gap</th></tr>{detail_rows}</table>
+<table class="detail"><tr><th>Dimension topic (question)</th><th>Importance</th><th>Support</th><th>Gap</th><th>Status</th></tr>{detail_rows}</table>
 <p class="lgd">Gap = Support − Importance (1–5). <span style="color:#C0392B">■</span> Under Supported ·
 <span style="color:#2E7D32">■</span> Target · <span style="color:#E67E22">■</span> Over Supported.
 Digital &amp; Tech (Agreement-only) is excluded from this Importance/Support view.</p>
@@ -616,11 +705,46 @@ def build_site_pdf(site, completers_flag):
     if d["n"] == 0:
         story.append(Paragraph("No comments for this site.", body))
         doc.build(story); return buf.getvalue()
-    story.append(Paragraph(f"Open-ended comment summary · {d['n']} substantive comments", body))
+    story.append(Paragraph("Workplace experience report card · completed responses", body))
+    # ---- report-card grade header ----
+    AREA_SHORT = {"Work Activity": "Work Activity", "Physical Feature": "Physical",
+                  "Service Level": "Services", "Digital & Tech": "Technology"}
+    def _mark_txt(sv, ov):
+        if pd.isna(sv) or pd.isna(ov): return ""
+        dd = sv - ov
+        if dd >= 2: return f"<font color='#1E7D32'>(+{dd:.0f} vs avg)</font>"
+        if dd <= -2: return f"<font color='#C0392B'>({dd:.0f} vs avg)</font>"
+        return "<font color='#888'>(on par)</font>"
+    if d.get("card"):
+        cc = d["card"]; ol, ow, oh = grade_of(cc["overall"])
+        og = Table([[Paragraph(f"<font size=22 color='white'><b>{ol}</b></font>", body),
+                     Paragraph(f"<b>Overall grade — {ow}</b>  ·  {cc['overall']:.0f} / 100  {_mark_txt(cc['overall'], cc.get('org_overall'))}<br/>"
+                               f"<font size=8 color='#777'>{d['participation']} survey participants · {d['n']} written comments</font>", body)]],
+                    colWidths=[0.62*inch, 5.9*inch])
+        og.setStyle(TableStyle([("BACKGROUND", (0, 0), (0, 0), rc.HexColor(oh)),
+            ("VALIGN", (0, 0), (-1, -1), "MIDDLE"), ("ALIGN", (0, 0), (0, 0), "CENTER"),
+            ("TOPPADDING", (0, 0), (0, 0), 10), ("BOTTOMPADDING", (0, 0), (0, 0), 10),
+            ("LEFTPADDING", (1, 0), (1, 0), 10)]))
+        names, grades, gstyle = [], [], []
+        for i, a in enumerate(cc["areas"]):
+            gl, gw, gh = grade_of(a["score"])
+            names.append(AREA_SHORT.get(a["dim"], a["dim"]))
+            grades.append(Paragraph(f"<font color='white' size=13><b>{gl}</b></font>  "
+                                    f"<font color='white' size=8>{a['score']:.0f}</font>", body))
+            gstyle += [("BACKGROUND", (i, 1), (i, 1), rc.HexColor(gh)), ("ALIGN", (i, 1), (i, 1), "CENTER")]
+        gt = Table([names, grades], colWidths=[1.55*inch]*len(cc["areas"]))
+        gt.setStyle(TableStyle([("FONTSIZE", (0, 0), (-1, 0), 8.5), ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+            ("TEXTCOLOR", (0, 0), (-1, 0), rc.HexColor("#555")), ("TOPPADDING", (0, 1), (-1, 1), 7),
+            ("BOTTOMPADDING", (0, 1), (-1, 1), 7), ("BOTTOMPADDING", (0, 0), (-1, 0), 3),
+            ("GRID", (0, 1), (-1, 1), 2, rc.white)] + gstyle))
+        story += [Spacer(1, 8), og, Spacer(1, 6), gt,
+                  Paragraph("<font size=7.5 color='#999'>Grades reflect workplace-support scores (0–100): "
+                            "A 80+ · B 72–79 · C 64–71 · D 56–63 · F below 56. (+/−) shows the site vs. the "
+                            "company average.</font>", body)]
     tops = d["P"]["key"].tolist()
     narr = (f"Overall sentiment is <b>{d['neg']:.0f}% negative</b> and {d['pos']:.0f}% positive. "
             f"Top area to address: <b>{tops[0] if tops else '—'}</b>.")
-    story += [Spacer(1, 6), Paragraph(narr, body)]
+    story += [Spacer(1, 8), Paragraph(narr, body)]
     charts = d["charts"]
     imgs = []
     for k in ("donut", "themes", "gap"):
@@ -657,22 +781,24 @@ def build_site_pdf(site, completers_flag):
             ("LINEBELOW", (0, 0), (-1, -1), 0.4, rc.HexColor("#e6e6e6")), ("ALIGN", (1, 0), (-1, -1), "RIGHT")] + sstyle))
         story += [Paragraph("Dimension summary — Importance vs Support (1–5)", h3), st_]
 
-        drows, dstyle, ri = [["Dimension topic (question)", "Imp", "Sup", "Gap"]], [], 1
+        drows, dstyle, ri = [["Dimension topic (question)", "Imp", "Sup", "Gap", "Status"]], [], 1
         for dim in d["detail"]["dimension"].drop_duplicates():
-            drows.append([dim, "", "", ""])
-            dstyle += [("SPAN", (0, ri), (3, ri)), ("BACKGROUND", (0, ri), (3, ri), rc.HexColor("#eef1f7")),
+            drows.append([dim, "", "", "", ""])
+            dstyle += [("SPAN", (0, ri), (4, ri)), ("BACKGROUND", (0, ri), (4, ri), rc.HexColor("#eef1f7")),
                        ("FONTNAME", (0, ri), (0, ri), "Helvetica-Bold"), ("TEXTCOLOR", (0, ri), (0, ri), rc.HexColor("#2b3a67"))]
             ri += 1
             for _, r in d["detail"][d["detail"]["dimension"] == dim].iterrows():
                 col = rc.HexColor(RYG_HEX[ryg_of(r["gap5"])])
-                drows.append([str(r["item"])[:66], f"{r['mean_importance']:.1f}", f"{r['mean_support']:.1f}", f"{r['gap5']:+.1f}"])
-                dstyle += [("TEXTCOLOR", (1, ri), (3, ri), col), ("FONTNAME", (3, ri), (3, ri), "Helvetica-Bold")]
+                drows.append([str(r["item"])[:60], f"{r['mean_importance']:.1f}", f"{r['mean_support']:.1f}",
+                              f"{r['gap5']:+.1f}", STATUS_WORD.get(ryg_of(r["gap5"]), "")])
+                dstyle += [("TEXTCOLOR", (1, ri), (4, ri), col), ("FONTNAME", (3, ri), (3, ri), "Helvetica-Bold")]
                 ri += 1
-        dt = Table(drows, colWidths=[3.9*inch, 0.6*inch, 0.6*inch, 0.6*inch], hAlign="LEFT")
+        dt = Table(drows, colWidths=[3.15*inch, 0.5*inch, 0.5*inch, 0.5*inch, 1.15*inch], hAlign="LEFT")
         dt.setStyle(TableStyle([("FONTSIZE", (0, 0), (-1, -1), 7.8), ("BOTTOMPADDING", (0, 0), (-1, -1), 2.5),
             ("TOPPADDING", (0, 0), (-1, -1), 2.5), ("TEXTCOLOR", (0, 0), (-1, 0), rc.HexColor("#555")),
             ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
-            ("LINEBELOW", (0, 0), (-1, -1), 0.3, rc.HexColor("#eee")), ("ALIGN", (1, 0), (-1, -1), "RIGHT")] + dstyle))
+            ("LINEBELOW", (0, 0), (-1, -1), 0.3, rc.HexColor("#eee")),
+            ("ALIGN", (1, 0), (3, -1), "RIGHT"), ("ALIGN", (4, 0), (4, -1), "LEFT")] + dstyle))
         story += [Paragraph("Dimension detail — by question (Gap = Support − Importance)", h3), dt]
     if d["quotes"]:
         story.append(Paragraph("In their words — what to fix", h3))
