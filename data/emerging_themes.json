@@ -1,0 +1,154 @@
+[
+  {
+    "size": 189,
+    "keywords": [
+      "calls",
+      "working",
+      "time",
+      "rooms",
+      "meetings",
+      "options",
+      "spaces",
+      "experience"
+    ],
+    "samples": [
+      "some of 2 may be 'not applicable'",
+      "More opportunities to meet with our executives. More networking.",
+      "More training Pharmacy Technician",
+      "Sometimes it is very load"
+    ]
+  },
+  {
+    "size": 56,
+    "keywords": [
+      "office",
+      "supplies",
+      "office supplies",
+      "able",
+      "time",
+      "going office",
+      "issues",
+      "need"
+    ],
+    "samples": [
+      "None. This office is very, very well run.",
+      "Office floor 10 does not have office supplies",
+      "Everything is slower at the office than at home.",
+      "Office supplies have become scarce"
+    ]
+  },
+  {
+    "size": 54,
+    "keywords": [
+      "work",
+      "home",
+      "office",
+      "working",
+      "working home",
+      "station",
+      "time",
+      "productive"
+    ],
+    "samples": [
+      "Priorize the work, not a policy that is not adherred to consistently accross the company.",
+      "There is none for my work",
+      "The microsoft copilot license has changed my life and revolutionized my productivity and the way I work.",
+      "It is LONELY - no one I work with is in the same office. NO ONE."
+    ]
+  },
+  {
+    "size": 39,
+    "keywords": [
+      "think",
+      "think time",
+      "time",
+      "survey",
+      "right",
+      "currently",
+      "limitations",
+      "help"
+    ],
+    "samples": [
+      "I can't think of anything.",
+      "Not that I can think of.",
+      "None that I can think of.",
+      "Not that I can think of."
+    ]
+  },
+  {
+    "size": 39,
+    "keywords": [
+      "pulsepoint",
+      "location",
+      "support",
+      "pulsepoint location",
+      "team",
+      "experience",
+      "work",
+      "overall"
+    ],
+    "samples": [
+      "The PulsePoint functions well and is maintained well.",
+      "PulsePoint is easy to use, however to perform my daily work tasks, it is not necessary for me to go to a PulsePoint location. Duties/meetings can be done virtually, and if not at a PulsePoint, the risk of disturbing other adjacent cubes is less likely.",
+      "Truly appreciative of the thought leadership and sustained support of the Miami PulsePoint location.",
+      "I think the PulsePoint space is very accomodating- well designed and planned."
+    ]
+  },
+  {
+    "size": 27,
+    "keywords": [
+      "pulse point",
+      "pulse",
+      "point",
+      "work",
+      "come",
+      "work pulse",
+      "team",
+      "come office"
+    ],
+    "samples": [
+      "No. Pulse point offers no benefit to my work.",
+      "associates at the pulse point do not flush toilets",
+      "I find I am less productive at a pulse point.",
+      "There is nothing that i do in the pulse point that i can't do remotely."
+    ]
+  },
+  {
+    "size": 24,
+    "keywords": [
+      "space",
+      "needed",
+      "availability",
+      "open",
+      "work space",
+      "open space",
+      "nice",
+      "meeting"
+    ],
+    "samples": [
+      "Dedicated work space needed",
+      "No. It's a very nice space.",
+      "- Reserving a workspace has never worked, or let me clarify, you can book a space easily, but when you arrive more than likely someone is sitting in that space so then you just do the same and hop to another space because you need to get to work and do not want to confront the person. Or the opposite also happens all spaces are booked and noone is there.",
+      "Space that my meeting wont bother others"
+    ]
+  },
+  {
+    "size": 19,
+    "keywords": [
+      "bar",
+      "tech bar",
+      "tech",
+      "helpful",
+      "technology bar",
+      "bar helpful",
+      "technology",
+      "having"
+    ],
+    "samples": [
+      "- Tech bar is nice to have",
+      "A tech bar will be helpful",
+      "Tech Bar staff are very helpful",
+      "Having a tech bar would be helpful"
+    ]
+  }
+]

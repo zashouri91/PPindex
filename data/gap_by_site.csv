@@ -1,0 +1,367 @@
+block,domain,item,site,mean_importance,mean_delivery,gap,n,classification
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,CA-Woodland Hills,4.227,2.954,1.273,392,Severely Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,CO-Denver,4.6,2.2,2.4,5,Severely Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,FL-Miami,4.51,3.54,0.97,100,Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,FL-Tampa,4.254,3.203,1.051,177,Severely Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,GA-Atlanta,4.232,3.728,0.504,276,Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,IL-Chicago-Bryn Mawr,3.75,3.375,0.375,24,Slightly Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,IL-Chicago-Willis Tower,4.205,3.239,0.966,88,Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,IN-Indianapolis,4.062,3.329,0.733,690,Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,NJ-Iselin,4.143,3.714,0.429,7,Slightly Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,NY-Latham,4.4,1.6,2.8,5,Severely Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,NY-New York (Penn1),4.297,3.386,0.911,101,Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,OH-Cincinnati,4.526,2.447,2.079,38,Severely Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,OH-Columbus-Lyra Dr,4.6,2.8,1.8,5,Severely Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,OH-Mason,4.268,3.145,1.123,358,Severely Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,VA-Norfolk,4.188,3.344,0.843,453,Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,VA-Richmond,4.157,3.345,0.812,293,Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,CA-Woodland Hills,3.702,3.02,0.681,392,Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,CO-Denver,4.6,2.2,2.4,5,Severely Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,FL-Miami,4.2,3.67,0.53,100,Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,FL-Tampa,3.87,3.316,0.554,177,Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,GA-Atlanta,3.736,3.699,0.036,276,Well-matched
+Work Types,Focused / Private Work,Tasks requiring discretion,IL-Chicago-Bryn Mawr,3.333,3.458,-0.125,24,Well-matched
+Work Types,Focused / Private Work,Tasks requiring discretion,IL-Chicago-Willis Tower,3.773,3.216,0.557,88,Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,IN-Indianapolis,3.7,3.239,0.461,690,Slightly Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,NJ-Iselin,3.714,3.286,0.429,7,Slightly Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,NY-Latham,4.2,1.8,2.4,5,Severely Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,NY-New York (Penn1),3.832,3.396,0.436,101,Slightly Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,OH-Cincinnati,3.974,2.553,1.421,38,Severely Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,OH-Columbus-Lyra Dr,3.6,2.8,0.8,5,Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,OH-Mason,3.813,3.156,0.656,358,Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,VA-Norfolk,3.722,3.397,0.325,453,Slightly Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,VA-Richmond,3.741,3.304,0.437,293,Slightly Under-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,CA-Woodland Hills,1.992,3.554,-1.561,392,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,CO-Denver,1.0,2.2,-1.2,5,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,FL-Miami,2.51,3.8,-1.29,100,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,FL-Tampa,2.141,3.531,-1.39,177,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,GA-Atlanta,2.33,4.069,-1.739,276,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,IL-Chicago-Bryn Mawr,1.625,3.375,-1.75,24,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,IL-Chicago-Willis Tower,1.841,3.841,-2.0,88,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,IN-Indianapolis,2.054,3.801,-1.748,690,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,NJ-Iselin,1.714,3.143,-1.429,7,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,NY-Latham,1.6,4.4,-2.8,5,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,NY-New York (Penn1),2.327,3.842,-1.515,101,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,OH-Cincinnati,1.605,3.079,-1.474,38,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,OH-Columbus-Lyra Dr,1.4,3.6,-2.2,5,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,OH-Mason,1.964,3.707,-1.743,358,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,VA-Norfolk,1.991,3.907,-1.916,453,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,VA-Richmond,1.925,3.775,-1.85,293,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,CA-Woodland Hills,2.474,3.26,-0.786,392,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,CO-Denver,3.6,2.0,1.6,5,Severely Under-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,FL-Miami,2.97,3.57,-0.6,100,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,FL-Tampa,2.774,3.379,-0.605,177,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,GA-Atlanta,2.754,3.833,-1.08,276,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,IL-Chicago-Bryn Mawr,2.208,3.125,-0.917,24,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,IL-Chicago-Willis Tower,2.443,3.386,-0.943,88,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,IN-Indianapolis,2.551,3.545,-0.994,690,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,NJ-Iselin,2.857,3.143,-0.286,7,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,NY-Latham,2.0,4.0,-2.0,5,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,NY-New York (Penn1),2.693,3.723,-1.03,101,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,OH-Cincinnati,1.974,2.921,-0.947,38,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,OH-Columbus-Lyra Dr,2.8,3.4,-0.6,5,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,OH-Mason,2.567,3.517,-0.95,358,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,VA-Norfolk,2.576,3.558,-0.982,453,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,VA-Richmond,2.488,3.468,-0.98,293,Over-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,CA-Woodland Hills,2.801,3.214,-0.413,392,Over-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,CO-Denver,3.4,2.0,1.4,5,Severely Under-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,FL-Miami,3.3,3.59,-0.29,100,Over-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,FL-Tampa,2.989,3.328,-0.339,177,Over-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,GA-Atlanta,3.051,3.79,-0.739,276,Over-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,IL-Chicago-Bryn Mawr,2.417,2.917,-0.5,24,Over-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,IL-Chicago-Willis Tower,2.989,3.375,-0.386,88,Over-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,IN-Indianapolis,2.806,3.467,-0.661,690,Over-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,NJ-Iselin,3.0,3.571,-0.571,7,Over-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,NY-Latham,2.4,3.6,-1.2,5,Over-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,NY-New York (Penn1),3.04,3.653,-0.614,101,Over-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,OH-Cincinnati,2.316,2.737,-0.421,38,Over-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,OH-Columbus-Lyra Dr,3.2,3.2,0.0,5,Well-matched
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,OH-Mason,2.827,3.383,-0.556,358,Over-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,VA-Norfolk,2.927,3.523,-0.596,453,Over-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,VA-Richmond,2.771,3.454,-0.683,293,Over-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,CA-Woodland Hills,3.798,3.411,0.388,392,Slightly Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,CO-Denver,4.2,2.4,1.8,5,Severely Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,FL-Miami,4.22,3.81,0.41,100,Slightly Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,FL-Tampa,3.966,3.565,0.401,177,Slightly Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,GA-Atlanta,4.13,3.953,0.178,276,Slightly Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,IL-Chicago-Bryn Mawr,3.792,3.333,0.458,24,Slightly Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,IL-Chicago-Willis Tower,4.33,3.5,0.83,88,Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,IN-Indianapolis,3.994,3.623,0.371,690,Slightly Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,NJ-Iselin,4.143,3.429,0.714,7,Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,NY-Latham,4.8,3.2,1.6,5,Severely Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,NY-New York (Penn1),4.05,3.634,0.416,101,Slightly Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,OH-Cincinnati,4.0,2.816,1.184,38,Severely Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,OH-Columbus-Lyra Dr,4.4,3.2,1.2,5,Severely Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,OH-Mason,4.042,3.592,0.45,358,Slightly Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,VA-Norfolk,4.018,3.773,0.245,453,Slightly Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,VA-Richmond,4.02,3.645,0.375,293,Slightly Under-supported
+Work Types,Focused / Private Work,"Learning, training, or skill development",CA-Woodland Hills,3.12,3.209,-0.089,392,Well-matched
+Work Types,Focused / Private Work,"Learning, training, or skill development",CO-Denver,3.2,1.8,1.4,5,Severely Under-supported
+Work Types,Focused / Private Work,"Learning, training, or skill development",FL-Miami,3.66,3.61,0.05,100,Well-matched
+Work Types,Focused / Private Work,"Learning, training, or skill development",FL-Tampa,3.339,3.424,-0.085,177,Well-matched
+Work Types,Focused / Private Work,"Learning, training, or skill development",GA-Atlanta,3.605,3.815,-0.21,276,Over-supported
+Work Types,Focused / Private Work,"Learning, training, or skill development",IL-Chicago-Bryn Mawr,2.917,3.042,-0.125,24,Well-matched
+Work Types,Focused / Private Work,"Learning, training, or skill development",IL-Chicago-Willis Tower,3.284,3.375,-0.091,88,Well-matched
+Work Types,Focused / Private Work,"Learning, training, or skill development",IN-Indianapolis,3.181,3.559,-0.378,690,Over-supported
+Work Types,Focused / Private Work,"Learning, training, or skill development",NJ-Iselin,2.857,3.429,-0.571,7,Over-supported
+Work Types,Focused / Private Work,"Learning, training, or skill development",NY-Latham,2.8,2.6,0.2,5,Slightly Under-supported
+Work Types,Focused / Private Work,"Learning, training, or skill development",NY-New York (Penn1),3.337,3.485,-0.149,101,Well-matched
+Work Types,Focused / Private Work,"Learning, training, or skill development",OH-Cincinnati,2.632,2.711,-0.079,38,Well-matched
+Work Types,Focused / Private Work,"Learning, training, or skill development",OH-Columbus-Lyra Dr,3.6,3.0,0.6,5,Under-supported
+Work Types,Focused / Private Work,"Learning, training, or skill development",OH-Mason,3.173,3.458,-0.285,358,Over-supported
+Work Types,Focused / Private Work,"Learning, training, or skill development",VA-Norfolk,3.26,3.554,-0.294,453,Over-supported
+Work Types,Focused / Private Work,"Learning, training, or skill development",VA-Richmond,3.154,3.451,-0.297,293,Over-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,CA-Woodland Hills,4.212,3.158,1.054,392,Severely Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,CO-Denver,4.4,2.8,1.6,5,Severely Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,FL-Miami,4.41,3.74,0.67,100,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,FL-Tampa,4.243,3.367,0.876,177,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,GA-Atlanta,4.308,3.681,0.627,276,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,IL-Chicago-Bryn Mawr,3.667,3.5,0.167,24,Slightly Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,IL-Chicago-Willis Tower,4.295,3.398,0.898,88,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,IN-Indianapolis,4.146,3.428,0.719,690,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,NJ-Iselin,4.571,3.571,1.0,7,Severely Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,NY-Latham,4.8,1.6,3.2,5,Severely Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,NY-New York (Penn1),4.317,3.475,0.842,101,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,OH-Cincinnati,4.289,2.421,1.868,38,Severely Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,OH-Columbus-Lyra Dr,4.2,2.2,2.0,5,Severely Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,OH-Mason,4.388,3.159,1.229,358,Severely Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,VA-Norfolk,4.26,3.395,0.865,453,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,VA-Richmond,4.239,3.331,0.908,293,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,CA-Woodland Hills,3.977,3.171,0.806,392,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,CO-Denver,4.6,2.8,1.8,5,Severely Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,FL-Miami,4.3,3.76,0.54,100,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,FL-Tampa,4.175,3.35,0.825,177,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,GA-Atlanta,4.051,3.638,0.413,276,Slightly Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,IL-Chicago-Bryn Mawr,3.333,3.542,-0.208,24,Over-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,IL-Chicago-Willis Tower,3.966,3.17,0.795,88,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,IN-Indianapolis,4.0,3.19,0.81,690,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,NJ-Iselin,3.714,3.286,0.429,7,Slightly Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,NY-Latham,4.8,1.8,3.0,5,Severely Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,NY-New York (Penn1),4.228,3.386,0.842,101,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,OH-Cincinnati,4.079,2.395,1.684,38,Severely Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,OH-Columbus-Lyra Dr,3.4,2.6,0.8,5,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,OH-Mason,4.075,3.126,0.95,358,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,VA-Norfolk,3.991,3.331,0.66,453,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,VA-Richmond,4.01,3.225,0.785,293,Under-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),CA-Woodland Hills,3.048,3.656,-0.607,392,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),CO-Denver,3.4,3.6,-0.2,5,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),FL-Miami,3.49,3.9,-0.41,100,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),FL-Tampa,3.153,3.684,-0.531,177,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),GA-Atlanta,3.486,4.112,-0.627,276,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),IL-Chicago-Bryn Mawr,2.333,3.5,-1.167,24,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),IL-Chicago-Willis Tower,2.898,3.773,-0.875,88,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),IN-Indianapolis,3.157,3.545,-0.388,690,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),NJ-Iselin,3.286,3.429,-0.143,7,Well-matched
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),NY-Latham,2.4,3.6,-1.2,5,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),NY-New York (Penn1),3.604,3.832,-0.228,101,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),OH-Cincinnati,2.605,3.132,-0.526,38,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),OH-Columbus-Lyra Dr,2.6,3.0,-0.4,5,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),OH-Mason,2.955,3.684,-0.729,358,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),VA-Norfolk,3.075,3.706,-0.631,453,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),VA-Richmond,3.038,3.853,-0.816,293,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",CA-Woodland Hills,2.551,3.821,-1.27,392,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",CO-Denver,2.2,3.4,-1.2,5,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",FL-Miami,3.11,3.99,-0.88,100,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",FL-Tampa,2.638,3.864,-1.226,177,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",GA-Atlanta,3.04,4.228,-1.188,276,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",IL-Chicago-Bryn Mawr,2.083,3.5,-1.417,24,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",IL-Chicago-Willis Tower,2.614,4.114,-1.5,88,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",IN-Indianapolis,2.599,3.904,-1.306,690,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",NJ-Iselin,2.0,3.857,-1.857,7,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",NY-Latham,2.8,3.2,-0.4,5,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",NY-New York (Penn1),2.97,4.149,-1.178,101,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",OH-Cincinnati,2.053,3.421,-1.368,38,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",OH-Columbus-Lyra Dr,1.8,3.8,-2.0,5,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",OH-Mason,2.506,3.922,-1.416,358,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",VA-Norfolk,2.611,3.874,-1.263,453,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",VA-Richmond,2.614,3.894,-1.28,293,Over-supported
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),CA-Woodland Hills,3.921,3.658,0.263,392,Slightly Under-supported
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),CO-Denver,3.8,4.0,-0.2,5,Over-supported
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),FL-Miami,4.06,3.91,0.15,100,Slightly Under-supported
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),FL-Tampa,3.814,3.938,-0.124,177,Well-matched
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),GA-Atlanta,4.083,4.065,0.018,276,Well-matched
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),IL-Chicago-Bryn Mawr,3.708,3.375,0.333,24,Slightly Under-supported
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),IL-Chicago-Willis Tower,3.864,3.886,-0.023,88,Well-matched
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),IN-Indianapolis,3.772,3.612,0.161,690,Slightly Under-supported
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),NJ-Iselin,3.571,3.714,-0.143,7,Well-matched
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),NY-Latham,4.4,3.0,1.4,5,Severely Under-supported
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),NY-New York (Penn1),4.139,4.129,0.01,101,Well-matched
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),OH-Cincinnati,3.553,3.211,0.342,38,Slightly Under-supported
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),OH-Columbus-Lyra Dr,3.6,3.6,0.0,5,Well-matched
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),OH-Mason,3.863,3.86,0.003,358,Well-matched
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),VA-Norfolk,3.887,3.79,0.097,453,Well-matched
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),VA-Richmond,3.945,3.686,0.259,293,Slightly Under-supported
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",CA-Woodland Hills,3.064,3.615,-0.551,392,Over-supported
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",FL-Miami,3.61,3.63,-0.02,100,Well-matched
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",FL-Tampa,3.107,3.638,-0.531,177,Over-supported
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",GA-Atlanta,3.478,3.96,-0.482,276,Over-supported
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",IL-Chicago-Bryn Mawr,2.917,2.917,0.0,24,Well-matched
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",IL-Chicago-Willis Tower,3.045,3.75,-0.705,88,Over-supported
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",IN-Indianapolis,3.078,3.543,-0.465,690,Over-supported
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",NJ-Iselin,2.571,3.143,-0.571,7,Over-supported
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",NY-New York (Penn1),3.248,3.901,-0.653,101,Over-supported
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",OH-Columbus-Lyra Dr,3.0,3.6,-0.6,5,Over-supported
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",OH-Mason,3.039,3.807,-0.768,358,Over-supported
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",VA-Norfolk,3.26,3.578,-0.318,453,Over-supported
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",VA-Richmond,3.082,3.423,-0.341,293,Over-supported
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),CA-Woodland Hills,3.737,3.689,0.048,392,Well-matched
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),CO-Denver,3.6,3.4,0.2,5,Slightly Under-supported
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),FL-Miami,4.04,3.88,0.16,100,Slightly Under-supported
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),FL-Tampa,3.791,3.881,-0.09,177,Well-matched
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),GA-Atlanta,4.058,4.127,-0.069,276,Well-matched
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),IL-Chicago-Bryn Mawr,3.333,3.75,-0.417,24,Over-supported
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),IL-Chicago-Willis Tower,3.705,3.909,-0.205,88,Over-supported
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),IN-Indianapolis,3.654,3.657,-0.003,690,Well-matched
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),NJ-Iselin,3.714,3.571,0.143,7,Well-matched
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),NY-Latham,4.4,3.2,1.2,5,Severely Under-supported
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),NY-New York (Penn1),4.02,4.158,-0.139,101,Well-matched
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),OH-Cincinnati,3.553,3.447,0.105,38,Well-matched
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),OH-Columbus-Lyra Dr,4.2,3.8,0.4,5,Slightly Under-supported
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),OH-Mason,3.712,3.902,-0.19,358,Over-supported
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),VA-Norfolk,3.845,3.764,0.082,453,Well-matched
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),VA-Richmond,3.761,3.751,0.01,293,Well-matched
+Physical Space,Physical Environment,Thermal / temperature comfort,CA-Woodland Hills,3.921,3.472,0.449,392,Slightly Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,CO-Denver,4.0,2.8,1.2,5,Severely Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,FL-Miami,4.18,3.54,0.64,100,Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,FL-Tampa,4.011,3.463,0.548,177,Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,GA-Atlanta,4.185,3.833,0.351,276,Slightly Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,IL-Chicago-Bryn Mawr,3.5,3.458,0.042,24,Well-matched
+Physical Space,Physical Environment,Thermal / temperature comfort,IL-Chicago-Willis Tower,3.909,3.614,0.295,88,Slightly Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,IN-Indianapolis,3.89,3.254,0.636,690,Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,NJ-Iselin,4.0,3.429,0.571,7,Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,NY-Latham,4.4,2.4,2.0,5,Severely Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,NY-New York (Penn1),4.198,3.485,0.713,101,Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,OH-Cincinnati,3.553,3.289,0.263,38,Slightly Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,OH-Columbus-Lyra Dr,4.4,2.8,1.6,5,Severely Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,OH-Mason,3.969,3.561,0.408,358,Slightly Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,VA-Norfolk,4.015,3.371,0.645,453,Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,VA-Richmond,3.969,3.464,0.505,293,Under-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),CA-Woodland Hills,3.503,3.661,-0.158,392,Over-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),CO-Denver,3.6,3.8,-0.2,5,Over-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),FL-Miami,3.78,4.01,-0.23,100,Over-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),FL-Tampa,3.599,3.881,-0.282,177,Over-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),GA-Atlanta,3.888,4.051,-0.163,276,Over-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),IL-Chicago-Bryn Mawr,2.792,3.833,-1.042,24,Over-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),IL-Chicago-Willis Tower,3.159,4.011,-0.852,88,Over-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),IN-Indianapolis,3.516,3.557,-0.041,690,Well-matched
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),NJ-Iselin,3.429,4.286,-0.857,7,Over-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),NY-Latham,3.8,3.6,0.2,5,Slightly Under-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),NY-New York (Penn1),3.693,3.97,-0.277,101,Over-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),OH-Cincinnati,3.263,3.474,-0.211,38,Over-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),OH-Columbus-Lyra Dr,3.4,4.0,-0.6,5,Over-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),OH-Mason,3.492,3.86,-0.369,358,Over-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),VA-Norfolk,3.534,3.865,-0.331,453,Over-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),VA-Richmond,3.543,3.71,-0.167,293,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,CA-Woodland Hills,2.88,4.253,-1.372,392,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,CO-Denver,2.6,3.4,-0.8,5,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,FL-Miami,3.12,4.19,-1.07,100,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,FL-Tampa,2.751,4.13,-1.379,177,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,GA-Atlanta,3.257,4.507,-1.25,276,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,IL-Chicago-Bryn Mawr,2.083,3.833,-1.75,24,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,IL-Chicago-Willis Tower,2.727,4.557,-1.83,88,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,IN-Indianapolis,2.794,4.346,-1.552,690,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,NJ-Iselin,2.857,4.286,-1.429,7,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,NY-Latham,1.6,2.4,-0.8,5,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,NY-New York (Penn1),3.129,4.416,-1.287,101,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,OH-Cincinnati,2.421,4.079,-1.658,38,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,OH-Columbus-Lyra Dr,3.4,4.8,-1.4,5,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,OH-Mason,2.76,4.411,-1.651,358,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,VA-Norfolk,2.998,4.389,-1.391,453,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,VA-Richmond,2.778,4.078,-1.3,293,Over-supported
+Workplace Services,Amenities & Services,Ability to get help resolving workplace or technology issues while on site,CA-Woodland Hills,3.969,4.066,-0.097,392,Well-matched
+Workplace Services,Amenities & Services,Ability to get help resolving workplace or technology issues while on site,CO-Denver,4.0,2.6,1.4,5,Severely Under-supported
+Workplace Services,Amenities & Services,Ability to get help resolving workplace or technology issues while on site,GA-Atlanta,4.272,4.467,-0.196,276,Over-supported
+Workplace Services,Amenities & Services,Ability to get help resolving workplace or technology issues while on site,IN-Indianapolis,3.868,3.971,-0.103,690,Well-matched
+Workplace Services,Amenities & Services,Ability to get help resolving workplace or technology issues while on site,NY-New York (Penn1),4.01,4.109,-0.099,101,Well-matched
+Workplace Services,Amenities & Services,Ability to get help resolving workplace or technology issues while on site,OH-Mason,3.955,4.159,-0.204,358,Over-supported
+Workplace Services,Amenities & Services,Ability to get help resolving workplace or technology issues while on site,VA-Norfolk,4.075,4.415,-0.34,453,Over-supported
+Workplace Services,Amenities & Services,Ability to get help resolving workplace or technology issues while on site,VA-Richmond,3.788,3.867,-0.078,293,Well-matched
+Workplace Services,Amenities & Services,Support from a community manager,CA-Woodland Hills,2.939,3.814,-0.875,392,Over-supported
+Workplace Services,Amenities & Services,Support from a community manager,CO-Denver,2.8,3.6,-0.8,5,Over-supported
+Workplace Services,Amenities & Services,Support from a community manager,GA-Atlanta,3.377,4.21,-0.833,276,Over-supported
+Workplace Services,Amenities & Services,Support from a community manager,IL-Chicago-Willis Tower,3.136,4.602,-1.466,88,Over-supported
+Workplace Services,Amenities & Services,Support from a community manager,IN-Indianapolis,2.797,3.875,-1.078,690,Over-supported
+Workplace Services,Amenities & Services,Support from a community manager,NY-New York (Penn1),3.386,4.248,-0.861,101,Over-supported
+Workplace Services,Amenities & Services,Support from a community manager,OH-Mason,2.88,3.927,-1.047,358,Over-supported
+Workplace Services,Amenities & Services,Support from a community manager,VA-Norfolk,2.958,3.918,-0.96,453,Over-supported
+Workplace Services,Amenities & Services,Support from a community manager,VA-Richmond,2.959,3.942,-0.983,293,Over-supported
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,CA-Woodland Hills,3.01,3.286,-0.276,392,Over-supported
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,CO-Denver,3.0,2.8,0.2,5,Slightly Under-supported
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,FL-Miami,3.22,3.37,-0.15,100,Over-supported
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,FL-Tampa,3.09,3.203,-0.113,177,Well-matched
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,GA-Atlanta,3.576,3.808,-0.232,276,Over-supported
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,IL-Chicago-Bryn Mawr,2.708,3.417,-0.708,24,Over-supported
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,IL-Chicago-Willis Tower,3.432,3.341,0.091,88,Well-matched
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,IN-Indianapolis,3.359,3.836,-0.477,690,Over-supported
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,NJ-Iselin,3.143,3.286,-0.143,7,Well-matched
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,NY-Latham,3.6,2.0,1.6,5,Severely Under-supported
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,NY-New York (Penn1),3.505,3.396,0.109,101,Well-matched
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,OH-Cincinnati,2.5,2.974,-0.474,38,Over-supported
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,OH-Columbus-Lyra Dr,3.4,3.0,0.4,5,Slightly Under-supported
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,OH-Mason,3.117,3.215,-0.098,358,Well-matched
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,VA-Norfolk,3.386,3.241,0.146,453,Well-matched
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,VA-Richmond,3.331,2.816,0.515,293,Under-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",CA-Woodland Hills,2.964,3.51,-0.546,392,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",CO-Denver,2.6,3.8,-1.2,5,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",FL-Miami,3.24,3.6,-0.36,100,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",FL-Tampa,3.011,3.734,-0.723,177,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",GA-Atlanta,3.424,3.895,-0.471,276,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",IL-Chicago-Bryn Mawr,2.542,3.375,-0.833,24,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",IL-Chicago-Willis Tower,2.989,4.0,-1.011,88,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",IN-Indianapolis,2.901,3.809,-0.907,690,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",NJ-Iselin,2.714,3.571,-0.857,7,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",NY-Latham,2.8,2.8,0.0,5,Well-matched
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",NY-New York (Penn1),3.277,3.812,-0.535,101,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",OH-Cincinnati,2.316,3.368,-1.053,38,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",OH-Columbus-Lyra Dr,3.2,3.4,-0.2,5,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",OH-Mason,2.966,3.902,-0.936,358,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",VA-Norfolk,3.033,3.801,-0.768,453,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",VA-Richmond,2.956,3.58,-0.625,293,Over-supported
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,CA-Woodland Hills,4.079,4.247,-0.168,392,Over-supported
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,CO-Denver,3.4,4.2,-0.8,5,Over-supported
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,FL-Miami,4.18,4.24,-0.06,100,Well-matched
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,FL-Tampa,4.13,4.316,-0.186,177,Over-supported
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,GA-Atlanta,4.33,4.583,-0.254,276,Over-supported
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,IL-Chicago-Bryn Mawr,3.333,3.792,-0.458,24,Over-supported
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,IL-Chicago-Willis Tower,4.023,4.489,-0.466,88,Over-supported
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,IN-Indianapolis,4.07,4.301,-0.232,690,Over-supported
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,NJ-Iselin,4.714,3.714,1.0,7,Severely Under-supported
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,NY-Latham,4.6,3.4,1.2,5,Severely Under-supported
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,NY-New York (Penn1),4.218,4.406,-0.188,101,Over-supported
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,OH-Cincinnati,3.737,4.132,-0.395,38,Over-supported
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,OH-Columbus-Lyra Dr,4.6,3.6,1.0,5,Severely Under-supported
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,OH-Mason,4.036,4.257,-0.221,358,Over-supported
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,VA-Norfolk,4.21,4.113,0.097,453,Well-matched
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,VA-Richmond,4.212,3.918,0.294,293,Slightly Under-supported
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",CA-Woodland Hills,4.156,4.214,-0.059,392,Well-matched
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",CO-Denver,3.6,2.8,0.8,5,Under-supported
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",FL-Miami,4.3,4.15,0.15,100,Slightly Under-supported
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",FL-Tampa,4.203,4.305,-0.102,177,Well-matched
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",GA-Atlanta,4.46,4.529,-0.069,276,Well-matched
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",IL-Chicago-Bryn Mawr,3.833,4.042,-0.208,24,Over-supported
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",IL-Chicago-Willis Tower,4.318,4.443,-0.125,88,Well-matched
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",IN-Indianapolis,4.214,4.352,-0.138,690,Well-matched
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",NJ-Iselin,4.571,4.286,0.286,7,Slightly Under-supported
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",NY-Latham,5.0,2.6,2.4,5,Severely Under-supported
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",NY-New York (Penn1),4.386,4.406,-0.02,101,Well-matched
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",OH-Cincinnati,3.737,4.053,-0.316,38,Over-supported
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",OH-Columbus-Lyra Dr,4.6,4.2,0.4,5,Slightly Under-supported
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",OH-Mason,4.103,4.307,-0.204,358,Over-supported
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",VA-Norfolk,4.351,4.097,0.254,453,Slightly Under-supported
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",VA-Richmond,4.235,3.724,0.512,293,Under-supported
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",CA-Woodland Hills,3.839,3.939,-0.099,392,Well-matched
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",CO-Denver,4.0,4.0,0.0,5,Well-matched
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",FL-Miami,4.05,4.03,0.02,100,Well-matched
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",FL-Tampa,3.921,4.136,-0.215,177,Over-supported
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",GA-Atlanta,4.246,4.409,-0.163,276,Over-supported
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",IL-Chicago-Bryn Mawr,3.417,3.708,-0.292,24,Over-supported
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",IL-Chicago-Willis Tower,3.966,4.25,-0.284,88,Over-supported
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",IN-Indianapolis,3.917,4.149,-0.232,690,Over-supported
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",NJ-Iselin,4.0,4.0,0.0,7,Well-matched
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",NY-Latham,4.4,3.4,1.0,5,Severely Under-supported
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",NY-New York (Penn1),4.119,4.188,-0.069,101,Well-matched
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",OH-Cincinnati,3.5,3.789,-0.289,38,Over-supported
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",OH-Columbus-Lyra Dr,4.4,3.8,0.6,5,Under-supported
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",OH-Mason,3.765,4.126,-0.36,358,Over-supported
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",VA-Norfolk,3.989,4.064,-0.075,453,Well-matched
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",VA-Richmond,3.887,3.952,-0.065,293,Well-matched

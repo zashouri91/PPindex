@@ -1,0 +1,25 @@
+block,domain,item,mean_importance,mean_delivery,gap,n,classification
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,4.196,3.284,0.912,3037,Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,3.76,3.286,0.474,3037,Slightly Under-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,2.045,3.759,-1.714,3037,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,2.582,3.5,-0.917,3037,Over-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,2.881,3.438,-0.557,3037,Over-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,4.011,3.63,0.381,3037,Slightly Under-supported
+Work Types,Focused / Private Work,"Learning, training, or skill development",3.244,3.477,-0.233,3037,Over-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,4.249,3.361,0.888,3037,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,4.033,3.271,0.762,3037,Under-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),3.125,3.711,-0.585,3037,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",2.642,3.921,-1.28,3037,Over-supported
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),3.887,3.767,0.12,3037,Well-matched
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",3.159,3.634,-0.475,2982,Over-supported
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),3.779,3.798,-0.019,3037,Well-matched
+Physical Space,Physical Environment,Thermal / temperature comfort,3.977,3.448,0.528,3037,Under-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),3.549,3.778,-0.229,3037,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,2.875,4.311,-1.437,3037,Over-supported
+Workplace Services,Amenities & Services,Ability to get help resolving workplace or technology issues while on site,3.972,4.134,-0.162,2568,Over-supported
+Workplace Services,Amenities & Services,Support from a community manager,2.968,3.96,-0.992,2656,Over-supported
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,3.276,3.395,-0.119,3025,Well-matched
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",3.009,3.747,-0.738,3037,Over-supported
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,4.127,4.246,-0.119,3037,Well-matched
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",4.241,4.227,0.015,3037,Well-matched
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",3.932,4.097,-0.165,3037,Over-supported
