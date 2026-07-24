@@ -340,6 +340,21 @@ def _b64png(fig):
     plt.close(fig)
     return base64.b64encode(buf.getvalue()).decode()
 
+# RYG colors matching the official Tableau legend
+RYG_HEX = {"Under Supported": "#C0392B", "Target": "#2E7D32",
+           "Over Supported": "#E67E22", "Agreement-only": "#9AA0A6"}
+DIM_ORDER = {"Work Activity": 0, "Physical Feature": 1, "Service Level": 2, "Digital & Tech": 3}
+
+def ryg_of(gap5):
+    """RYG status from Support − Importance (1–5), per the Tableau spec thresholds."""
+    if pd.isna(gap5):
+        return "Agreement-only"
+    if gap5 < -0.049:
+        return "Under Supported"
+    if gap5 > 1.5:
+        return "Over Supported"
+    return "Target"
+
 @st.cache_data(show_spinner=False)
 def site_report_data(site, completers_flag):
     """All computed pieces for a site's report (cached per site+filter)."""
@@ -366,11 +381,27 @@ def site_report_data(site, completers_flag):
     strengths = [(t, int(tvol[t]), float(1 - tsent.get(t, 1))) for t in tvol.index
                  if tvol[t] >= 5 and tsent.get(t, 1) <= 0.30][:5]
     data["fixes"], data["strengths"] = fixes, strengths
-    # official Friction scores (Tableau spec) — only exist for the 10 in-scope sites
+    # official scores (Tableau spec) — only exist for the 10 in-scope sites
     ss = scores_site[scores_site["site"] == site].dropna(subset=["friction"]) if not scores_site.empty else pd.DataFrame()
-    data["under"] = ss.sort_values("friction", ascending=False).head(4) if len(ss) else pd.DataFrame()
+    imp_items = ss[ss["mean_importance"].notna()] if len(ss) else pd.DataFrame()  # importance-based dims only
+    data["under"] = imp_items.sort_values("friction", ascending=False).head(4) if len(imp_items) else pd.DataFrame()
     data["over"] = ss[ss["ryg"] == "Over Supported"].head(2) if len(ss) else pd.DataFrame()
     data["in_scope"] = len(ss) > 0
+    # Importance vs Support DETAIL (1–5, Gap = Support − Importance) — the Tableau view
+    det = ss[ss["mean_importance"].notna()].copy() if len(ss) else pd.DataFrame()
+    if len(det):
+        det["gap5"] = (det["mean_support"] - det["mean_importance"]).round(1) + 0.0  # kill -0.0
+        det["_o"] = det["dimension"].map(DIM_ORDER).fillna(9)
+        det = det.sort_values(["_o", "gap5"], ascending=[True, False])
+        dsum = det.groupby("dimension", sort=False).agg(
+            mean_importance=("mean_importance", "mean"),
+            mean_support=("mean_support", "mean")).reset_index()
+        dsum["gap5"] = (dsum["mean_support"] - dsum["mean_importance"]).round(1) + 0.0
+        dsum["_o"] = dsum["dimension"].map(DIM_ORDER).fillna(9)
+        dsum = dsum.sort_values("_o")
+        data["detail"], data["dim_summary"] = det, dsum
+    else:
+        data["detail"], data["dim_summary"] = pd.DataFrame(), pd.DataFrame()
     # benchmark vs org: theme rate lift
     org_real = comments[~comments["eff_junk"]]
     org_tot = len(org_real)
@@ -469,14 +500,26 @@ def build_site_report(site):
         f"<tr><td>{_html.escape(r['key'])}</td><td>{int(r['volume'])}</td>"
         f"<td>{int(r['neg_share']*100)}%</td><td>{int(round(r['Priority']))}</td></tr>"
         for _, r in P.iterrows()) or "<tr><td colspan='4'>Not enough tagged comments to rank.</td></tr>"
-    def _gap_row(r):
-        comp = "" if pd.isna(r["support_100"]) else f"{r['support_100']:.0f}"
-        fpct = "" if pd.isna(r["friction_pct"]) else f"{int(r['friction_pct'])}%"
-        return (f"<tr><td>{_html.escape(str(r['item']))}</td><td>{comp}</td>"
-                f"<td>{r['friction']:.0f}</td><td>{fpct}</td></tr>")
-    gap_rows = "".join(_gap_row(r) for _, r in d["under"].iterrows()) or (
-        "<tr><td colspan='4'>Not one of the 10 in-scope sites — no official scores. "
-        "The comment analysis above still applies.</td></tr>")
+    def _c(v):
+        return RYG_HEX.get(ryg_of(v), "#333")
+    dsum_rows = "".join(
+        f"<tr><td>{_html.escape(r['dimension'])}</td><td>{r['mean_importance']:.1f}</td>"
+        f"<td>{r['mean_support']:.1f}</td>"
+        f"<td style='color:{_c(r['gap5'])};font-weight:700'>{r['gap5']:+.1f}</td></tr>"
+        for _, r in d["dim_summary"].iterrows()) or "<tr><td colspan='4'>Not an in-scope site.</td></tr>"
+    if len(d["detail"]):
+        detail_rows = ""
+        for dim in d["detail"]["dimension"].drop_duplicates():
+            detail_rows += f"<tr class='dh'><td colspan='4'>{_html.escape(dim)}</td></tr>"
+            for _, r in d["detail"][d["detail"]["dimension"] == dim].iterrows():
+                col = _c(r["gap5"])
+                detail_rows += (f"<tr><td class='tp'>{_html.escape(str(r['item']))}</td>"
+                                f"<td style='color:{col}'>{r['mean_importance']:.1f}</td>"
+                                f"<td style='color:{col}'>{r['mean_support']:.1f}</td>"
+                                f"<td style='color:{col};font-weight:700'>{r['gap5']:+.1f}</td></tr>")
+    else:
+        detail_rows = ("<tr><td colspan='4'>Not one of the 10 in-scope sites — no official "
+                       "scores. The comment analysis above still applies.</td></tr>")
     fix_rows = "".join(f"<li><b>{_html.escape(t)}</b> — {v} comments, {int(ns*100)}% negative</li>"
                        for t, v, ns in d["fixes"]) or "<li>No clearly negative themes.</li>"
     str_rows = "".join(f"<li><b>{_html.escape(t)}</b> — {v} comments, {int(ps*100)}% positive</li>"
@@ -519,6 +562,9 @@ def build_site_report(site):
  blockquote{{margin:7px 0;padding:8px 12px;background:#fafafa;border-left:3px solid #D1495B;font-size:13px;font-style:italic}}
  blockquote.pos{{border-left-color:#2E9E6B}}
  cite{{display:block;font-style:normal;color:#888;font-size:11px;margin-top:4px}}
+ tr.dh td{{background:#eef1f7;font-weight:700;color:#2b3a67;text-align:left}}
+ table.detail td.tp{{max-width:430px}}
+ .lgd{{font-size:11px;color:#888;margin-top:5px}}
  .foot{{color:#aaa;font-size:11px;margin-top:24px}}
 </style></head><body>
 <h1>PulsePoint Experience — {_html.escape(site)}</h1>
@@ -530,8 +576,13 @@ def build_site_report(site):
 <div class="two"><div>
 <h3>⚠️ What to fix</h3><ul>{fix_rows}</ul></div><div>
 <h3>✅ What's working</h3><ul>{str_rows}</ul></div></div>
-<h3>Highest-Friction items (Tableau spec)</h3>
-<table><tr><th>Item</th><th>composite</th><th>friction</th><th>% w/ friction</th></tr>{gap_rows}</table>
+<h3>Dimension summary — Importance vs Support (1–5)</h3>
+<table><tr><th>Dimension</th><th>Importance</th><th>Support</th><th>Gap</th></tr>{dsum_rows}</table>
+<h3>Dimension detail — by question</h3>
+<table class="detail"><tr><th>Dimension topic (question)</th><th>Importance</th><th>Support</th><th>Gap</th></tr>{detail_rows}</table>
+<p class="lgd">Gap = Support − Importance (1–5). <span style="color:#C0392B">■</span> Under Supported ·
+<span style="color:#2E7D32">■</span> Target · <span style="color:#E67E22">■</span> Over Supported.
+Digital &amp; Tech (Agreement-only) is excluded from this Importance/Support view.</p>
 <div class="two"><div>
 <h3>Vs. org — theme rates</h3>
 <table><tr><th>Theme</th><th>site</th><th>org</th><th>lift</th></tr>{bench_rows}</table></div><div>
@@ -594,14 +645,35 @@ def build_site_pdf(site, completers_flag):
               tbl(["Category", "# comments", "% neg", "priority"],
                   [[r["key"], int(r["volume"]), f"{int(r['neg_share']*100)}%", int(round(r["Priority"]))]
                    for _, r in d["P"].iterrows()], [2.6*inch, 1.1*inch, 0.9*inch, 0.9*inch])]
-    if len(d["under"]):
-        story += [Paragraph("Highest-Friction items (Tableau spec)", h3),
-                  tbl(["Item", "composite", "friction", "% w/ friction"],
-                      [[str(r["item"])[:56],
-                        "" if pd.isna(r["support_100"]) else f"{r['support_100']:.0f}",
-                        f"{r['friction']:.0f}",
-                        "" if pd.isna(r["friction_pct"]) else f"{int(r['friction_pct'])}%"]
-                       for _, r in d["under"].iterrows()], [3.4*inch, 0.9*inch, 0.8*inch, 0.9*inch])]
+    if len(d["dim_summary"]):
+        srows, sstyle = [["Dimension", "Importance", "Support", "Gap"]], []
+        for i, (_, r) in enumerate(d["dim_summary"].iterrows(), 1):
+            srows.append([r["dimension"], f"{r['mean_importance']:.1f}", f"{r['mean_support']:.1f}", f"{r['gap5']:+.1f}"])
+            sstyle.append(("TEXTCOLOR", (3, i), (3, i), rc.HexColor(RYG_HEX[ryg_of(r["gap5"])])))
+        st_ = Table(srows, colWidths=[2.6*inch, 1.1*inch, 0.9*inch, 0.8*inch], hAlign="LEFT")
+        st_.setStyle(TableStyle([("FONTSIZE", (0, 0), (-1, -1), 8.5), ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
+            ("TOPPADDING", (0, 0), (-1, -1), 3), ("TEXTCOLOR", (0, 0), (-1, 0), rc.HexColor("#555")),
+            ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"), ("FONTNAME", (3, 1), (3, -1), "Helvetica-Bold"),
+            ("LINEBELOW", (0, 0), (-1, -1), 0.4, rc.HexColor("#e6e6e6")), ("ALIGN", (1, 0), (-1, -1), "RIGHT")] + sstyle))
+        story += [Paragraph("Dimension summary — Importance vs Support (1–5)", h3), st_]
+
+        drows, dstyle, ri = [["Dimension topic (question)", "Imp", "Sup", "Gap"]], [], 1
+        for dim in d["detail"]["dimension"].drop_duplicates():
+            drows.append([dim, "", "", ""])
+            dstyle += [("SPAN", (0, ri), (3, ri)), ("BACKGROUND", (0, ri), (3, ri), rc.HexColor("#eef1f7")),
+                       ("FONTNAME", (0, ri), (0, ri), "Helvetica-Bold"), ("TEXTCOLOR", (0, ri), (0, ri), rc.HexColor("#2b3a67"))]
+            ri += 1
+            for _, r in d["detail"][d["detail"]["dimension"] == dim].iterrows():
+                col = rc.HexColor(RYG_HEX[ryg_of(r["gap5"])])
+                drows.append([str(r["item"])[:66], f"{r['mean_importance']:.1f}", f"{r['mean_support']:.1f}", f"{r['gap5']:+.1f}"])
+                dstyle += [("TEXTCOLOR", (1, ri), (3, ri), col), ("FONTNAME", (3, ri), (3, ri), "Helvetica-Bold")]
+                ri += 1
+        dt = Table(drows, colWidths=[3.9*inch, 0.6*inch, 0.6*inch, 0.6*inch], hAlign="LEFT")
+        dt.setStyle(TableStyle([("FONTSIZE", (0, 0), (-1, -1), 7.8), ("BOTTOMPADDING", (0, 0), (-1, -1), 2.5),
+            ("TOPPADDING", (0, 0), (-1, -1), 2.5), ("TEXTCOLOR", (0, 0), (-1, 0), rc.HexColor("#555")),
+            ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+            ("LINEBELOW", (0, 0), (-1, -1), 0.3, rc.HexColor("#eee")), ("ALIGN", (1, 0), (-1, -1), "RIGHT")] + dstyle))
+        story += [Paragraph("Dimension detail — by question (Gap = Support − Importance)", h3), dt]
     if d["quotes"]:
         story.append(Paragraph("In their words — what to fix", h3))
         for q in d["quotes"][:4]:
@@ -967,8 +1039,7 @@ with tab_prio:
 # ===========================================================================
 # TAB — GAP ANALYSIS
 # ===========================================================================
-RYG_COLORS = {"Under Supported": "#D1495B", "Target": "#E9C46A",
-              "Over Supported": "#4C78A8", "Agreement-only": "#9AA0A6"}
+RYG_COLORS = RYG_HEX  # match the official Tableau legend (maroon / green / orange)
 
 with tab_gap:
     st.subheader("Scores & Friction — matches the Tableau dashboard")
