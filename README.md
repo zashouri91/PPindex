@@ -107,13 +107,22 @@ raised it vs everyone else. A negative delta means the theme drags satisfaction 
 availability, noise, and privacy are big drags, while reception and community events
 barely move the needle.
 
-**📄 Site Reports** — generate a leadership-ready one-pager for any site: an auto-written
-recap, inline charts (sentiment donut, top themes, gap bars), top priorities, a
-**what's-working vs what-to-fix** split, largest gaps, a **benchmark vs the org** (theme
-rates and the four satisfaction scores), and **representative quotes** — now theme-level,
-deduplicated, attributed to role and tenure, and tagged with how many similar comments each
-represents. Download per site as **HTML, PDF, or PowerPoint**, build a full deck of all
-sites at once, or export a site's complete verbatim bank as CSV.
+**📄 Site Reports** — generate a leadership-ready one-pager for any site. The header is a
+**report card**: the raw 0–100 workplace-support composite, the site's **rank among the 10
+in-scope sites**, its **tier** (top/middle/bottom third of the site distribution — a relative
+standing, not an arbitrary A–F cutoff), and an **overall employee-sentiment** line with a
+**Welch t-test** verdict (significantly above / in line with / significantly below the other
+in-scope sites). Absolute letter grades were removed because, on this custom instrument, all
+ten sites fall inside an ~11-point band (≈64–76) and there is no external "optimal range" to
+anchor a letter to — rank + significance say honestly whether a gap is real or noise.
+Below the header: a **Dimension summary** and **Dimension detail** (Importance vs Support,
+1–5) that now include **Digital & Tech** (shown as agreement-based, since it carries no
+Importance rating) plus an **Overall agreement** column for each area's summary question
+(Q8/Q12/Q16/Q19); an auto-written recap, inline charts, top priorities, a **what's-working
+vs what-to-fix** split, a **benchmark vs the org**, **representative quotes** (theme-level,
+deduplicated, attributed to role and tenure), and the full **comments-by-category-and-
+sentiment** appendix. Download per site as **HTML, PDF, or PowerPoint**, build a full deck of
+all sites at once, or export a site's complete verbatim bank as CSV.
 
 **✏️ Tagging Workspace** — starts with a **"Discover missing themes"** panel that
 auto-clusters the Unclassified comments so you can spot themes the taxonomy is missing
