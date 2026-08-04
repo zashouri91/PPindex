@@ -110,19 +110,28 @@ barely move the needle.
 **📄 Site Reports** — generate a leadership-ready one-pager for any site. The header is a
 **report card**: the raw 0–100 workplace-support composite, the site's **rank among the 10
 in-scope sites**, its **tier** (top/middle/bottom third of the site distribution — a relative
-standing, not an arbitrary A–F cutoff), and an **overall employee-sentiment** line with a
+standing, not an arbitrary A–F cutoff), an **overall employee-agreement** line with a
 **Welch t-test** verdict (significantly above / in line with / significantly below the other
-in-scope sites). Absolute letter grades were removed because, on this custom instrument, all
-ten sites fall inside an ~11-point band (≈64–76) and there is no external "optimal range" to
-anchor a letter to — rank + significance say honestly whether a gap is real or noise.
-Below the header: a **Dimension summary** and **Dimension detail** (Importance vs Support,
-1–5) that now include **Digital & Tech** (shown as agreement-based, since it carries no
-Importance rating) plus an **Overall agreement** column for each area's summary question
-(Q8/Q12/Q16/Q19); an auto-written recap, inline charts, top priorities, a **what's-working
-vs what-to-fix** split, a **benchmark vs the org**, **representative quotes** (theme-level,
-deduplicated, attributed to role and tenure), and the full **comments-by-category-and-
-sentiment** appendix. Download per site as **HTML, PDF, or PowerPoint**, build a full deck of
-all sites at once, or export a site's complete verbatim bank as CSV.
+in-scope sites), and the **comment sentiment** headline (% positive / neutral / negative).
+Absolute letter grades were removed because, on this custom instrument, all ten sites fall
+inside an ~11-point band (≈64–76) and there is no external "optimal range" to anchor a letter
+to. The composite uses the **official dimension weights** (Work 35 · Service 25 · Physical 20
+· Digital & Tech 20); the header also prints the **simple-average** figure, which is what the
+Tableau deck shows, so the two reconcile at a glance.
+
+The report is ordered **quantitative first, open-ended second**. The quantitative block runs:
+a **Dimension summary** and **Dimension detail** (Importance vs Support, 1–5) that include
+**Digital & Tech** with a real status band (Strong ≥4.0 / Moderate 3.5–3.9 / Needs attention
+<3.5, since it is agreement-only) and an **Overall agreement** column per area (Q8/Q12/Q16/Q19;
+Q16 = Services, Q19 = Technology by survey position); a **Friction chart** labeled by dimension
+with the Friction score and % feeling under-supported on each bar, paired with a **Strengths**
+chart of the best-supported items; and a **demographics** breakdown (role, tenure, hybrid
+category — counts and % of site). The **Open-ended responses** section then covers the comment
+recap, **sentiment** and **theme** charts (both titled), top priorities, a **what's-working vs
+what-to-fix** split, a **benchmark vs the org**, **representative quotes**, and the full
+**comments-by-category-and-sentiment** appendix. A **data source & method** footer documents the
+pipeline. Download per site as **HTML, PDF, or PowerPoint**, build a full deck of all sites at
+once, or export a site's complete verbatim bank as CSV.
 
 **✏️ Tagging Workspace** — starts with a **"Discover missing themes"** panel that
 auto-clusters the Unclassified comments so you can spot themes the taxonomy is missing

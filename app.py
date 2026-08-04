@@ -365,6 +365,18 @@ GRADE_HEX = {"A": "#1E7D32", "B": "#5A9E3A", "C": "#E0A400", "D": "#E67E22", "F"
 # lay-language status words for the RYG classification (kept alongside the numbers)
 STATUS_WORD = {"Under Supported": "Needs attention", "Target": "On track",
                "Over Supported": "Exceeds needs", "Agreement-only": "Agreement-based"}
+# Digital & Tech is agreement-only (no Importance/Gap). Give it a real status from the
+# 1–5 agreement level so a 4.0 vs a 3.6 is meaningful (net-agree = strong).
+TECH_BANDS = [(4.0, "Strong", "#2E7D32"), (3.5, "Moderate", "#E0A400"), (0.0, "Needs attention", "#C0392B")]
+
+def tech_status(mean_support_1to5):
+    """(label, hex) for an agreement-based score on the 1–5 scale."""
+    if pd.isna(mean_support_1to5):
+        return ("—", "#999999")
+    for lo, lab, hx in TECH_BANDS:
+        if mean_support_1to5 >= lo:
+            return (lab, hx)
+    return ("Needs attention", "#C0392B")
 
 def grade_of(score):
     """Return (letter, word, hex) for a 0–100 composite score."""
@@ -525,6 +537,7 @@ def site_report_data(site, completers_flag):
                                            "Physical Feature": 20, "Digital & Tech": 20})
         wt = sum(weights.get(dm, 0) for dm in dcomp.index)
         site_overall = (sum(dcomp[dm] * weights.get(dm, 0) for dm in dcomp.index) / wt) if wt else float(dcomp.mean())
+        site_equal = float(dcomp.mean())  # deck-comparable simple average (matches Tableau)
         o_rank, o_n, o_tier, o_hex, o_pctl = rank_tier(site_overall, list(standings["overall"].values()))
         areas = []
         for dm in ["Work Activity", "Physical Feature", "Service Level", "Digital & Tech"]:
@@ -536,12 +549,28 @@ def site_report_data(site, completers_flag):
         ovals = [v for v in standings["overall"].values() if pd.notna(v)]
         data["card"] = {"overall": site_overall,
                         "org_overall": float(orgd.get("OVERALL (weighted)", np.nan)),
+                        "overall_equal": site_equal,
+                        "org_overall_equal": float(orgd.get("OVERALL (equal)", np.nan)),
                         "areas": areas, "rank": o_rank, "n_sites": o_n, "tier": o_tier,
                         "tier_hex": o_hex, "pctl": o_pctl,
                         "dist_min": (min(ovals) if ovals else np.nan),
                         "dist_max": (max(ovals) if ovals else np.nan)}
     else:
         data["card"] = None
+    # Strengths — best-supported items (mirror of the Friction chart), importance dims
+    imp_ss = ss[ss["mean_importance"].notna()] if len(ss) else pd.DataFrame()
+    data["top_support"] = (imp_ss.sort_values("support_100", ascending=False).head(4)
+                           if len(imp_ss) else pd.DataFrame())
+    # Demographics — who responded at this site (counts + % of site)
+    rs_site_all = resp_scores[resp_scores["site"] == site] if not resp_scores.empty else pd.DataFrame()
+    demo = {}
+    for lab, col in [("Role", "role"), ("Tenure", "tenure"), ("Hybrid category", "hybrid")]:
+        if len(rs_site_all) and col in rs_site_all.columns:
+            vc = rs_site_all[col].dropna().astype(str).value_counts()
+            if len(vc):
+                demo[lab] = vc
+    data["demographics"] = demo
+    data["demo_total"] = int(len(rs_site_all))
     # benchmark vs org: theme rate lift
     org_real = comments[~comments["eff_junk"]]
     org_tot = len(org_real)
@@ -561,11 +590,13 @@ def site_report_data(site, completers_flag):
     # --- Employee sentiment: the survey's own summary agreement questions (1–5) ------
     #     Each dimension has one summary Likert item (Q8/Q12/Q16/Q19). We surface them
     #     here with a Welch t-test vs the other in-scope sites (the "statistical thing").
+    # Q16 (services block) and Q19 (technology block) carry identical wording in the export;
+    # they are distinguished here by survey position, per confirmation to relabel by position.
     AGREE_Q = {
         "Work Activity": "“My workplace enables me to work productively” (Q8)",
         "Physical Feature": "“I feel comfortable and safe while working at the PulsePoint” (Q12)",
-        "Service Level": "“Overall, it is easy to use the PulsePoint…” (Q16 · services)",
-        "Digital & Tech": "“Overall, it is easy to use the PulsePoint…” (Q19 · technology)"}
+        "Service Level": "Overall ease of using the PulsePoint — Services (Q16)",
+        "Digital & Tech": "Overall ease of using the PulsePoint — Technology (Q19)"}
     agreement = []
     for dm in ["Work Activity", "Physical Feature", "Service Level", "Digital & Tech"]:
         sig = agreement_sig(site, DIM_TO_SCORECOL[dm], ten)
@@ -608,34 +639,66 @@ def site_report_data(site, completers_flag):
 
 SENT_HEX = {"Positive": "#2E9E6B", "Neutral / Mixed": "#9AA0A6", "Negative": "#D1495B"}
 
+DIM_ABBR = {"Work Activity": "Work Activity", "Physical Feature": "Physical Feature",
+            "Service Level": "Service Level", "Digital & Tech": "Digital & Tech"}
+
 def _site_charts(d):
     """Return dict of base64 PNG charts for a site report."""
     charts = {}
-    # donut
-    fig, ax = plt.subplots(figsize=(2.6, 2.6))
+    # donut — comment sentiment (titled)
+    fig, ax = plt.subplots(figsize=(2.7, 2.9))
     vals = [d["pos"], d["neu"], d["neg"]]
     ax.pie(vals, colors=[SENT_HEX["Positive"], SENT_HEX["Neutral / Mixed"], SENT_HEX["Negative"]],
            startangle=90, wedgeprops=dict(width=0.42))
     ax.text(0, 0, f"{d['neg']:.0f}%\nneg", ha="center", va="center", fontsize=11, weight="bold")
-    ax.set(aspect="equal"); charts["donut"] = _b64png(fig)
-    # top themes bar
+    ax.set(aspect="equal")
+    ax.set_title("Comment sentiment\n(green +  ·  grey ~  ·  red −)", fontsize=9, weight="bold", color="#2b3a67")
+    charts["donut"] = _b64png(fig)
+    # top themes bar (titled)
     tt = d["top_themes"].head(7)[::-1]
-    fig, ax = plt.subplots(figsize=(4.2, 2.8))
+    fig, ax = plt.subplots(figsize=(4.3, 2.9))
     ax.barh(range(len(tt)), tt.values, color="#4C78A8")
     ax.set_yticks(range(len(tt))); ax.set_yticklabels([t[:26] for t in tt.index], fontsize=8)
     ax.set_xlabel("mentions", fontsize=8); ax.tick_params(axis="x", labelsize=8)
+    ax.set_title("Top comment themes", fontsize=10, weight="bold", color="#2b3a67", loc="left")
     for s in ["top", "right"]: ax.spines[s].set_visible(False)
     charts["themes"] = _b64png(fig)
-    # friction bars (Tableau spec)
+    # friction bars (Tableau spec) — titled, dimension-labeled, value + % labeled
     if len(d["under"]):
         gg = d["under"].sort_values("friction")
-        fig, ax = plt.subplots(figsize=(4.4, 2.8))
+        fig, ax = plt.subplots(figsize=(5.6, 3.0))
         ax.barh(range(len(gg)), gg["friction"], color="#D1495B")
-        ax.set_yticks(range(len(gg))); ax.set_yticklabels([str(i)[:30] for i in gg["item"]], fontsize=7)
-        ax.set_xlabel("Friction (0–100, higher = worse)", fontsize=8)
-        ax.tick_params(axis="x", labelsize=8)
+        labels = [f"[{DIM_ABBR.get(r['dimension'], r['dimension'])}] {str(r['item'])[:30]}"
+                  for _, r in gg.iterrows()]
+        ax.set_yticks(range(len(gg))); ax.set_yticklabels(labels, fontsize=7)
+        fmax = float(gg["friction"].max())
+        for i, (_, r) in enumerate(gg.iterrows()):
+            pct = "" if pd.isna(r.get("friction_pct")) else f" · {r['friction_pct']:.0f}% feel it"
+            ax.text(r["friction"] + fmax * 0.02, i, f"{r['friction']:.0f}/100{pct}",
+                    va="center", fontsize=7, color="#7a1f2b")
+        ax.set_xlim(0, fmax * 1.42)
+        ax.set_xlabel("Friction (0–100, higher = worse)", fontsize=8); ax.tick_params(axis="x", labelsize=8)
+        ax.set_title("Where support falls short — highest-Friction items", fontsize=10,
+                     weight="bold", color="#2b3a67", loc="left")
         for s in ["top", "right"]: ax.spines[s].set_visible(False)
         charts["gap"] = _b64png(fig)
+    # strengths bars — best-supported items (green mirror of the friction chart)
+    if len(d.get("top_support", [])):
+        gs = d["top_support"].sort_values("support_100")
+        fig, ax = plt.subplots(figsize=(5.6, 3.0))
+        ax.barh(range(len(gs)), gs["support_100"], color="#2E7D32")
+        labels = [f"[{DIM_ABBR.get(r['dimension'], r['dimension'])}] {str(r['item'])[:30]}"
+                  for _, r in gs.iterrows()]
+        ax.set_yticks(range(len(gs))); ax.set_yticklabels(labels, fontsize=7)
+        for i, (_, r) in enumerate(gs.iterrows()):
+            ax.text(r["support_100"] + 1.5, i, f"{r['support_100']:.0f}/100",
+                    va="center", fontsize=7, color="#1c5024")
+        ax.set_xlim(0, 108)
+        ax.set_xlabel("Support (0–100, higher = better)", fontsize=8); ax.tick_params(axis="x", labelsize=8)
+        ax.set_title("PulsePoint strengths — best-supported items", fontsize=10,
+                     weight="bold", color="#2b3a67", loc="left")
+        for s in ["top", "right"]: ax.spines[s].set_visible(False)
+        charts["strength"] = _b64png(fig)
     return charts
 
 def build_site_report(site):
@@ -664,9 +727,15 @@ def build_site_report(site):
         for _, r in P.iterrows()) or "<tr><td colspan='4'>Not enough tagged comments to rank.</td></tr>"
     def _c(v):
         return RYG_HEX.get(ryg_of(v), "#333")
+    def _status_color(r):
+        """Status word + color: importance dims use RYG; agreement-only (Tech) use the band."""
+        if pd.isna(r["gap5"]):
+            lab, hx = tech_status(r["mean_support"])
+            return lab, hx
+        return STATUS_WORD.get(ryg_of(r["gap5"]), ""), _c(r["gap5"])
     dsum_rows = ""
     for _, r in d["dim_summary"].iterrows():
-        gpv = r["gap5"]; col = _c(gpv); status = STATUS_WORD.get(ryg_of(gpv), "")
+        gpv = r["gap5"]; status, col = _status_color(r)
         agree = r.get("agree", np.nan)
         av = "—" if pd.isna(agree) else f"{agree:.2f}"
         ahex = r.get("agree_hex", "#888") if pd.notna(agree) else "#888"
@@ -682,8 +751,7 @@ def build_site_report(site):
         for dim in d["detail"]["dimension"].drop_duplicates():
             detail_rows += f"<tr class='dh'><td colspan='5'>{_html.escape(dim)}</td></tr>"
             for _, r in d["detail"][d["detail"]["dimension"] == dim].iterrows():
-                col = _c(r["gap5"])
-                status = STATUS_WORD.get(ryg_of(r["gap5"]), "")
+                status, col = _status_color(r)
                 detail_rows += (f"<tr><td class='tp'>{_html.escape(str(r['item']))}</td>"
                                 f"<td style='color:{col}'>{_f1(r['mean_importance'])}</td>"
                                 f"<td style='color:{col}'>{_f1(r['mean_support'])}</td>"
@@ -722,22 +790,32 @@ def build_site_report(site):
         if so and pd.notna(so.get("site_mean")):
             pstr = f", p={so['p']:.2f}" if pd.notna(so.get("p")) else ""
             sent_line = (f"<div class='rc-sent' style='color:{so['hex']}'>"
-                         f"Overall employee sentiment <b>{so['site_mean']:.2f} / 5</b> — {so['verdict']} "
+                         f"Overall employee agreement <b>{so['site_mean']:.2f} / 5</b> — {so['verdict']} "
                          f"<span style='color:#999'>(company {so['org_mean']:.2f}{pstr})</span></div>")
+        eqnote = ""
+        if pd.notna(cc.get("overall_equal")):
+            eqnote = (f"<div class='rc-p'>Composite uses the official dimension weights "
+                      f"(Work 35 · Service 25 · Physical 20 · Tech 20). A simple average of the four "
+                      f"dimensions = <b>{cc['overall_equal']:.0f}</b> — the figure the Tableau deck shows.</div>")
+        cs = (f"<span style='color:{SENT_HEX['Positive']}'>{d['pos']:.0f}% positive</span> · "
+              f"<span style='color:#7a7a7a'>{d['neu']:.0f}% neutral</span> · "
+              f"<span style='color:{SENT_HEX['Negative']}'>{d['neg']:.0f}% negative</span>")
         card_html = (
             f"<div class='rc'><div class='rc-o'>"
             f"<div class='rc-badge' style='background:{oh}'>{cc['overall']:.0f}</div>"
             f"<div><div class='rc-t'>Overall composite (0–100) · {cc['tier']} of sites</div>"
             f"<div class='rc-s'>{rank_str} &nbsp; {ovm}</div>"
             f"<div class='rc-p'>{org_str}{rng}</div>"
+            f"{eqnote}"
             f"{sent_line}"
+            f"<div class='rc-sent'>Comment sentiment: {cs}</div>"
             f"<div class='rc-p'>{part_str} · {d['n']:,} written comments</div>"
             f"</div></div>"
             f"<div class='rc-areas'>{badges}</div>"
             f"<div class='rc-key'>Big number = workplace-support composite (0–100); area boxes show each "
             f"dimension's composite and its rank among the 10 sites. <b>Tier</b> = thirds of the 10-site "
             f"distribution (relative standing, not an absolute pass/fail cutoff). &#9650;/&#9660; = vs. the "
-            f"company average. <b>Employee sentiment</b> significance = Welch t-test of this site's summary-"
+            f"company average. <b>Employee agreement</b> significance = Welch t-test of this site's summary-"
             f"agreement responses vs. the other in-scope sites (p&lt;0.05).</div></div>")
 
     # All-comments appendix — by category then sentiment (collapsible)
@@ -789,6 +867,27 @@ def build_site_report(site):
         for q in d["pos_quotes"])
     img = lambda k: (f"<img src='data:image/png;base64,{charts[k]}'/>" if k in charts else "")
 
+    # demographics — who responded (counts + % of site)
+    demo = d.get("demographics") or {}
+    demo_total = d.get("demo_total") or 0
+    demo_html = ""
+    if demo and demo_total:
+        cols = ""
+        for label, vc in demo.items():
+            rows = "".join(
+                f"<tr><td>{_html.escape(str(k))}</td><td>{int(v)}</td>"
+                f"<td>{v / demo_total * 100:.0f}%</td></tr>" for k, v in vc.items())
+            cols += (f"<div><table><tr><th>{_html.escape(label)}</th><th>#</th><th>%</th></tr>{rows}</table></div>")
+        demo_html = (f"<h3>Who responded — demographics</h3>"
+                     f"<p class='lgd'>Respondents at this site by group ({demo_total:,} total). "
+                     f"% is each group's share of this site's respondents.</p>"
+                     f"<div class='demo'>{cols}</div>")
+    # deck reconciliation note for the methods footer
+    deck_note = ""
+    if d.get("card") and pd.notna(d["card"].get("overall_equal")):
+        deck_note = (f" A simple (equal) average of the four dimensions = "
+                     f"<b>{d['card']['overall_equal']:.0f}</b>, which matches the figure in the Tableau deck.")
+
     return f"""<!doctype html><html><head><meta charset="utf-8">
 <title>PulsePoint — {_html.escape(site)}</title>
 <style>
@@ -830,7 +929,9 @@ def build_site_report(site):
  .sgrp{{margin:4px 0 8px}} .slab{{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;margin:6px 0 2px}}
  ul.clist{{margin:2px 0 6px;padding-left:18px}} ul.clist li{{font-size:12.5px;margin:3px 0;line-height:1.45}}
  .cmeta{{color:#999;font-size:11px}}
- .foot{{color:#aaa;font-size:11px;margin-top:24px}}
+ .demo{{display:flex;gap:18px;flex-wrap:wrap;margin-top:8px}} .demo>div{{flex:1;min-width:210px}}
+ .demo table{{font-size:12px}}
+ .foot{{color:#888;font-size:11px;margin-top:24px;border-top:1px solid #eee;padding-top:8px}}
 </style></head><body>
 <h1>PulsePoint Experience — {_html.escape(site)}</h1>
 <div class="sub">Workplace experience report card · completed responses</div>
@@ -839,14 +940,19 @@ def build_site_report(site):
 <table><tr><th>Dimension</th><th>Importance</th><th>Support</th><th>Gap</th><th>Status</th><th>Overall agreement (1–5)</th></tr>{dsum_rows}</table>
 <h3>Dimension detail — by question</h3>
 <table class="detail"><tr><th>Dimension topic (question)</th><th>Importance</th><th>Support</th><th>Gap</th><th>Status</th></tr>{detail_rows}</table>
-<p class="lgd">Gap = Support − Importance (1–5). <span style="color:#C0392B">■</span> Under Supported ·
-<span style="color:#2E7D32">■</span> Target · <span style="color:#E67E22">■</span> Over Supported ·
-<span style="color:#9AA0A6">■</span> Agreement-based. <b>Digital &amp; Tech</b> is agreement-only (no Importance rating),
-so its Gap/Status show as “Agreement-based”. <b>Overall agreement</b> is the survey's single summary question for each
-area (Q8/Q12/Q16/Q19, 1–5); its color marks whether the site sits above/below the rest of the company (Welch t-test, p&lt;0.05).
-Note: Q16 (services) and Q19 (technology) share identical wording in the export — a survey-build quirk worth confirming with the instrument owner.</p>
+<p class="lgd">Gap = Support − Importance (1–5). Status:
+<span style="color:#C0392B">■</span> Needs attention · <span style="color:#2E7D32">■</span> On track ·
+<span style="color:#E67E22">■</span> Exceeds needs. <b>Digital &amp; Tech</b> is agreement-only (no Importance/Gap); it's
+rated on the 1–5 agreement level — <span style="color:#2E7D32">■</span> Strong (≥4.0) ·
+<span style="color:#E0A400">■</span> Moderate (3.5–3.9) · <span style="color:#C0392B">■</span> Needs attention (&lt;3.5).
+<b>Overall agreement</b> is each area's single summary question (Q8/Q12/Q16/Q19, 1–5; Q16 = Services, Q19 = Technology by
+survey position); its color marks whether the site sits above/below the rest of the company (Welch t-test, p&lt;0.05).</p>
+<h3>Where support falls short &amp; strengths</h3>
+<div class="charts">{img('gap')}{img('strength')}</div>
+{demo_html}
+<h3>Open-ended responses</h3>
 <div class="narr">{narrative}</div>
-<div class="charts">{img('donut')}{img('themes')}{img('gap')}</div>
+<div class="charts">{img('donut')}{img('themes')}</div>
 <h3>Top priorities to address</h3>
 <table><tr><th>Category</th><th>#&nbsp;comments</th><th>%&nbsp;negative</th><th>priority</th></tr>{prio_rows}</table>
 <div class="two"><div>
@@ -855,7 +961,7 @@ Note: Q16 (services) and Q19 (technology) share identical wording in the export 
 <div class="two"><div>
 <h3>Vs. org — theme rates</h3>
 <table><tr><th>Theme</th><th>site</th><th>org</th><th>lift</th></tr>{bench_rows}</table></div><div>
-<h3>Vs. org — satisfaction (1–5)</h3>
+<h3>Vs. org — employee agreement (1–5)</h3>
 <table><tr><th>Area</th><th>site</th><th>org</th><th>Δ</th></tr>{score_rows}</table></div></div>
 <h3>In their words — what to fix</h3>{neg_quotes}
 {('<h3>In their words — what’s working</h3>'+pos_quotes) if pos_quotes else ''}
@@ -863,7 +969,11 @@ Note: Q16 (services) and Q19 (technology) share identical wording in the export 
 <p class="lgd">Every open-ended comment at this site, grouped by category then sentiment. Click a category to expand.
 A comment that touches more than one category appears under each.</p>
 {appendix_html or '<p style="color:#888">No comments to list.</p>'}
-<div class="foot">Generated by the PulsePoint Open-Ended Response Analyzer · {'completed responses only' if completers_only else 'all responses'} · Friction &amp; Composite per the official Tableau spec · Priority = 40% volume + 35% share negative + 25% Friction.</div>
+<div class="foot"><b>Data source &amp; method.</b> Built from the PulsePoint survey export ·
+{'completed responses only' if completers_only else 'all responses'} · 10 in-scope sites. Support responses map to a
+0–100 scale; each dimension is the average of its items; the overall Composite applies the official dimension weights
+(Work 35 · Service 25 · Physical 20 · Digital &amp; Tech 20).{deck_note} Friction &amp; RYG per the official Tableau
+spec · Priority = 40% volume + 35% share negative + 25% Friction.</div>
 </body></html>"""
 
 @st.cache_data(show_spinner=False)
@@ -910,13 +1020,20 @@ def build_site_pdf(site, completers_flag):
         so = d.get("sentiment_overall"); _sent = ""
         if so and pd.notna(so.get("site_mean")):
             _pv = f", p={so['p']:.2f}" if pd.notna(so.get("p")) else ""
-            _sent = (f"<br/><font size=8 color='{so['hex']}'>Employee sentiment {so['site_mean']:.2f}/5 — "
+            _sent = (f"<br/><font size=8 color='{so['hex']}'>Employee agreement {so['site_mean']:.2f}/5 — "
                      f"{so['verdict']} (company {so['org_mean']:.2f}{_pv})</font>")
+        _eq = ""
+        if pd.notna(cc.get("overall_equal")):
+            _eq = (f"<br/><font size=8 color='#777'>Official dimension weights; simple average of the four "
+                   f"dimensions = <b>{cc['overall_equal']:.0f}</b> (matches the Tableau deck)</font>")
+        _csent = (f"<br/><font size=8 color='#555'>Comment sentiment: "
+                  f"<font color='{SENT_HEX['Positive']}'>{d['pos']:.0f}% positive</font> · {d['neu']:.0f}% neutral · "
+                  f"<font color='{SENT_HEX['Negative']}'>{d['neg']:.0f}% negative</font></font>")
         og = Table([[Paragraph(f"<font size=20 color='white'><b>{cc['overall']:.0f}</b></font>", body),
                      Paragraph(f"<b>Overall composite {cc['overall']:.0f} / 100</b>  ·  {cc['tier']} of sites  "
                                f"{_mark_txt(cc['overall'], cc.get('org_overall'))}<br/>"
-                               f"<font size=8 color='#777'>{_rank}{_rng}</font><br/>"
-                               f"<font size=8 color='#777'>{_pstr} · {d['n']:,} written comments</font>{_sent}", body)]],
+                               f"<font size=8 color='#777'>{_rank}{_rng}</font>{_eq}<br/>"
+                               f"<font size=8 color='#777'>{_pstr} · {d['n']:,} written comments</font>{_sent}{_csent}", body)]],
                     colWidths=[0.62*inch, 5.9*inch])
         og.setStyle(TableStyle([("BACKGROUND", (0, 0), (0, 0), rc.HexColor(oh)),
             ("VALIGN", (0, 0), (-1, -1), "MIDDLE"), ("ALIGN", (0, 0), (0, 0), "CENTER"),
@@ -938,16 +1055,21 @@ def build_site_pdf(site, completers_flag):
                   Paragraph("<font size=7.5 color='#999'>Big number = workplace-support composite (0–100); "
                             "boxes show each area's composite and its rank among the 10 sites. Tier = thirds of the "
                             "10-site distribution (relative standing, not an absolute pass/fail cutoff). (+/−) = vs. the "
-                            "company average. Employee-sentiment significance = Welch t-test vs. the other in-scope sites.</font>", body)]
+                            "company average. Employee-agreement significance = Welch t-test vs. the other in-scope sites.</font>", body)]
     # Dimension summary + detail near the top (Importance vs Support, 1–5)
+    def _sc(r):
+        """Status word + hex: RYG for importance dims; the agreement band for Tech."""
+        if pd.isna(r["gap5"]):
+            return tech_status(r["mean_support"])
+        ry = ryg_of(r["gap5"]); return STATUS_WORD.get(ry, ""), RYG_HEX[ry]
     if len(d["dim_summary"]):
         srows, sstyle = [["Dimension", "Imp", "Sup", "Gap", "Status", "Agree"]], []
         for i, (_, r) in enumerate(d["dim_summary"].iterrows(), 1):
             gpv = r["gap5"]; ag = r.get("agree", np.nan)
+            _slab, _shex = _sc(r)
             srows.append([r["dimension"], _f1(r["mean_importance"]), _f1(r["mean_support"]),
-                          _gp(gpv), STATUS_WORD.get(ryg_of(gpv), ""),
-                          ("—" if pd.isna(ag) else f"{ag:.2f}")])
-            sstyle.append(("TEXTCOLOR", (3, i), (4, i), rc.HexColor(RYG_HEX[ryg_of(gpv)])))
+                          _gp(gpv), _slab, ("—" if pd.isna(ag) else f"{ag:.2f}")])
+            sstyle.append(("TEXTCOLOR", (3, i), (4, i), rc.HexColor(_shex)))
             if pd.notna(ag):
                 sstyle.append(("TEXTCOLOR", (5, i), (5, i), rc.HexColor(r.get("agree_hex", "#333"))))
         st_ = Table(srows, colWidths=[1.95*inch, 0.65*inch, 0.65*inch, 0.6*inch, 1.3*inch, 0.85*inch], hAlign="LEFT")
@@ -964,9 +1086,9 @@ def build_site_pdf(site, completers_flag):
                        ("FONTNAME", (0, ri), (0, ri), "Helvetica-Bold"), ("TEXTCOLOR", (0, ri), (0, ri), rc.HexColor("#2b3a67"))]
             ri += 1
             for _, r in d["detail"][d["detail"]["dimension"] == dim].iterrows():
-                col = rc.HexColor(RYG_HEX[ryg_of(r["gap5"])])
+                _slab, _shex = _sc(r); col = rc.HexColor(_shex)
                 drows.append([str(r["item"])[:60], _f1(r["mean_importance"]), _f1(r["mean_support"]),
-                              _gp(r["gap5"]), STATUS_WORD.get(ryg_of(r["gap5"]), "")])
+                              _gp(r["gap5"]), _slab])
                 dstyle += [("TEXTCOLOR", (1, ri), (4, ri), col), ("FONTNAME", (3, ri), (3, ri), "Helvetica-Bold")]
                 ri += 1
         dt = Table(drows, colWidths=[3.15*inch, 0.5*inch, 0.5*inch, 0.5*inch, 1.15*inch], hAlign="LEFT")
@@ -976,23 +1098,42 @@ def build_site_pdf(site, completers_flag):
             ("LINEBELOW", (0, 0), (-1, -1), 0.3, rc.HexColor("#eee")),
             ("ALIGN", (1, 0), (3, -1), "RIGHT"), ("ALIGN", (4, 0), (4, -1), "LEFT")] + dstyle))
         story += [Spacer(1, 6), Paragraph("Dimension summary — Importance vs Support (1–5)", h3), st_,
-                  Paragraph("<font size=7.5 color='#999'>“Agree” = the survey's single summary question for each area "
-                            "(Q8/Q12/Q16/Q19, 1–5); its color marks above/below the rest of the company (Welch t-test, "
-                            "p&lt;0.05). Digital &amp; Tech is agreement-only, so its Gap/Status read “Agreement-based”. "
-                            "Q16 (services) and Q19 (technology) share identical wording in the export — a survey-build quirk.</font>", body),
+                  Paragraph("<font size=7.5 color='#999'>Status: red = Needs attention · green = On track · orange = "
+                            "Exceeds needs. Digital &amp; Tech is agreement-only, rated on the 1–5 agreement level "
+                            "(Strong ≥4.0 / Moderate 3.5–3.9 / Needs attention &lt;3.5). “Agree” = each area's summary "
+                            "question (Q8/Q12/Q16/Q19; Q16 = Services, Q19 = Technology by survey position); its color marks "
+                            "above/below the rest of the company (Welch t-test, p&lt;0.05).</font>", body),
                   Paragraph("Dimension detail — by question (Gap = Support − Importance)", h3), dt]
-    tops = d["P"]["key"].tolist()
-    narr = (f"Overall sentiment is <b>{d['neg']:.0f}% negative</b> and {d['pos']:.0f}% positive. "
-            f"Top area to address: <b>{tops[0] if tops else '—'}</b>.")
-    story += [Spacer(1, 8), Paragraph(narr, body)]
     charts = d["charts"]
-    imgs = []
-    for k in ("donut", "themes", "gap"):
-        if k in charts:
-            imgs.append(RLImage(io.BytesIO(base64.b64decode(charts[k])),
-                                width=2.1*inch, height=1.7*inch, kind="proportional"))
-    if imgs:
-        story += [Spacer(1, 6), Table([imgs], colWidths=[2.3*inch]*len(imgs))]
+    def _img(k, w, h):
+        return RLImage(io.BytesIO(base64.b64decode(charts[k])), width=w*inch, height=h*inch, kind="proportional")
+    # Quantitative close-out: friction + strengths (before the open-ended section)
+    qc = [k for k in ("gap", "strength") if k in charts]
+    if qc:
+        story += [Spacer(1, 8), Paragraph("Where support falls short &amp; strengths", h3),
+                  Table([[_img(k, 3.35, 2.15) for k in qc]], colWidths=[3.5*inch]*len(qc), hAlign="LEFT")]
+    # Demographics — who responded (counts + % of site)
+    demo = d.get("demographics") or {}; demo_total = d.get("demo_total") or 0
+    if demo and demo_total:
+        story.append(Paragraph("Who responded — demographics", h3))
+        dcells = []
+        for lab, vc in demo.items():
+            rows = [[lab, "#", "%"]] + [[str(k)[:22], int(v), f"{v/demo_total*100:.0f}%"] for k, v in vc.items()]
+            dt2 = Table(rows, colWidths=[1.3*inch, 0.4*inch, 0.5*inch])
+            dt2.setStyle(TableStyle([("FONTSIZE", (0, 0), (-1, -1), 7.5), ("BOTTOMPADDING", (0, 0), (-1, -1), 1.5),
+                ("TOPPADDING", (0, 0), (-1, -1), 1.5), ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+                ("TEXTCOLOR", (0, 0), (-1, 0), rc.HexColor("#555")),
+                ("LINEBELOW", (0, 0), (-1, 0), 0.4, rc.HexColor("#ccc")), ("ALIGN", (1, 0), (-1, -1), "RIGHT")]))
+            dcells.append(dt2)
+        story.append(Table([dcells], colWidths=[2.3*inch]*len(dcells), hAlign="LEFT"))
+    # Open-ended responses section
+    tops = d["P"]["key"].tolist()
+    narr = (f"Overall comment sentiment is <b>{d['neg']:.0f}% negative</b> and {d['pos']:.0f}% positive. "
+            f"Top area to address: <b>{tops[0] if tops else '—'}</b>.")
+    story += [Spacer(1, 8), Paragraph("Open-ended responses", h3), Paragraph(narr, body)]
+    ocs = [k for k in ("donut", "themes") if k in charts]
+    if ocs:
+        story += [Spacer(1, 4), Table([[_img(k, 2.6, 2.0) for k in ocs]], colWidths=[2.85*inch]*len(ocs), hAlign="LEFT")]
 
     def tbl(header, rows, widths):
         data = [header] + rows
@@ -1051,6 +1192,17 @@ def build_site_pdf(site, completers_flag):
                     story.append(Paragraph(
                         f"• {_html.escape(str(r['comment']))} "
                         f"<font size=6.5 color='#999'>— {_html.escape(str(r['role']))}, {_html.escape(str(r['tenure']))}</font>", cmt))
+    _decknote = ""
+    if d.get("card") and pd.notna(d["card"].get("overall_equal")):
+        _decknote = (f" A simple (equal) average of the four dimensions = {d['card']['overall_equal']:.0f}, "
+                     f"which matches the figure in the Tableau deck.")
+    story += [Spacer(1, 10), Paragraph(
+        "<font size=7.5 color='#888'><b>Data source &amp; method.</b> Built from the PulsePoint survey export · "
+        + ("completed responses only" if completers_flag else "all responses") +
+        " · 10 in-scope sites. Support responses map to a 0–100 scale; each dimension is the average of its items; the "
+        "overall Composite applies the official dimension weights (Work 35 · Service 25 · Physical 20 · Digital &amp; Tech 20)."
+        + _decknote +
+        " Friction &amp; RYG per the official Tableau spec · Priority = 40% volume + 35% share negative + 25% Friction.</font>", body)]
     doc.build(story)
     return buf.getvalue()
 
