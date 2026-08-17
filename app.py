@@ -678,9 +678,9 @@ def _site_charts(d):
     # top themes bar — % of this site's comments + comment count on each bar
     tt = d["top_themes"].head(7)[::-1]
     n_real = max(1, int(d.get("n", 1)))
-    fig, ax = plt.subplots(figsize=(5.8, 3.2))
+    fig, ax = plt.subplots(figsize=(6.2, 3.3))
     ax.barh(range(len(tt)), tt.values, color="#4C78A8", height=0.62)
-    ax.set_yticks(range(len(tt))); ax.set_yticklabels([str(t)[:30] for t in tt.index], fontsize=8)
+    ax.set_yticks(range(len(tt))); ax.set_yticklabels([_wrap(str(t), 24) for t in tt.index], fontsize=7.5)
     tmax = float(tt.max()) if len(tt) else 1
     for i, (name, c) in enumerate(tt.items()):
         ax.text(c + tmax * 0.02, i, f"{c / n_real * 100:.0f}% | {int(c)} comments",
@@ -711,7 +711,7 @@ def _site_charts(d):
         for ax, lab in zip(axes, keys):
             vc = demo[lab].head(6)[::-1]; pct = vc / dt * 100
             ax.barh(range(len(vc)), pct.values, color="#5B7DB1", height=0.62)
-            ax.set_yticks(range(len(vc))); ax.set_yticklabels([str(k)[:20] for k in vc.index], fontsize=7.5)
+            ax.set_yticks(range(len(vc))); ax.set_yticklabels([_wrap(str(k), 16) for k in vc.index], fontsize=7)
             for i, v in enumerate(pct.values):
                 ax.text(v + 1.5, i, f"{v:.0f}%", va="center", fontsize=7.5, color="#33475b")
             ax.set_xlim(0, 112); ax.set_title(lab, fontsize=9.5, weight="bold", color="#2b3a67")
@@ -727,8 +727,11 @@ def build_site_report(site):
         return f"<html><body style='font-family:sans-serif'><h2>{_html.escape(site)}</h2><p>No comments for this site.</p></body></html>"
     charts = d["charts"]
     P, tops = d["P"], d["P"]["key"].tolist()
-    narrative = (f"{d['n']} associates at <b>{_html.escape(site)}</b> left a substantive comment. "
-                 f"Overall sentiment is <b>{d['neg']:.0f}% negative</b> and {d['pos']:.0f}% positive. ")
+    _ncommenters = int(d["real_df"]["respondent"].nunique()) if d.get("real_df") is not None and len(d.get("real_df", [])) else 0
+    narrative = (f"We received <b>{d['n']:,} substantive comments</b>"
+                 + (f" from {_ncommenters:,} associates" if _ncommenters else "")
+                 + f" at <b>{_html.escape(site)}</b> (associates could answer up to five open-ended questions). "
+                 f"Overall comment sentiment is <b>{d['neg']:.0f}% negative</b> and {d['pos']:.0f}% positive. ")
     if tops:
         narrative += (f"The top area to address is <b>{_html.escape(tops[0])}</b> "
                       f"({int(P.iloc[0]['neg_share']*100)}% negative across {int(P.iloc[0]['volume'])} comments)")
@@ -1293,6 +1296,376 @@ def build_site_pptx(sites, completers_flag):
             p = qtf.add_paragraph(); p.text = f"“{q['text'][:150]}” — {q['role']} · {q['theme']}"
             p.font.size = Pt(9); p.font.color.rgb = RGBColor(0x44, 0x44, 0x44)
     buf = io.BytesIO(); prs.save(buf)
+    return buf.getvalue()
+
+# ===========================================================================
+# PORTFOLIO — "10 PulsePoints Report Card" (roll-up across the in-scope sites)
+# ===========================================================================
+def _portfolio_heatmap(matrix, rows, cols, vmin, vmax, cmap, fmt, title, figsize, xrot=0):
+    arr = np.array(matrix, dtype=float)
+    fig, ax = plt.subplots(figsize=figsize)
+    ax.imshow(arr, aspect="auto", cmap=plt.get_cmap(cmap), vmin=vmin, vmax=vmax)
+    ax.set_xticks(range(len(cols)))
+    ax.set_xticklabels(cols, fontsize=8, rotation=xrot, ha=("right" if xrot else "center"))
+    ax.set_yticks(range(len(rows))); ax.set_yticklabels(rows, fontsize=8)
+    for i in range(arr.shape[0]):
+        for j in range(arr.shape[1]):
+            v = arr[i, j]
+            if not np.isnan(v):
+                ax.text(j, i, fmt.format(v), ha="center", va="center", fontsize=7, color="#1a1a1a")
+    ax.set_title(title, fontsize=10.5, weight="bold", color="#2b3a67", loc="left", pad=8)
+    ax.tick_params(length=0)
+    for sp in ax.spines.values():
+        sp.set_visible(False)
+    fig.tight_layout()
+    return _b64png(fig)
+
+def _portfolio_charts(dd):
+    charts = {}
+    board = dd["board"]; sites = [b["site"] for b in board]
+    # 1) Leaderboard bar (Index Score, colored by tier; best at top)
+    if board:
+        order = board[::-1]  # worst first -> best ends at top
+        fig, ax = plt.subplots(figsize=(7.4, 3.7))
+        ax.barh(range(len(order)), [b["index"] for b in order], color=[b["hex"] for b in order], height=0.66)
+        ax.set_yticks(range(len(order))); ax.set_yticklabels([b["site"] for b in order], fontsize=8)
+        mx = max(b["index"] for b in board)
+        for i, b in enumerate(order):
+            ax.text(b["index"] + mx * 0.01, i, f"{b['index']:.0f}  (#{b['rank']})",
+                    va="center", fontsize=8, weight="bold", color="#333")
+        cx = dd.get("comp_index")
+        if pd.notna(cx):
+            ax.axvline(cx, color="#555", ls="--", lw=1)
+            ax.text(cx, len(order) - 0.4, f" company {cx:.0f}", fontsize=7.5, color="#555")
+        ax.set_xlim(0, mx * 1.2); ax.set_xlabel("Index Score (0–100)", fontsize=8.5)
+        ax.set_title("Site leaderboard — Overall PulsePoint Experience Index Score", fontsize=11,
+                     weight="bold", color="#2b3a67", loc="left")
+        for s in ["top", "right"]: ax.spines[s].set_visible(False)
+        fig.tight_layout(); charts["leaderboard"] = _b64png(fig)
+    # 2) Site × dimension heatmap (absolute 0–100, RdYlGn)
+    dims = ["Work Activity", "Physical Feature", "Service Level", "Digital & Tech"]
+    dbs = dd["dim_by_site"]
+    mat = [[dbs.get(dm, {}).get(s, np.nan) for dm in dims] for s in sites]
+    if sites:
+        charts["heatmap_dim"] = _portfolio_heatmap(
+            mat, sites, ["Work", "Physical", "Service", "Tech"], 50, 85, "RdYlGn", "{:.0f}",
+            "Dimension Scores by site (0–100; green = higher)", (6.4, 3.9))
+    # 3) Site × theme heatmap (% of each site's comments; Blues)
+    themes = dd["site_theme_themes"]; sxt = dd["site_theme"]
+    if sites and themes:
+        tmat = [[sxt.get(s, {}).get(t, np.nan) for t in themes] for s in sites]
+        vmax = max([v for row in tmat for v in row if not np.isnan(v)] + [1])
+        charts["heatmap_theme"] = _portfolio_heatmap(
+            tmat, sites, [_wrap(t, 12) for t in themes], 0, vmax, "Blues", "{:.0f}",
+            "Comment theme prevalence by site (% of site's comments)", (8.2, 4.0), xrot=30)
+    # 4) Company friction + strengths (reuse the site chart renderer)
+    if dd["friction"]:
+        fr = pd.DataFrame(dd["friction"])
+        fr["friction"] = pd.to_numeric(fr["friction"], errors="coerce")
+        fr["friction_pct"] = pd.to_numeric(fr["friction_pct"], errors="coerce")
+        charts["friction"] = _score_bar(fr.sort_values("friction"), "friction", "#D1495B",
+            "Company-wide highest-Friction items", "Friction (0–100, higher = worse)", "#7a1f2b",
+            pctcol="friction_pct", xmax=100)
+    if dd["strength"]:
+        stg = pd.DataFrame(dd["strength"])
+        stg["support_100"] = pd.to_numeric(stg["support_100"], errors="coerce")
+        charts["strength"] = _score_bar(stg.sort_values("support_100"), "support_100", "#2E7D32",
+            "Company-wide strengths — best-supported items", "Support (0–100, higher = better)", "#1c5024", xmax=100)
+    # 5) Company demographics visual
+    demo = dd["demographics"]; dt = dd.get("n_participants") or 0
+    if demo and dt:
+        keys = list(demo.keys())
+        fig, axes = plt.subplots(1, len(keys), figsize=(3.05 * len(keys), 2.6))
+        if len(keys) == 1:
+            axes = [axes]
+        for ax, lab in zip(axes, keys):
+            vc = demo[lab].head(6)[::-1]; pct = vc / dt * 100
+            ax.barh(range(len(vc)), pct.values, color="#5B7DB1", height=0.62)
+            ax.set_yticks(range(len(vc))); ax.set_yticklabels([_wrap(str(k), 16) for k in vc.index], fontsize=7)
+            for i, v in enumerate(pct.values):
+                ax.text(v + 1.5, i, f"{v:.0f}%", va="center", fontsize=7, color="#33475b")
+            ax.set_xlim(0, 112); ax.set_title(lab, fontsize=9.5, weight="bold", color="#2b3a67")
+            ax.tick_params(axis="x", labelsize=7)
+            for s in ["top", "right"]: ax.spines[s].set_visible(False)
+        fig.tight_layout(); charts["demo"] = _b64png(fig)
+    return charts
+
+@st.cache_data(show_spinner=False)
+def portfolio_data(completers_flag):
+    """Roll-up data for the 10-site portfolio report card."""
+    ten = meta.get("ten_sites", [])
+    dd = {}
+    sd = scores_dim if scores_dim is not None else pd.DataFrame()
+    def _dim_val(name):
+        if not sd.empty and (sd["dimension"] == name).any():
+            return float(pd.to_numeric(sd.loc[sd["dimension"] == name, "composite"], errors="coerce").iloc[0])
+        return np.nan
+    dd["comp_index"] = _dim_val("OVERALL (equal)")
+    dims = ["Work Activity", "Physical Feature", "Service Level", "Digital & Tech"]
+    dd["dim_comp"] = {dm: _dim_val(dm) for dm in dims}
+    # per-site index + rank + tier
+    stand = site_standings(completers_flag)
+    overalls = stand["overall"]; ovals = list(overalls.values())
+    board = []
+    for site, idx in sorted(overalls.items(), key=lambda kv: -kv[1]):
+        r, n, tier, hexc, _p = rank_tier(idx, ovals)
+        board.append({"site": site, "index": idx, "rank": r, "n": n, "tier": tier, "hex": hexc})
+    dd["board"] = board
+    dd["dim_by_site"] = stand["dims"]
+    # company dimension gaps (Importance vs Support, 1–5) from item-level scores
+    sc = scores if scores is not None else pd.DataFrame()
+    gaps = []
+    if not sc.empty:
+        for dm in dims:
+            sub = sc[sc["dimension"] == dm]
+            if not len(sub):
+                continue
+            mi = pd.to_numeric(sub["mean_importance"], errors="coerce").mean()
+            ms = pd.to_numeric(sub["mean_support"], errors="coerce").mean()
+            gaps.append({"dim": dm, "imp": mi, "sup": ms,
+                         "gap": (ms - mi) if pd.notna(mi) else np.nan,
+                         "support100": dd["dim_comp"].get(dm, np.nan)})
+    dd["dim_gaps"] = gaps
+    # per-site associate sentiment (composite 1–5) + company
+    rs = resp_scores[resp_scores["site"].isin(ten)] if not resp_scores.empty else pd.DataFrame()
+    dd["comp_sentiment"] = float(rs["composite"].mean()) if len(rs) else np.nan
+    dd["sent_by_site"] = {s: float(g["composite"].mean()) for s, g in rs.groupby("site")} if len(rs) else {}
+    dd["n_participants"] = int(len(rs)); dd["n_sites"] = len(board)
+    # company friction items + strengths
+    if not sc.empty:
+        imp_items = sc[pd.to_numeric(sc["mean_importance"], errors="coerce").notna()].copy()
+        imp_items["friction"] = pd.to_numeric(imp_items["friction"], errors="coerce")
+        dd["friction"] = imp_items.sort_values("friction", ascending=False).head(6)[
+            ["dimension", "item", "friction", "friction_pct"]].to_dict("records")
+        sc2 = sc.copy(); sc2["support_100"] = pd.to_numeric(sc2["support_100"], errors="coerce")
+        dd["strength"] = sc2.sort_values("support_100", ascending=False).head(6)[
+            ["dimension", "item", "support_100"]].to_dict("records")
+    else:
+        dd["friction"] = []; dd["strength"] = []
+    # open-ended: company comment sentiment + top themes + site×theme
+    real = comments[~comments["eff_junk"]]
+    real10 = real[real["site"].isin(ten)]
+    dd["n_comments"] = int(len(real10)); dd["n_commenters"] = int(real10["respondent"].nunique())
+    dd["pos"] = float((real10["eff_sentiment"] == "Positive").mean() * 100) if len(real10) else 0.0
+    dd["neg"] = float((real10["eff_sentiment"] == "Negative").mean() * 100) if len(real10) else 0.0
+    dd["neu"] = 100 - dd["pos"] - dd["neg"]
+    tex = explode_level(real10, "Themes")
+    tcounts = tex["key"].value_counts()
+    tops = list(tcounts.head(8).index)
+    dd["top_themes"] = [{"theme": t, "n": int(tcounts[t]), "pct": tcounts[t] / max(1, len(real10)) * 100,
+                         "neg": float((tex[tex["key"] == t]["eff_sentiment"] == "Negative").mean() * 100)}
+                        for t in tops]
+    site_tot = real10.groupby("site")["comment_id"].nunique()
+    dd["site_theme_themes"] = tops
+    dd["site_theme"] = {b["site"]: {t: (tex[(tex["site"] == b["site"]) & (tex["key"] == t)]["comment_id"].nunique()
+                                        / max(1, int(site_tot.get(b["site"], 0))) * 100) for t in tops}
+                        for b in board}
+    # company demographics
+    demo = {}
+    for lab, col in [("Role", "role"), ("Tenure", "tenure"), ("Hybrid category", "hybrid")]:
+        if len(rs) and col in rs.columns:
+            vc = rs[col].dropna().astype(str).value_counts()
+            if len(vc):
+                demo[lab] = vc
+    dd["demographics"] = demo
+    dd["charts"] = _portfolio_charts(dd)
+    return dd
+
+def _sent_mark(v, ref, thr=0.05):
+    if pd.isna(v) or pd.isna(ref):
+        return ""
+    d = v - ref
+    if d >= thr:
+        return f"<span style='color:#1E7D32'>&#9650; +{d:.2f}</span>"
+    if d <= -thr:
+        return f"<span style='color:#C0392B'>&#9660; {d:.2f}</span>"
+    return "<span style='color:#888'>&#8776;</span>"
+
+def build_portfolio_report(completers_flag):
+    """Self-contained HTML — the 10 PulsePoints portfolio report card (exec brief)."""
+    dd = portfolio_data(completers_flag)
+    ch = dd["charts"]
+    img = lambda k: (f"<img src='data:image/png;base64,{ch[k]}'/>" if k in ch else "")
+    cx = dd["comp_index"]; board = dd["board"]
+    ivals = [b["index"] for b in board]
+    rng = f"{min(ivals):.0f}–{max(ivals):.0f}" if ivals else "—"
+    # leaderboard table
+    lead = ""
+    for b in board:
+        s = dd["sent_by_site"].get(b["site"], np.nan)
+        lead += (f"<tr><td>{_html.escape(b['site'])}</td>"
+                 f"<td style='font-weight:800'>{b['index']:.0f}</td>"
+                 f"<td>#{b['rank']} of {b['n']}</td>"
+                 f"<td style='color:{b['hex']};font-weight:600'>{b['tier']}</td>"
+                 f"<td>{vs_mark(b['index'], cx)}</td>"
+                 f"<td>{'—' if pd.isna(s) else f'{s:.2f}'} {_sent_mark(s, dd['comp_sentiment'])}</td></tr>")
+    # dimension gaps table
+    def _dstat(g):
+        if pd.isna(g["gap"]):
+            lab, hx = tech_status(g["sup"]); return lab, hx
+        ry = ryg_of(g["gap"]); return STATUS_WORD.get(ry, ""), RYG_HEX.get(ry, "#333")
+    gap_rows = ""
+    for g in dd["dim_gaps"]:
+        lab, hx = _dstat(g)
+        gap_rows += (f"<tr><td>{_html.escape(g['dim'])}</td><td>{_f1(g['imp'])}</td><td>{_f1(g['sup'])}</td>"
+                     f"<td style='color:{hx};font-weight:700'>{_gp(g['gap'])}</td>"
+                     f"<td style='color:{hx};font-weight:600'>{lab}</td>"
+                     f"<td style='font-weight:700'>{g['support100']:.0f}</td></tr>")
+    # top themes table
+    th_rows = "".join(
+        f"<tr><td>{_html.escape(t['theme'])}</td><td>{t['pct']:.0f}%</td><td>{t['n']:,}</td>"
+        f"<td style='color:{'#C0392B' if t['neg']>=50 else '#555'}'>{t['neg']:.0f}% neg</td></tr>"
+        for t in dd["top_themes"])
+    return f"""<!doctype html><html><head><meta charset="utf-8">
+<title>10 PulsePoints — Portfolio Report Card</title>
+<style>
+ body{{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#1a1a2e;max-width:900px;
+   margin:22px auto;padding:0 22px;line-height:1.5}}
+ h1{{font-size:23px;margin-bottom:2px}} .sub{{color:#666;font-size:13px;margin-bottom:14px}}
+ h3{{border-bottom:2px solid #eee;padding-bottom:4px;margin-top:22px;font-size:14px;text-transform:uppercase;
+   letter-spacing:.03em;color:#2b3a67}}
+ table{{border-collapse:collapse;width:100%;font-size:13px;margin-top:8px}}
+ th,td{{text-align:left;padding:5px 8px;border-bottom:1px solid #eee}} th{{color:#555;font-weight:600}}
+ td:nth-child(n+2),th:nth-child(n+2){{text-align:right}}
+ .charts img{{max-width:100%;margin-top:8px}}
+ .rc{{border:1px solid #e3e6ec;border-radius:10px;padding:16px 18px;margin:4px 0 14px;background:#fbfcfe;display:flex;
+   align-items:center;gap:16px}}
+ .rc-badge{{width:66px;height:66px;border-radius:10px;background:#2b3a67;color:#fff;font-size:28px;font-weight:800;
+   display:flex;align-items:center;justify-content:center;flex-shrink:0}}
+ .rc-t{{font-size:15px;font-weight:700;color:#2b3a67}} .rc-p{{font-size:12.5px;color:#777;margin-top:3px}}
+ .lgd{{font-size:11px;color:#888;margin-top:5px}}
+ .foot{{color:#888;font-size:11px;margin-top:22px;border-top:1px solid #eee;padding-top:8px}}
+</style></head><body>
+<h1>10 PulsePoints — Portfolio Report Card</h1>
+<div class="sub">Company-wide exec brief across the {dd['n_sites']} in-scope sites · completed responses</div>
+<div class="rc"><div class="rc-badge">{cx:.0f}</div><div>
+ <div class="rc-t">Company Overall PulsePoint Experience Index Score (0–100)</div>
+ <div class="rc-p">Sites range {rng} · {dd['n_participants']:,} respondents · {dd['n_comments']:,} substantive comments
+  from {dd['n_commenters']:,} associates</div>
+ <div class="rc-p">Company comment sentiment:
+  <span style="color:#2E9E6B">{dd['pos']:.0f}% positive</span> ·
+  <span style="color:#7a7a7a">{dd['neu']:.0f}% neutral</span> ·
+  <span style="color:#D1495B">{dd['neg']:.0f}% negative</span></div>
+</div></div>
+<h3>Site leaderboard</h3>
+<table><tr><th>Site</th><th>Index</th><th>Rank</th><th>Tier</th><th>vs company</th><th>Sentiment (1–5)</th></tr>{lead}</table>
+<div class="charts">{img('leaderboard')}</div>
+<h3>Dimension Scores by site</h3>
+<div class="charts">{img('heatmap_dim')}</div>
+<p class="lgd">Each cell is that site's Dimension Score (0–100). Color is absolute (green = higher, red = lower);
+Work Activity is the company's weakest dimension, so it reads amber/red across most sites.</p>
+<h3>Company dimensions — Importance vs. Support</h3>
+<table><tr><th>Dimension</th><th>Importance</th><th>Support</th><th>Gap</th><th>Status</th><th>Score (0–100)</th></tr>{gap_rows}</table>
+<p class="lgd">Digital &amp; Tech is agreement-only (Strong ≥4.0 / Moderate 3.5–3.9 / Needs attention &lt;3.5).</p>
+<h3>Friction &amp; strength themes (company-wide)</h3>
+<div class="charts">{img('friction')}{img('strength')}</div>
+<h3>Open-ended comment themes</h3>
+<table><tr><th>Theme</th><th>% of comments</th><th>Mentions</th><th>Sentiment</th></tr>{th_rows}</table>
+<div class="charts">{img('heatmap_theme')}</div>
+<p class="lgd">Prevalence = share of each site's comments mentioning the theme (a comment can touch several).
+Themes come from a keyword taxonomy (29 themes across 7 categories), kept separate from PXIP categories by design.</p>
+<h3>Demographics — respondent profile</h3>
+<p class="lgd">Provided to help readers understand the respondent mix behind the results ({dd['n_participants']:,} respondents).</p>
+<div class="charts">{img('demo')}</div>
+<div class="foot"><b>Data source &amp; method.</b> PulsePoint survey export ·
+{'completed responses only' if completers_flag else 'all responses'} · {dd['n_sites']} in-scope sites. The Index Score is
+the unweighted average of the four Dimension Scores (0–100) — the same calculation as the Tableau deck. Friction &amp; RYG
+per the official Tableau spec.</div>
+</body></html>"""
+
+@st.cache_data(show_spinner=False)
+def build_portfolio_pdf(completers_flag):
+    """Native PDF of the portfolio report card (exec brief)."""
+    from reportlab.lib.pagesizes import letter
+    from reportlab.lib.units import inch
+    from reportlab.lib import colors as rc
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image as RLImage
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    dd = portfolio_data(completers_flag); ch = dd["charts"]
+    buf = io.BytesIO()
+    doc = SimpleDocTemplate(buf, pagesize=letter, topMargin=0.55*inch, bottomMargin=0.55*inch,
+                            leftMargin=0.55*inch, rightMargin=0.55*inch)
+    ss = getSampleStyleSheet()
+    h1 = ParagraphStyle("h1", parent=ss["Title"], fontSize=18, spaceAfter=2)
+    h3 = ParagraphStyle("h3", parent=ss["Heading3"], textColor=rc.HexColor("#2b3a67"), fontSize=11, spaceBefore=9)
+    body = ParagraphStyle("body", parent=ss["BodyText"], fontSize=9.5, leading=13)
+    cx = dd["comp_index"]; board = dd["board"]; ivals = [b["index"] for b in board]
+    rng = f"{min(ivals):.0f}–{max(ivals):.0f}" if ivals else "—"
+    def _img(k, w, h):
+        return RLImage(io.BytesIO(base64.b64decode(ch[k])), width=w*inch, height=h*inch, kind="proportional") if k in ch else Spacer(1, 1)
+    story = [Paragraph("10 PulsePoints — Portfolio Report Card", h1),
+             Paragraph(f"Company-wide exec brief across the {dd['n_sites']} in-scope sites · completed responses", body)]
+    idx_tbl = Table([[Paragraph(f"<font size=22 color='white'><b>{cx:.0f}</b></font>", body),
+        Paragraph(f"<b>Company Overall PulsePoint Experience Index Score (0–100)</b><br/>"
+                  f"<font size=8 color='#777'>Sites range {rng} · {dd['n_participants']:,} respondents · "
+                  f"{dd['n_comments']:,} substantive comments from {dd['n_commenters']:,} associates</font><br/>"
+                  f"<font size=8 color='#555'>Comment sentiment: <font color='#2E9E6B'>{dd['pos']:.0f}% pos</font> · "
+                  f"{dd['neu']:.0f}% neu · <font color='#D1495B'>{dd['neg']:.0f}% neg</font></font>", body)]],
+        colWidths=[0.7*inch, 6.6*inch])
+    idx_tbl.setStyle(TableStyle([("BACKGROUND", (0, 0), (0, 0), rc.HexColor("#2b3a67")),
+        ("VALIGN", (0, 0), (-1, -1), "MIDDLE"), ("ALIGN", (0, 0), (0, 0), "CENTER"),
+        ("TOPPADDING", (0, 0), (0, 0), 12), ("BOTTOMPADDING", (0, 0), (0, 0), 12), ("LEFTPADDING", (1, 0), (1, 0), 10)]))
+    story += [Spacer(1, 6), idx_tbl]
+    # leaderboard table
+    lrows = [["Site", "Index", "Rank", "Tier", "vs co.", "Sentiment"]]; lstyle = []
+    for i, b in enumerate(board, 1):
+        s = dd["sent_by_site"].get(b["site"], np.nan)
+        dv = b["index"] - cx if pd.notna(cx) else np.nan
+        vs = "" if pd.isna(dv) else (f"+{dv:.0f}" if dv >= 0 else f"{dv:.0f}")
+        lrows.append([b["site"], f"{b['index']:.0f}", f"#{b['rank']}", b["tier"], vs,
+                      "—" if pd.isna(s) else f"{s:.2f}"])
+        lstyle.append(("TEXTCOLOR", (3, i), (3, i), rc.HexColor(b["hex"])))
+    lt = Table(lrows, colWidths=[2.3*inch, 0.7*inch, 0.6*inch, 1.5*inch, 0.7*inch, 1.0*inch], hAlign="LEFT")
+    lt.setStyle(TableStyle([("FONTSIZE", (0, 0), (-1, -1), 8.5), ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
+        ("TOPPADDING", (0, 0), (-1, -1), 3), ("TEXTCOLOR", (0, 0), (-1, 0), rc.HexColor("#555")),
+        ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"), ("FONTNAME", (1, 1), (1, -1), "Helvetica-Bold"),
+        ("LINEBELOW", (0, 0), (-1, -1), 0.4, rc.HexColor("#e6e6e6")), ("ALIGN", (1, 0), (-1, -1), "RIGHT"),
+        ("ALIGN", (3, 0), (3, -1), "LEFT")] + lstyle))
+    story += [Paragraph("Site leaderboard", h3), lt, Spacer(1, 4), _img("leaderboard", 6.9, 3.3)]
+    story += [Paragraph("Dimension Scores by site", h3), _img("heatmap_dim", 6.2, 3.7),
+              Paragraph("<font size=7.5 color='#999'>Cells are Dimension Scores (0–100); color is absolute "
+                        "(green = higher). Work Activity is the weakest company-wide, so it reads amber/red across sites.</font>", body)]
+    # dimension gaps table
+    grows = [["Dimension", "Imp", "Sup", "Gap", "Status", "Score"]]; gstyle = []
+    for i, g in enumerate(dd["dim_gaps"], 1):
+        if pd.isna(g["gap"]):
+            lab, hx = tech_status(g["sup"])
+        else:
+            ry = ryg_of(g["gap"]); lab, hx = STATUS_WORD.get(ry, ""), RYG_HEX.get(ry, "#333")
+        grows.append([g["dim"], _f1(g["imp"]), _f1(g["sup"]), _gp(g["gap"]), lab, f"{g['support100']:.0f}"])
+        gstyle.append(("TEXTCOLOR", (3, i), (4, i), rc.HexColor(hx)))
+    gt = Table(grows, colWidths=[1.9*inch, 0.8*inch, 0.8*inch, 0.7*inch, 1.4*inch, 0.7*inch], hAlign="LEFT")
+    gt.setStyle(TableStyle([("FONTSIZE", (0, 0), (-1, -1), 8.5), ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
+        ("TOPPADDING", (0, 0), (-1, -1), 3), ("TEXTCOLOR", (0, 0), (-1, 0), rc.HexColor("#555")),
+        ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"), ("LINEBELOW", (0, 0), (-1, -1), 0.4, rc.HexColor("#e6e6e6")),
+        ("ALIGN", (1, 0), (-1, -1), "RIGHT"), ("ALIGN", (4, 0), (4, -1), "LEFT")] + gstyle))
+    story += [Paragraph("Company dimensions — Importance vs. Support", h3), gt]
+    fs = [k for k in ("friction", "strength") if k in ch]
+    if fs:
+        story += [Paragraph("Friction &amp; strength themes (company-wide)", h3),
+                  Table([[_img(k, 3.45, 2.4) for k in fs]], colWidths=[3.6*inch]*len(fs), hAlign="LEFT")]
+    # top themes table + site×theme heatmap
+    trows = [["Theme", "% of comments", "Mentions", "Sentiment"]]
+    for t in dd["top_themes"]:
+        trows.append([t["theme"], f"{t['pct']:.0f}%", f"{t['n']:,}", f"{t['neg']:.0f}% neg"])
+    tt = Table(trows, colWidths=[3.0*inch, 1.2*inch, 1.0*inch, 1.2*inch], hAlign="LEFT")
+    tt.setStyle(TableStyle([("FONTSIZE", (0, 0), (-1, -1), 8.5), ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
+        ("TOPPADDING", (0, 0), (-1, -1), 3), ("TEXTCOLOR", (0, 0), (-1, 0), rc.HexColor("#555")),
+        ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"), ("LINEBELOW", (0, 0), (-1, -1), 0.4, rc.HexColor("#e6e6e6")),
+        ("ALIGN", (1, 0), (-1, -1), "RIGHT")]))
+    story += [Paragraph("Open-ended comment themes", h3), tt]
+    if "heatmap_theme" in ch:
+        story += [Spacer(1, 4), _img("heatmap_theme", 7.2, 3.5)]
+    if "demo" in ch:
+        story += [Paragraph("Demographics — respondent profile", h3),
+                  Paragraph("<font size=8 color='#777'>Provided to help readers understand the respondent mix behind "
+                            "the results.</font>", body), _img("demo", 7.0, 2.4)]
+    story += [Spacer(1, 10), Paragraph(
+        "<font size=7.5 color='#888'><b>Data source &amp; method.</b> PulsePoint survey export · "
+        + ("completed responses only" if completers_flag else "all responses") +
+        f" · {dd['n_sites']} in-scope sites. The Index Score is the unweighted average of the four Dimension Scores "
+        "(0–100) — the same calculation as the Tableau deck. Friction &amp; RYG per the official Tableau spec.</font>", body)]
+    doc.build(story)
     return buf.getvalue()
 
 def verbatim_export(site=None):
@@ -1942,6 +2315,19 @@ with tab_diag:
 # TAB — SITE REPORTS (one-pager export)
 # ===========================================================================
 with tab_report:
+    st.subheader("📋 10 PulsePoints — Portfolio report card")
+    st.caption("A company-wide exec brief across the 10 in-scope sites: an Index-Score leaderboard, a site×dimension "
+               "heatmap, Importance-vs-Support gaps, company Friction & strengths, top comment themes with a "
+               "site×theme heatmap, and the respondent profile. Download as HTML or PDF.")
+    pf_html = build_portfolio_report(completers_only)
+    _pcol = st.columns(4)
+    _pcol[0].download_button("⬇️ Portfolio HTML", pf_html, "pulsepoint_portfolio.html", "text/html",
+                             use_container_width=True)
+    _pcol[1].download_button("⬇️ Portfolio PDF", build_portfolio_pdf(completers_only), "pulsepoint_portfolio.pdf",
+                             "application/pdf", use_container_width=True)
+    components.html(pf_html, height=780, scrolling=True)
+    st.divider()
+
     st.subheader("Site one-pagers")
     st.caption("A leadership-ready summary for a single site — top priorities, highest-Friction items, "
                "org benchmark, and representative quotes, with an auto-written recap. The 10 in-scope "

@@ -127,6 +127,12 @@ rollup (role, tenure, hybrid category) above a detailed backup table. A **data s
 footer documents the pipeline. Download per site as **HTML, PDF, or PowerPoint**, build a full deck
 of all sites at once, or export a site's complete verbatim bank as CSV.
 
+At the top of the tab is the **10 PulsePoints — Portfolio Report Card**: a company-wide exec brief
+(2–3 pages) that rolls the same elements up across all ten sites — the company Index Score, a ranked
+**site leaderboard**, a **site × dimension heatmap**, company Importance-vs-Support gaps, company-wide
+Friction and strength themes, the top comment themes with a **site × theme heatmap**, and the overall
+respondent profile. Download as HTML or PDF.
+
 **✏️ Tagging Workspace** — starts with a **"Discover missing themes"** panel that
 auto-clusters the Unclassified comments so you can spot themes the taxonomy is missing
 (it already surfaced an "office supplies" cluster, for example). Below that, review the
