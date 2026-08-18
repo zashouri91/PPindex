@@ -722,17 +722,29 @@ def _site_charts(d):
 
 def html_to_pdf(html):
     """Render report HTML to PDF so the PDF export is identical to the HTML report.
-    Primary engine = headless Chromium (a literal print of the page); fallback = WeasyPrint."""
+    Tries browsers in order — the system Chrome, then Edge (no download, works on
+    locked-down/corporate machines), then Playwright's bundled Chromium — and finally
+    falls back to WeasyPrint."""
     try:
         from playwright.sync_api import sync_playwright
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(args=["--no-sandbox", "--disable-dev-shm-usage"])
-            page = browser.new_page()
-            page.set_content(html, wait_until="load")
-            pdf = page.pdf(format="Letter", print_background=True, prefer_css_page_size=True,
-                           margin={"top": "0", "bottom": "0", "left": "0", "right": "0"})
-            browser.close()
-            return pdf
+            browser = None
+            for _launch in (
+                lambda: pw.chromium.launch(channel="chrome", args=["--no-sandbox"]),
+                lambda: pw.chromium.launch(channel="msedge", args=["--no-sandbox"]),
+                lambda: pw.chromium.launch(args=["--no-sandbox", "--disable-dev-shm-usage"]),
+            ):
+                try:
+                    browser = _launch(); break
+                except Exception:
+                    continue
+            if browser is not None:
+                page = browser.new_page()
+                page.set_content(html, wait_until="load")
+                pdf = page.pdf(format="Letter", print_background=True, prefer_css_page_size=True,
+                               margin={"top": "0", "bottom": "0", "left": "0", "right": "0"})
+                browser.close()
+                return pdf
     except Exception:
         pass
     try:
@@ -740,8 +752,9 @@ def html_to_pdf(html):
         return _WHTML(string=html).write_pdf()
     except Exception as exc:
         raise RuntimeError(
-            "PDF export needs a renderer: either Chromium (run `playwright install chromium`) "
-            f"or WeasyPrint (`pip install weasyprint`). Neither is available — {exc}")
+            "PDF export needs a browser. Easiest: download the HTML report and use your browser's "
+            "Print → Save as PDF (identical output). To enable the in-app button, install Chrome or "
+            f"Edge, or run `python -m playwright install chromium`. (renderer error: {exc})")
 
 def build_site_report(site):
     """Self-contained HTML one-pager for one site."""
