@@ -720,6 +720,29 @@ def _site_charts(d):
         fig.tight_layout(); charts["demo"] = _b64png(fig)
     return charts
 
+def html_to_pdf(html):
+    """Render report HTML to PDF so the PDF export is identical to the HTML report.
+    Primary engine = headless Chromium (a literal print of the page); fallback = WeasyPrint."""
+    try:
+        from playwright.sync_api import sync_playwright
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(args=["--no-sandbox", "--disable-dev-shm-usage"])
+            page = browser.new_page()
+            page.set_content(html, wait_until="load")
+            pdf = page.pdf(format="Letter", print_background=True, prefer_css_page_size=True,
+                           margin={"top": "0", "bottom": "0", "left": "0", "right": "0"})
+            browser.close()
+            return pdf
+    except Exception:
+        pass
+    try:
+        from weasyprint import HTML as _WHTML
+        return _WHTML(string=html).write_pdf()
+    except Exception as exc:
+        raise RuntimeError(
+            "PDF export needs a renderer: either Chromium (run `playwright install chromium`) "
+            f"or WeasyPrint (`pip install weasyprint`). Neither is available — {exc}")
+
 def build_site_report(site):
     """Self-contained HTML one-pager for one site."""
     d = site_report_data(site, completers_only)
@@ -956,6 +979,9 @@ def build_site_report(site):
  .demo{{display:flex;gap:18px;flex-wrap:wrap;margin-top:8px}} .demo>div{{flex:1;min-width:210px}}
  .demo table{{font-size:12px}}
  .foot{{color:#888;font-size:11px;margin-top:24px;border-top:1px solid #eee;padding-top:8px}}
+ @page{{size:Letter;margin:12mm}}
+ @media print{{ body{{max-width:100%;margin:0;padding:0}} .charts img{{max-width:100%}}
+   h1,h3{{break-after:avoid}} tr,blockquote,.rc,.area,details.catblk{{break-inside:avoid}} }}
 </style></head><body>
 <h1>PulsePoint Experience — {_html.escape(site)}</h1>
 <div class="sub">Workplace experience report card · completed responses</div>
@@ -1006,253 +1032,9 @@ the official Tableau spec · Priority = 40% volume + 35% share negative + 25% Fr
 
 @st.cache_data(show_spinner=False)
 def build_site_pdf(site, completers_flag):
-    """Native PDF one-pager via reportlab (mirrors the HTML)."""
-    from reportlab.lib.pagesizes import letter
-    from reportlab.lib.units import inch
-    from reportlab.lib import colors as rc
-    from reportlab.platypus import (SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle,
-                                    Image as RLImage)
-    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-    d = site_report_data(site, completers_flag)
-    buf = io.BytesIO()
-    doc = SimpleDocTemplate(buf, pagesize=letter, topMargin=0.6*inch, bottomMargin=0.6*inch,
-                            leftMargin=0.6*inch, rightMargin=0.6*inch)
-    ss = getSampleStyleSheet()
-    h1 = ParagraphStyle("h1", parent=ss["Title"], fontSize=18, spaceAfter=2)
-    h3 = ParagraphStyle("h3", parent=ss["Heading3"], textColor=rc.HexColor("#2b3a67"), fontSize=11, spaceBefore=10)
-    body = ParagraphStyle("body", parent=ss["BodyText"], fontSize=9.5, leading=13)
-    quote = ParagraphStyle("q", parent=body, leftIndent=8, textColor=rc.HexColor("#333"),
-                           borderColor=rc.HexColor("#D1495B"), fontName="Helvetica-Oblique")
-    story = [Paragraph(f"PulsePoint Experience — {_html.escape(site)}", h1)]
-    if d["n"] == 0:
-        story.append(Paragraph("No comments for this site.", body))
-        doc.build(story); return buf.getvalue()
-    story.append(Paragraph("Workplace experience report card · completed responses", body))
-    # ---- report-card grade header ----
-    AREA_SHORT = {"Work Activity": "Work Activity", "Physical Feature": "Physical",
-                  "Service Level": "Services", "Digital & Tech": "Technology"}
-    def _mark_txt(sv, ov):
-        if pd.isna(sv) or pd.isna(ov): return ""
-        dd = sv - ov
-        if dd >= 2: return f"<font color='#1E7D32'>(+{dd:.0f} vs avg)</font>"
-        if dd <= -2: return f"<font color='#C0392B'>({dd:.0f} vs avg)</font>"
-        return "<font color='#888'>(on par)</font>"
-    if d.get("card"):
-        cc = d["card"]; oh = cc.get("tier_hex", "#5A9E3A")
-        _allp = d.get("all_participants") or 0
-        _pstr = (f"{d['participation']:,} of {_allp:,} respondents (this site vs. all 10 sites)"
-                 if _allp else f"{d['participation']:,} participants")
-        _rank = (f"Rank {cc['rank']} of {cc['n_sites']} · {cc['tier']} of sites" if cc.get("rank") else "")
-        _rng = (f" · sites range {cc['dist_min']:.0f}–{cc['dist_max']:.0f}"
-                if pd.notna(cc.get("dist_min")) else "")
-        og = Table([[Paragraph(f"<font size=20 color='white'><b>{cc['overall']:.0f}</b></font>", body),
-                     Paragraph(f"<b>Overall PulsePoint Experience Index Score {cc['overall']:.0f} / 100</b>  ·  "
-                               f"{cc['tier']} of sites  {_mark_txt(cc['overall'], cc.get('org_overall'))}<br/>"
-                               f"<font size=8 color='#777'>{_rank}{_rng}</font><br/>"
-                               f"<font size=8 color='#777'>{_pstr} · {d['n']:,} written comments</font>", body)]],
-                    colWidths=[0.62*inch, 5.9*inch])
-        og.setStyle(TableStyle([("BACKGROUND", (0, 0), (0, 0), rc.HexColor(oh)),
-            ("VALIGN", (0, 0), (-1, -1), "MIDDLE"), ("ALIGN", (0, 0), (0, 0), "CENTER"),
-            ("TOPPADDING", (0, 0), (0, 0), 10), ("BOTTOMPADDING", (0, 0), (0, 0), 10),
-            ("LEFTPADDING", (1, 0), (1, 0), 10)]))
-        names, grades, gstyle = [], [], []
-        for i, a in enumerate(cc["areas"]):
-            names.append(AREA_SHORT.get(a["dim"], a["dim"]))
-            _rc = f"#{a['rank']}/{a['n']}" if a.get("rank") else ""
-            grades.append(Paragraph(f"<font color='white' size=13><b>{a['score']:.0f}</b></font>  "
-                                    f"<font color='white' size=7>{_rc}</font>", body))
-            gstyle += [("BACKGROUND", (i, 1), (i, 1), rc.HexColor(a.get("hex", "#888"))), ("ALIGN", (i, 1), (i, 1), "CENTER")]
-        gt = Table([names, grades], colWidths=[1.55*inch]*len(cc["areas"]))
-        gt.setStyle(TableStyle([("FONTSIZE", (0, 0), (-1, 0), 8.5), ("ALIGN", (0, 0), (-1, -1), "CENTER"),
-            ("TEXTCOLOR", (0, 0), (-1, 0), rc.HexColor("#555")), ("TOPPADDING", (0, 1), (-1, 1), 7),
-            ("BOTTOMPADDING", (0, 1), (-1, 1), 7), ("BOTTOMPADDING", (0, 0), (-1, 0), 3),
-            ("GRID", (0, 1), (-1, 1), 2, rc.white)] + gstyle))
-        story += [Spacer(1, 8), og, Spacer(1, 5),
-                  Paragraph("<font size=8 color='#6b7280'><b>DIMENSION SCORES (0–100)</b></font>", body),
-                  Spacer(1, 2), gt,
-                  Paragraph("<font size=7.5 color='#999'>The Index Score is the average of the four Dimension Scores "
-                            "(0–100) — the same calculation as the Tableau deck. Boxes show each dimension's score and its "
-                            "rank among the 10 sites. Tier = thirds of the 10-site distribution. (+/−) = vs. the company "
-                            "average.</font>", body)]
-    # Dimension summary + detail near the top (Importance vs Support, 1–5)
-    def _sc(r):
-        """Status word + hex: RYG for importance dims; the agreement band for Tech."""
-        if pd.isna(r["gap5"]):
-            return tech_status(r["mean_support"])
-        ry = ryg_of(r["gap5"]); return STATUS_WORD.get(ry, ""), RYG_HEX[ry]
-    if len(d["dim_summary"]):
-        srows, sstyle = [["Dimension", "Importance", "Support", "Gap", "Status"]], []
-        for i, (_, r) in enumerate(d["dim_summary"].iterrows(), 1):
-            gpv = r["gap5"]
-            _slab, _shex = _sc(r)
-            srows.append([r["dimension"], _f1(r["mean_importance"]), _f1(r["mean_support"]), _gp(gpv), _slab])
-            sstyle.append(("TEXTCOLOR", (3, i), (4, i), rc.HexColor(_shex)))
-        st_ = Table(srows, colWidths=[2.1*inch, 1.0*inch, 0.9*inch, 0.7*inch, 1.4*inch], hAlign="LEFT")
-        st_.setStyle(TableStyle([("FONTSIZE", (0, 0), (-1, -1), 8.5), ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
-            ("TOPPADDING", (0, 0), (-1, -1), 3), ("TEXTCOLOR", (0, 0), (-1, 0), rc.HexColor("#555")),
-            ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"), ("FONTNAME", (3, 1), (3, -1), "Helvetica-Bold"),
-            ("LINEBELOW", (0, 0), (-1, -1), 0.4, rc.HexColor("#e6e6e6")), ("ALIGN", (1, 0), (-1, -1), "RIGHT"),
-            ("ALIGN", (4, 0), (4, -1), "LEFT")] + sstyle))
-        drows, dstyle, ri = [["Dimension topic (question)", "Imp", "Sup", "Gap", "Status"]], [], 1
-        for dim in d["detail"]["dimension"].drop_duplicates():
-            drows.append([dim, "", "", "", ""])
-            dstyle += [("SPAN", (0, ri), (4, ri)), ("BACKGROUND", (0, ri), (4, ri), rc.HexColor("#eef1f7")),
-                       ("FONTNAME", (0, ri), (0, ri), "Helvetica-Bold"), ("TEXTCOLOR", (0, ri), (0, ri), rc.HexColor("#2b3a67"))]
-            ri += 1
-            for _, r in d["detail"][d["detail"]["dimension"] == dim].iterrows():
-                _slab, _shex = _sc(r); col = rc.HexColor(_shex)
-                drows.append([str(r["item"])[:60], _f1(r["mean_importance"]), _f1(r["mean_support"]),
-                              _gp(r["gap5"]), _slab])
-                dstyle += [("TEXTCOLOR", (1, ri), (4, ri), col), ("FONTNAME", (3, ri), (3, ri), "Helvetica-Bold")]
-                ri += 1
-        dt = Table(drows, colWidths=[3.15*inch, 0.5*inch, 0.5*inch, 0.5*inch, 1.15*inch], hAlign="LEFT")
-        dt.setStyle(TableStyle([("FONTSIZE", (0, 0), (-1, -1), 7.8), ("BOTTOMPADDING", (0, 0), (-1, -1), 2.5),
-            ("TOPPADDING", (0, 0), (-1, -1), 2.5), ("TEXTCOLOR", (0, 0), (-1, 0), rc.HexColor("#555")),
-            ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
-            ("LINEBELOW", (0, 0), (-1, -1), 0.3, rc.HexColor("#eee")),
-            ("ALIGN", (1, 0), (3, -1), "RIGHT"), ("ALIGN", (4, 0), (4, -1), "LEFT")] + dstyle))
-        story += [Spacer(1, 6), Paragraph("Importance vs. Support gaps", h3), st_,
-                  Paragraph("<font size=7.5 color='#999'>Status: red = Needs attention · green = On track · orange = "
-                            "Exceeds needs. Digital &amp; Tech is agreement-only, rated on the 1–5 agreement level "
-                            "(Strong ≥4.0 / Moderate 3.5–3.9 / Needs attention &lt;3.5).</font>", body),
-                  Paragraph("Detail — by question (Gap = Support − Importance)", h3), dt]
-    # ---- Associate Sentiment Score (standalone section) ----
-    agr = d.get("agreement", []); so = d.get("sentiment_overall")
-    _dl = {"Work Activity": "Work Activity", "Physical Feature": "Physical space",
-           "Service Level": "Services", "Digital & Tech": "Technology"}
-    srows2, s2style, ri2 = [["Dimension", "Summary sentiment question", "Site", "Company", "vs company"]], [], 1
-    for a in agr:
-        if pd.isna(a.get("site_mean")):
-            continue
-        srows2.append([_dl.get(a["dim"], a["dim"]), a.get("q", ""), f"{a['site_mean']:.2f}",
-                       ("" if pd.isna(a.get("org_mean")) else f"{a['org_mean']:.2f}"), a.get("verdict", "")])
-        s2style.append(("TEXTCOLOR", (4, ri2), (4, ri2), rc.HexColor(a.get("hex", "#333"))))
-        ri2 += 1
-    if so and pd.notna(so.get("site_mean")):
-        _pv = f", p={so['p']:.2f}" if pd.notna(so.get("p")) else ""
-        srows2.append(["Overall", "Average of the four items", f"{so['site_mean']:.2f}",
-                       f"{so['org_mean']:.2f}", f"{so['verdict']}{_pv}"])
-        s2style += [("TEXTCOLOR", (4, ri2), (4, ri2), rc.HexColor(so["hex"])),
-                    ("LINEABOVE", (0, ri2), (-1, ri2), 0.8, rc.HexColor("#cbd5e1")),
-                    ("FONTNAME", (0, ri2), (1, ri2), "Helvetica-Bold")]
-    if len(srows2) > 1:
-        stbl = Table(srows2, colWidths=[1.1*inch, 2.95*inch, 0.6*inch, 0.75*inch, 1.65*inch], hAlign="LEFT")
-        stbl.setStyle(TableStyle([("FONTSIZE", (0, 0), (-1, -1), 7.8), ("BOTTOMPADDING", (0, 0), (-1, -1), 2.5),
-            ("TOPPADDING", (0, 0), (-1, -1), 2.5), ("TEXTCOLOR", (0, 0), (-1, 0), rc.HexColor("#555")),
-            ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"), ("LINEBELOW", (0, 0), (-1, -1), 0.3, rc.HexColor("#eee")),
-            ("ALIGN", (2, 0), (3, -1), "RIGHT"), ("VALIGN", (0, 0), (-1, -1), "TOP")] + s2style))
-        story += [Paragraph("Associate Sentiment Score", h3),
-                  Paragraph("<font size=7.5 color='#999'>The survey's summary sentiment items, one per dimension "
-                            "(Q8/Q12/Q16/Q19, 1–5; Q16 = Services, Q19 = Technology by survey position). “Company” = the "
-                            "other in-scope sites; “vs company” is a Welch t-test (significant at p&lt;0.05).</font>", body),
-                  stbl]
-    charts = d["charts"]
-    def _img(k, w, h):
-        return RLImage(io.BytesIO(base64.b64decode(charts[k])), width=w*inch, height=h*inch, kind="proportional")
-    # Quantitative close-out: friction + strengths (before the open-ended section)
-    qc = [k for k in ("gap", "strength") if k in charts]
-    if qc:
-        story += [Spacer(1, 8), Paragraph("Friction &amp; strength themes", h3),
-                  Table([[_img(k, 3.45, 2.5) for k in qc]], colWidths=[3.6*inch]*len(qc), hAlign="LEFT")]
-    # Open-ended comment themes
-    tops = d["P"]["key"].tolist()
-    _cs = (f"Comment sentiment: <font color='{SENT_HEX['Positive']}'>{d['pos']:.0f}% positive</font> · "
-           f"{d['neu']:.0f}% neutral · <font color='{SENT_HEX['Negative']}'>{d['neg']:.0f}% negative</font>")
-    story += [Spacer(1, 8), Paragraph("Open-ended comment themes", h3), Paragraph(f"<b>{_cs}</b>", body),
-              Paragraph(f"Top area to address: <b>{tops[0] if tops else '—'}</b>.", body)]
-    ocs = [k for k in ("donut", "themes") if k in charts]
-    if ocs:
-        story += [Spacer(1, 4), Table([[_img(k, 2.7, 2.1) for k in ocs]], colWidths=[2.95*inch]*len(ocs), hAlign="LEFT")]
+    """PDF export = an exact render of the HTML site report (identical content and layout)."""
+    return html_to_pdf(build_site_report(site))
 
-    def tbl(header, rows, widths):
-        data = [header] + rows
-        t = Table(data, colWidths=widths, hAlign="LEFT")
-        t.setStyle(TableStyle([
-            ("FONTSIZE", (0, 0), (-1, -1), 8.5), ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
-            ("TOPPADDING", (0, 0), (-1, -1), 3),
-            ("TEXTCOLOR", (0, 0), (-1, 0), rc.HexColor("#555")),
-            ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
-            ("LINEBELOW", (0, 0), (-1, -1), 0.4, rc.HexColor("#e6e6e6")),
-            ("ALIGN", (1, 0), (-1, -1), "RIGHT")]))
-        return t
-    story += [Paragraph("Top priorities to address", h3),
-              tbl(["Category", "# comments", "% neg", "priority"],
-                  [[r["key"], int(r["volume"]), f"{int(r['neg_share']*100)}%", int(round(r["Priority"]))]
-                   for _, r in d["P"].iterrows()], [2.6*inch, 1.1*inch, 0.9*inch, 0.9*inch])]
-    if d["quotes"]:
-        story.append(Paragraph("In their words — what to fix", h3))
-        for q in d["quotes"][:4]:
-            rep = f" · represents ~{q['represents']} similar" if q.get("represents", 0) >= 3 else ""
-            story += [Paragraph(f"“{_html.escape(q['text'])}”", quote),
-                      Paragraph(f"— {q['role']}, {q['tenure']} · <b>{q['theme']}</b>{rep}",
-                                ParagraphStyle("c", parent=body, fontSize=7.5, textColor=rc.HexColor("#888"))),
-                      Spacer(1, 4)]
-    story.append(Paragraph("<font size=7.5 color='#888'><b>How comments are categorized:</b> themes are assigned by a "
-                           "transparent keyword taxonomy built for this survey (28 themes across 7 categories), kept "
-                           "separate from the PXIP category set by design so the open-ended read stands on its own.</font>", body))
-    # ---- Demographics — respondent profile (visual first, table second) ----
-    demo = d.get("demographics") or {}; demo_total = d.get("demo_total") or 0
-    if demo and demo_total:
-        story += [Spacer(1, 8), Paragraph("Demographics — respondent profile", h3),
-                  Paragraph("<font size=8 color='#777'>Demographics are provided to help readers understand the "
-                            "respondent mix behind the results.</font>", body)]
-        if "demo" in charts:
-            story += [Spacer(1, 4), _img("demo", 7.0, 2.4)]
-        dcells = []
-        for lab, vc in demo.items():
-            rows = [[lab, "#", "%"]] + [[str(k)[:22], int(v), f"{v/demo_total*100:.0f}%"] for k, v in vc.items()]
-            dt2 = Table(rows, colWidths=[1.3*inch, 0.4*inch, 0.5*inch])
-            dt2.setStyle(TableStyle([("FONTSIZE", (0, 0), (-1, -1), 7.5), ("BOTTOMPADDING", (0, 0), (-1, -1), 1.5),
-                ("TOPPADDING", (0, 0), (-1, -1), 1.5), ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
-                ("TEXTCOLOR", (0, 0), (-1, 0), rc.HexColor("#555")),
-                ("LINEBELOW", (0, 0), (-1, 0), 0.4, rc.HexColor("#ccc")), ("ALIGN", (1, 0), (-1, -1), "RIGHT")]))
-            dcells.append(dt2)
-        story += [Spacer(1, 4), Table([dcells], colWidths=[2.3*inch]*len(dcells), hAlign="LEFT")]
-    # ---- Appendix: all comments by category & sentiment ----
-    # In the PDF we include a capped sample per category so it stays a shareable
-    # report card; the HTML report and the per-site CSV carry the complete log.
-    rdf = d.get("real_df")
-    if rdf is not None and len(rdf):
-        from reportlab.platypus import PageBreak
-        CAP = 8  # comments shown per sentiment per category in the PDF
-        catst = ParagraphStyle("catst", parent=body, fontSize=11, textColor=rc.HexColor("#2b3a67"),
-                               fontName="Helvetica-Bold", spaceBefore=8, spaceAfter=2)
-        slabst = ParagraphStyle("slab", parent=body, fontSize=8, fontName="Helvetica-Bold", spaceBefore=4)
-        cmt = ParagraphStyle("cmt", parent=body, fontSize=8, leading=10.5, leftIndent=8, spaceAfter=1)
-        _r = rdf.reset_index(drop=True).copy(); _r["_rid"] = range(len(_r))
-        ex = _r.assign(_cat=_r["eff_themes"].str.split("|")).explode("_cat")
-        ex["_cat"] = ex["_cat"].str.strip().map(lambda t: THEME_TO_CAT.get(t, "Uncategorized"))
-        ex = ex[ex["_cat"] != "Uncategorized"].drop_duplicates(subset=["respondent", "comment", "_cat"])
-        cats = [c for c in (meta.get("categories") or []) if c in set(ex["_cat"])]
-        story += [PageBreak(), Paragraph("Appendix — Comments by category &amp; sentiment", h1),
-                  Paragraph(f"Up to {CAP} comments per category/sentiment shown here to keep the report "
-                            f"shareable. The <b>complete</b> log of all {len(rdf):,} comments is in the HTML "
-                            f"report (expandable) and the per-site verbatim CSV export.", body), Spacer(1, 6)]
-        SENTS = [("Negative", "#C0392B"), ("Neutral / Mixed", "#7A7A7A"), ("Positive", "#2E7D32")]
-        for cat in cats:
-            sub = ex[ex["_cat"] == cat]
-            story.append(Paragraph(f"{_html.escape(cat)} &nbsp;<font size=8 color='#999'>({len(sub)} total)</font>", catst))
-            for sname, scol in SENTS:
-                ssub = sub[sub["eff_sentiment"] == sname]
-                if not len(ssub):
-                    continue
-                extra = f" &nbsp;<font color='#999'>(+{len(ssub)-CAP} more in HTML/CSV)</font>" if len(ssub) > CAP else ""
-                story.append(Paragraph(f"<font color='{scol}'>{sname.upper()} · {len(ssub)}</font>{extra}", slabst))
-                for _, r in ssub.head(CAP).iterrows():
-                    story.append(Paragraph(
-                        f"• {_html.escape(str(r['comment']))} "
-                        f"<font size=6.5 color='#999'>— {_html.escape(str(r['role']))}, {_html.escape(str(r['tenure']))}</font>", cmt))
-    story += [Spacer(1, 10), Paragraph(
-        "<font size=7.5 color='#888'><b>Data source &amp; method.</b> Built from the PulsePoint survey export · "
-        + ("completed responses only" if completers_flag else "all responses") +
-        " · 10 in-scope sites. Support responses map to a 0–100 scale; each dimension is the average of its items; the "
-        "<b>Overall PulsePoint Experience Index Score</b> is the <b>unweighted</b> average of the four Dimension Scores — "
-        "the same calculation as the Tableau deck. Friction &amp; RYG per the official Tableau spec · "
-        "Priority = 40% volume + 35% share negative + 25% Friction.</font>", body)]
-    doc.build(story)
-    return buf.getvalue()
-
-@st.cache_data(show_spinner=False)
 def build_site_pptx(sites, completers_flag):
     """One slide per site."""
     from pptx import Presentation
@@ -1301,10 +1083,11 @@ def build_site_pptx(sites, completers_flag):
 # ===========================================================================
 # PORTFOLIO — "10 PulsePoints Report Card" (roll-up across the in-scope sites)
 # ===========================================================================
-def _portfolio_heatmap(matrix, rows, cols, vmin, vmax, cmap, fmt, title, figsize, xrot=0):
+def _portfolio_heatmap(matrix, rows, cols, vmin, vmax, cmap, fmt, title, figsize, xrot=0,
+                       cbar_label="", cbar_ticks=None):
     arr = np.array(matrix, dtype=float)
     fig, ax = plt.subplots(figsize=figsize)
-    ax.imshow(arr, aspect="auto", cmap=plt.get_cmap(cmap), vmin=vmin, vmax=vmax)
+    im = ax.imshow(arr, aspect="auto", cmap=plt.get_cmap(cmap), vmin=vmin, vmax=vmax)
     ax.set_xticks(range(len(cols)))
     ax.set_xticklabels(cols, fontsize=8, rotation=xrot, ha=("right" if xrot else "center"))
     ax.set_yticks(range(len(rows))); ax.set_yticklabels(rows, fontsize=8)
@@ -1317,6 +1100,13 @@ def _portfolio_heatmap(matrix, rows, cols, vmin, vmax, cmap, fmt, title, figsize
     ax.tick_params(length=0)
     for sp in ax.spines.values():
         sp.set_visible(False)
+    # color key
+    cbar = fig.colorbar(im, ax=ax, fraction=0.028, pad=0.02)
+    if cbar_ticks is not None:
+        cbar.set_ticks(cbar_ticks)
+    cbar.ax.tick_params(labelsize=6.5, length=0)
+    cbar.set_label(cbar_label, fontsize=7.5, color="#555")
+    cbar.outline.set_visible(False)
     fig.tight_layout()
     return _b64png(fig)
 
@@ -1349,7 +1139,8 @@ def _portfolio_charts(dd):
     if sites:
         charts["heatmap_dim"] = _portfolio_heatmap(
             mat, sites, ["Work", "Physical", "Service", "Tech"], 50, 85, "RdYlGn", "{:.0f}",
-            "Dimension Scores by site (0–100; green = higher)", (6.4, 3.9))
+            "Dimension Scores by site (0–100; green = higher)", (6.8, 3.9),
+            cbar_label="Score (0–100)", cbar_ticks=[50, 60, 70, 80])
     # 3) Site × theme heatmap (% of each site's comments; Blues)
     themes = dd["site_theme_themes"]; sxt = dd["site_theme"]
     if sites and themes:
@@ -1357,7 +1148,8 @@ def _portfolio_charts(dd):
         vmax = max([v for row in tmat for v in row if not np.isnan(v)] + [1])
         charts["heatmap_theme"] = _portfolio_heatmap(
             tmat, sites, [_wrap(t, 12) for t in themes], 0, vmax, "Blues", "{:.0f}",
-            "Comment theme prevalence by site (% of site's comments)", (8.2, 4.0), xrot=30)
+            "Comment theme prevalence by site (% of site's comments)", (8.6, 4.0), xrot=30,
+            cbar_label="% of site's comments")
     # 4) Company friction + strengths (reuse the site chart renderer)
     if dd["friction"]:
         fr = pd.DataFrame(dd["friction"])
@@ -1535,6 +1327,9 @@ def build_portfolio_report(completers_flag):
  .rc-t{{font-size:15px;font-weight:700;color:#2b3a67}} .rc-p{{font-size:12.5px;color:#777;margin-top:3px}}
  .lgd{{font-size:11px;color:#888;margin-top:5px}}
  .foot{{color:#888;font-size:11px;margin-top:22px;border-top:1px solid #eee;padding-top:8px}}
+ @page{{size:Letter;margin:12mm}}
+ @media print{{ body{{max-width:100%;margin:0;padding:0}} .charts img{{max-width:100%}}
+   h1,h3{{break-after:avoid}} tr,.rc{{break-inside:avoid}} }}
 </style></head><body>
 <h1>10 PulsePoints — Portfolio Report Card</h1>
 <div class="sub">Company-wide exec brief across the {dd['n_sites']} in-scope sites · completed responses</div>
@@ -1575,98 +1370,8 @@ per the official Tableau spec.</div>
 
 @st.cache_data(show_spinner=False)
 def build_portfolio_pdf(completers_flag):
-    """Native PDF of the portfolio report card (exec brief)."""
-    from reportlab.lib.pagesizes import letter
-    from reportlab.lib.units import inch
-    from reportlab.lib import colors as rc
-    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image as RLImage
-    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-    dd = portfolio_data(completers_flag); ch = dd["charts"]
-    buf = io.BytesIO()
-    doc = SimpleDocTemplate(buf, pagesize=letter, topMargin=0.55*inch, bottomMargin=0.55*inch,
-                            leftMargin=0.55*inch, rightMargin=0.55*inch)
-    ss = getSampleStyleSheet()
-    h1 = ParagraphStyle("h1", parent=ss["Title"], fontSize=18, spaceAfter=2)
-    h3 = ParagraphStyle("h3", parent=ss["Heading3"], textColor=rc.HexColor("#2b3a67"), fontSize=11, spaceBefore=9)
-    body = ParagraphStyle("body", parent=ss["BodyText"], fontSize=9.5, leading=13)
-    cx = dd["comp_index"]; board = dd["board"]; ivals = [b["index"] for b in board]
-    rng = f"{min(ivals):.0f}–{max(ivals):.0f}" if ivals else "—"
-    def _img(k, w, h):
-        return RLImage(io.BytesIO(base64.b64decode(ch[k])), width=w*inch, height=h*inch, kind="proportional") if k in ch else Spacer(1, 1)
-    story = [Paragraph("10 PulsePoints — Portfolio Report Card", h1),
-             Paragraph(f"Company-wide exec brief across the {dd['n_sites']} in-scope sites · completed responses", body)]
-    idx_tbl = Table([[Paragraph(f"<font size=22 color='white'><b>{cx:.0f}</b></font>", body),
-        Paragraph(f"<b>Company Overall PulsePoint Experience Index Score (0–100)</b><br/>"
-                  f"<font size=8 color='#777'>Sites range {rng} · {dd['n_participants']:,} respondents · "
-                  f"{dd['n_comments']:,} substantive comments from {dd['n_commenters']:,} associates</font><br/>"
-                  f"<font size=8 color='#555'>Comment sentiment: <font color='#2E9E6B'>{dd['pos']:.0f}% pos</font> · "
-                  f"{dd['neu']:.0f}% neu · <font color='#D1495B'>{dd['neg']:.0f}% neg</font></font>", body)]],
-        colWidths=[0.7*inch, 6.6*inch])
-    idx_tbl.setStyle(TableStyle([("BACKGROUND", (0, 0), (0, 0), rc.HexColor("#2b3a67")),
-        ("VALIGN", (0, 0), (-1, -1), "MIDDLE"), ("ALIGN", (0, 0), (0, 0), "CENTER"),
-        ("TOPPADDING", (0, 0), (0, 0), 12), ("BOTTOMPADDING", (0, 0), (0, 0), 12), ("LEFTPADDING", (1, 0), (1, 0), 10)]))
-    story += [Spacer(1, 6), idx_tbl]
-    # leaderboard table
-    lrows = [["Site", "Index", "Rank", "Tier", "vs co.", "Sentiment"]]; lstyle = []
-    for i, b in enumerate(board, 1):
-        s = dd["sent_by_site"].get(b["site"], np.nan)
-        dv = b["index"] - cx if pd.notna(cx) else np.nan
-        vs = "" if pd.isna(dv) else (f"+{dv:.0f}" if dv >= 0 else f"{dv:.0f}")
-        lrows.append([b["site"], f"{b['index']:.0f}", f"#{b['rank']}", b["tier"], vs,
-                      "—" if pd.isna(s) else f"{s:.2f}"])
-        lstyle.append(("TEXTCOLOR", (3, i), (3, i), rc.HexColor(b["hex"])))
-    lt = Table(lrows, colWidths=[2.3*inch, 0.7*inch, 0.6*inch, 1.5*inch, 0.7*inch, 1.0*inch], hAlign="LEFT")
-    lt.setStyle(TableStyle([("FONTSIZE", (0, 0), (-1, -1), 8.5), ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
-        ("TOPPADDING", (0, 0), (-1, -1), 3), ("TEXTCOLOR", (0, 0), (-1, 0), rc.HexColor("#555")),
-        ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"), ("FONTNAME", (1, 1), (1, -1), "Helvetica-Bold"),
-        ("LINEBELOW", (0, 0), (-1, -1), 0.4, rc.HexColor("#e6e6e6")), ("ALIGN", (1, 0), (-1, -1), "RIGHT"),
-        ("ALIGN", (3, 0), (3, -1), "LEFT")] + lstyle))
-    story += [Paragraph("Site leaderboard", h3), lt, Spacer(1, 4), _img("leaderboard", 6.9, 3.3)]
-    story += [Paragraph("Dimension Scores by site", h3), _img("heatmap_dim", 6.2, 3.7),
-              Paragraph("<font size=7.5 color='#999'>Cells are Dimension Scores (0–100); color is absolute "
-                        "(green = higher). Work Activity is the weakest company-wide, so it reads amber/red across sites.</font>", body)]
-    # dimension gaps table
-    grows = [["Dimension", "Imp", "Sup", "Gap", "Status", "Score"]]; gstyle = []
-    for i, g in enumerate(dd["dim_gaps"], 1):
-        if pd.isna(g["gap"]):
-            lab, hx = tech_status(g["sup"])
-        else:
-            ry = ryg_of(g["gap"]); lab, hx = STATUS_WORD.get(ry, ""), RYG_HEX.get(ry, "#333")
-        grows.append([g["dim"], _f1(g["imp"]), _f1(g["sup"]), _gp(g["gap"]), lab, f"{g['support100']:.0f}"])
-        gstyle.append(("TEXTCOLOR", (3, i), (4, i), rc.HexColor(hx)))
-    gt = Table(grows, colWidths=[1.9*inch, 0.8*inch, 0.8*inch, 0.7*inch, 1.4*inch, 0.7*inch], hAlign="LEFT")
-    gt.setStyle(TableStyle([("FONTSIZE", (0, 0), (-1, -1), 8.5), ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
-        ("TOPPADDING", (0, 0), (-1, -1), 3), ("TEXTCOLOR", (0, 0), (-1, 0), rc.HexColor("#555")),
-        ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"), ("LINEBELOW", (0, 0), (-1, -1), 0.4, rc.HexColor("#e6e6e6")),
-        ("ALIGN", (1, 0), (-1, -1), "RIGHT"), ("ALIGN", (4, 0), (4, -1), "LEFT")] + gstyle))
-    story += [Paragraph("Company dimensions — Importance vs. Support", h3), gt]
-    fs = [k for k in ("friction", "strength") if k in ch]
-    if fs:
-        story += [Paragraph("Friction &amp; strength themes (company-wide)", h3),
-                  Table([[_img(k, 3.45, 2.4) for k in fs]], colWidths=[3.6*inch]*len(fs), hAlign="LEFT")]
-    # top themes table + site×theme heatmap
-    trows = [["Theme", "% of comments", "Mentions", "Sentiment"]]
-    for t in dd["top_themes"]:
-        trows.append([t["theme"], f"{t['pct']:.0f}%", f"{t['n']:,}", f"{t['neg']:.0f}% neg"])
-    tt = Table(trows, colWidths=[3.0*inch, 1.2*inch, 1.0*inch, 1.2*inch], hAlign="LEFT")
-    tt.setStyle(TableStyle([("FONTSIZE", (0, 0), (-1, -1), 8.5), ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
-        ("TOPPADDING", (0, 0), (-1, -1), 3), ("TEXTCOLOR", (0, 0), (-1, 0), rc.HexColor("#555")),
-        ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"), ("LINEBELOW", (0, 0), (-1, -1), 0.4, rc.HexColor("#e6e6e6")),
-        ("ALIGN", (1, 0), (-1, -1), "RIGHT")]))
-    story += [Paragraph("Open-ended comment themes", h3), tt]
-    if "heatmap_theme" in ch:
-        story += [Spacer(1, 4), _img("heatmap_theme", 7.2, 3.5)]
-    if "demo" in ch:
-        story += [Paragraph("Demographics — respondent profile", h3),
-                  Paragraph("<font size=8 color='#777'>Provided to help readers understand the respondent mix behind "
-                            "the results.</font>", body), _img("demo", 7.0, 2.4)]
-    story += [Spacer(1, 10), Paragraph(
-        "<font size=7.5 color='#888'><b>Data source &amp; method.</b> PulsePoint survey export · "
-        + ("completed responses only" if completers_flag else "all responses") +
-        f" · {dd['n_sites']} in-scope sites. The Index Score is the unweighted average of the four Dimension Scores "
-        "(0–100) — the same calculation as the Tableau deck. Friction &amp; RYG per the official Tableau spec.</font>", body)]
-    doc.build(story)
-    return buf.getvalue()
+    """PDF export = an exact render of the HTML portfolio report (identical content and layout)."""
+    return html_to_pdf(build_portfolio_report(completers_flag))
 
 def verbatim_export(site=None):
     """Long verbatim table grouped by theme for CSV/Excel export."""

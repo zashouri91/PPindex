@@ -38,6 +38,16 @@ pulsepoint_tool/
    pip install -r requirements.txt
    ```
 
+   For **PDF export** (the PDF is a faithful render of the HTML report), install the
+   Chromium engine once:
+
+   ```
+   playwright install chromium
+   ```
+
+   If you skip this, PDF export falls back to WeasyPrint (already in requirements) —
+   slightly less faithful, but no browser needed.
+
 3. Launch the app:
 
    ```

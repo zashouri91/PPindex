@@ -46,6 +46,9 @@
  .demo{display:flex;gap:18px;flex-wrap:wrap;margin-top:8px} .demo>div{flex:1;min-width:210px}
  .demo table{font-size:12px}
  .foot{color:#888;font-size:11px;margin-top:24px;border-top:1px solid #eee;padding-top:8px}
+ @page{size:Letter;margin:12mm}
+ @media print{ body{max-width:100%;margin:0;padding:0} .charts img{max-width:100%}
+   h1,h3{break-after:avoid} tr,blockquote,.rc,.area,details.catblk{break-inside:avoid} }
 </style></head><body>
 <h1>PulsePoint Experience — IN-Indianapolis</h1>
 <div class="sub">Workplace experience report card · completed responses</div>
