@@ -39,14 +39,17 @@ pulsepoint_tool/
    ```
 
    For **PDF export** (the PDF is a faithful render of the HTML report), install the
-   Chromium engine once:
+   Chromium engine once — it's self-contained and needs no system libraries:
 
    ```
-   playwright install chromium
+   python -m playwright install chromium
    ```
 
-   If you skip this, PDF export falls back to WeasyPrint (already in requirements) —
-   slightly less faithful, but no browser needed.
+   You don't strictly need it: every report has an **HTML** download, and your browser's
+   **Print → Save as PDF** produces the identical file (it's the same engine). PDF export
+   also has a WeasyPrint fallback, but on macOS WeasyPrint needs extra system libraries
+   (`brew install pango`), so Chromium is the easy path. If no renderer is available the
+   app just hides the PDF button and points you here — it won't error.
 
 3. Launch the app:
 

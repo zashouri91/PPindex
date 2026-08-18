@@ -1373,6 +1373,19 @@ def build_portfolio_pdf(completers_flag):
     """PDF export = an exact render of the HTML portfolio report (identical content and layout)."""
     return html_to_pdf(build_portfolio_report(completers_flag))
 
+def _safe_pdf_button(container, label, build_fn, filename, key=None):
+    """PDF download button that degrades gracefully: if no PDF renderer is installed,
+    show a one-line hint instead of throwing and taking down the whole tab."""
+    try:
+        data = build_fn()
+    except Exception:
+        container.caption("PDF export needs a renderer — run `playwright install chromium` once. "
+                          "In the meantime, download the HTML and use your browser's Print → Save as PDF "
+                          "(identical output).")
+        return
+    container.download_button(label, data, filename, "application/pdf",
+                              use_container_width=True, key=key)
+
 def verbatim_export(site=None):
     """Long verbatim table grouped by theme for CSV/Excel export."""
     base = comments[~comments["eff_junk"]]
@@ -2028,8 +2041,8 @@ with tab_report:
     _pcol = st.columns(4)
     _pcol[0].download_button("⬇️ Portfolio HTML", pf_html, "pulsepoint_portfolio.html", "text/html",
                              use_container_width=True)
-    _pcol[1].download_button("⬇️ Portfolio PDF", build_portfolio_pdf(completers_only), "pulsepoint_portfolio.pdf",
-                             "application/pdf", use_container_width=True)
+    _safe_pdf_button(_pcol[1], "⬇️ Portfolio PDF", lambda: build_portfolio_pdf(completers_only),
+                     "pulsepoint_portfolio.pdf", key="pf_pdf")
     components.html(pf_html, height=780, scrolling=True)
     st.divider()
 
@@ -2049,8 +2062,8 @@ with tab_report:
     with rc[1]:
         st.download_button("⬇️ HTML", report_html, f"pulsepoint_{safe}.html", "text/html",
                            use_container_width=True)
-        st.download_button("⬇️ PDF", build_site_pdf(rsite, completers_only), f"pulsepoint_{safe}.pdf",
-                           "application/pdf", use_container_width=True)
+        _safe_pdf_button(st, "⬇️ PDF", lambda: build_site_pdf(rsite, completers_only),
+                         f"pulsepoint_{safe}.pdf", key="site_pdf")
         st.download_button("⬇️ PowerPoint", build_site_pptx([rsite], completers_only), f"pulsepoint_{safe}.pptx",
                            "application/vnd.openxmlformats-officedocument.presentationml.presentation",
                            use_container_width=True)
