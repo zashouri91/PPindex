@@ -781,8 +781,8 @@ def build_site_report(site):
 
     prio_rows = "".join(
         f"<tr><td>{_html.escape(r['key'])}</td><td>{int(r['volume'])}</td>"
-        f"<td>{int(r['neg_share']*100)}%</td><td>{int(round(r['Priority']))}</td></tr>"
-        for _, r in P.iterrows()) or "<tr><td colspan='4'>Not enough tagged comments to rank.</td></tr>"
+        f"<td>{int(r['neg_share']*100)}%</td></tr>"
+        for _, r in P.iterrows()) or "<tr><td colspan='3'>Not enough tagged comments to rank.</td></tr>"
     def _c(v):
         return RYG_HEX.get(ryg_of(v), "#333")
     def _status_color(r):
@@ -905,8 +905,8 @@ def build_site_report(site):
     str_rows = "".join(f"<li><b>{_html.escape(t)}</b> — {v} comments, {int(ps*100)}% positive</li>"
                        for t, v, ps in d["strengths"]) or "<li>No clearly positive themes.</li>"
     bench_rows = "".join(
-        f"<tr><td>{_html.escape(t)}</td><td>{sr*100:.0f}%</td><td>{orr*100:.0f}%</td>"
-        f"<td>{'—' if orr==0 else f'{sr/orr:.1f}×'}</td></tr>" for t, sr, orr in d["bench"])
+        f"<tr><td>{_html.escape(t)}</td><td>{sr*100:.0f}%</td><td>{orr*100:.0f}%</td></tr>"
+        for t, sr, orr in d["bench"])
     score_rows = "".join(
         f"<tr><td>{_html.escape(lab)}</td><td>{sv:.2f}</td><td>{ov:.2f}</td>"
         f"<td style='color:{'#D1495B' if sv<ov-0.05 else ('#2E9E6B' if sv>ov+0.05 else '#888')}'>"
@@ -999,6 +999,8 @@ def build_site_report(site):
 <h1>PulsePoint Experience — {_html.escape(site)}</h1>
 <div class="sub">Workplace experience report card · completed responses</div>
 {card_html}
+<h3>Demographics — respondent profile</h3>
+{demo_html or '<p style="color:#888">No demographic data.</p>'}
 <h3>Importance vs. Support gaps</h3>
 <table><tr><th>Dimension</th><th>Importance</th><th>Support</th><th>Gap</th><th>Status</th></tr>{dsum_rows}</table>
 <div class="rc-dimlab">Detail — by question</div>
@@ -1019,12 +1021,12 @@ by survey position). “Company” is the other in-scope sites; “vs company”
 <div class="narr">{narrative}</div>
 <div class="charts">{img('donut')}{img('themes')}</div>
 <h3>Top priorities to address</h3>
-<table><tr><th>Category</th><th>#&nbsp;comments</th><th>%&nbsp;negative</th><th>priority</th></tr>{prio_rows}</table>
+<table><tr><th>Category</th><th>#&nbsp;comments</th><th>%&nbsp;negative</th></tr>{prio_rows}</table>
 <div class="two"><div>
 <h3>What needs attention</h3><ul>{fix_rows}</ul></div><div>
 <h3>What's working</h3><ul>{str_rows}</ul></div></div>
 <h3>Vs. org — theme rates</h3>
-<table><tr><th>Theme</th><th>site</th><th>org</th><th>lift</th></tr>{bench_rows}</table>
+<table><tr><th>Theme</th><th>site</th><th>org</th></tr>{bench_rows}</table>
 <p class="lgd"><b>How comments are categorized:</b> themes are assigned by a transparent keyword taxonomy built for this
 survey (28 themes across 7 categories), kept separate from the PXIP category set by design so the open-ended read stands
 on its own. The mapping lives in <code>taxonomy.py</code> and can be tuned without touching the scores.</p>
@@ -1034,8 +1036,6 @@ on its own. The mapping lives in <code>taxonomy.py</code> and can be tuned witho
 <p class="lgd">Every open-ended comment at this site, grouped by category then sentiment. Click a category to expand.
 A comment that touches more than one category appears under each.</p>
 {appendix_html or '<p style="color:#888">No comments to list.</p>'}
-<h3>Demographics — respondent profile</h3>
-{demo_html or '<p style="color:#888">No demographic data.</p>'}
 <div class="foot"><b>Data source &amp; method.</b> Built from the PulsePoint survey export ·
 {'completed responses only' if completers_only else 'all responses'} · 10 in-scope sites. Support responses map to a
 0–100 scale; each dimension is the average of its items; the <b>Overall PulsePoint Experience Index Score</b> is the
