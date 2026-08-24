@@ -1,0 +1,180 @@
+{
+  "location": "FL-Miami",
+  "indexScore": 71.7,
+  "indexTier": "Top third",
+  "reviewFullReportCardRecommended": true,
+  "priorities": [
+    {
+      "name": "Quiet space for focused work",
+      "sourceThemes": [
+        "Noise & Distraction",
+        "Focus / Concentration"
+      ],
+      "issue": "Common areas get noisy enough to interrupt concentrated work, and cold temperatures compound the difficulty of focusing.",
+      "whatItLooksLike": [
+        "Again, the common areas are sometimes noisy and distracting.",
+        "It gets extremely cold sometimes and is hard to concentrate"
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Focused / Private Work is the #1 priority category (82/100)."
+        },
+        {
+          "type": "Finding",
+          "text": "Noise & Distraction: 24 comments, 67% negative; focused-work friction 28/100 (56% under-supported)."
+        }
+      ],
+      "proposedAction": "Review quiet-zone availability and etiquette in common areas before any physical change; test a designated quiet neighborhood.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Workplace Solutions",
+        "Change & Communications"
+      ],
+      "siteMustDo": "Observe common areas at peak, identify the noisiest zones, and pilot a quiet-zone protocol; track whether it helps.",
+      "actionType": "LOCAL ACTION"
+    },
+    {
+      "name": "Thermal comfort (temperature)",
+      "sourceThemes": [
+        "Temperature / Thermal"
+      ],
+      "issue": "Temperature — running cold — is a sharply negative, specific complaint that also undermines focus.",
+      "whatItLooksLike": [
+        "It gets extremely cold sometimes and is hard to concentrate"
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Temperature / Thermal: 15 comments, 80% negative — the most-negative theme at the site."
+        },
+        {
+          "type": "Finding",
+          "text": "Thermal comfort friction is 21/100 (47% under-supported)."
+        }
+      ],
+      "proposedAction": "Have facilities check HVAC set-points and balancing in the affected zones and confirm whether it's a control, zoning, or equipment issue.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Workplace Operations",
+        "Workplace Solutions"
+      ],
+      "siteMustDo": "Log the specific cold zones and times, submit to building operations, and verify a fix rather than assuming set-point changes hold.",
+      "actionType": "LOCAL ACTION"
+    },
+    {
+      "name": "Network connectivity reliability",
+      "sourceThemes": [
+        "Connectivity (WiFi / Login / Power)"
+      ],
+      "issue": "Unreliable connectivity directly disrupts virtual work, and it registers above the company norm here.",
+      "whatItLooksLike": [
+        "The internet connectivity is unreliable which directly affects all work. There are also no real food options on site so even basic logistics like lunch become a problem."
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Connectivity is cited at 16% of comments vs. 11% company-wide."
+        },
+        {
+          "type": "Interpretation",
+          "text": "Connectivity issues undercut an otherwise top-tier site (Miami is #2 overall)."
+        }
+      ],
+      "proposedAction": "Validate Wi-Fi coverage/quality in the reported areas and route confirmed gaps to the Technology workstream.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Technology"
+      ],
+      "siteMustDo": "Collect the specific floors/areas and times of drops, run a coverage check, and escalate with data to Technology.",
+      "actionType": "WORKSTREAM / ENTERPRISE"
+    }
+  ],
+  "protectWhatIsWorking": [
+    {
+      "area": "Desk Availability & Reservations",
+      "evidence": "73% positive across 26 comments — reservations work well here",
+      "note": "Maintain the current service level and monitor performance."
+    },
+    {
+      "area": "Connectivity (WiFi / Login / Power)",
+      "evidence": "mixed: strong for many (72% positive, 18 comments) but a vocal reliability minority — protect the baseline while fixing the gaps",
+      "note": "Maintain the current service level and monitor performance."
+    },
+    {
+      "area": "Reception & Entry",
+      "evidence": "70% positive",
+      "note": "Maintain the current service level and monitor performance."
+    }
+  ],
+  "assumptions": [
+    "Miami is a top-tier site (2 of 10); these are targeted refinements, not turnaround actions.",
+    "HVAC root cause (control vs. equipment) needs onsite validation."
+  ],
+  "evidenceConfidence": [
+    {
+      "priorityName": "Quiet space for focused work",
+      "supportingDataPoints": [
+        "Focused / Private Work is the #1 priority category (82/100).",
+        "Noise & Distraction: 24 comments, 67% negative; focused-work friction 28/100 (56% under-supported)."
+      ],
+      "needsLocalValidation": [
+        "Onsite validation of the specific condition before any capital step."
+      ]
+    },
+    {
+      "priorityName": "Thermal comfort (temperature)",
+      "supportingDataPoints": [
+        "Temperature / Thermal: 15 comments, 80% negative — the most-negative theme at the site.",
+        "Thermal comfort friction is 21/100 (47% under-supported)."
+      ],
+      "needsLocalValidation": [
+        "Onsite validation of the specific condition before any capital step."
+      ]
+    },
+    {
+      "priorityName": "Network connectivity reliability",
+      "supportingDataPoints": [
+        "Connectivity is cited at 16% of comments vs. 11% company-wide."
+      ],
+      "needsLocalValidation": [
+        "Onsite validation of the specific condition before any capital step."
+      ]
+    }
+  ],
+  "operationalResponseTable": [
+    {
+      "priorityName": "Quiet space for focused work",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Thermal comfort (temperature)",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Network connectivity reliability",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    }
+  ],
+  "_meta": {
+    "generated_at": "2026-08-24",
+    "provider": "Claude Opus 4",
+    "model": "Cowork",
+    "owner": "Regional Director + Local Team",
+    "include_verbatims": true,
+    "prompt_version": "v3",
+    "generated_by": "Claude Opus (Cowork session, batch)"
+  }
+}

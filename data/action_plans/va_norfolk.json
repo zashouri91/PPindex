@@ -1,0 +1,182 @@
+{
+  "location": "VA-Norfolk",
+  "indexScore": 69.8,
+  "indexTier": "Middle third",
+  "reviewFullReportCardRecommended": true,
+  "priorities": [
+    {
+      "name": "Quiet, private space for calls and meetings",
+      "sourceThemes": [
+        "Noise & Distraction",
+        "Privacy & Confidentiality"
+      ],
+      "issue": "Noise from meetings and calls on the open floor is the site's most negative theme, and phone-booth/private space is limited.",
+      "whatItLooksLike": [
+        "distractions and noise level from people talking in meetings (unavoidable)",
+        "Temperature and limited number of phone booth/private workspaces"
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Noise & Distraction: 125 comments, 75% negative — the most-negative theme at the site."
+        },
+        {
+          "type": "Finding",
+          "text": "Focused / Private Work is the #2 priority category (73/100); focused-work friction 28/100 (53% under-supported)."
+        }
+      ],
+      "proposedAction": "Assess phone-booth/private-space capacity and a call-etiquette norm against demand before adding enclosed space.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Workplace Solutions",
+        "Change & Communications"
+      ],
+      "siteMustDo": "Measure booth demand vs. availability, pilot a call-etiquette norm, and size any gap for Workplace Solutions.",
+      "actionType": "LOCAL PROJECT"
+    },
+    {
+      "name": "Desk availability and sit/stand + workstation setup",
+      "sourceThemes": [
+        "Desk Availability & Reservations",
+        "Hardware (Monitors / Peripherals)"
+      ],
+      "issue": "Associates want more offices and sit/stand desks, and dual monitors aren't reliably plug-and-play.",
+      "whatItLooksLike": [
+        "Not enough offices, need more stand/sit desks.",
+        "Dual monitors sometimes dont work. it is not easy as plug and play. we have to spend time on it sometimes."
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Physical Environment is the #1 priority category (75/100); Desk Availability 222 comments (50% neg)."
+        },
+        {
+          "type": "Finding",
+          "text": "Hardware: 150 comments, 53% negative."
+        }
+      ],
+      "proposedAction": "Review desk mix (offices, sit/stand) against demand and standardize workstation setup with routine checks.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Workplace Solutions",
+        "Technology"
+      ],
+      "siteMustDo": "Quantify demand for offices/sit-stand seats and fix the dual-monitor setup reliability.",
+      "actionType": "LOCAL PROJECT"
+    },
+    {
+      "name": "Building operations upkeep",
+      "sourceThemes": [
+        "Building Operations"
+      ],
+      "issue": "Building-operations issues are a notable, above-norm theme even though the site is generally well-regarded.",
+      "whatItLooksLike": [
+        "Building-operations items (maintenance/upkeep) recur in the comments; see the appendix."
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Building Operations: 119 comments, 46% negative; cited at a normal-to-elevated rate."
+        }
+      ],
+      "proposedAction": "Triage the recurring building-ops items and confirm a maintenance cadence.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Workplace Operations"
+      ],
+      "siteMustDo": "Compile the recurring maintenance items and confirm ownership/cadence with building operations.",
+      "actionType": "LOCAL ACTION"
+    }
+  ],
+  "protectWhatIsWorking": [
+    {
+      "area": "Reception & Entry",
+      "evidence": "82% positive across 56 comments — front desk, security, on-site gym and medical are praised",
+      "note": "Maintain the current service level and monitor performance."
+    },
+    {
+      "area": "Community & Events",
+      "evidence": "85% positive",
+      "note": "Maintain the current service level and monitor performance."
+    },
+    {
+      "area": "Parking & Commute",
+      "evidence": "74% positive",
+      "note": "Maintain the current service level and monitor performance."
+    },
+    {
+      "area": "Wellbeing / Wellness Spaces",
+      "evidence": "77% positive",
+      "note": "Maintain the current service level and monitor performance."
+    }
+  ],
+  "assumptions": [
+    "Norfolk is a mid-tier site (5 of 10) that's well-liked; the priorities target its few sharp negatives (noise especially)."
+  ],
+  "evidenceConfidence": [
+    {
+      "priorityName": "Quiet, private space for calls and meetings",
+      "supportingDataPoints": [
+        "Noise & Distraction: 125 comments, 75% negative — the most-negative theme at the site.",
+        "Focused / Private Work is the #2 priority category (73/100); focused-work friction 28/100 (53% under-supported)."
+      ],
+      "needsLocalValidation": [
+        "Onsite validation of the specific condition before any capital step."
+      ]
+    },
+    {
+      "priorityName": "Desk availability and sit/stand + workstation setup",
+      "supportingDataPoints": [
+        "Physical Environment is the #1 priority category (75/100); Desk Availability 222 comments (50% neg).",
+        "Hardware: 150 comments, 53% negative."
+      ],
+      "needsLocalValidation": [
+        "Onsite validation of the specific condition before any capital step."
+      ]
+    },
+    {
+      "priorityName": "Building operations upkeep",
+      "supportingDataPoints": [
+        "Building Operations: 119 comments, 46% negative; cited at a normal-to-elevated rate."
+      ],
+      "needsLocalValidation": [
+        "Onsite validation of the specific condition before any capital step."
+      ]
+    }
+  ],
+  "operationalResponseTable": [
+    {
+      "priorityName": "Quiet, private space for calls and meetings",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Desk availability and sit/stand + workstation setup",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Building operations upkeep",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    }
+  ],
+  "_meta": {
+    "generated_at": "2026-08-24",
+    "provider": "Claude Opus 4",
+    "model": "Cowork",
+    "owner": "Regional Director + Local Team",
+    "include_verbatims": true,
+    "prompt_version": "v3",
+    "generated_by": "Claude Opus (Cowork session, batch)"
+  }
+}

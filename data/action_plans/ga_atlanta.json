@@ -1,0 +1,179 @@
+{
+  "location": "GA-Atlanta",
+  "indexScore": 76.5,
+  "indexTier": "Top third",
+  "reviewFullReportCardRecommended": true,
+  "priorities": [
+    {
+      "name": "Enclosed space for focus and discretion",
+      "sourceThemes": [
+        "Noise & Distraction",
+        "Privacy & Confidentiality"
+      ],
+      "issue": "Even as the top-ranked site, Atlanta's most-cited gap is too few capsules/rooms for discreet meetings and phone calls taken in hallways carrying noise.",
+      "whatItLooksLike": [
+        "The limited number of capsules to have meetings that require discretion. The limitation of 2 hours in each capsule.",
+        "Some locations can be too noisy because people tend to take phone calls in the hallway areas."
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Focused / Private Work is the #1 priority category (74/100)."
+        },
+        {
+          "type": "Finding",
+          "text": "Noise & Distraction: 58 comments (52% neg); Privacy & Confidentiality: 57 comments (49% neg)."
+        },
+        {
+          "type": "Finding",
+          "text": "Focused-space friction 23/100 (46% under-supported); the 2-hour capsule limit is called out."
+        }
+      ],
+      "proposedAction": "Review capsule/room booking rules (including the 2-hour cap) and a hallway-calls etiquette nudge before adding rooms.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Workplace Solutions",
+        "Change & Communications"
+      ],
+      "siteMustDo": "Test whether relaxing/adjusting the capsule time limit and a hallway-call norm reduce the complaints; measure before/after.",
+      "actionType": "LOCAL ACTION"
+    },
+    {
+      "name": "Workstation hardware standardization",
+      "sourceThemes": [
+        "Hardware (Monitors / Peripherals)"
+      ],
+      "issue": "Monitors are reset to unusable positions each visit and shared keyboards/mice are a hygiene concern, adding friction to every arrival.",
+      "whatItLooksLike": [
+        "Hinder = 1) Monitors are unnecessarily 'reset' to locations that are unusable and each visit requires maneuvering monitors/cords/etc. 2) Keyboards/mice - We went from Covid is the plague to communal keyboards/mice. I'm the furthest thing…"
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Hardware: 55 comments, 47% negative. Connectivity: 31 comments, 52% negative."
+        }
+      ],
+      "proposedAction": "Standardize monitor/dock setup, run routine checks, and address the shared-peripheral hygiene concern (wipes or personal-kit option).",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Technology"
+      ],
+      "siteMustDo": "Inspect stations, fix the monitor-reset issue, and provide a hygiene option for shared peripherals.",
+      "actionType": "LOCAL ACTION"
+    },
+    {
+      "name": "Thermal comfort (temperature)",
+      "sourceThemes": [
+        "Temperature / Thermal"
+      ],
+      "issue": "Temperature is a specific, negative complaint concentrated in certain zones.",
+      "whatItLooksLike": [
+        "Temperature is called out as too cold in several comments (see Physical Feature detail)."
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Temperature / Thermal: 30 comments, 57% negative; thermal friction 16/100 (37% under-supported)."
+        }
+      ],
+      "proposedAction": "Check HVAC set-points/balancing in the flagged zones; confirm a durable fix.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Workplace Operations"
+      ],
+      "siteMustDo": "Log the cold zones/times and verify the correction holds.",
+      "actionType": "LOCAL ACTION"
+    }
+  ],
+  "protectWhatIsWorking": [
+    {
+      "area": "Service Level",
+      "evidence": "highest of all sites (82.5/100) — the whole service experience is a model to protect",
+      "note": "Maintain the current service level and monitor performance."
+    },
+    {
+      "area": "Collaboration Space",
+      "evidence": "72% positive",
+      "note": "Maintain the current service level and monitor performance."
+    },
+    {
+      "area": "AV / Video Conferencing",
+      "evidence": "70% positive",
+      "note": "Maintain the current service level and monitor performance."
+    },
+    {
+      "area": "Parking & Commute",
+      "evidence": "73% positive",
+      "note": "Maintain the current service level and monitor performance."
+    }
+  ],
+  "assumptions": [
+    "Atlanta ranks #1 overall; these are optimizations of an already-strong site, not fixes for systemic problems."
+  ],
+  "evidenceConfidence": [
+    {
+      "priorityName": "Enclosed space for focus and discretion",
+      "supportingDataPoints": [
+        "Focused / Private Work is the #1 priority category (74/100).",
+        "Noise & Distraction: 58 comments (52% neg); Privacy & Confidentiality: 57 comments (49% neg).",
+        "Focused-space friction 23/100 (46% under-supported); the 2-hour capsule limit is called out."
+      ],
+      "needsLocalValidation": [
+        "Onsite validation of the specific condition before any capital step."
+      ]
+    },
+    {
+      "priorityName": "Workstation hardware standardization",
+      "supportingDataPoints": [
+        "Hardware: 55 comments, 47% negative. Connectivity: 31 comments, 52% negative."
+      ],
+      "needsLocalValidation": [
+        "Onsite validation of the specific condition before any capital step."
+      ]
+    },
+    {
+      "priorityName": "Thermal comfort (temperature)",
+      "supportingDataPoints": [
+        "Temperature / Thermal: 30 comments, 57% negative; thermal friction 16/100 (37% under-supported)."
+      ],
+      "needsLocalValidation": [
+        "Onsite validation of the specific condition before any capital step."
+      ]
+    }
+  ],
+  "operationalResponseTable": [
+    {
+      "priorityName": "Enclosed space for focus and discretion",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Workstation hardware standardization",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Thermal comfort (temperature)",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    }
+  ],
+  "_meta": {
+    "generated_at": "2026-08-24",
+    "provider": "Claude Opus 4",
+    "model": "Cowork",
+    "owner": "Regional Director + Local Team",
+    "include_verbatims": true,
+    "prompt_version": "v3",
+    "generated_by": "Claude Opus (Cowork session, batch)"
+  }
+}

@@ -1,0 +1,175 @@
+{
+  "location": "IL-Chicago-Willis Tower",
+  "indexScore": 70.2,
+  "indexTier": "Top third",
+  "reviewFullReportCardRecommended": true,
+  "priorities": [
+    {
+      "name": "Quiet, private space for focused and customer-facing work",
+      "sourceThemes": [
+        "Noise & Distraction",
+        "Privacy & Confidentiality"
+      ],
+      "issue": "Associates in focus- and call-heavy roles can't consistently get a quiet, private workspace, and comments tie this directly to needing to work from home to do the job.",
+      "whatItLooksLike": [
+        "I am in customer service role so I need to be in an environment that is quiet and job does not support it need to be at home like I was for the past 9 years",
+        "The inability to consistently have a private work space with multiple screens as I have in my home office."
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Focused / Private Work is the #1 priority category (75/100); focused-work friction 29/100 (60% under-supported)."
+        },
+        {
+          "type": "Finding",
+          "text": "Noise & Distraction: 27 comments (59% neg); Privacy & Confidentiality: 32 comments (47% neg)."
+        },
+        {
+          "type": "Interpretation",
+          "text": "Work Activity is the site's weakest dimension (60.5, rank 8) despite strong Service and Physical scores."
+        }
+      ],
+      "proposedAction": "Map which roles need sustained quiet/private space and match them to quiet neighborhoods or bookable enclosed space; validate capacity before build-out.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Workplace Solutions",
+        "Change & Communications"
+      ],
+      "siteMustDo": "Identify the affected teams, trial a quiet neighborhood, and size any enclosed-space gap for Workplace Solutions.",
+      "actionType": "LOCAL PROJECT"
+    },
+    {
+      "name": "Desk reservation model and dual-monitor setup",
+      "sourceThemes": [
+        "Desk Availability & Reservations",
+        "Hardware (Monitors / Peripherals)"
+      ],
+      "issue": "Daily reserve-and-reset is seen as cumbersome, and 'dual' monitors are wired to mirror rather than extend, so associates don't get the setup they expect.",
+      "whatItLooksLike": [
+        "Would prefer a permanent seat in the PulsePoint with a 3+ days in the office requirement. Reserving my workspace and resetting my workspace every day is cumbersome",
+        "At our Pulse Point, the dual monitors are plugged into each other so you don't get the value of dual  you just get two versions of the same thing."
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Desk Availability & Reservations: 45 comments, 60% negative (cited at 30% of comments vs. 28% company)."
+        },
+        {
+          "type": "Finding",
+          "text": "Hardware: 39 comments, 49% negative — the mirrored dual-monitor issue is a concrete, fixable defect."
+        }
+      ],
+      "proposedAction": "Fix the dual-monitor extend/mirror configuration as an immediate technical correction, and review whether high-attendance teams warrant assigned/neighborhood seating.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Technology"
+      ],
+      "siteMustDo": "Correct the monitor configuration site-wide now; separately assess a seating model for 3+-day teams.",
+      "actionType": "LOCAL ACTION"
+    },
+    {
+      "name": "Thermal comfort (temperature)",
+      "sourceThemes": [
+        "Temperature / Thermal"
+      ],
+      "issue": "Temperature runs too cold and is among the most negative specific complaints.",
+      "whatItLooksLike": [
+        "People should be cognizant of others on conference calls. Temperature is way too cold."
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Temperature / Thermal: 17 comments, 82% negative — the most-negative theme at the site."
+        }
+      ],
+      "proposedAction": "Facilities to check set-points/balancing in the cold zones and confirm the fix.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Workplace Operations"
+      ],
+      "siteMustDo": "Log cold zones/times, submit to building ops, and verify the correction.",
+      "actionType": "LOCAL ACTION"
+    }
+  ],
+  "protectWhatIsWorking": [
+    {
+      "area": "Service Level",
+      "evidence": "81/100, rank 2 — a strength",
+      "note": "Maintain the current service level and monitor performance."
+    },
+    {
+      "area": "Community & Events",
+      "evidence": "100% positive (the community manager is named)",
+      "note": "Maintain the current service level and monitor performance."
+    }
+  ],
+  "assumptions": [
+    "The mirrored dual-monitor issue is treated as a real defect based on comments; confirm onsite it's configuration, not per-desk hardware."
+  ],
+  "evidenceConfidence": [
+    {
+      "priorityName": "Quiet, private space for focused and customer-facing work",
+      "supportingDataPoints": [
+        "Focused / Private Work is the #1 priority category (75/100); focused-work friction 29/100 (60% under-supported).",
+        "Noise & Distraction: 27 comments (59% neg); Privacy & Confidentiality: 32 comments (47% neg)."
+      ],
+      "needsLocalValidation": [
+        "Onsite validation of the specific condition before any capital step."
+      ]
+    },
+    {
+      "priorityName": "Desk reservation model and dual-monitor setup",
+      "supportingDataPoints": [
+        "Desk Availability & Reservations: 45 comments, 60% negative (cited at 30% of comments vs. 28% company).",
+        "Hardware: 39 comments, 49% negative — the mirrored dual-monitor issue is a concrete, fixable defect."
+      ],
+      "needsLocalValidation": [
+        "Onsite validation of the specific condition before any capital step."
+      ]
+    },
+    {
+      "priorityName": "Thermal comfort (temperature)",
+      "supportingDataPoints": [
+        "Temperature / Thermal: 17 comments, 82% negative — the most-negative theme at the site."
+      ],
+      "needsLocalValidation": [
+        "Onsite validation of the specific condition before any capital step."
+      ]
+    }
+  ],
+  "operationalResponseTable": [
+    {
+      "priorityName": "Quiet, private space for focused and customer-facing work",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Desk reservation model and dual-monitor setup",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Thermal comfort (temperature)",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    }
+  ],
+  "_meta": {
+    "generated_at": "2026-08-24",
+    "provider": "Claude Opus 4",
+    "model": "Cowork",
+    "owner": "Regional Director + Local Team",
+    "include_verbatims": true,
+    "prompt_version": "v3",
+    "generated_by": "Claude Opus (Cowork session, batch)"
+  }
+}

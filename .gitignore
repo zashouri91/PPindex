@@ -7,10 +7,9 @@ venv/
 
 # Runtime / user-generated
 data/overrides.csv
-# Operational Action Plans are generated per-site and stored locally (may quote
-# comment text). Kept out of version control by default; delete this line if you
-# want them shared/versioned with the team.
-data/action_plans/*.json
+# Operational Action Plans (data/action_plans/*.json) are tracked so the whole
+# team sees the same generated plans in the report cards. Regenerate in-app to
+# update them. To keep them local-only instead, re-add: data/action_plans/*.json
 
 # QA / scratch artifacts
 preview_*.png

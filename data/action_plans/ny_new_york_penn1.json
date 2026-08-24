@@ -1,0 +1,175 @@
+{
+  "location": "NY-New York (Penn1)",
+  "indexScore": 71.4,
+  "indexTier": "Top third",
+  "reviewFullReportCardRecommended": true,
+  "priorities": [
+    {
+      "name": "Enough pods/private space for call-heavy roles",
+      "sourceThemes": [
+        "Privacy & Confidentiality",
+        "Noise & Distraction"
+      ],
+      "issue": "There aren't enough pods for associates who are on calls all day, so calls happen on the open floor and people 'camp' in the few private spaces.",
+      "whatItLooksLike": [
+        "more pods are needed for associates that are on calls all day. It's a distraction for everyone else.",
+        "Lack of private spaces a lot of times because people camp in them"
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Focused / Private Work is the #1 priority category (86/100 — the highest of any category at any site)."
+        },
+        {
+          "type": "Finding",
+          "text": "Noise & Distraction: 28 comments (68% neg); Privacy & Confidentiality: 30 comments (57% neg)."
+        }
+      ],
+      "proposedAction": "Assess pod/booth capacity and camping behavior against call-heavy demand; test time limits/occupancy signals before adding pods.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Workplace Solutions",
+        "Change & Communications"
+      ],
+      "siteMustDo": "Quantify pod demand vs. availability at peak, test anti-camping measures, and size any gap for Workplace Solutions.",
+      "actionType": "LOCAL PROJECT"
+    },
+    {
+      "name": "Wi-Fi reliability on upper floors",
+      "sourceThemes": [
+        "Connectivity (WiFi / Login / Power)"
+      ],
+      "issue": "Wi-Fi on the 35th/36th floors is unreliable for calls and virtual meetings — a critical, previously-raised, still-open issue.",
+      "whatItLooksLike": [
+        "Wi-Fi is a SIGNIFICANT concern. Connection at all points of the 35th and 36th Floor are not reliable for virtual conferences, phone calls, etc. This is a critical issue, which i have raised in the past, and remains unaddressed."
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Connectivity is cited at 16% of comments vs. 11% company-wide; Technology priority score 67/100."
+        },
+        {
+          "type": "Interpretation",
+          "text": "A named, repeatedly-raised reliability issue on specific floors — high credibility, needs escalation not re-diagnosis."
+        }
+      ],
+      "proposedAction": "Escalate a floor-specific Wi-Fi coverage/capacity assessment to the Technology workstream with the prior tickets attached.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Technology"
+      ],
+      "siteMustDo": "Compile the history and specific locations, and drive a Technology coverage survey of floors 35–36 to closure.",
+      "actionType": "WORKSTREAM / ENTERPRISE"
+    },
+    {
+      "name": "Workstation equipment condition",
+      "sourceThemes": [
+        "Hardware (Monitors / Peripherals)",
+        "Desk Availability & Reservations"
+      ],
+      "issue": "Equipment at desks is worn or unreliable — wires that only work in a certain position, unstable monitors, keyboards missing kickstands.",
+      "whatItLooksLike": [
+        "I've been to several PulsePoints and I'm surprised at how worn some equipment is. Examples: wires that only work in a certain position, monitors that don't stay steady where you position them, keyboards that are missing their kickstands to…",
+        "problems with the equipment at desks is not uncommon"
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Hardware: 26 comments, 65% negative — a high negative rate on a maintenance-type issue."
+        }
+      ],
+      "proposedAction": "Run an equipment-condition sweep and replace worn peripherals/cables on a schedule.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Technology"
+      ],
+      "siteMustDo": "Inventory worn equipment, replace the worst, and set a recurring refresh check.",
+      "actionType": "LOCAL ACTION"
+    }
+  ],
+  "protectWhatIsWorking": [
+    {
+      "area": "Community & Events",
+      "evidence": "100% positive (small sample)",
+      "note": "Maintain the current service level and monitor performance."
+    },
+    {
+      "area": "Parking & Commute",
+      "evidence": "100% positive (small sample)",
+      "note": "Maintain the current service level and monitor performance."
+    },
+    {
+      "area": "Physical Feature",
+      "evidence": "70.8/100, rank 2 — a strong physical space overall",
+      "note": "Maintain the current service level and monitor performance."
+    }
+  ],
+  "assumptions": [
+    "New York rates well overall (3 of 10) but comment sentiment skews negative (53%); the strongest signal is the concentrated pod-capacity and Wi-Fi issues."
+  ],
+  "evidenceConfidence": [
+    {
+      "priorityName": "Enough pods/private space for call-heavy roles",
+      "supportingDataPoints": [
+        "Focused / Private Work is the #1 priority category (86/100 — the highest of any category at any site).",
+        "Noise & Distraction: 28 comments (68% neg); Privacy & Confidentiality: 30 comments (57% neg)."
+      ],
+      "needsLocalValidation": [
+        "Onsite validation of the specific condition before any capital step."
+      ]
+    },
+    {
+      "priorityName": "Wi-Fi reliability on upper floors",
+      "supportingDataPoints": [
+        "Connectivity is cited at 16% of comments vs. 11% company-wide; Technology priority score 67/100."
+      ],
+      "needsLocalValidation": [
+        "Onsite validation of the specific condition before any capital step."
+      ]
+    },
+    {
+      "priorityName": "Workstation equipment condition",
+      "supportingDataPoints": [
+        "Hardware: 26 comments, 65% negative — a high negative rate on a maintenance-type issue."
+      ],
+      "needsLocalValidation": [
+        "Onsite validation of the specific condition before any capital step."
+      ]
+    }
+  ],
+  "operationalResponseTable": [
+    {
+      "priorityName": "Enough pods/private space for call-heavy roles",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Wi-Fi reliability on upper floors",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Workstation equipment condition",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    }
+  ],
+  "_meta": {
+    "generated_at": "2026-08-24",
+    "provider": "Claude Opus 4",
+    "model": "Cowork",
+    "owner": "Regional Director + Local Team",
+    "include_verbatims": true,
+    "prompt_version": "v3",
+    "generated_by": "Claude Opus (Cowork session, batch)"
+  }
+}

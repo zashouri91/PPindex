@@ -1,0 +1,177 @@
+{
+  "location": "FL-Tampa",
+  "indexScore": 67.8,
+  "indexTier": "Bottom third",
+  "reviewFullReportCardRecommended": true,
+  "priorities": [
+    {
+      "name": "Private space for confidential conversations and calls",
+      "sourceThemes": [
+        "Privacy & Confidentiality",
+        "Noise & Distraction"
+      ],
+      "issue": "Associates routinely can't find a private room for confidential conversations because booths and phone rooms are all in use, and call noise carries across the floor.",
+      "whatItLooksLike": [
+        "There are times when I need to have a confidential conversation, but I cannot find a private location because all available phone rooms and booths are in use.",
+        "Lack of white noise to drown out others that work on the phone."
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Focused / Private Work is the #1 priority category (76/100)."
+        },
+        {
+          "type": "Finding",
+          "text": "Privacy & Confidentiality: 57 comments, 65% negative; Noise & Distraction: 47 comments, 62% negative."
+        },
+        {
+          "type": "Finding",
+          "text": "Discretion-space friction is 27/100 (49% under-supported)."
+        }
+      ],
+      "proposedAction": "Assess booth/phone-room capacity and booking against peak demand; test occupancy indicators and time limits before adding enclosed space.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Workplace Solutions",
+        "Change & Communications"
+      ],
+      "siteMustDo": "Track booth/phone-room demand-vs-availability for two weeks and escalate a sized capacity gap to Workplace Solutions.",
+      "actionType": "LOCAL PROJECT"
+    },
+    {
+      "name": "Desk reservation clarity and workstation setup",
+      "sourceThemes": [
+        "Desk Availability & Reservations"
+      ],
+      "issue": "Associates can't see when a reserved room/desk will free up, and workstations are often left disassembled, costing setup time.",
+      "whatItLooksLike": [
+        "Other associates being in a room that I have reserved for a meeting and me being unable to see when they are scheduled to be out of that capsule room, if they intend to leave at all.",
+        "Many times the workspace has been disassembled and requires that I figure out how to reconnect all pieces (monitors, keyboard, mouse). It's not as easy as just plugging in my laptop."
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Desk Availability & Reservations: 77 comments, 48% negative (highest-volume theme)."
+        }
+      ],
+      "proposedAction": "Review room/desk booking visibility (when a space frees up) and set a standard for how a workstation should be left.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Reservation-system owner",
+        "Technology"
+      ],
+      "siteMustDo": "Confirm whether the booking tool surfaces end-times; test a 'leave it as you found it' workstation standard.",
+      "actionType": "LOCAL ACTION"
+    },
+    {
+      "name": "Workstation hardware reliability",
+      "sourceThemes": [
+        "Hardware (Monitors / Peripherals)",
+        "Connectivity (WiFi / Login / Power)"
+      ],
+      "issue": "Reconnecting monitors/keyboard/mouse at shared desks is not plug-and-play, and connectivity is a frequent, highly negative complaint.",
+      "whatItLooksLike": [
+        "Many times the workspace has been disassembled and requires that I figure out how to reconnect all pieces (monitors, keyboard, mouse). It's not as easy as just plugging in my laptop."
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Hardware: 64 comments, 52% negative. Connectivity: 31 comments, 65% negative."
+        }
+      ],
+      "proposedAction": "Standardize the dock/monitor setup and run routine equipment checks; validate connectivity in weak spots and route to Technology.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Technology"
+      ],
+      "siteMustDo": "Inspect workstations, standardize the setup, and log connectivity dead spots for Technology.",
+      "actionType": "LOCAL ACTION"
+    }
+  ],
+  "protectWhatIsWorking": [
+    {
+      "area": "Cleanliness & Upkeep",
+      "evidence": "88% positive across 24 comments — the cleaning staff are singled out",
+      "note": "Maintain the current service level and monitor performance."
+    },
+    {
+      "area": "Reception & Entry",
+      "evidence": "73% positive",
+      "note": "Maintain the current service level and monitor performance."
+    },
+    {
+      "area": "Wellbeing / Wellness Spaces",
+      "evidence": "83% positive",
+      "note": "Maintain the current service level and monitor performance."
+    }
+  ],
+  "assumptions": [
+    "Enclosed-space utilization needs an onsite check before sizing any build-out."
+  ],
+  "evidenceConfidence": [
+    {
+      "priorityName": "Private space for confidential conversations and calls",
+      "supportingDataPoints": [
+        "Focused / Private Work is the #1 priority category (76/100).",
+        "Privacy & Confidentiality: 57 comments, 65% negative; Noise & Distraction: 47 comments, 62% negative.",
+        "Discretion-space friction is 27/100 (49% under-supported)."
+      ],
+      "needsLocalValidation": [
+        "Onsite validation of the specific condition before any capital step."
+      ]
+    },
+    {
+      "priorityName": "Desk reservation clarity and workstation setup",
+      "supportingDataPoints": [
+        "Desk Availability & Reservations: 77 comments, 48% negative (highest-volume theme)."
+      ],
+      "needsLocalValidation": [
+        "Onsite validation of the specific condition before any capital step."
+      ]
+    },
+    {
+      "priorityName": "Workstation hardware reliability",
+      "supportingDataPoints": [
+        "Hardware: 64 comments, 52% negative. Connectivity: 31 comments, 65% negative."
+      ],
+      "needsLocalValidation": [
+        "Onsite validation of the specific condition before any capital step."
+      ]
+    }
+  ],
+  "operationalResponseTable": [
+    {
+      "priorityName": "Private space for confidential conversations and calls",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Desk reservation clarity and workstation setup",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Workstation hardware reliability",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    }
+  ],
+  "_meta": {
+    "generated_at": "2026-08-24",
+    "provider": "Claude Opus 4",
+    "model": "Cowork",
+    "owner": "Regional Director + Local Team",
+    "include_verbatims": true,
+    "prompt_version": "v3",
+    "generated_by": "Claude Opus (Cowork session, batch)"
+  }
+}

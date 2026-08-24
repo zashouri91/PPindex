@@ -1,0 +1,178 @@
+{
+  "location": "IN-Indianapolis",
+  "indexScore": 68.2,
+  "indexTier": "Bottom third",
+  "reviewFullReportCardRecommended": true,
+  "priorities": [
+    {
+      "name": "Private space for sensitive meetings and all-day calls",
+      "sourceThemes": [
+        "Privacy & Confidentiality",
+        "Noise & Distraction"
+      ],
+      "issue": "Associates on sensitive-topic meetings lack all-day private space, and meeting-heavy calendars make the quiet zones hard to actually use.",
+      "whatItLooksLike": [
+        "Lack of offices in which I can work all day. I am on meetings on sensitive topics, and working in general areas is not appropriate.",
+        "Too much noise and distraction at times. So many meetings on our calendar it's hard to utilize the Quiet Zones."
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Focused / Private Work is the #2 priority category (67/100); discretion-space friction 28/100 (51% under-supported)."
+        },
+        {
+          "type": "Finding",
+          "text": "Privacy & Confidentiality: 224 comments (50% neg); Noise & Distraction: 205 comments (59% neg)."
+        }
+      ],
+      "proposedAction": "Assess enclosed/quiet-space capacity against the meeting-heavy demand pattern; review whether quiet zones are being absorbed by meetings and need protection or expansion.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Workplace Solutions",
+        "Change & Communications"
+      ],
+      "siteMustDo": "Measure private-room demand vs. availability across a typical week and escalate the capacity gap with evidence.",
+      "actionType": "LOCAL PROJECT"
+    },
+    {
+      "name": "Desk reservations and booking window",
+      "sourceThemes": [
+        "Desk Availability & Reservations"
+      ],
+      "issue": "The two-week booking window is too short for how associates plan, and reservations are the highest-volume complaint at the largest site.",
+      "whatItLooksLike": [
+        "Reservations should be available more than 2 weeks out. It is very inconvenient that we can only schedule 2 weeks at a time."
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Desk Availability & Reservations: 375 comments, 47% negative — Physical Environment is the #1 priority category (73/100)."
+        }
+      ],
+      "proposedAction": "Review the booking-window policy (is the 2-week limit local or enterprise?) and no-show handling.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Reservation-system owner",
+        "Technology"
+      ],
+      "siteMustDo": "Confirm whether the 2-week window is a local setting or enterprise policy, and route accordingly.",
+      "actionType": "WORKSTREAM / ENTERPRISE"
+    },
+    {
+      "name": "Workstation equipment and connectivity reliability",
+      "sourceThemes": [
+        "Hardware (Monitors / Peripherals)",
+        "Connectivity (WiFi / Login / Power)"
+      ],
+      "issue": "Monitors and video often don't work, and USB-C cords on specific floors fail to connect to the network — the site's Digital & Tech score is the lowest of all sites.",
+      "whatItLooksLike": [
+        "Often the monitors don't work and occasionally the video meetings don't work.",
+        "Many of the USBC cords don't work and allow you to connect to the network on the 4th floor."
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Hardware: 237 comments (57% neg); Connectivity: 167 comments (54% neg)."
+        },
+        {
+          "type": "Finding",
+          "text": "Digital & Tech dimension is 69.9 — rank 10 of 10."
+        }
+      ],
+      "proposedAction": "Run a floor-by-floor equipment and cable audit (the 4th-floor USB-C issue is specific and testable) and route confirmed faults to Technology.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Technology"
+      ],
+      "siteMustDo": "Audit cords/monitors by floor, replace failed cables, and escalate the connectivity pattern to Technology with locations.",
+      "actionType": "LOCAL PROJECT"
+    }
+  ],
+  "protectWhatIsWorking": [
+    {
+      "area": "Reception & Entry",
+      "evidence": "81% positive across 48 comments",
+      "note": "Maintain the current service level and monitor performance."
+    },
+    {
+      "area": "Community & Events",
+      "evidence": "80% positive",
+      "note": "Maintain the current service level and monitor performance."
+    },
+    {
+      "area": "Wellbeing / Wellness Spaces",
+      "evidence": "71% positive — the refreshed building is praised",
+      "note": "Maintain the current service level and monitor performance."
+    }
+  ],
+  "assumptions": [
+    "Indianapolis is the largest site by comment volume (1,266); the three priorities target the highest-volume, highest-friction gaps.",
+    "Whether the 2-week reservation window is local or enterprise-set needs confirmation."
+  ],
+  "evidenceConfidence": [
+    {
+      "priorityName": "Private space for sensitive meetings and all-day calls",
+      "supportingDataPoints": [
+        "Focused / Private Work is the #2 priority category (67/100); discretion-space friction 28/100 (51% under-supported).",
+        "Privacy & Confidentiality: 224 comments (50% neg); Noise & Distraction: 205 comments (59% neg)."
+      ],
+      "needsLocalValidation": [
+        "Onsite validation of the specific condition before any capital step."
+      ]
+    },
+    {
+      "priorityName": "Desk reservations and booking window",
+      "supportingDataPoints": [
+        "Desk Availability & Reservations: 375 comments, 47% negative — Physical Environment is the #1 priority category (73/100)."
+      ],
+      "needsLocalValidation": [
+        "Onsite validation of the specific condition before any capital step."
+      ]
+    },
+    {
+      "priorityName": "Workstation equipment and connectivity reliability",
+      "supportingDataPoints": [
+        "Hardware: 237 comments (57% neg); Connectivity: 167 comments (54% neg).",
+        "Digital & Tech dimension is 69.9 — rank 10 of 10."
+      ],
+      "needsLocalValidation": [
+        "Onsite validation of the specific condition before any capital step."
+      ]
+    }
+  ],
+  "operationalResponseTable": [
+    {
+      "priorityName": "Private space for sensitive meetings and all-day calls",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Desk reservations and booking window",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Workstation equipment and connectivity reliability",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    }
+  ],
+  "_meta": {
+    "generated_at": "2026-08-24",
+    "provider": "Claude Opus 4",
+    "model": "Cowork",
+    "owner": "Regional Director + Local Team",
+    "include_verbatims": true,
+    "prompt_version": "v3",
+    "generated_by": "Claude Opus (Cowork session, batch)"
+  }
+}

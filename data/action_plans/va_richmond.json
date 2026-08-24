@@ -1,0 +1,165 @@
+{
+  "location": "VA-Richmond",
+  "indexScore": 66.5,
+  "indexTier": "Bottom third",
+  "reviewFullReportCardRecommended": true,
+  "priorities": [
+    {
+      "name": "Quiet space for calls and focused work",
+      "sourceThemes": [
+        "Noise & Distraction"
+      ],
+      "issue": "There are too few spaces to take calls, so most people are on the open floor during meetings, making it noisy for everyone.",
+      "whatItLooksLike": [
+        "There are limited spaces where calls can be taken so most people are on the floor while holding or attending meetings and it can be quite noisy."
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Focused / Private Work is the #1 priority category (74/100); focused-work friction 27/100 (56% under-supported)."
+        },
+        {
+          "type": "Finding",
+          "text": "Noise & Distraction: 90 comments, 63% negative."
+        }
+      ],
+      "proposedAction": "Assess call/quiet-space capacity and etiquette against demand before adding enclosed space.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Workplace Solutions",
+        "Change & Communications"
+      ],
+      "siteMustDo": "Track call-space demand vs. availability and pilot a quiet/call-etiquette norm; size any gap for Workplace Solutions.",
+      "actionType": "LOCAL PROJECT"
+    },
+    {
+      "name": "On-site food and beverage options",
+      "sourceThemes": [
+        "Food & Beverage"
+      ],
+      "issue": "Food options are seen as poor — the frozen/market selection isn't useful — and F&B is cited well above the company norm here.",
+      "whatItLooksLike": [
+        "There should better options made available for buying food. The frozen section is not useful."
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Food & Beverage: 101 comments, 46% negative; cited at 19% of comments vs. 14% company-wide."
+        },
+        {
+          "type": "Finding",
+          "text": "On-site food/beverage availability friction is 25/100 (46% under-supported); Service Level is the site's weakest dimension (68.4, rank 10)."
+        }
+      ],
+      "proposedAction": "Review the F&B vendor's offering, hours and stocking with the Food & Beverage team against what associates actually want.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Food & Beverage"
+      ],
+      "siteMustDo": "Gather the specific gaps (options, hours, freshness) and bring them to the Food & Beverage team for a vendor review.",
+      "actionType": "WORKSTREAM / ENTERPRISE"
+    },
+    {
+      "name": "Workstation equipment and desk adjustability",
+      "sourceThemes": [
+        "Hardware (Monitors / Peripherals)",
+        "Desk Availability & Reservations"
+      ],
+      "issue": "Keyboards and station equipment aren't routinely checked (stuck/dead keys), and desks don't lower enough for smaller associates.",
+      "whatItLooksLike": [
+        "Maybe having routine checks on the equipment in the rooms and stations would be nice. Sometimes for examples the keyboards may not be working or have stuck keys which can make working a bit more difficult.",
+        "desks need to be able to lower more for smaller people"
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Hardware: 88 comments, 56% negative; Desk Availability: 141 comments, 54% negative."
+        }
+      ],
+      "proposedAction": "Institute routine equipment checks and confirm desk-height adjustability options for smaller associates.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Technology"
+      ],
+      "siteMustDo": "Run a station-by-station equipment check and confirm/adjust desk-height range where needed.",
+      "actionType": "LOCAL ACTION"
+    }
+  ],
+  "protectWhatIsWorking": [
+    {
+      "area": "Community & Events",
+      "evidence": "80% positive — community managers are praised by name",
+      "note": "Maintain the current service level and monitor performance."
+    }
+  ],
+  "assumptions": [
+    "Richmond is near the bottom overall (9 of 10) with the weakest Service Level; food/beverage is an unusually strong signal here vs. other sites.",
+    "The Richmond↔Norfolk comparison (outdoor walking areas, escalators) is associate-reported and worth an onsite check."
+  ],
+  "evidenceConfidence": [
+    {
+      "priorityName": "Quiet space for calls and focused work",
+      "supportingDataPoints": [
+        "Focused / Private Work is the #1 priority category (74/100); focused-work friction 27/100 (56% under-supported).",
+        "Noise & Distraction: 90 comments, 63% negative."
+      ],
+      "needsLocalValidation": [
+        "Onsite validation of the specific condition before any capital step."
+      ]
+    },
+    {
+      "priorityName": "On-site food and beverage options",
+      "supportingDataPoints": [
+        "Food & Beverage: 101 comments, 46% negative; cited at 19% of comments vs. 14% company-wide.",
+        "On-site food/beverage availability friction is 25/100 (46% under-supported); Service Level is the site's weakest dimension (68.4, rank 10)."
+      ],
+      "needsLocalValidation": [
+        "Onsite validation of the specific condition before any capital step."
+      ]
+    },
+    {
+      "priorityName": "Workstation equipment and desk adjustability",
+      "supportingDataPoints": [
+        "Hardware: 88 comments, 56% negative; Desk Availability: 141 comments, 54% negative."
+      ],
+      "needsLocalValidation": [
+        "Onsite validation of the specific condition before any capital step."
+      ]
+    }
+  ],
+  "operationalResponseTable": [
+    {
+      "priorityName": "Quiet space for calls and focused work",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "On-site food and beverage options",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Workstation equipment and desk adjustability",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    }
+  ],
+  "_meta": {
+    "generated_at": "2026-08-24",
+    "provider": "Claude Opus 4",
+    "model": "Cowork",
+    "owner": "Regional Director + Local Team",
+    "include_verbatims": true,
+    "prompt_version": "v3",
+    "generated_by": "Claude Opus (Cowork session, batch)"
+  }
+}

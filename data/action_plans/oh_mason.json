@@ -1,0 +1,178 @@
+{
+  "location": "OH-Mason",
+  "indexScore": 68.4,
+  "indexTier": "Middle third",
+  "reviewFullReportCardRecommended": true,
+  "priorities": [
+    {
+      "name": "Quiet, private space for meeting-heavy and technical work",
+      "sourceThemes": [
+        "Noise & Distraction",
+        "Privacy & Confidentiality",
+        "Focus / Concentration"
+      ],
+      "issue": "Managers spend the day in back-to-back calls with nowhere private to take them, and the shift to smaller, clustered cubes has made focused technical work harder.",
+      "whatItLooksLike": [
+        "no privacy with ongoing all day meetings and calls",
+        "The change from professional cubes to much smaller, highly clustered cubes make it very difficult to focus on technical work."
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Focused / Private Work is the #1 priority category (80/100); focused-space friction 34/100 (61% under-supported)."
+        },
+        {
+          "type": "Finding",
+          "text": "Noise & Distraction: 137 comments (64% neg); Privacy & Confidentiality: 124 comments (60% neg); Focus/Concentration: 96 (55%)."
+        }
+      ],
+      "proposedAction": "Assess enclosed/manager-suitable space and the cube-density change against demand; validate whether zoning or added enclosed rooms is warranted before build-out.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Workplace Solutions",
+        "Change & Communications"
+      ],
+      "siteMustDo": "Walk the floor at peak, quantify where private space runs out, and bring a sized gap (including the cube-density concern) to Workplace Solutions.",
+      "actionType": "LOCAL PROJECT"
+    },
+    {
+      "name": "Manager workstations with monitors and a door",
+      "sourceThemes": [
+        "Hardware (Monitors / Peripherals)",
+        "Desk Availability & Reservations"
+      ],
+      "issue": "Enclosed workstations equipped with monitors are scarce for managers who need them, and desk equipment is unreliable.",
+      "whatItLooksLike": [
+        "The availability of workspaces with monitors and a door is limited for managers.",
+        "The limited areas to work when you have meetings that others should not hear. Not always able to sit in the same seat."
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Hardware: 115 comments, 56% negative; Technology priority score 56/100."
+        }
+      ],
+      "proposedAction": "Map demand for enclosed, monitor-equipped workstations and standardize desk equipment/checks.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Workplace Solutions",
+        "Technology"
+      ],
+      "siteMustDo": "Quantify how many enclosed monitor-equipped seats are needed vs. available and route to Workplace Solutions.",
+      "actionType": "LOCAL PROJECT"
+    },
+    {
+      "name": "Connectivity reliability",
+      "sourceThemes": [
+        "Connectivity (WiFi / Login / Power)"
+      ],
+      "issue": "Connectivity is a frequent and highly negative complaint.",
+      "whatItLooksLike": [
+        "Connectivity is the most-negative technology theme at the site (see comment appendix)."
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Connectivity: 67 comments, 66% negative."
+        }
+      ],
+      "proposedAction": "Validate coverage/reliability in the reported areas and route to Technology.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Technology"
+      ],
+      "siteMustDo": "Log dead spots and times and escalate to Technology with locations.",
+      "actionType": "WORKSTREAM / ENTERPRISE"
+    }
+  ],
+  "protectWhatIsWorking": [
+    {
+      "area": "Building Operations",
+      "evidence": "71% positive across 52 comments — the facility itself is praised",
+      "note": "Maintain the current service level and monitor performance."
+    },
+    {
+      "area": "Community & Events",
+      "evidence": "83% positive",
+      "note": "Maintain the current service level and monitor performance."
+    },
+    {
+      "area": "Support / Help Services",
+      "evidence": "85% positive",
+      "note": "Maintain the current service level and monitor performance."
+    },
+    {
+      "area": "Reception & Entry",
+      "evidence": "77% positive",
+      "note": "Maintain the current service level and monitor performance."
+    }
+  ],
+  "assumptions": [
+    "The cube-density change is associate-reported; onsite validation is needed to judge whether layout or capacity is the driver."
+  ],
+  "evidenceConfidence": [
+    {
+      "priorityName": "Quiet, private space for meeting-heavy and technical work",
+      "supportingDataPoints": [
+        "Focused / Private Work is the #1 priority category (80/100); focused-space friction 34/100 (61% under-supported).",
+        "Noise & Distraction: 137 comments (64% neg); Privacy & Confidentiality: 124 comments (60% neg); Focus/Concentration: 96 (55%)."
+      ],
+      "needsLocalValidation": [
+        "Onsite validation of the specific condition before any capital step."
+      ]
+    },
+    {
+      "priorityName": "Manager workstations with monitors and a door",
+      "supportingDataPoints": [
+        "Hardware: 115 comments, 56% negative; Technology priority score 56/100."
+      ],
+      "needsLocalValidation": [
+        "Onsite validation of the specific condition before any capital step."
+      ]
+    },
+    {
+      "priorityName": "Connectivity reliability",
+      "supportingDataPoints": [
+        "Connectivity: 67 comments, 66% negative."
+      ],
+      "needsLocalValidation": [
+        "Onsite validation of the specific condition before any capital step."
+      ]
+    }
+  ],
+  "operationalResponseTable": [
+    {
+      "priorityName": "Quiet, private space for meeting-heavy and technical work",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Manager workstations with monitors and a door",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Connectivity reliability",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    }
+  ],
+  "_meta": {
+    "generated_at": "2026-08-24",
+    "provider": "Claude Opus 4",
+    "model": "Cowork",
+    "owner": "Regional Director + Local Team",
+    "include_verbatims": true,
+    "prompt_version": "v3",
+    "generated_by": "Claude Opus (Cowork session, batch)"
+  }
+}

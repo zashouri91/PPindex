@@ -1,0 +1,190 @@
+{
+  "location": "CA-Woodland Hills",
+  "indexScore": 65.8,
+  "indexTier": "Bottom third",
+  "reviewFullReportCardRecommended": true,
+  "priorities": [
+    {
+      "name": "Quiet, private space for focus and confidential work",
+      "sourceThemes": [
+        "Noise & Distraction",
+        "Privacy & Confidentiality",
+        "Focus / Concentration"
+      ],
+      "issue": "Associates cannot reliably find quiet or private space for concentrated work and confidential conversations; even managers with designated space report having to leave their seat for a booth. This is the site's single largest driver of dissatisfaction.",
+      "whatItLooksLike": [
+        "even with designated manager/director space, there is still minimal privacy and sensitive conversations require you to get up and move to a privacy booth which is inconvenient and disruptive.",
+        "Working at a pulse point is challenging due to potential missing items and high noise levels."
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Focused / Private Work is the #1 priority category (priority score 79/100)."
+        },
+        {
+          "type": "Finding",
+          "text": "Friction for focused individual work is 37/100 — 64% feel under-supported; discretion 27/100 (50%)."
+        },
+        {
+          "type": "Finding",
+          "text": "Noise & Distraction: 137 comments, 68% negative. Privacy & Confidentiality: 100 comments, 55% negative."
+        },
+        {
+          "type": "Interpretation",
+          "text": "Reserved seats lose value when the surrounding environment doesn't support the work done there."
+        }
+      ],
+      "proposedAction": "Assess current quiet/phone-booth/enclosed-room capacity against peak demand; determine whether booking limits, an etiquette/quiet-zone protocol, or added enclosed capacity is the right fix before proposing construction.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Workplace Solutions",
+        "Change & Communications"
+      ],
+      "siteMustDo": "Walk the floor at peak occupancy, log where and when private/quiet space runs out, compare with booth/room utilization, and escalate a capacity gap to Workplace Solutions with evidence.",
+      "actionType": "LOCAL PROJECT"
+    },
+    {
+      "name": "Desk reservation reliability and arrival readiness",
+      "sourceThemes": [
+        "Desk Availability & Reservations"
+      ],
+      "issue": "Desk reservations and the state of reserved workstations don't consistently hold up, so associates lose time getting set up when they arrive.",
+      "whatItLooksLike": [
+        "Often cords or mouses are missing from desks and I do not know who to contact"
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Desk Availability & Reservations is the highest-volume theme: 174 comments, 53% negative."
+        },
+        {
+          "type": "Finding",
+          "text": "Physical Environment ranks #2 by priority score (71/100)."
+        }
+      ],
+      "proposedAction": "Review booking rules and no-show behavior, and stand up a clear, visible path for reporting a desk found missing equipment on arrival.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Reservation-system owner",
+        "Technology"
+      ],
+      "siteMustDo": "Audit a sample of reservations against actual occupancy for two weeks, confirm the failure mode (double-booking vs. no-shows vs. setup), and post the who-to-contact path at each neighborhood.",
+      "actionType": "LOCAL ACTION"
+    },
+    {
+      "name": "Workstation equipment reliability",
+      "sourceThemes": [
+        "Hardware (Monitors / Peripherals)"
+      ],
+      "issue": "Monitors, cords and peripherals at shared desks are frequently missing or misconfigured, interrupting work.",
+      "whatItLooksLike": [
+        "Sometimes, find issues of a monitor not working due to settings being changed at times."
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Hardware (Monitors / Peripherals): 98 comments, 59% negative."
+        },
+        {
+          "type": "Interpretation",
+          "text": "A recurring per-desk reliability issue rather than a one-off failure."
+        }
+      ],
+      "proposedAction": "Institute a routine equipment check for shared workstations and standardize the docking/monitor setup so any desk works the same way on arrival.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Technology"
+      ],
+      "siteMustDo": "Inspect a sample of workstations, catalog missing/broken peripherals and reset-monitor issues, and set a recurring check with Technology.",
+      "actionType": "LOCAL ACTION"
+    }
+  ],
+  "protectWhatIsWorking": [
+    {
+      "area": "Reception & Entry",
+      "evidence": "91% positive across 22 comments — security/front-desk is a genuine strength",
+      "note": "Maintain the current service level and monitor performance."
+    },
+    {
+      "area": "Community & Events",
+      "evidence": "84% positive across 31 comments",
+      "note": "Maintain the current service level and monitor performance."
+    },
+    {
+      "area": "Cleanliness & Upkeep",
+      "evidence": "72% positive across 43 comments",
+      "note": "Maintain the current service level and monitor performance."
+    }
+  ],
+  "assumptions": [
+    "Quiet/enclosed-space utilization data isn't in the survey; an onsite walkthrough is needed to size any capacity gap before recommending build-out.",
+    "Woodland Hills is the lowest-ranked site overall (10 of 10); these three priorities target its largest, most-cited gaps first."
+  ],
+  "evidenceConfidence": [
+    {
+      "priorityName": "Quiet, private space for focus and confidential work",
+      "supportingDataPoints": [
+        "Focused / Private Work is the #1 priority category (priority score 79/100).",
+        "Friction for focused individual work is 37/100 — 64% feel under-supported; discretion 27/100 (50%).",
+        "Noise & Distraction: 137 comments, 68% negative. Privacy & Confidentiality: 100 comments, 55% negative."
+      ],
+      "needsLocalValidation": [
+        "Onsite validation of the specific condition before any capital step."
+      ]
+    },
+    {
+      "priorityName": "Desk reservation reliability and arrival readiness",
+      "supportingDataPoints": [
+        "Desk Availability & Reservations is the highest-volume theme: 174 comments, 53% negative.",
+        "Physical Environment ranks #2 by priority score (71/100)."
+      ],
+      "needsLocalValidation": [
+        "Onsite validation of the specific condition before any capital step."
+      ]
+    },
+    {
+      "priorityName": "Workstation equipment reliability",
+      "supportingDataPoints": [
+        "Hardware (Monitors / Peripherals): 98 comments, 59% negative."
+      ],
+      "needsLocalValidation": [
+        "Onsite validation of the specific condition before any capital step."
+      ]
+    }
+  ],
+  "operationalResponseTable": [
+    {
+      "priorityName": "Quiet, private space for focus and confidential work",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Desk reservation reliability and arrival readiness",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Workstation equipment reliability",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    }
+  ],
+  "_meta": {
+    "generated_at": "2026-08-24",
+    "provider": "Claude Opus 4",
+    "model": "Cowork",
+    "owner": "Regional Director + Local Team",
+    "include_verbatims": true,
+    "prompt_version": "v3",
+    "generated_by": "Claude Opus (Cowork session, batch)"
+  }
+}
