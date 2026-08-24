@@ -137,8 +137,10 @@ bar. **(6) Open-ended comment themes** — the comment-sentiment headline, senti
 benchmark vs the org, representative quotes, a categorization methodology note, and the full
 comments-by-category-and-sentiment appendix. **(7) Demographics — respondent profile** — a visual
 rollup (role, tenure, hybrid category) above a detailed backup table. A **data source & method**
-footer documents the pipeline. Download per site as **HTML, PDF, or PowerPoint**, build a full deck
-of all sites at once, or export a site's complete verbatim bank as CSV.
+footer documents the pipeline. Each card can also open with an optional, auto-generated
+**Operational Action Plan — "What to Do Next"** band (see its own section below). Download per site as
+**HTML, PDF, or PowerPoint**, build a full deck of all sites at once, or export a site's complete
+verbatim bank as CSV.
 
 At the top of the tab is the **10 PulsePoints — Portfolio Report Card**: a company-wide exec brief
 (2–3 pages) that rolls the same elements up across all ten sites — the company Index Score, a ranked
@@ -154,6 +156,55 @@ auto-tags and override them. Edit the
 and `junk_override` columns, add notes, tick *reviewed*, then **Save changes**.
 Saves to `data/overrides.csv` and updates every tab. Export the fully-tagged
 dataset (with your edits applied) to CSV or Excel.
+
+## Operational Action Plan — "What to Do Next"
+
+Each site card can open with an auto-generated **Operational Action Plan** — the bridge between the
+survey read-out and execution, per the work-stream review. It is **not** a re-summary: it converts the
+site's own evidence into **3–5 prioritized, validate-before-acting recommendations**, each with the
+specific issue, what it looks like at that site (quoted from real comments), the supporting evidence, a
+proposed action, the proposed support team, and a required next step — plus a "Protect what's working"
+block and a blank operational-response table for the team to complete (Confirm/Modify/Reject → owner →
+cost → timing). The primary owner for every action defaults to **Regional Director + Local Team** and is
+editable (the ownership model is still an open decision).
+
+The plan is generated **once and stored** per site (`data/action_plans/<site>.json`), so the text is
+stable — it does not shift each time the card is opened. Regenerate any time from the **Site Reports**
+tab (*🧭 Operational Action Plan — generate / regenerate*), per site or for all ten at once. The section
+is grounded strictly in that site's report card (unweighted Index only; the generic "Positive /
+Appreciation" and "Overall Dissatisfaction" buckets are excluded), and the model is told to use only the
+supplied quotes for examples and never to fabricate.
+
+### Configuring the model (privacy-first)
+
+Generation calls a language model over plain HTTP — **no extra Python packages**. The **default and
+recommended** backend is a **local [Ollama](https://ollama.com) model**, so **employee comments never
+leave the machine**:
+
+```bash
+# one-time
+brew install ollama            # or download from ollama.com
+ollama pull llama3.1           # any capable local model works
+# then just run the app — Ollama is the default provider
+```
+
+To use a hosted model instead, set environment variables before launching Streamlit:
+
+| Provider | `PULSEPOINT_LLM_PROVIDER` | Required env vars |
+|----------|---------------------------|-------------------|
+| Ollama (local, default) | `ollama` | *(none)* — optional `PULSEPOINT_OLLAMA_HOST`, `PULSEPOINT_LLM_MODEL` |
+| Azure OpenAI | `azure` | `PULSEPOINT_AZURE_ENDPOINT`, `PULSEPOINT_AZURE_DEPLOYMENT`, `PULSEPOINT_AZURE_API_KEY` (opt. `PULSEPOINT_AZURE_API_VERSION`) |
+| OpenAI | `openai` | `OPENAI_API_KEY` (opt. `PULSEPOINT_LLM_MODEL`, default `gpt-4o`) |
+| Anthropic | `anthropic` | `ANTHROPIC_API_KEY` (opt. `PULSEPOINT_LLM_MODEL`, default `claude-3-5-sonnet-latest`) |
+
+Other knobs: `PULSEPOINT_ACTION_OWNER` sets the default owner label; the **Include verbatim quotes**
+toggle can be turned off to send the model **aggregate numbers only** (no comment text) if policy
+requires. Requests run at **temperature 0**. If no backend is configured, the card renders without the
+section and the tab shows a one-line setup hint — nothing breaks.
+
+> **Hosted providers:** sending comments to a cloud API means employee text leaves your environment —
+> use an organization-approved endpoint, or stick with local Ollama. Either way the generated plan is a
+> **draft for the site team to validate**, not a final decision; that guardrail is built into the prompt.
 
 ## How the auto-tagging works
 

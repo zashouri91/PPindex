@@ -19,6 +19,8 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
+import action_plan  # Operational Action Plan — "What to Do Next" section (LLM-generated, stored per site)
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(HERE, "data")
 OVERRIDES = os.path.join(DATA, "overrides.csv")
@@ -762,6 +764,9 @@ def build_site_report(site):
     if d["n"] == 0:
         return f"<html><body style='font-family:sans-serif'><h2>{_html.escape(site)}</h2><p>No comments for this site.</p></body></html>"
     charts = d["charts"]
+    # Operational Action Plan — "What to Do Next": rendered from the stored per-site
+    # plan (empty string until one is generated, so exports stay clean).
+    action_plan_html = action_plan.render_action_plan_html(action_plan.load_plan(site))
     P, tops = d["P"], d["P"]["key"].tolist()
     _ncommenters = int(d["real_df"]["respondent"].nunique()) if d.get("real_df") is not None and len(d.get("real_df", [])) else 0
     narrative = (f"We received <b>{d['n']:,} substantive comments</b>"
@@ -994,11 +999,13 @@ def build_site_report(site):
  .foot{{color:#888;font-size:11px;margin-top:24px;border-top:1px solid #eee;padding-top:8px}}
  @page{{size:Letter;margin:12mm}}
  @media print{{ body{{max-width:100%;margin:0;padding:0}} .charts img{{max-width:100%}}
-   h1,h3{{break-after:avoid}} tr,blockquote,.rc,.area,details.catblk{{break-inside:avoid}} }}
+   h1,h3{{break-after:avoid}} tr,blockquote,.rc,.area,details.catblk,.oap-pri{{break-inside:avoid}} }}
+{action_plan.ACTION_PLAN_CSS}
 </style></head><body>
 <h1>PulsePoint Experience — {_html.escape(site)}</h1>
 <div class="sub">Workplace experience report card · completed responses</div>
 {card_html}
+{action_plan_html}
 <h3>Demographics — respondent profile</h3>
 {demo_html or '<p style="color:#888">No demographic data.</p>'}
 <h3>Importance vs. Support gaps</h3>
@@ -2080,6 +2087,61 @@ with tab_report:
         st.download_button("⬇️ PowerPoint", build_site_pptx([rsite], completers_only), f"pulsepoint_{safe}.pptx",
                            "application/vnd.openxmlformats-officedocument.presentationml.presentation",
                            use_container_width=True)
+
+    # --- Operational Action Plan — What to Do Next (generate / regenerate) -----------
+    with st.expander("🧭 Operational Action Plan — generate / regenerate",
+                     expanded=not action_plan.plan_exists(rsite)):
+        st.caption("An auto-generated, validate-before-acting **What to Do Next** section that renders at the "
+                   "top of the card. Grounded only in this site's evidence; generated once and stored.")
+        _prov = action_plan.configured_provider()
+        _pm = action_plan.plan_meta(rsite)
+        if _pm:
+            st.caption(f"Current plan for **{rsite}**: generated {_pm.get('generated_at','?')} · "
+                       f"{_pm.get('provider','?')}/{_pm.get('model','?')}"
+                       + (" · aggregate-only" if _pm.get('include_verbatims') is False else ""))
+        else:
+            st.caption(f"No action plan generated yet for **{rsite}** — it appears at the top of the card once created.")
+        oc = st.columns([3, 2, 2])
+        _owner = oc[0].text_input("Primary owner (every action)", value=action_plan.default_owner(),
+                                  key="oap_owner", help="The ownership model is still open per the meeting — edit freely.")
+        _incl = oc[1].checkbox("Include verbatim quotes", value=True, key="oap_incl",
+                               help="On = quotes ground the 'what this looks like' lines. "
+                                    "Off = aggregate-only; no comment text is sent to the model.")
+        _btn_label = "🔁 Regenerate" if _pm else "✨ Generate"
+        if oc[2].button(_btn_label, type="primary", use_container_width=True,
+                        disabled=(_prov is None), key="oap_gen"):
+            try:
+                with st.spinner(f"Generating action plan for {rsite} via {_prov}…"):
+                    _data = site_report_data(rsite, completers_only)
+                    _plan = action_plan.generate_action_plan(_data, owner=_owner, include_verbatims=_incl)
+                    action_plan.save_plan(rsite, _plan)
+                    build_site_pdf.clear()
+                st.success(f"Action plan generated for {rsite}.")
+                st.rerun()
+            except Exception as e:
+                st.error(f"Generation failed: {e}")
+        if _prov is None:
+            st.info("⚙️ **No model configured.** Recommended (keeps comments on your machine): install "
+                    "[Ollama](https://ollama.com), run `ollama pull llama3.1`, then set "
+                    "`PULSEPOINT_LLM_PROVIDER=ollama` and restart the app. Azure / OpenAI / Anthropic are also "
+                    "supported — see the README → *Operational Action Plan*.")
+        elif st.button("Generate for all 10 sites", key="oap_gen_all",
+                       help="Runs the model once per site and stores each plan."):
+            _prog = st.progress(0.0, text="Starting…")
+            _fail = []
+            for _i, _s in enumerate(report_sites):
+                try:
+                    _d = site_report_data(_s, completers_only)
+                    _pl = action_plan.generate_action_plan(_d, owner=_owner, include_verbatims=_incl)
+                    action_plan.save_plan(_s, _pl)
+                except Exception as e:
+                    _fail.append(f"{_s}: {e}")
+                _prog.progress((_i + 1) / len(report_sites), text=f"{_i+1}/{len(report_sites)} — {_s}")
+            build_site_pdf.clear()
+            (st.warning("Some sites failed:\n\n" + "\n\n".join(_fail)) if _fail
+             else st.success(f"Generated action plans for all {len(report_sites)} sites."))
+            st.rerun()
+
     components.html(report_html, height=820, scrolling=True)
 
     st.divider()

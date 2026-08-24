@@ -13,3 +13,7 @@ python-pptx>=0.6.21
 playwright>=1.40
 # Fallback engine if Chromium isn't installed (pure-Python, slightly less faithful):
 weasyprint>=60
+# Operational Action Plan ("What to Do Next"): no extra dependencies — the model
+# is called over plain HTTP (stdlib urllib). Default backend is a LOCAL Ollama
+# model (install separately from https://ollama.com) so comments never leave the
+# machine; Azure OpenAI / OpenAI / Anthropic also work via env config. See README.
