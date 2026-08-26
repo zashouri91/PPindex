@@ -1327,7 +1327,10 @@ def _portfolio_qgrid(site_order):
     dims = sorted(ss["dimension"].dropna().unique(), key=lambda d: DIM_ORDER.get(d, 9))
     comp_fric = ss.groupby(["dimension", "item"])["friction"].mean()
 
-    heads = "".join(f"<th class='qs' title='{_html.escape(str(s))}'>{_short(s)}</th>" for s in site_order)
+    _key = ("<span class='qs-key'><span>Imp</span><span>Sup</span>"
+            "<span>Gap</span><span>Fri</span></span>")
+    heads = "".join(f"<th class='qs' title='{_html.escape(str(s))}'>"
+                    f"<span class='qs-code'>{_short(s)}</span>{_key}</th>" for s in site_order)
     body = ""
     ncol = len(site_order) + 1
     for dm in dims:
@@ -1339,7 +1342,7 @@ def _portfolio_qgrid(site_order):
             for s in site_order:
                 r = lut.get((dm, it, s))
                 if r is None or (pd.isna(r["mean_support"]) and pd.isna(r["friction"])):
-                    cells += f"<td class='qc' style='background:{QG_MISS}'><span class='qg-na'>n/a</span></td>"
+                    cells += f"<td class='qc qc-na' style='background:{QG_MISS}'>n/a</td>"
                     continue
                 imp, sup, gap, fri = r["mean_importance"], r["mean_support"], r["gap5"], r["friction"]
                 if pd.isna(imp):                       # agreement-only (Digital & Tech)
@@ -1347,22 +1350,24 @@ def _portfolio_qgrid(site_order):
                 else:
                     bg = QG_BG.get(ryg_of(gap), QG_MISS)
                 fr = "—" if pd.isna(fri) else f"{fri:.0f}"
-                cells += (f"<td class='qc' style='background:{bg}'>"
-                          f"<span class='q1'>I&nbsp;{_f1(imp)}&nbsp;&nbsp;S&nbsp;{_f1(sup)}</span>"
-                          f"<span class='q2'>G&nbsp;{_gp(gap)}&nbsp;&nbsp;F&nbsp;{fr}</span></td>")
+                # 2×2 quadrant: Imp (top-left) · Sup (top-right) / Gap (bottom-left) · Fri (bottom-right)
+                cells += (f"<td class='qc' style='background:{bg}'><div class='qcw'>"
+                          f"<span class='qv tl'>{_f1(imp)}</span><span class='qv tr'>{_f1(sup)}</span>"
+                          f"<span class='qv bl'>{_gp(gap)}</span><span class='qv br'>{fr}</span></div></td>")
             body += f"<tr><td class='qg-q'>{_html.escape(str(it))}</td>{cells}</tr>"
 
     codes = " · ".join(f"<b>{_short(s)}</b> {_html.escape(str(s).split('-', 1)[-1])}" for s in site_order)
     legend = (
-        "<p class='lgd'>Each cell — top: <b>I</b>mportance · <b>S</b>upport (1–5 scale); bottom: "
-        "<b>G</b>ap (Support − Importance) · <b>F</b>riction (0–100, higher = worse). Cell color is the "
-        "support-vs-importance status: <span style='background:#f7d6d2;padding:0 4px'>under-supported</span> "
+        "<p class='lgd'>Each cell is a 2×2 block — top row <b>Importance</b> · <b>Support</b> (1–5 scale), "
+        "bottom row <b>Gap</b> (Support − Importance) · <b>Friction</b> (0–100, higher = worse); the same layout "
+        "key sits under every site code. Cell color is the support-vs-importance status: "
+        "<span style='background:#f7d6d2;padding:0 4px'>under-supported</span> "
         "<span style='background:#dcefdc;padding:0 4px'>on track</span> "
         "<span style='background:#fbe8c9;padding:0 4px'>exceeds needs</span>. "
-        "<b>Digital &amp; Tech</b> is agreement-only (no Importance/Gap) — shaded by agreement band "
+        "<b>Digital &amp; Tech</b> is agreement-only (no Importance/Gap, shown as “—”) — shaded by agreement band "
         "(green ≥4.0 / amber 3.5–3.9 / red &lt;3.5). Questions are ordered by company Friction (worst first) "
         "within each dimension.</p>"
-        f"<p class='lgd'>Sites (in leaderboard order): {codes}.</p>")
+        f"<p class='lgd'>Sites (leaderboard order): {codes}.</p>")
     return (
         "<section class='qgrid-sec'>"
         "<h3>Question-level detail — Importance / Support / Gap / Friction by site</h3>"
@@ -1431,9 +1436,17 @@ def build_portfolio_report(completers_flag):
  table.qgrid th.qg-qh,table.qgrid td.qg-q{{text-align:left;width:24%;min-width:180px;font-size:9px;line-height:1.25;color:#2b3a42;white-space:normal}}
  table.qgrid th.qs{{font-weight:800;color:#2b3a67;background:#eef2f8;white-space:nowrap}}
  tr.qg-dim td{{background:#2b3a67;color:#fff;font-weight:700;text-align:left;font-size:9.5px;letter-spacing:.03em;text-transform:uppercase;padding:3px 6px}}
- td.qc{{white-space:nowrap;line-height:1.25}} td.qc .q1,td.qc .q2{{display:block}}
- td.qc .q1{{font-weight:700;color:#22303a}} td.qc .q2{{color:#41565f}}
- .qg-na{{color:#b9bfc9;font-style:italic}}
+ table.qgrid td.qc{{padding:0;white-space:nowrap}}
+ table.qgrid td.qc .qcw{{display:grid;grid-template-columns:1fr 1fr}}
+ table.qgrid td.qc .qv{{padding:1px 2px;text-align:center;line-height:1.3;font-variant-numeric:tabular-nums}}
+ table.qgrid td.qc .tl,table.qgrid td.qc .tr{{font-weight:700;color:#22303a}}
+ table.qgrid td.qc .bl,table.qgrid td.qc .br{{color:#43585f}}
+ table.qgrid td.qc .tl,table.qgrid td.qc .bl{{border-right:1px solid rgba(30,40,60,.11)}}
+ table.qgrid td.qc .tl,table.qgrid td.qc .tr{{border-bottom:1px solid rgba(30,40,60,.11)}}
+ table.qgrid td.qc-na{{color:#b9bfc9;font-style:italic}}
+ table.qgrid th.qs .qs-code{{display:block;font-size:10px;font-weight:800;color:#2b3a67}}
+ table.qgrid th.qs .qs-key{{display:grid;grid-template-columns:1fr 1fr;column-gap:5px;margin-top:2px;
+   font-size:6px;font-weight:700;color:#9aa2b1;text-transform:uppercase;letter-spacing:.02em;line-height:1.4}}
  @page{{size:Letter;margin:12mm}}
  @page qgrid{{ size:Letter landscape;margin:10mm }}
  .qgrid-sec{{ page:qgrid;break-before:page }}
