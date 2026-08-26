@@ -1297,6 +1297,79 @@ def _sent_mark(v, ref, thr=0.05):
         return f"<span style='color:#C0392B'>&#9660; {d:.2f}</span>"
     return "<span style='color:#888'>&#8776;</span>"
 
+# --- Question-level detail grid (30 questions × 10 sites, all four metrics/cell) ----
+SITE_SHORT = {
+    "CA-Woodland Hills": "WH", "FL-Miami": "MIA", "FL-Tampa": "TPA", "GA-Atlanta": "ATL",
+    "IL-Chicago-Willis Tower": "CHI", "IN-Indianapolis": "IND", "NY-New York (Penn1)": "NYC",
+    "OH-Mason": "MSN", "VA-Norfolk": "NOR", "VA-Richmond": "RIC",
+}
+def _short(site):
+    return SITE_SHORT.get(site, "".join(w[:1] for w in re.split(r"[ \-]+", str(site))[:3]).upper())
+
+# light RYG cell tints (background) keyed by status / agreement band
+QG_BG = {"Under Supported": "#f7d6d2", "Target": "#dcefdc", "Over Supported": "#fbe8c9",
+         "Agreement-only": "#eceef1"}
+QG_TECH_BG = {"Strong": "#dcefdc", "Moderate": "#fbe8c9", "Needs attention": "#f7d6d2"}
+QG_MISS = "#f3f4f6"
+
+def _portfolio_qgrid(site_order):
+    """Combined per-question × per-site table: each cell carries Importance, Support,
+    Gap and Friction, shaded R/Y/G by the support-vs-importance status (Digital & Tech,
+    which is agreement-only, is shaded by its agreement band)."""
+    ss = scores_site if scores_site is not None else pd.DataFrame()
+    if ss.empty:
+        return ""
+    ss = ss.copy()
+    for c in ("mean_importance", "mean_support", "friction"):
+        ss[c] = pd.to_numeric(ss[c], errors="coerce")
+    ss["gap5"] = (ss["mean_support"] - ss["mean_importance"]).round(1)
+    lut = {(r["dimension"], r["item"], r["site"]): r for _, r in ss.iterrows()}
+    dims = sorted(ss["dimension"].dropna().unique(), key=lambda d: DIM_ORDER.get(d, 9))
+    comp_fric = ss.groupby(["dimension", "item"])["friction"].mean()
+
+    heads = "".join(f"<th class='qs' title='{_html.escape(str(s))}'>{_short(s)}</th>" for s in site_order)
+    body = ""
+    ncol = len(site_order) + 1
+    for dm in dims:
+        items = list(pd.unique(ss[ss["dimension"] == dm]["item"].dropna()))
+        items.sort(key=lambda it: -(comp_fric.get((dm, it)) if pd.notna(comp_fric.get((dm, it), np.nan)) else -1))
+        body += f"<tr class='qg-dim'><td colspan='{ncol}'>{_html.escape(str(dm))}</td></tr>"
+        for it in items:
+            cells = ""
+            for s in site_order:
+                r = lut.get((dm, it, s))
+                if r is None or (pd.isna(r["mean_support"]) and pd.isna(r["friction"])):
+                    cells += f"<td class='qc' style='background:{QG_MISS}'><span class='qg-na'>n/a</span></td>"
+                    continue
+                imp, sup, gap, fri = r["mean_importance"], r["mean_support"], r["gap5"], r["friction"]
+                if pd.isna(imp):                       # agreement-only (Digital & Tech)
+                    lab, _hx = tech_status(sup); bg = QG_TECH_BG.get(lab, QG_MISS)
+                else:
+                    bg = QG_BG.get(ryg_of(gap), QG_MISS)
+                fr = "—" if pd.isna(fri) else f"{fri:.0f}"
+                cells += (f"<td class='qc' style='background:{bg}'>"
+                          f"<span class='q1'>I&nbsp;{_f1(imp)}&nbsp;&nbsp;S&nbsp;{_f1(sup)}</span>"
+                          f"<span class='q2'>G&nbsp;{_gp(gap)}&nbsp;&nbsp;F&nbsp;{fr}</span></td>")
+            body += f"<tr><td class='qg-q'>{_html.escape(str(it))}</td>{cells}</tr>"
+
+    codes = " · ".join(f"<b>{_short(s)}</b> {_html.escape(str(s).split('-', 1)[-1])}" for s in site_order)
+    legend = (
+        "<p class='lgd'>Each cell — top: <b>I</b>mportance · <b>S</b>upport (1–5 scale); bottom: "
+        "<b>G</b>ap (Support − Importance) · <b>F</b>riction (0–100, higher = worse). Cell color is the "
+        "support-vs-importance status: <span style='background:#f7d6d2;padding:0 4px'>under-supported</span> "
+        "<span style='background:#dcefdc;padding:0 4px'>on track</span> "
+        "<span style='background:#fbe8c9;padding:0 4px'>exceeds needs</span>. "
+        "<b>Digital &amp; Tech</b> is agreement-only (no Importance/Gap) — shaded by agreement band "
+        "(green ≥4.0 / amber 3.5–3.9 / red &lt;3.5). Questions are ordered by company Friction (worst first) "
+        "within each dimension.</p>"
+        f"<p class='lgd'>Sites (in leaderboard order): {codes}.</p>")
+    return (
+        "<section class='qgrid-sec'>"
+        "<h3>Question-level detail — Importance / Support / Gap / Friction by site</h3>"
+        f"{legend}"
+        f"<div class='qgrid-wrap'><table class='qgrid'><tr><th class='qg-qh'>Survey question</th>{heads}</tr>{body}</table></div>"
+        "</section>")
+
 def build_portfolio_report(completers_flag):
     """Self-contained HTML — the 10 PulsePoints portfolio report card (exec brief)."""
     dd = portfolio_data(completers_flag)
@@ -1332,6 +1405,7 @@ def build_portfolio_report(completers_flag):
         f"<tr><td>{_html.escape(t['theme'])}</td><td>{t['pct']:.0f}%</td><td>{t['n']:,}</td>"
         f"<td style='color:{'#C0392B' if t['neg']>=50 else '#555'}'>{t['neg']:.0f}% neg</td></tr>"
         for t in dd["top_themes"])
+    qgrid_html = _portfolio_qgrid([b["site"] for b in board])
     return f"""<!doctype html><html><head><meta charset="utf-8">
 <title>10 PulsePoints — Portfolio Report Card</title>
 <style>
@@ -1351,9 +1425,21 @@ def build_portfolio_report(completers_flag):
  .rc-t{{font-size:15px;font-weight:700;color:#2b3a67}} .rc-p{{font-size:12.5px;color:#777;margin-top:3px}}
  .lgd{{font-size:11px;color:#888;margin-top:5px}}
  .foot{{color:#888;font-size:11px;margin-top:22px;border-top:1px solid #eee;padding-top:8px}}
+ .qgrid-wrap{{overflow-x:auto;margin-top:8px}}
+ table.qgrid{{border-collapse:collapse;width:100%;font-size:8.5px;min-width:1000px}}
+ table.qgrid th,table.qgrid td{{border:1px solid #e2e5ec;padding:2px 3px;text-align:center;vertical-align:middle}}
+ table.qgrid th.qg-qh,table.qgrid td.qg-q{{text-align:left;width:24%;min-width:180px;font-size:9px;line-height:1.25;color:#2b3a42;white-space:normal}}
+ table.qgrid th.qs{{font-weight:800;color:#2b3a67;background:#eef2f8;white-space:nowrap}}
+ tr.qg-dim td{{background:#2b3a67;color:#fff;font-weight:700;text-align:left;font-size:9.5px;letter-spacing:.03em;text-transform:uppercase;padding:3px 6px}}
+ td.qc{{white-space:nowrap;line-height:1.25}} td.qc .q1,td.qc .q2{{display:block}}
+ td.qc .q1{{font-weight:700;color:#22303a}} td.qc .q2{{color:#41565f}}
+ .qg-na{{color:#b9bfc9;font-style:italic}}
  @page{{size:Letter;margin:12mm}}
+ @page qgrid{{ size:Letter landscape;margin:10mm }}
+ .qgrid-sec{{ page:qgrid;break-before:page }}
  @media print{{ body{{max-width:100%;margin:0;padding:0}} .charts img{{max-width:100%}}
-   h1,h3{{break-after:avoid}} tr,.rc{{break-inside:avoid}} }}
+   h1,h3{{break-after:avoid}} tr,.rc{{break-inside:avoid}}
+   table.qgrid{{min-width:0}} .qgrid-wrap{{overflow:visible}} tr.qg-dim,table.qgrid tr{{break-inside:avoid}} }}
 </style></head><body>
 <h1>10 PulsePoints — Portfolio Report Card</h1>
 <div class="sub">Company-wide exec brief across the {dd['n_sites']} in-scope sites · completed responses</div>
@@ -1386,6 +1472,7 @@ Themes come from a keyword taxonomy (29 themes across 7 categories), kept separa
 <h3>Demographics — respondent profile</h3>
 <p class="lgd">Provided to help readers understand the respondent mix behind the results ({dd['n_participants']:,} respondents).</p>
 <div class="charts">{img('demo')}</div>
+{qgrid_html}
 <div class="foot"><b>Data source &amp; method.</b> PulsePoint survey export ·
 {'completed responses only' if completers_flag else 'all responses'} · {dd['n_sites']} in-scope sites. The Index Score is
 the unweighted average of the four Dimension Scores (0–100) — the same calculation as the Tableau deck. Friction &amp; RYG
