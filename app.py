@@ -486,6 +486,10 @@ def site_report_data(site, completers_flag):
     # priorities (categories) + top themes
     data["P"] = build_priority(sc, "Categories", theme_friction_map(site)).head(5)
     tex = explode_level(real, "Themes")
+    # Hide the generic "Positive / Appreciation" bucket from all theme-level card
+    # views — it's a non-actionable catch-all (per stakeholder feedback). The
+    # underlying comments still count toward sentiment and the category appendix.
+    tex = tex[~tex["key"].isin({"Positive / Appreciation"})]
     tcounts = tex["key"].value_counts()
     data["top_themes"] = tcounts.head(8)
     # theme sentiment for strengths/fixes
@@ -1005,7 +1009,6 @@ def build_site_report(site):
 <h1>PulsePoint Experience — {_html.escape(site)}</h1>
 <div class="sub">Workplace experience report card · completed responses</div>
 {card_html}
-{action_plan_html}
 <h3>Demographics — respondent profile</h3>
 {demo_html or '<p style="color:#888">No demographic data.</p>'}
 <h3>Importance vs. Support gaps</h3>
@@ -1037,6 +1040,7 @@ by survey position). “Company” is the other in-scope sites; “vs company”
 <p class="lgd"><b>How comments are categorized:</b> themes are assigned by a transparent keyword taxonomy built for this
 survey (28 themes across 7 categories), kept separate from the PXIP category set by design so the open-ended read stands
 on its own. The mapping lives in <code>taxonomy.py</code> and can be tuned without touching the scores.</p>
+{action_plan_html}
 <h3>In their words — what to fix</h3>{neg_quotes}
 {('<h3>In their words — what’s working</h3>'+pos_quotes) if pos_quotes else ''}
 <h3>All comments — by category &amp; sentiment</h3>
