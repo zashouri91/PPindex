@@ -1139,20 +1139,21 @@ def _portfolio_charts(dd):
     board = dd["board"]; sites = [b["site"] for b in board]
     # 1) Leaderboard bar (Index Score, colored by tier; best at top)
     if board:
-        order = board[::-1]  # worst first -> best ends at top
+        # Alphabetical, single neutral color, no rank labels — avoid implying a good-to-bad ranking.
+        order = sorted(board, key=lambda x: x["site"], reverse=True)  # reverse -> A at top (barh idx0 = bottom)
         fig, ax = plt.subplots(figsize=(7.4, 3.7))
-        ax.barh(range(len(order)), [b["index"] for b in order], color=[b["hex"] for b in order], height=0.66)
+        ax.barh(range(len(order)), [b["index"] for b in order], color="#4a5a86", height=0.66)
         ax.set_yticks(range(len(order))); ax.set_yticklabels([b["site"] for b in order], fontsize=8)
         mx = max(b["index"] for b in board)
         for i, b in enumerate(order):
-            ax.text(b["index"] + mx * 0.01, i, f"{b['index']:.0f}  (#{b['rank']})",
+            ax.text(b["index"] + mx * 0.01, i, f"{b['index']:.0f}",
                     va="center", fontsize=8, weight="bold", color="#333")
         cx = dd.get("comp_index")
         if pd.notna(cx):
             ax.axvline(cx, color="#555", ls="--", lw=1)
             ax.text(cx, len(order) - 0.4, f" company {cx:.0f}", fontsize=7.5, color="#555")
         ax.set_xlim(0, mx * 1.2); ax.set_xlabel("Index Score (0–100)", fontsize=8.5)
-        ax.set_title("Site leaderboard — Overall PulsePoint Experience Index Score", fontsize=11,
+        ax.set_title("Overall PulsePoint Experience Index Score by site", fontsize=11,
                      weight="bold", color="#2b3a67", loc="left")
         for s in ["top", "right"]: ax.spines[s].set_visible(False)
         fig.tight_layout(); charts["leaderboard"] = _b64png(fig)
@@ -1367,7 +1368,7 @@ def _portfolio_qgrid(site_order):
         "<b>Digital &amp; Tech</b> is agreement-only (no Importance/Gap, shown as “—”) — shaded by agreement band "
         "(green ≥4.0 / amber 3.5–3.9 / red &lt;3.5). Questions are ordered by company Friction (worst first) "
         "within each dimension.</p>"
-        f"<p class='lgd'>Sites (leaderboard order): {codes}.</p>")
+        f"<p class='lgd'>Sites (ordered by overall Index): {codes}.</p>")
     return (
         "<section class='qgrid-sec'>"
         "<h3>Question-level detail — Importance / Support / Gap / Friction by site</h3>"
@@ -1383,14 +1384,12 @@ def build_portfolio_report(completers_flag):
     cx = dd["comp_index"]; board = dd["board"]
     ivals = [b["index"] for b in board]
     rng = f"{min(ivals):.0f}–{max(ivals):.0f}" if ivals else "—"
-    # leaderboard table
+    # Index-by-site table (alphabetical; no Rank/Tier per feedback — avoid implying good-to-bad)
     lead = ""
-    for b in board:
+    for b in sorted(board, key=lambda x: x["site"]):
         s = dd["sent_by_site"].get(b["site"], np.nan)
         lead += (f"<tr><td>{_html.escape(b['site'])}</td>"
                  f"<td style='font-weight:800'>{b['index']:.0f}</td>"
-                 f"<td>#{b['rank']} of {b['n']}</td>"
-                 f"<td style='color:{b['hex']};font-weight:600'>{b['tier']}</td>"
                  f"<td>{vs_mark(b['index'], cx)}</td>"
                  f"<td>{'—' if pd.isna(s) else f'{s:.2f}'} {_sent_mark(s, dd['comp_sentiment'])}</td></tr>")
     # dimension gaps table
@@ -1444,6 +1443,7 @@ def build_portfolio_report(completers_flag):
  table.qgrid td.qc .tl,table.qgrid td.qc .bl{{border-right:1px solid rgba(30,40,60,.11)}}
  table.qgrid td.qc .tl,table.qgrid td.qc .tr{{border-bottom:1px solid rgba(30,40,60,.11)}}
  table.qgrid td.qc-na{{color:#b9bfc9;font-style:italic}}
+ table.qgrid th.qs,table.qgrid td.qc{{border-left:2.5px solid #9aa3b6}}
  table.qgrid th.qs .qs-code{{display:block;font-size:10px;font-weight:800;color:#2b3a67}}
  table.qgrid th.qs .qs-key{{display:grid;grid-template-columns:1fr 1fr;column-gap:5px;margin-top:2px;
    font-size:6px;font-weight:700;color:#9aa2b1;text-transform:uppercase;letter-spacing:.02em;line-height:1.4}}
@@ -1465,8 +1465,8 @@ def build_portfolio_report(completers_flag):
   <span style="color:#7a7a7a">{dd['neu']:.0f}% neutral</span> ·
   <span style="color:#D1495B">{dd['neg']:.0f}% negative</span></div>
 </div></div>
-<h3>Site leaderboard</h3>
-<table><tr><th>Site</th><th>Index</th><th>Rank</th><th>Tier</th><th>vs company</th><th>Sentiment (1–5)</th></tr>{lead}</table>
+<h3>Overall Index Score by site</h3>
+<table><tr><th>Site</th><th>Index</th><th>vs company</th><th>Sentiment (1–5)</th></tr>{lead}</table>
 <div class="charts">{img('leaderboard')}</div>
 <h3>Dimension Scores by site</h3>
 <div class="charts">{img('heatmap_dim')}</div>
