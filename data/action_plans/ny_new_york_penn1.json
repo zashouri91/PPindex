@@ -70,7 +70,7 @@
       "issue": "Equipment at desks is worn or unreliable — wires that only work in a certain position, unstable monitors, keyboards missing kickstands.",
       "whatItLooksLike": [
         "I've been to several PulsePoints and I'm surprised at how worn some equipment is. Examples: wires that only work in a certain position, monitors that don't stay steady where you position them, keyboards that are missing their kickstands to…",
-        "problems with the equipment at desks is not uncommon"
+        "limited ability/availability for calls where I have to discuss confidential information - cannot do from a workstation"
       ],
       "evidence": [
         {
@@ -164,7 +164,7 @@
     }
   ],
   "_meta": {
-    "generated_at": "2026-08-24",
+    "generated_at": "2026-08-31",
     "provider": "Claude Opus 4",
     "model": "Cowork",
     "owner": "Regional Director + Local Team",

@@ -90,7 +90,7 @@ THEMES = {
     ),
     "Lighting": (
         "Physical Environment",
-        [r"light(?:ing)?", r"\bdark\b", r"too bright", r"natural light", r"\bwindow",
+        [r"\blight(?:ing|s|ed)?\b", r"\bdark\b", r"too bright", r"natural light", r"\bwindow",
          r"fluorescent", r"dim\b", r"glare"],
     ),
     "Space Availability & Crowding": (
@@ -158,12 +158,13 @@ THEMES = {
     # --- Workplace Operations ------------------------------------------------
     "Building Operations": (
         "Workplace Operations",
-        [r"elevator", r"escalator", r"\bbuilding\b", r"out of order", r"\bbroken\b",
-         r"maintenance", r"repair", r"\bstairs\b", r"door(?:s)? (?:not|won'?t)", r"facilit"],
+        [r"elevator", r"escalator", r"building (?:maintenance|operations?|management|systems?|services?)",
+         r"out of order", r"\bbroken\b", r"maintenance", r"repair", r"\bstairs\b",
+         r"door(?:s)? (?:not|won'?t)", r"\bfacilit(?:y|ies)\b"],
     ),
     "Parking & Commute": (
         "Workplace Operations",
-        [r"parking", r"garage", r"commute", r"\btraffic\b", r"transit", r"\bdrive\b",
+        [r"parking", r"garage", r"commute", r"\btraffic\b", r"\btransit\b", r"\bdrive\b",
          r"gas money", r"mileage", r"\btoll", r"public transport"],
     ),
     "Navigation / Wayfinding": (
@@ -173,7 +174,9 @@ THEMES = {
     ),
     "Communication & Updates": (
         "Workplace Operations",
-        [r"communicat", r"\bupdates?\b", r"notif", r"\binform", r"\baware", r"announcement",
+        [r"communicat", r"\bupdates?\b", r"notif",
+         r"inform(?:ed|s|ing)? (?:us|me|staff|associates|everyone|the team|about|of|on)\b",
+         r"keep .{0,20}informed", r"\baware", r"announcement",
          r"didn'?t know", r"no idea", r"unclear"],
     ),
     "Support / Help Services": (

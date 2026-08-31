@@ -65,26 +65,30 @@
       "actionType": "LOCAL PROJECT"
     },
     {
-      "name": "Building operations upkeep",
+      "name": "Thermal comfort (temperature)",
       "sourceThemes": [
-        "Building Operations"
+        "Temperature / Thermal"
       ],
-      "issue": "Building-operations issues are a notable, above-norm theme even though the site is generally well-regarded.",
+      "issue": "Temperature is a frequent, specific complaint — the office runs cold and inconsistent — and it compounds the difficulty of focused work.",
       "whatItLooksLike": [
-        "Building-operations items (maintenance/upkeep) recur in the comments; see the appendix."
+        "Temperature (often too cold) recurs across comments; identify the specific zones and times during local validation."
       ],
       "evidence": [
         {
           "type": "Finding",
-          "text": "Building Operations: 119 comments, 46% negative; cited at a normal-to-elevated rate."
+          "text": "Temperature / Thermal: 101 comments, 62% negative."
+        },
+        {
+          "type": "Finding",
+          "text": "Thermal comfort friction is 24/100 (47% under-supported)."
         }
       ],
-      "proposedAction": "Triage the recurring building-ops items and confirm a maintenance cadence.",
+      "proposedAction": "Have facilities check HVAC set-points and balancing in the affected zones and confirm whether it is a control, zoning, or equipment issue.",
       "primaryOwner": "Regional Director + Local Team",
       "supportTeams": [
         "Workplace Operations"
       ],
-      "siteMustDo": "Compile the recurring maintenance items and confirm ownership/cadence with building operations.",
+      "siteMustDo": "Log the specific cold zones and times, submit to building operations, and verify the correction holds rather than assuming set-point changes stick.",
       "actionType": "LOCAL ACTION"
     }
   ],
@@ -135,9 +139,10 @@
       ]
     },
     {
-      "priorityName": "Building operations upkeep",
+      "priorityName": "Thermal comfort (temperature)",
       "supportingDataPoints": [
-        "Building Operations: 119 comments, 46% negative; cited at a normal-to-elevated rate."
+        "Temperature / Thermal: 101 comments, 62% negative.",
+        "Thermal comfort friction is 24/100 (47% under-supported)."
       ],
       "needsLocalValidation": [
         "Onsite validation of the specific condition before any capital step."
@@ -162,7 +167,7 @@
       "targetOrEscalation": ""
     },
     {
-      "priorityName": "Building operations upkeep",
+      "priorityName": "Thermal comfort (temperature)",
       "validate": "Confirm / Modify / Reject",
       "actionType": "",
       "finalOwner": "",
@@ -171,7 +176,7 @@
     }
   ],
   "_meta": {
-    "generated_at": "2026-08-24",
+    "generated_at": "2026-08-31",
     "provider": "Claude Opus 4",
     "model": "Cowork",
     "owner": "Regional Director + Local Team",

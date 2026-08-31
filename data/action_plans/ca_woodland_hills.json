@@ -78,7 +78,7 @@
       ],
       "issue": "Monitors, cords and peripherals at shared desks are frequently missing or misconfigured, interrupting work.",
       "whatItLooksLike": [
-        "Sometimes, find issues of a monitor not working due to settings being changed at times."
+        "The limited availability of capsule rooms with dual monitors. There are times I have presentations to facilitate, and I cannot find an empty capsule room (others working in them for longer than an hour.) and pods do not have monitors in…"
       ],
       "evidence": [
         {
@@ -179,7 +179,7 @@
     }
   ],
   "_meta": {
-    "generated_at": "2026-08-24",
+    "generated_at": "2026-08-31",
     "provider": "Claude Opus 4",
     "model": "Cowork",
     "owner": "Regional Director + Local Team",

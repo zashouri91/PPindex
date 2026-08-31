@@ -12,7 +12,7 @@
       ],
       "issue": "Associates routinely can't find a private room for confidential conversations because booths and phone rooms are all in use, and call noise carries across the floor.",
       "whatItLooksLike": [
-        "There are times when I need to have a confidential conversation, but I cannot find a private location because all available phone rooms and booths are in use.",
+        "My role involves working with associates and their confidential information. Going to the office makes it very hard to be able to work productively while managing confidential information.",
         "Lack of white noise to drown out others that work on the phone."
       ],
       "evidence": [
@@ -166,7 +166,7 @@
     }
   ],
   "_meta": {
-    "generated_at": "2026-08-24",
+    "generated_at": "2026-08-31",
     "provider": "Claude Opus 4",
     "model": "Cowork",
     "owner": "Regional Director + Local Team",
