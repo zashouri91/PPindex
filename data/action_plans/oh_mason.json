@@ -83,14 +83,77 @@
       ],
       "siteMustDo": "Log dead spots and times and escalate to Technology with locations.",
       "actionType": "WORKSTREAM / ENTERPRISE"
+    },
+    {
+      "name": "Thermal comfort (temperature)",
+      "sourceThemes": [
+        "Temperature / Thermal"
+      ],
+      "issue": "Parts of the office run cold year-round, and comments say repeated facilities adjustments haven't held — pointing to a zoning or equipment cause rather than the set-point.",
+      "whatItLooksLike": [
+        "Temperature - It is freezing year-round. It's as if the A/C is cranked on by 8:30am. I wear gloves and a jacket in the middle of summer! …",
+        "The temperature in our Neighborhood is not comfortable. Facilities has tried over and over again to keep it regulated, however, those of us who are here 5 days a week are always cold and using blankets to keep ourselves warm.",
+        "the temperature. It is always freezing in the office."
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Temperature / Thermal: 48 comments, 62% negative."
+        },
+        {
+          "type": "Finding",
+          "text": "Thermal / temperature comfort: Under Supported — friction 19/100 (43% under-supported)."
+        }
+      ],
+      "proposedAction": "Commission an HVAC zoning and balancing check for the affected neighborhoods, since set-point changes haven't held.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Workplace Operations"
+      ],
+      "siteMustDo": "Identify the cold neighborhoods and times, request the zoning/balancing check, and verify the result over four weeks.",
+      "actionType": "LOCAL PROJECT"
+    },
+    {
+      "name": "Meeting-room booking discipline and in-room connections",
+      "sourceThemes": [
+        "Meeting & Conference Rooms",
+        "AV / Video Conferencing"
+      ],
+      "issue": "Huddle and meeting rooms are booked for the whole day by one person who uses them for an hour or two, and connecting to the room screens is difficult.",
+      "whatItLooksLike": [
+        "People shouldn't be allowed to reserve Huddle meeting rooms or the Hybrid Huddle meeting rooms for the entire workday. I often find it difficult to find space when I need to take meetings in a more private setting.",
+        "…Allowing associates to book a meeting room for an entire day for just one person and than they only stay 1-2 hours levaing that space wasted for the day",
+        "It is very difficult to connect into the meeting/huddle rooms to the screens, etc and other technology."
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Meeting & Conference Rooms: 58 comments, 50% negative; AV / Video Conferencing: 35 comments, 46% negative."
+        },
+        {
+          "type": "Finding",
+          "text": "Virtual collaboration with remote/hybrid colleagues: Under Supported — friction 21/100 (44% under-supported)."
+        },
+        {
+          "type": "Finding",
+          "text": "Availability of meeting & collaboration spaces: on Target — friction 8/100 (18% under-supported)."
+        },
+        {
+          "type": "Interpretation",
+          "text": "Room supply rates well; the loss is in all-day single-person bookings and room tech."
+        }
+      ],
+      "proposedAction": "Turn on check-in with auto-release for huddle and meeting rooms, limit all-day single-person bookings, and have Technology test and fix the screen connections in every room.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Reservation-system owner",
+        "Technology"
+      ],
+      "siteMustDo": "Pull a two-week sample of room bookings vs. actual use, pilot the auto-release rule, and log room-connection failures for Technology.",
+      "actionType": "LOCAL ACTION"
     }
   ],
   "protectWhatIsWorking": [
-    {
-      "area": "Building Operations",
-      "evidence": "71% positive across 52 comments — the facility itself is praised",
-      "note": "Maintain the current service level and monitor performance."
-    },
     {
       "area": "Community & Events",
       "evidence": "83% positive",
@@ -138,6 +201,27 @@
       "needsLocalValidation": [
         "Onsite validation of the specific condition before any capital step."
       ]
+    },
+    {
+      "priorityName": "Thermal comfort (temperature)",
+      "supportingDataPoints": [
+        "Temperature / Thermal: 48 comments, 62% negative.",
+        "Thermal / temperature comfort: Under Supported — friction 19/100 (43% under-supported)."
+      ],
+      "needsLocalValidation": [
+        "Which neighborhoods run cold and why earlier adjustments didn't hold."
+      ]
+    },
+    {
+      "priorityName": "Meeting-room booking discipline and in-room connections",
+      "supportingDataPoints": [
+        "Meeting & Conference Rooms: 58 comments, 50% negative; AV / Video Conferencing: 35 comments, 46% negative.",
+        "Virtual collaboration with remote/hybrid colleagues: Under Supported — friction 21/100 (44% under-supported).",
+        "Availability of meeting & collaboration spaces: on Target — friction 8/100 (18% under-supported)."
+      ],
+      "needsLocalValidation": [
+        "Two-week sample of room bookings vs actual use; room-connection failure log."
+      ]
     }
   ],
   "operationalResponseTable": [
@@ -164,15 +248,33 @@
       "finalOwner": "",
       "cost": "",
       "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Thermal comfort (temperature)",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Meeting-room booking discipline and in-room connections",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
     }
   ],
   "_meta": {
-    "generated_at": "2026-08-31",
-    "provider": "Claude Opus 4",
+    "generated_at": "2026-09-29",
+    "provider": "Claude Opus",
     "model": "Cowork",
     "owner": "Regional Director + Local Team",
     "include_verbatims": true,
     "prompt_version": "v3",
-    "generated_by": "Claude Opus (Cowork session, batch)"
+    "generated_by": "Claude Opus (Cowork session, batch)",
+    "priorities": 5,
+    "revision": "Expanded to top 5 (P1–P3 unchanged; P4–P5 added from site evidence)"
   }
 }

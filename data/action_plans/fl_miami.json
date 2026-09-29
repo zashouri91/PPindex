@@ -88,6 +88,77 @@
       ],
       "siteMustDo": "Collect the specific floors/areas and times of drops, run a coverage check, and escalate with data to Technology.",
       "actionType": "WORKSTREAM / ENTERPRISE"
+    },
+    {
+      "name": "Private space for confidential calls and conversations",
+      "sourceThemes": [
+        "Privacy & Confidentiality"
+      ],
+      "issue": "Associates and people leaders with back-to-back virtual meetings on sensitive topics struggle to get private space, and on the open floor call participants can hear the background.",
+      "whatItLooksLike": [
+        "…I have back to back online meetings, private office space for these meetings is severely incumbered when having to book office space.",
+        "…it can be challenging to fully participate when much of my work involves sensitive and confidential information. …",
+        "…No privacy I've been on calls with colleagues or clients hear background noise. …"
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Availability of spaces that support discretion: Under Supported — friction 19/100 (43% under-supported)."
+        },
+        {
+          "type": "Finding",
+          "text": "Tasks requiring discretion: Under Supported — friction 19/100 (37% under-supported)."
+        },
+        {
+          "type": "Finding",
+          "text": "Privacy & Confidentiality: 14 comments, 36% negative — the survey signal is stronger than the comment signal."
+        },
+        {
+          "type": "Interpretation",
+          "text": "Distinct from P1: P1 is quiet for focused work; this is confidentiality for conversations."
+        }
+      ],
+      "proposedAction": "Check how enclosed offices and rooms are booked on peak days, and hold a small set for short, walk-up confidential calls before considering any new enclosed space.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Workplace Solutions",
+        "Reservation-system owner"
+      ],
+      "siteMustDo": "Track when associates can't get a private room for a confidential call over two weeks, pilot the walk-up hold, and escalate a sized gap only if the pilot doesn't close it.",
+      "actionType": "LOCAL ACTION"
+    },
+    {
+      "name": "Dual monitors in offices, focus rooms and single-screen desks",
+      "sourceThemes": [
+        "Hardware (Monitors / Peripherals)"
+      ],
+      "issue": "Several offices and focus rooms — and some desks — have a single monitor, so the enclosed rooms people need for calls are also the least productive places to work.",
+      "whatItLooksLike": [
+        "I think all workstations should have dual monitors, not sure why we have some with only one,",
+        "Lack of quality chairs and dual monitors in the individual work rooms",
+        "…There is only one monitor in the offices which severely limit my ability to work efficiently. …"
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Hardware (Monitors / Peripherals): 24 comments, 50% negative; cited in 21% of comments vs 18% company-wide."
+        },
+        {
+          "type": "Finding",
+          "text": "Workplace-provided hardware agreement: 4.04 vs 3.80 company average (Strong)."
+        },
+        {
+          "type": "Interpretation",
+          "text": "Strong hardware agreement alongside specific single-monitor complaints points to a targeted gap in enclosed rooms, not a site-wide hardware problem."
+        }
+      ],
+      "proposedAction": "Inventory monitors in every office and focus room and add a second monitor (with a compatible dock or cable) wherever the desk surface supports it.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Technology"
+      ],
+      "siteMustDo": "Complete the room-by-room monitor count, send Technology the list of single-monitor rooms and desks, and confirm the installs.",
+      "actionType": "LOCAL ACTION"
     }
   ],
   "protectWhatIsWorking": [
@@ -140,6 +211,27 @@
       "needsLocalValidation": [
         "Onsite validation of the specific condition before any capital step."
       ]
+    },
+    {
+      "priorityName": "Private space for confidential calls and conversations",
+      "supportingDataPoints": [
+        "Availability of spaces that support discretion: Under Supported — friction 19/100 (43% under-supported).",
+        "Tasks requiring discretion: Under Supported — friction 19/100 (37% under-supported).",
+        "Privacy & Confidentiality: 14 comments, 36% negative — the survey signal is stronger than the comment signal."
+      ],
+      "needsLocalValidation": [
+        "How often a private room is unavailable when needed for a confidential conversation (comment volume is small; the survey carries this signal)."
+      ]
+    },
+    {
+      "priorityName": "Dual monitors in offices, focus rooms and single-screen desks",
+      "supportingDataPoints": [
+        "Hardware (Monitors / Peripherals): 24 comments, 50% negative; cited in 21% of comments vs 18% company-wide.",
+        "Workplace-provided hardware agreement: 4.04 vs 3.80 company average (Strong)."
+      ],
+      "needsLocalValidation": [
+        "Count of single-monitor offices, focus rooms and desks, and whether each can take a second screen."
+      ]
     }
   ],
   "operationalResponseTable": [
@@ -166,15 +258,33 @@
       "finalOwner": "",
       "cost": "",
       "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Private space for confidential calls and conversations",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Dual monitors in offices, focus rooms and single-screen desks",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
     }
   ],
   "_meta": {
-    "generated_at": "2026-08-31",
-    "provider": "Claude Opus 4",
+    "generated_at": "2026-09-29",
+    "provider": "Claude Opus",
     "model": "Cowork",
     "owner": "Regional Director + Local Team",
     "include_verbatims": true,
     "prompt_version": "v3",
-    "generated_by": "Claude Opus (Cowork session, batch)"
+    "generated_by": "Claude Opus (Cowork session, batch)",
+    "priorities": 5,
+    "revision": "Expanded to top 5 (P1–P3 unchanged; P4–P5 added from site evidence)"
   }
 }

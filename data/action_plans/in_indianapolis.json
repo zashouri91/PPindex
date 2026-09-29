@@ -86,6 +86,65 @@
       ],
       "siteMustDo": "Audit cords/monitors by floor, replace failed cables, and escalate the connectivity pattern to Technology with locations.",
       "actionType": "LOCAL PROJECT"
+    },
+    {
+      "name": "Thermal comfort (temperature)",
+      "sourceThemes": [
+        "Temperature / Thermal"
+      ],
+      "issue": "The office is widely described as too cold — desks beneath supply vents especially — and it is one of the most frequent and most negative complaints at the site.",
+      "whatItLooksLike": [
+        "It is always too cold in the office which makes it uncomfortable. …",
+        "The temperature is always frigid and even though I bring a jacket or sweater to wear, my hands are so cold it is difficult to even type. …",
+        "…The desks beneath a vent can be freezing cold & I'm typically hot."
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Temperature / Thermal: 138 comments, 67% negative (92 negative comments)."
+        },
+        {
+          "type": "Finding",
+          "text": "Thermal / temperature comfort: Under Supported — friction 23/100 (46% under-supported)."
+        }
+      ],
+      "proposedAction": "Have Workplace Operations map cold zones — starting with desks under supply vents — and check set-points, airflow balancing and diffuser direction in those zones.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Workplace Operations"
+      ],
+      "siteMustDo": "Log cold zones and times by floor for two weeks, submit them to building operations, and verify the corrections hold.",
+      "actionType": "LOCAL ACTION"
+    },
+    {
+      "name": "Chair comfort and sit/stand desk repairs",
+      "sourceThemes": [
+        "Furniture & Ergonomics"
+      ],
+      "issue": "Chairs are uncomfortable and hard to re-adjust at each new desk, and some standing desks in offices are broken.",
+      "whatItLooksLike": [
+        "The chairs are very uncomfortable and hurt my back. …",
+        "I have back issues and adjusting the chairs each time in a new cubicle is not easy",
+        "The standing desks in some of the offices are broken."
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Furniture & Ergonomics: 69 comments, 57% negative."
+        },
+        {
+          "type": "Finding",
+          "text": "Furniture comfort & ergonomics: Under Supported — friction 14/100 (34% under-supported)."
+        }
+      ],
+      "proposedAction": "Audit chair and sit/stand desk condition, fix broken standing desks, and post simple chair-adjustment guidance at shared desks; assess a chair upgrade only if the audit shows widespread wear.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Workplace Operations",
+        "Workplace Solutions"
+      ],
+      "siteMustDo": "Complete the chair and desk audit by floor, repair what is broken, and report the scale of any remaining gap.",
+      "actionType": "LOCAL ACTION"
     }
   ],
   "protectWhatIsWorking": [
@@ -106,7 +165,7 @@
     }
   ],
   "assumptions": [
-    "Indianapolis is the largest site by comment volume (1,266); the three priorities target the highest-volume, highest-friction gaps.",
+    "Indianapolis is the largest site by comment volume (1,266); the priorities target the highest-volume, highest-friction gaps.",
     "Whether the 2-week reservation window is local or enterprise-set needs confirmation."
   ],
   "evidenceConfidence": [
@@ -138,6 +197,26 @@
       "needsLocalValidation": [
         "Onsite validation of the specific condition before any capital step."
       ]
+    },
+    {
+      "priorityName": "Thermal comfort (temperature)",
+      "supportingDataPoints": [
+        "Temperature / Thermal: 138 comments, 67% negative (92 negative comments).",
+        "Thermal / temperature comfort: Under Supported — friction 23/100 (46% under-supported)."
+      ],
+      "needsLocalValidation": [
+        "Cold zones by floor and time; whether vent placement or balancing is the driver."
+      ]
+    },
+    {
+      "priorityName": "Chair comfort and sit/stand desk repairs",
+      "supportingDataPoints": [
+        "Furniture & Ergonomics: 69 comments, 57% negative.",
+        "Furniture comfort & ergonomics: Under Supported — friction 14/100 (34% under-supported)."
+      ],
+      "needsLocalValidation": [
+        "Chair and sit/stand desk condition audit by floor."
+      ]
     }
   ],
   "operationalResponseTable": [
@@ -164,15 +243,33 @@
       "finalOwner": "",
       "cost": "",
       "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Thermal comfort (temperature)",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Chair comfort and sit/stand desk repairs",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
     }
   ],
   "_meta": {
-    "generated_at": "2026-08-31",
-    "provider": "Claude Opus 4",
+    "generated_at": "2026-09-29",
+    "provider": "Claude Opus",
     "model": "Cowork",
     "owner": "Regional Director + Local Team",
     "include_verbatims": true,
     "prompt_version": "v3",
-    "generated_by": "Claude Opus (Cowork session, batch)"
+    "generated_by": "Claude Opus (Cowork session, batch)",
+    "priorities": 5,
+    "revision": "Expanded to top 5 (P1–P3 unchanged; P4–P5 added from site evidence)"
   }
 }

@@ -159,9 +159,11 @@ dataset (with your edits applied) to CSV or Excel.
 
 ## Operational Action Plan — "What to Do Next"
 
-Each site card can open with an auto-generated **Operational Action Plan** — the bridge between the
-survey read-out and execution, per the work-stream review. It is **not** a re-summary: it converts the
-site's own evidence into **3–5 prioritized, validate-before-acting recommendations**, each with the
+Each site card carries an auto-generated **Operational Action Plan**, placed just below the *Vs. org —
+theme rates* table — the bridge between the survey read-out and execution, per the work-stream review. It
+is **not** a re-summary: it converts the site's own evidence into a **top 5 of prioritized,
+validate-before-acting recommendations** (five distinct issues, ordered by the card's computed category
+ranking; fewer only if the evidence doesn't support five), each with the
 specific issue, what it looks like at that site (quoted from real comments), the supporting evidence, a
 proposed action, the proposed support team, and a required next step — plus a "Protect what's working"
 block and a blank operational-response table for the team to complete (Confirm/Modify/Reject → owner →
@@ -173,7 +175,10 @@ stable — it does not shift each time the card is opened. Regenerate any time f
 tab (*🧭 Operational Action Plan — generate / regenerate*), per site or for all ten at once. The section
 is grounded strictly in that site's report card (unweighted Index only; the generic "Positive /
 Appreciation" and "Overall Dissatisfaction" buckets are excluded), and the model is told to use only the
-supplied quotes for examples and never to fabricate.
+supplied quotes for examples and never to fabricate. To give it enough to work with for five priorities,
+the model receives up to 10 candidate themes (not just the card's top 5), up to two real example quotes
+per candidate theme, the eight highest-Friction survey items, and the Digital & Tech items as agreement
+scores against the company average (never as Friction, which isn't comparable for those items).
 
 ### Configuring the model (privacy-first)
 

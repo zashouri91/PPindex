@@ -83,6 +83,73 @@
       ],
       "siteMustDo": "Run a station-by-station equipment check and confirm/adjust desk-height range where needed.",
       "actionType": "LOCAL ACTION"
+    },
+    {
+      "name": "Private space for confidential conversations",
+      "sourceThemes": [
+        "Privacy & Confidentiality"
+      ],
+      "issue": "Managers and associates handling sensitive matters have to get up and find a room for each confidential conversation, and booking a conference room doesn't work for short, unplanned ones.",
+      "whatItLooksLike": [
+        "I have to pick up and move to have a private conversation (termination, salary, performance mgmt discussion). That can be frustrating to be up an down through out the day.",
+        "…Reserving a conference room is not a viable option when you have sporadic meetings that involve confidential information.",
+        "Lack of secure/discretionary space to discuss issues related to CEO complaints."
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Availability of spaces that support discretion: Under Supported — friction 28/100 (50% under-supported)."
+        },
+        {
+          "type": "Finding",
+          "text": "Tasks requiring discretion: Under Supported — friction 23/100 (42% under-supported)."
+        },
+        {
+          "type": "Finding",
+          "text": "Privacy & Confidentiality: 80 comments, 56% negative."
+        },
+        {
+          "type": "Interpretation",
+          "text": "Distinct from P1 (noise for calls and focused work): this is confidentiality for conversations, which room-hold rules can address first."
+        }
+      ],
+      "proposedAction": "Check utilization of the enclosed rooms and hold a few small ones for short, walk-up confidential conversations (no all-day bookings) before considering any new enclosed space.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Workplace Solutions",
+        "Reservation-system owner"
+      ],
+      "siteMustDo": "Measure how often a private room is unavailable when needed over two weeks, pilot the walk-up rooms, and escalate a sized gap if the pilot doesn't close it.",
+      "actionType": "LOCAL ACTION"
+    },
+    {
+      "name": "Escalator and entry-door reliability",
+      "sourceThemes": [
+        "Building Operations"
+      ],
+      "issue": "The escalator from the 1st to the 2nd floor and the side entry door break down repeatedly and stay out of service for long periods.",
+      "whatItLooksLike": [
+        "Escalator from 1st floor to 2nd floor is ALWAYS broken",
+        "We have significantly recurring issues with the side entry door and the escalators, which is incredibly frustrating.",
+        "It can be an inconvenience when some of the doors do not work or the escalator is broken. Especially the escalator as it takes forever for it to be operational again."
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Building Operations: 53 comments, 62% negative — cited in 10% of comments vs 5% company-wide."
+        },
+        {
+          "type": "Finding",
+          "text": "Reliability of building operations: Under Supported — friction 18/100 (42% under-supported)."
+        }
+      ],
+      "proposedAction": "Pull the escalator and entry-door work-order history, escalate the repeat failures for a repair-vs-replace assessment, and post alternate-route signage while units are down.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Workplace Operations"
+      ],
+      "siteMustDo": "Compile the outage history, request the repair-vs-replace assessment, and report downtime monthly until it is resolved.",
+      "actionType": "LOCAL PROJECT"
     }
   ],
   "protectWhatIsWorking": [
@@ -125,6 +192,27 @@
       "needsLocalValidation": [
         "Onsite validation of the specific condition before any capital step."
       ]
+    },
+    {
+      "priorityName": "Private space for confidential conversations",
+      "supportingDataPoints": [
+        "Availability of spaces that support discretion: Under Supported — friction 28/100 (50% under-supported).",
+        "Tasks requiring discretion: Under Supported — friction 23/100 (42% under-supported).",
+        "Privacy & Confidentiality: 80 comments, 56% negative."
+      ],
+      "needsLocalValidation": [
+        "How often a private room is unavailable for a confidential conversation; how the enclosed rooms are actually used."
+      ]
+    },
+    {
+      "priorityName": "Escalator and entry-door reliability",
+      "supportingDataPoints": [
+        "Building Operations: 53 comments, 62% negative — cited in 10% of comments vs 5% company-wide.",
+        "Reliability of building operations: Under Supported — friction 18/100 (42% under-supported)."
+      ],
+      "needsLocalValidation": [
+        "Work-order and downtime history for the escalators and side entry door."
+      ]
     }
   ],
   "operationalResponseTable": [
@@ -151,15 +239,33 @@
       "finalOwner": "",
       "cost": "",
       "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Private space for confidential conversations",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Escalator and entry-door reliability",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
     }
   ],
   "_meta": {
-    "generated_at": "2026-08-31",
-    "provider": "Claude Opus 4",
+    "generated_at": "2026-09-29",
+    "provider": "Claude Opus",
     "model": "Cowork",
     "owner": "Regional Director + Local Team",
     "include_verbatims": true,
     "prompt_version": "v3",
-    "generated_by": "Claude Opus (Cowork session, batch)"
+    "generated_by": "Claude Opus (Cowork session, batch)",
+    "priorities": 5,
+    "revision": "Expanded to top 5 (P1–P3 unchanged; P4–P5 added from site evidence)"
   }
 }

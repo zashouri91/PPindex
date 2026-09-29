@@ -90,6 +90,70 @@
       ],
       "siteMustDo": "Log the specific cold zones and times, submit to building operations, and verify the correction holds rather than assuming set-point changes stick.",
       "actionType": "LOCAL ACTION"
+    },
+    {
+      "name": "On-site food and coffee",
+      "sourceThemes": [
+        "Food & Beverage",
+        "Cost / Pricing"
+      ],
+      "issue": "The on-site market is thin and pricey for a site this size — especially mid-week — and coffee machines are often out of supplies or not working.",
+      "whatItLooksLike": [
+        "The cafe at the Concourse is extremely bare and options available are not satisfactory. …",
+        "Market cafe item availability has become somewhat limited especially mid-week",
+        "The coffee machines seem to be out of supplies, non-functional, or having an issue more likely than I would expect. …"
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Food & Beverage: 122 comments, 44% negative — cited in 16% of comments vs 14% company-wide; Cost / Pricing: 30 comments, 50% negative."
+        },
+        {
+          "type": "Finding",
+          "text": "Availability of on-site food and beverage options: Under Supported — friction 19/100 (36% under-supported)."
+        }
+      ],
+      "proposedAction": "Review the market's restock cadence, product range and pricing with Food & Beverage, and set a service standard for coffee-machine supplies and repairs.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Food & Beverage"
+      ],
+      "siteMustDo": "Log empty-shelf days and coffee-machine outages for four weeks and review them with the vendor against the new standard.",
+      "actionType": "WORKSTREAM / ENTERPRISE"
+    },
+    {
+      "name": "Restroom repairs and building upkeep",
+      "sourceThemes": [
+        "Cleanliness & Upkeep",
+        "Building Operations"
+      ],
+      "issue": "Restroom fixtures — sinks, faucets, toilets — are frequently out of order and some areas are dusty, which associates notice on every visit.",
+      "whatItLooksLike": [
+        "The ladies rooms are bad and have been for years. Some facets don't work, some toilets don't work and it often does not smell pleasant in there at all.",
+        "…4th floor restrooms generally have one sink working out of four",
+        "Annex building is dusty and upsets my allergies …"
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Reliability of building operations (elevators, restrooms): Under Supported — friction 13/100 (33% under-supported)."
+        },
+        {
+          "type": "Finding",
+          "text": "Cleanliness & upkeep: Under Supported — friction 12/100 (27% under-supported)."
+        },
+        {
+          "type": "Finding",
+          "text": "Cleanliness & Upkeep: 65 comments, 45% negative; Building Operations: 51 comments, 39% negative."
+        }
+      ],
+      "proposedAction": "Run a floor-by-floor restroom fixture audit, repair non-working sinks and toilets, and check cleaning frequency against current occupancy, including the Annex.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Workplace Operations"
+      ],
+      "siteMustDo": "Complete the fixture audit, track each repair to closure, and re-inspect in 30 days.",
+      "actionType": "LOCAL ACTION"
     }
   ],
   "protectWhatIsWorking": [
@@ -147,6 +211,27 @@
       "needsLocalValidation": [
         "Onsite validation of the specific condition before any capital step."
       ]
+    },
+    {
+      "priorityName": "On-site food and coffee",
+      "supportingDataPoints": [
+        "Food & Beverage: 122 comments, 44% negative — cited in 16% of comments vs 14% company-wide; Cost / Pricing: 30 comments, 50% negative.",
+        "Availability of on-site food and beverage options: Under Supported — friction 19/100 (36% under-supported)."
+      ],
+      "needsLocalValidation": [
+        "Four weeks of empty-shelf and coffee-machine outage logs; current vendor service terms."
+      ]
+    },
+    {
+      "priorityName": "Restroom repairs and building upkeep",
+      "supportingDataPoints": [
+        "Reliability of building operations (elevators, restrooms): Under Supported — friction 13/100 (33% under-supported).",
+        "Cleanliness & upkeep: Under Supported — friction 12/100 (27% under-supported).",
+        "Cleanliness & Upkeep: 65 comments, 45% negative; Building Operations: 51 comments, 39% negative."
+      ],
+      "needsLocalValidation": [
+        "Restroom fixture audit by floor; cleaning schedule vs occupancy."
+      ]
     }
   ],
   "operationalResponseTable": [
@@ -173,15 +258,33 @@
       "finalOwner": "",
       "cost": "",
       "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "On-site food and coffee",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Restroom repairs and building upkeep",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
     }
   ],
   "_meta": {
-    "generated_at": "2026-08-31",
-    "provider": "Claude Opus 4",
+    "generated_at": "2026-09-29",
+    "provider": "Claude Opus",
     "model": "Cowork",
     "owner": "Regional Director + Local Team",
     "include_verbatims": true,
     "prompt_version": "v3",
-    "generated_by": "Claude Opus (Cowork session, batch)"
+    "generated_by": "Claude Opus (Cowork session, batch)",
+    "priorities": 5,
+    "revision": "Expanded to top 5 (P1–P3 unchanged; P4–P5 added from site evidence)"
   }
 }

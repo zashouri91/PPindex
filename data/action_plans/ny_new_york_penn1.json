@@ -85,6 +85,78 @@
       ],
       "siteMustDo": "Inventory worn equipment, replace the worst, and set a recurring refresh check.",
       "actionType": "LOCAL ACTION"
+    },
+    {
+      "name": "Thermal comfort — building-controlled cooling",
+      "sourceThemes": [
+        "Temperature / Thermal"
+      ],
+      "issue": "The office runs very cold, especially in summer, and associates understand the temperature is controlled by the building rather than by Elevance.",
+      "whatItLooksLike": [
+        "In the summer, the air conditioning is often run so high that I'm freezing and my hands go numb",
+        "Generally speaking, it is freezing in the NYC PulsePoint during the summer months. It is my understanding that Elevance Health does not have direct temperature control.",
+        "The air conditioner is always too high, FRIGID @ one-penn, can get very uncomfortable."
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Temperature / Thermal: 22 comments, 77% negative."
+        },
+        {
+          "type": "Finding",
+          "text": "Thermal / temperature comfort: Under Supported — friction 24/100 (45% under-supported)."
+        },
+        {
+          "type": "Interpretation",
+          "text": "Comments indicate the landlord controls HVAC, so the path is escalation with logged evidence rather than a local set-point change."
+        }
+      ],
+      "proposedAction": "Log temperatures by zone and time, raise them with building management through the lease/property channel, and confirm what temperature control Elevance can have.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Workplace Operations"
+      ],
+      "siteMustDo": "Collect two weeks of zone/time readings, submit a formal request to building management, and track the response to closure.",
+      "actionType": "WORKSTREAM / ENTERPRISE"
+    },
+    {
+      "name": "Meeting-room hookups, guides and booking",
+      "sourceThemes": [
+        "Meeting & Conference Rooms",
+        "AV / Video Conferencing"
+      ],
+      "issue": "Meeting rooms are hard to use: hookups are confusing, in-room guides don't help, cameras sometimes fail, and rooms are hard to find and book.",
+      "whatItLooksLike": [
+        "…Meeting technology hookups in rooms are not the easiest to figure out and guides are not helpful - Often not enough close by plug in space in larger meeting rooms - There have been ongoing issues with room reservation technology",
+        "camera device on large monitor not working properly.",
+        "it can be difficult to locate conference rooms. They are not well marked"
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Meeting & Conference Rooms: 12 comments, 67% negative; AV / Video Conferencing: 7 comments, 57% negative."
+        },
+        {
+          "type": "Finding",
+          "text": "Virtual collaboration with remote/hybrid colleagues: Under Supported — friction 21/100 (37% under-supported)."
+        },
+        {
+          "type": "Finding",
+          "text": "Availability of meeting & collaboration spaces: on Target — friction 10/100 (22% under-supported)."
+        },
+        {
+          "type": "Interpretation",
+          "text": "Room supply rates adequately; the problem is usability — hookups, guides, cameras, signage and booking."
+        }
+      ],
+      "proposedAction": "Test each room's connections and camera, replace in-room guides with a one-page quick-start, add power where larger rooms lack it, and improve room signage.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Technology",
+        "Workplace Experience"
+      ],
+      "siteMustDo": "Run a room-by-room usability check, fix or ticket each failure, and post the new quick-start guides.",
+      "actionType": "LOCAL ACTION"
     }
   ],
   "protectWhatIsWorking": [
@@ -100,12 +172,13 @@
     },
     {
       "area": "Physical Feature",
-      "evidence": "70.8/100, rank 2 — a strong physical space overall",
+      "evidence": "70.8/100, rank 2 — a strong physical space overall (thermal comfort is the exception — see priority 4)",
       "note": "Maintain the current service level and monitor performance."
     }
   ],
   "assumptions": [
-    "New York rates well overall (3 of 10) but comment sentiment skews negative (53%); the strongest signal is the concentrated pod-capacity and Wi-Fi issues."
+    "New York rates well overall (3 of 10) but comment sentiment skews negative (53%); the strongest signal is the concentrated pod-capacity and Wi-Fi issues.",
+    "That Elevance lacks direct control of the temperature is associate-reported; confirm it against the lease."
   ],
   "evidenceConfidence": [
     {
@@ -135,6 +208,27 @@
       "needsLocalValidation": [
         "Onsite validation of the specific condition before any capital step."
       ]
+    },
+    {
+      "priorityName": "Thermal comfort — building-controlled cooling",
+      "supportingDataPoints": [
+        "Temperature / Thermal: 22 comments, 77% negative.",
+        "Thermal / temperature comfort: Under Supported — friction 24/100 (45% under-supported)."
+      ],
+      "needsLocalValidation": [
+        "Lease terms on HVAC control and hours; zone/time readings."
+      ]
+    },
+    {
+      "priorityName": "Meeting-room hookups, guides and booking",
+      "supportingDataPoints": [
+        "Meeting & Conference Rooms: 12 comments, 67% negative; AV / Video Conferencing: 7 comments, 57% negative.",
+        "Virtual collaboration with remote/hybrid colleagues: Under Supported — friction 21/100 (37% under-supported).",
+        "Availability of meeting & collaboration spaces: on Target — friction 10/100 (22% under-supported)."
+      ],
+      "needsLocalValidation": [
+        "Room-by-room usability check results."
+      ]
     }
   ],
   "operationalResponseTable": [
@@ -161,15 +255,33 @@
       "finalOwner": "",
       "cost": "",
       "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Thermal comfort — building-controlled cooling",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Meeting-room hookups, guides and booking",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
     }
   ],
   "_meta": {
-    "generated_at": "2026-08-31",
-    "provider": "Claude Opus 4",
+    "generated_at": "2026-09-29",
+    "provider": "Claude Opus",
     "model": "Cowork",
     "owner": "Regional Director + Local Team",
     "include_verbatims": true,
     "prompt_version": "v3",
-    "generated_by": "Claude Opus (Cowork session, batch)"
+    "generated_by": "Claude Opus (Cowork session, batch)",
+    "priorities": 5,
+    "revision": "Expanded to top 5 (P1–P3 unchanged; P4–P5 added from site evidence)"
   }
 }

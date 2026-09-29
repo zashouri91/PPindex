@@ -86,6 +86,68 @@
       ],
       "siteMustDo": "Inspect workstations, standardize the setup, and log connectivity dead spots for Technology.",
       "actionType": "LOCAL ACTION"
+    },
+    {
+      "name": "Thermal comfort (temperature)",
+      "sourceThemes": [
+        "Temperature / Thermal"
+      ],
+      "issue": "The office runs cold much of the time — associates mention space heaters — while others report it running hot, which points to uneven zoning rather than a single set-point.",
+      "whatItLooksLike": [
+        "It is generally freezing in the Tampa office.",
+        "There were times when space heaters need to be used in the Tampa office and it was still cold.",
+        "The building gets very hot, this causes me to become uncomfortable and makes it hard to focus on work."
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Temperature / Thermal: 25 comments, 68% negative."
+        },
+        {
+          "type": "Finding",
+          "text": "Thermal / temperature comfort: Under Supported — friction 21/100 (43% under-supported)."
+        }
+      ],
+      "proposedAction": "Have Workplace Operations map hot and cold zones by time of day and check HVAC zoning, set-points and balancing; confirm whether personal heaters are being used to compensate.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Workplace Operations"
+      ],
+      "siteMustDo": "Log hot/cold zones and times for two weeks, submit them to building operations, and verify each correction holds.",
+      "actionType": "LOCAL ACTION"
+    },
+    {
+      "name": "Faster IT issue resolution on site",
+      "sourceThemes": [
+        "Support / Help Services"
+      ],
+      "issue": "When a connection or piece of equipment fails, associates say there is no on-site IT help and the only route is phone or chat, so small problems (a missing HDMI cable) cost large parts of the day. P3 covers the equipment itself; this covers how fast problems get fixed.",
+      "whatItLooksLike": [
+        "There is not IT support at the office should I experience issues. The only resolution is to contact IT via phone or chat.",
+        "on several occasions I have been unable to connect and there is no IT support onsite to assist which results in large amounts of lost productivity being on the phone with IT support when there isn't even an HDMI cable available to plug into and no one to ask."
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "'Technical issues are resolved in a timely manner' agreement: 3.53 vs 3.81 company average (Moderate) — just above the 3.5 'Needs attention' line."
+        },
+        {
+          "type": "Finding",
+          "text": "Support / Help Services: 9 comments, 56% negative."
+        },
+        {
+          "type": "Interpretation",
+          "text": "The survey's 'help resolving issues while on site' item has no Tampa scores, consistent with comments that there is no on-site IT support — confirm the site's support model."
+        }
+      ],
+      "proposedAction": "Have Technology confirm Tampa's support model and pilot scheduled on-site tech hours plus a stocked spares kit (HDMI/USB-C cables, docks, keyboards, mice) at reception.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Technology",
+        "Workplace Experience"
+      ],
+      "siteMustDo": "Log every IT issue at the site — what failed and how long it took to fix — for 30 days, and use it to size on-site coverage with Technology.",
+      "actionType": "WORKSTREAM / ENTERPRISE"
     }
   ],
   "protectWhatIsWorking": [
@@ -106,7 +168,8 @@
     }
   ],
   "assumptions": [
-    "Enclosed-space utilization needs an onsite check before sizing any build-out."
+    "Enclosed-space utilization needs an onsite check before sizing any build-out.",
+    "There are no Tampa scores for the 'help resolving issues while on site' survey item; the 'no on-site IT' reading comes from comments and needs confirming."
   ],
   "evidenceConfidence": [
     {
@@ -137,6 +200,26 @@
       "needsLocalValidation": [
         "Onsite validation of the specific condition before any capital step."
       ]
+    },
+    {
+      "priorityName": "Thermal comfort (temperature)",
+      "supportingDataPoints": [
+        "Temperature / Thermal: 25 comments, 68% negative.",
+        "Thermal / temperature comfort: Under Supported — friction 21/100 (43% under-supported)."
+      ],
+      "needsLocalValidation": [
+        "Which zones run hot vs cold and when; whether personal heaters are in use."
+      ]
+    },
+    {
+      "priorityName": "Faster IT issue resolution on site",
+      "supportingDataPoints": [
+        "'Technical issues are resolved in a timely manner' agreement: 3.53 vs 3.81 company average (Moderate) — just above the 3.5 'Needs attention' line.",
+        "Support / Help Services: 9 comments, 56% negative."
+      ],
+      "needsLocalValidation": [
+        "Actual support model at Tampa, plus 30 days of issue type and time-to-fix."
+      ]
     }
   ],
   "operationalResponseTable": [
@@ -163,15 +246,33 @@
       "finalOwner": "",
       "cost": "",
       "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Thermal comfort (temperature)",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Faster IT issue resolution on site",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
     }
   ],
   "_meta": {
-    "generated_at": "2026-08-31",
-    "provider": "Claude Opus 4",
+    "generated_at": "2026-09-29",
+    "provider": "Claude Opus",
     "model": "Cowork",
     "owner": "Regional Director + Local Team",
     "include_verbatims": true,
     "prompt_version": "v3",
-    "generated_by": "Claude Opus (Cowork session, batch)"
+    "generated_by": "Claude Opus (Cowork session, batch)",
+    "priorities": 5,
+    "revision": "Expanded to top 5 (P1–P3 unchanged; P4–P5 added from site evidence)"
   }
 }

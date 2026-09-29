@@ -97,6 +97,69 @@
       ],
       "siteMustDo": "Inspect a sample of workstations, catalog missing/broken peripherals and reset-monitor issues, and set a recurring check with Technology.",
       "actionType": "LOCAL ACTION"
+    },
+    {
+      "name": "Thermal comfort (temperature)",
+      "sourceThemes": [
+        "Temperature / Thermal"
+      ],
+      "issue": "Temperature is uneven across the floor — some desks run cold, especially in summer — so associates plan their day around which desk they can get.",
+      "whatItLooksLike": [
+        "Sometimes the temperature is set to too cold and everyone on the floor is freezing especially in Summer time. …",
+        "Temperature control is difficult so depending on what desk I am able to secure I need to plan accordingly.",
+        "Temperature can be an issue, can be too cold and uncomfortable."
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Temperature / Thermal: 55 comments, 53% negative."
+        },
+        {
+          "type": "Finding",
+          "text": "Thermal / temperature comfort: Under Supported — friction 19/100 (41% under-supported)."
+        }
+      ],
+      "proposedAction": "Have Workplace Operations map the cold zones by floor and time of day, then check set-points, airflow balancing and diffuser placement in those zones before considering any equipment change.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Workplace Operations"
+      ],
+      "siteMustDo": "Log cold desks/zones and times for two weeks, submit them to building operations, and re-check after each adjustment to confirm it holds.",
+      "actionType": "LOCAL ACTION"
+    },
+    {
+      "name": "Meeting-room and video-conferencing reliability",
+      "sourceThemes": [
+        "AV / Video Conferencing",
+        "Meeting & Conference Rooms"
+      ],
+      "issue": "Laptop connections, audio and screen-sharing in conference and meeting rooms fail intermittently, which undermines the client and hybrid meetings the rooms exist for.",
+      "whatItLooksLike": [
+        "I have found that many of the conference room connections do not work well. They have been treated rough and when I connect my laptop sometimes they connect and disconnect intermittently. It is unreliable.",
+        "Some of the meeting rooms do not function reliably. There are often connectivity issues, audio frequently cuts in and out during meetings, and several rooms lack accessible power outlets for charging laptops. …",
+        "…Some conference rooms when you directly connect your laptop to share screens you lose your internet connection. …"
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Video conferencing & meeting-room technology agreement: 3.58 vs 3.72 company average (Moderate) — close to the 3.5 'Needs attention' line."
+        },
+        {
+          "type": "Finding",
+          "text": "Virtual collaboration with remote/hybrid colleagues: Under Supported — friction 20/100 (39% under-supported)."
+        },
+        {
+          "type": "Finding",
+          "text": "Meeting & Conference Rooms: 45 comments, 47% negative; AV / Video Conferencing: 39 comments, 44% negative."
+        }
+      ],
+      "proposedAction": "Have Technology test every conference and huddle room end-to-end (laptop connection, display, audio, camera, power), repair or replace worn cables and connectors, and post a short in-room quick-start guide.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Technology"
+      ],
+      "siteMustDo": "Run a room-by-room test with Technology, log failures by room, and re-test the repaired rooms after 30 days.",
+      "actionType": "LOCAL ACTION"
     }
   ],
   "protectWhatIsWorking": [
@@ -118,7 +181,7 @@
   ],
   "assumptions": [
     "Quiet/enclosed-space utilization data isn't in the survey; an onsite walkthrough is needed to size any capacity gap before recommending build-out.",
-    "Woodland Hills is the lowest-ranked site overall (10 of 10); these three priorities target its largest, most-cited gaps first."
+    "Woodland Hills is the lowest-ranked site overall (10 of 10); these priorities target its largest, most-cited gaps first."
   ],
   "evidenceConfidence": [
     {
@@ -150,6 +213,27 @@
       "needsLocalValidation": [
         "Onsite validation of the specific condition before any capital step."
       ]
+    },
+    {
+      "priorityName": "Thermal comfort (temperature)",
+      "supportingDataPoints": [
+        "Temperature / Thermal: 55 comments, 53% negative.",
+        "Thermal / temperature comfort: Under Supported — friction 19/100 (41% under-supported)."
+      ],
+      "needsLocalValidation": [
+        "Which zones and times run cold, and whether the cause is set-point, balancing or equipment."
+      ]
+    },
+    {
+      "priorityName": "Meeting-room and video-conferencing reliability",
+      "supportingDataPoints": [
+        "Video conferencing & meeting-room technology agreement: 3.58 vs 3.72 company average (Moderate) — close to the 3.5 'Needs attention' line.",
+        "Virtual collaboration with remote/hybrid colleagues: Under Supported — friction 20/100 (39% under-supported).",
+        "Meeting & Conference Rooms: 45 comments, 47% negative; AV / Video Conferencing: 39 comments, 44% negative."
+      ],
+      "needsLocalValidation": [
+        "Room-by-room failure log — which rooms fail, and whether it is cabling, the room system, or network."
+      ]
     }
   ],
   "operationalResponseTable": [
@@ -176,15 +260,33 @@
       "finalOwner": "",
       "cost": "",
       "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Thermal comfort (temperature)",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Meeting-room and video-conferencing reliability",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
     }
   ],
   "_meta": {
-    "generated_at": "2026-08-31",
-    "provider": "Claude Opus 4",
+    "generated_at": "2026-09-29",
+    "provider": "Claude Opus",
     "model": "Cowork",
     "owner": "Regional Director + Local Team",
     "include_verbatims": true,
     "prompt_version": "v3",
-    "generated_by": "Claude Opus (Cowork session, batch)"
+    "generated_by": "Claude Opus (Cowork session, batch)",
+    "priorities": 5,
+    "revision": "Expanded to top 5 (P1–P3 unchanged; P4–P5 added from site evidence)"
   }
 }

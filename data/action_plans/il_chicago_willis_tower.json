@@ -89,12 +89,78 @@
       ],
       "siteMustDo": "Log cold zones/times, submit to building ops, and verify the correction.",
       "actionType": "LOCAL ACTION"
+    },
+    {
+      "name": "Virtual-meeting readiness: webcams and room screen-sharing",
+      "sourceThemes": [
+        "AV / Video Conferencing",
+        "Meeting & Conference Rooms"
+      ],
+      "issue": "Hybrid meetings are harder than they should be: many desks and focus cubes lack a webcam, and conference-room screen-sharing doesn't work reliably.",
+      "whatItLooksLike": [
+        "…Most cubes lack a webcam, which means you have you use the blurry laptop camera",
+        "Conference room share screen features don't work properly. …"
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Virtual collaboration with remote/hybrid colleagues: Under Supported — friction 26/100 (51% under-supported), the highest-friction item at the site after the focus and discretion items covered by P1."
+        },
+        {
+          "type": "Finding",
+          "text": "AV / Video Conferencing: 11 comments, 73% negative; Meeting & Conference Rooms: 12 comments, 75% negative."
+        },
+        {
+          "type": "Finding",
+          "text": "Video conferencing & meeting-room technology agreement: 3.75 vs 3.72 company average (Moderate)."
+        },
+        {
+          "type": "Interpretation",
+          "text": "P1 covers call privacy and P2 covers monitors; this priority is the camera and room screen-share gap."
+        }
+      ],
+      "proposedAction": "Have Technology test screen-sharing in every conference room and fix failures, and confirm webcam coverage at workstations and focus cubes — adding cameras where desks are used for video calls.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Technology"
+      ],
+      "siteMustDo": "Run a room-by-room screen-share test with Technology, count workstations without a camera, and confirm the fixes within 30 days.",
+      "actionType": "LOCAL ACTION"
+    },
+    {
+      "name": "Food options without leaving the tower",
+      "sourceThemes": [
+        "Food & Beverage"
+      ],
+      "issue": "On-site food and snack options are limited and pricey, and the nearest meal means a long elevator trip down and back.",
+      "whatItLooksLike": [
+        "Meal Options for purchase. Willis Tower has many options on the main level, but it would take 10 minute elevator ride each way (down and up) plus the wait for the food (busy area)",
+        "More affordable food options available on site",
+        "Better snack and beverage options, which unfortunately would probably be less healthy than the current options. …"
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Availability of on-site food and beverage options: Under Supported — friction 17/100 (35% under-supported)."
+        },
+        {
+          "type": "Finding",
+          "text": "Food & Beverage: 14 comments, 57% negative."
+        }
+      ],
+      "proposedAction": "Review the pantry/market range and pricing with Food & Beverage, and test a pre-order or delivery option with the building's main-level vendors.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Food & Beverage"
+      ],
+      "siteMustDo": "Pulse-check which items and price points associates want, pilot one change for 30 days, and measure uptake.",
+      "actionType": "LOCAL ACTION"
     }
   ],
   "protectWhatIsWorking": [
     {
       "area": "Service Level",
-      "evidence": "81/100, rank 2 — a strength",
+      "evidence": "81/100, rank 2 — a strength (food & beverage availability is the exception — see priority 5)",
       "note": "Maintain the current service level and monitor performance."
     },
     {
@@ -135,6 +201,27 @@
       "needsLocalValidation": [
         "Onsite validation of the specific condition before any capital step."
       ]
+    },
+    {
+      "priorityName": "Virtual-meeting readiness: webcams and room screen-sharing",
+      "supportingDataPoints": [
+        "Virtual collaboration with remote/hybrid colleagues: Under Supported — friction 26/100 (51% under-supported), the highest-friction item at the site after the focus and discretion items covered by P1.",
+        "AV / Video Conferencing: 11 comments, 73% negative; Meeting & Conference Rooms: 12 comments, 75% negative.",
+        "Video conferencing & meeting-room technology agreement: 3.75 vs 3.72 company average (Moderate)."
+      ],
+      "needsLocalValidation": [
+        "Which rooms fail screen-share, and how many desks/focus cubes lack a camera."
+      ]
+    },
+    {
+      "priorityName": "Food options without leaving the tower",
+      "supportingDataPoints": [
+        "Availability of on-site food and beverage options: Under Supported — friction 17/100 (35% under-supported).",
+        "Food & Beverage: 14 comments, 57% negative."
+      ],
+      "needsLocalValidation": [
+        "What associates would actually buy on site, and at what price."
+      ]
     }
   ],
   "operationalResponseTable": [
@@ -161,15 +248,33 @@
       "finalOwner": "",
       "cost": "",
       "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Virtual-meeting readiness: webcams and room screen-sharing",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Food options without leaving the tower",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
     }
   ],
   "_meta": {
-    "generated_at": "2026-08-31",
-    "provider": "Claude Opus 4",
+    "generated_at": "2026-09-29",
+    "provider": "Claude Opus",
     "model": "Cowork",
     "owner": "Regional Director + Local Team",
     "include_verbatims": true,
     "prompt_version": "v3",
-    "generated_by": "Claude Opus (Cowork session, batch)"
+    "generated_by": "Claude Opus (Cowork session, batch)",
+    "priorities": 5,
+    "revision": "Expanded to top 5 (P1–P3 unchanged; P4–P5 added from site evidence)"
   }
 }

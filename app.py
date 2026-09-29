@@ -634,6 +634,21 @@ def site_report_data(site, completers_flag):
         if len(pos_quotes) >= 2:
             break
     data["pos_quotes"] = pos_quotes
+    # Extra evidence for the Operational Action Plan generator only (not rendered on the
+    # card): a top-5 plan needs more candidate themes than the 5-item "fixes" list, real
+    # example quotes for each, and the Digital & Tech items vs the company average.
+    data["fix_candidates"] = [(t, int(tvol[t]), float(tsent[t])) for t in tvol.index
+                              if tvol[t] >= 5 and tsent.get(t, 0) >= 0.45][:10]
+    cq_ids, cq_txt = set(), set()
+    data["cand_quotes"] = [
+        {"theme": t, "text": str(r["comment"]), "role": str(r["role"]), "sentiment": r["eff_sentiment"]}
+        for t, _, _ in data["fix_candidates"]
+        for r in select_quotes(real, t, "Themes", "representative", 2, cq_ids, cq_txt)]
+    _tech = ss[ss["mean_importance"].isna()] if len(ss) else pd.DataFrame()
+    _org_t = (scores.set_index("item")["mean_support"]
+              if not scores.empty and "item" in scores.columns else pd.Series(dtype=float))
+    data["tech_items"] = [(r["item"], float(r["mean_support"]), float(_org_t.get(r["item"], np.nan)))
+                          for _, r in _tech.iterrows()]
     data["charts"] = _site_charts(data)
     return data
 
@@ -2204,7 +2219,7 @@ with tab_report:
                        f"{_pm.get('provider','?')}/{_pm.get('model','?')}"
                        + (" · aggregate-only" if _pm.get('include_verbatims') is False else ""))
         else:
-            st.caption(f"No action plan generated yet for **{rsite}** — it appears at the top of the card once created.")
+            st.caption(f"No action plan generated yet for **{rsite}** — it appears below the Vs. org theme table once created.")
         oc = st.columns([3, 2, 2])
         _owner = oc[0].text_input("Primary owner (every action)", value=action_plan.default_owner(),
                                   key="oap_owner", help="The ownership model is still open per the meeting — edit freely.")

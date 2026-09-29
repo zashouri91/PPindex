@@ -83,6 +83,73 @@
       ],
       "siteMustDo": "Log the cold zones/times and verify the correction holds.",
       "actionType": "LOCAL ACTION"
+    },
+    {
+      "name": "Reserved-desk etiquette and visibility",
+      "sourceThemes": [
+        "Desk Availability & Reservations"
+      ],
+      "issue": "Associates arrive to find someone in the desk or room they reserved, with nothing at the desk showing it is reserved, and some people hold more than one space at a time.",
+      "whatItLooksLike": [
+        "Its frustrating when another Elevance employee decides to sit in the space that I reserved for the day.",
+        "When someone sits down at a station that is reserved, there is no indication. It would be helpful to discourage them from using what's been reserved.",
+        "Other associates taking up multiple spaces by reserving more than one space ( focus room and work station) at the same time. …"
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Desk Availability & Reservations: 98 comments, 45% negative — the highest-volume theme at the site not already covered by P1–P3."
+        },
+        {
+          "type": "Finding",
+          "text": "'Reservation tools are easy to use' agreement: 4.23 vs 4.03 company average (Strong)."
+        },
+        {
+          "type": "Interpretation",
+          "text": "The tool itself rates well, so the fix is behavior and visibility — who is sitting in a reserved seat — not a new system."
+        }
+      ],
+      "proposedAction": "Make reserved status visible at the desk (check-in, or a reserved indicator if the system supports it), auto-release unclaimed bookings, and set a one-space-at-a-time norm.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Reservation-system owner",
+        "Change & Communications"
+      ],
+      "siteMustDo": "Spot-check reserved vs. occupied desks on peak days, confirm which check-in/indicator features exist, and communicate the etiquette norm.",
+      "actionType": "LOCAL ACTION"
+    },
+    {
+      "name": "Chair condition and adjustability",
+      "sourceThemes": [
+        "Furniture & Ergonomics"
+      ],
+      "issue": "Worn chairs with failing adjustments and torn arm pads mean associates try several desks before they can settle — a condition problem at specific desks rather than a site-wide furniture gap.",
+      "whatItLooksLike": [
+        "I seem to have bad luck with selecting workstations whose chairs are wobbly and worn out. Usually it takes a few desks before I find one that has working adjustments and isn't falling apart even if it looks ok from the outside.",
+        "Many chair arm pads are ripped on Quad B 12th floor and need to be repaired.",
+        "Chairs and tables are old. More than 5+ years"
+      ],
+      "evidence": [
+        {
+          "type": "Finding",
+          "text": "Furniture & Ergonomics: 21 comments, 62% negative."
+        },
+        {
+          "type": "Finding",
+          "text": "Furniture comfort & ergonomics: on Target — friction 10/100 (28% under-supported)."
+        },
+        {
+          "type": "Interpretation",
+          "text": "The survey item is on Target, so treat this as repairing and replacing worn chairs, not a furniture refresh."
+        }
+      ],
+      "proposedAction": "Have Workplace Operations audit chair condition floor by floor, repair or replace failed chairs (starting with Quad B, 12th floor), and add a simple way to tag a broken chair.",
+      "primaryOwner": "Regional Director + Local Team",
+      "supportTeams": [
+        "Workplace Operations"
+      ],
+      "siteMustDo": "Complete the chair audit, take failing chairs out of service, and confirm repairs or replacements within 30 days.",
+      "actionType": "LOCAL ACTION"
     }
   ],
   "protectWhatIsWorking": [
@@ -139,6 +206,26 @@
       "needsLocalValidation": [
         "Onsite validation of the specific condition before any capital step."
       ]
+    },
+    {
+      "priorityName": "Reserved-desk etiquette and visibility",
+      "supportingDataPoints": [
+        "Desk Availability & Reservations: 98 comments, 45% negative — the highest-volume theme at the site not already covered by P1–P3.",
+        "'Reservation tools are easy to use' agreement: 4.23 vs 4.03 company average (Strong)."
+      ],
+      "needsLocalValidation": [
+        "Peak-day spot checks of reserved vs occupied seats; which check-in/indicator features the reservation system already has."
+      ]
+    },
+    {
+      "priorityName": "Chair condition and adjustability",
+      "supportingDataPoints": [
+        "Furniture & Ergonomics: 21 comments, 62% negative.",
+        "Furniture comfort & ergonomics: on Target — friction 10/100 (28% under-supported)."
+      ],
+      "needsLocalValidation": [
+        "Chair-condition audit results by floor."
+      ]
     }
   ],
   "operationalResponseTable": [
@@ -165,15 +252,33 @@
       "finalOwner": "",
       "cost": "",
       "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Reserved-desk etiquette and visibility",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
+    },
+    {
+      "priorityName": "Chair condition and adjustability",
+      "validate": "Confirm / Modify / Reject",
+      "actionType": "",
+      "finalOwner": "",
+      "cost": "",
+      "targetOrEscalation": ""
     }
   ],
   "_meta": {
-    "generated_at": "2026-08-31",
-    "provider": "Claude Opus 4",
+    "generated_at": "2026-09-29",
+    "provider": "Claude Opus",
     "model": "Cowork",
     "owner": "Regional Director + Local Team",
     "include_verbatims": true,
     "prompt_version": "v3",
-    "generated_by": "Claude Opus (Cowork session, batch)"
+    "generated_by": "Claude Opus (Cowork session, batch)",
+    "priorities": 5,
+    "revision": "Expanded to top 5 (P1–P3 unchanged; P4–P5 added from site evidence)"
   }
 }

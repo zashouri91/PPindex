@@ -1,7 +1,7 @@
 """
 Operational Action Plan — "What to Do Next" generator for PulsePoint site cards.
 
-Turns a single site's report-card evidence into a small, validated set of
+Turns a single site's report-card evidence into a validated top-5 set of
 operational recommendations, following the v3 master prompt agreed with the
 work-stream team. The design constraints from that review are baked in here:
 
@@ -194,9 +194,14 @@ def build_report_card_payload(data: dict, include_verbatims: bool = True) -> dic
                 "agreement_1_5": _round(r.get("agree")) if "agree" in r else None,
             })
 
-    # Highest-Friction survey items (importance dims) — friction 0-100 + %under-supported
+    # Highest-Friction survey items (importance dims) — friction 0-100 + %under-supported.
+    # A top-5 plan needs more than the card's 4-item list, so take the top 8 from the
+    # full item detail when it's available.
     highest_friction = []
     under = data.get("under")
+    det = data.get("detail")
+    if det is not None and len(det) and {"mean_importance", "friction"} <= set(det.columns):
+        under = det[det["mean_importance"].notna()].sort_values("friction", ascending=False).head(8)
     if under is not None and len(under):
         for _, r in under.iterrows():
             highest_friction.append({
@@ -219,9 +224,21 @@ def build_report_card_payload(data: dict, include_verbatims: bool = True) -> dic
                 "priority_score": _round(r.get("Priority"), 0),
             })
 
+    # Digital & Tech items are agreement-only (1-5, no Importance/Gap): send the score,
+    # its band and the company average — never a friction / under-supported figure.
+    tech_items = []
+    for item, site_v, org_v in (data.get("tech_items") or []):
+        if site_v is None or site_v != site_v:  # missing / NaN
+            continue
+        band = ("Strong" if site_v >= 4.0 else "Moderate" if site_v >= 3.5 else "Needs attention")
+        tech_items.append({"item": item, "agreement_1_5": _round(site_v, 2),
+                           "company_avg_1_5": _round(org_v, 2), "band": band})
+
     # Candidate priority THEMES (theme-level, high-negative), generic buckets dropped.
+    # Prefer the longer list (up to 10) so the model has enough distinct candidates for
+    # five priorities; fall back to the card's 5-item list.
     candidate_themes = []
-    for t, cnt, neg in (data.get("fixes") or []):
+    for t, cnt, neg in (data.get("fix_candidates") or data.get("fixes") or []):
         if t in EXCLUDED_THEMES:
             continue
         candidate_themes.append({
@@ -265,6 +282,7 @@ def build_report_card_payload(data: dict, include_verbatims: bool = True) -> dic
         "dimension_scores": dimension_scores,
         "importance_vs_support": imp_vs_sup,
         "highest_friction_items": highest_friction,
+        "digital_tech_agreement_items": tech_items,
         "computed_priority_ranking_by_category": priority_ranking,
         "candidate_priority_themes": candidate_themes,
         "strengths_to_protect": strengths,
@@ -274,16 +292,24 @@ def build_report_card_payload(data: dict, include_verbatims: bool = True) -> dic
             "support_teams": SUPPORT_TEAMS,
             "note": ("Index & dimension scores are 0-100. Gap = Support - Importance (1-5). "
                      "Friction is 0-100 (higher = worse). The priority ranking is by comment "
-                     "category; define priorities at the theme level within the top categories."),
+                     "category; define priorities at the theme level within the top categories. "
+                     "Digital & Tech items are agreement-only (1-5): cite the score, band and "
+                     "company average, never a friction or under-supported figure."),
         },
     }
 
     if include_verbatims:
-        payload["representative_comments"] = [
-            {"theme": q.get("theme"), "sentiment": q.get("sentiment"),
-             "role": q.get("role"), "text": q.get("text")}
-            for q in (data.get("quotes") or []) if q.get("theme") not in EXCLUDED_THEMES
-        ]
+        # the card's one-per-top-theme quotes, plus up to two per candidate theme so every
+        # possible priority has real examples to draw on (deduplicated by text)
+        reps, seen = [], set()
+        for q in list(data.get("quotes") or []) + list(data.get("cand_quotes") or []):
+            txt = q.get("text")
+            if q.get("theme") in EXCLUDED_THEMES or not txt or txt in seen:
+                continue
+            seen.add(txt)
+            reps.append({"theme": q.get("theme"), "sentiment": q.get("sentiment"),
+                         "role": q.get("role"), "text": txt})
+        payload["representative_comments"] = reps
         payload["positive_comments"] = [
             {"theme": q.get("theme"), "role": q.get("role"), "text": q.get("text")}
             for q in (data.get("pos_quotes") or []) if q.get("theme") not in EXCLUDED_THEMES
@@ -304,12 +330,13 @@ PROMPT_TEMPLATE = """Act as a Workplace Strategy, Corporate Real Estate, Workpla
 Using ONLY the PulsePoint Experience Index Report Card data provided in the user message (between <report_card> tags), create an "Operational Action Plan — What to Do Next" for the location. That data is the sole source of truth. Do not use any other location's data and do not invent facts. If a field you would normally cite is absent, note it under assumptions instead of fabricating it.
 
 PURPOSE
-This is NOT a re-summary of the survey. Translate the findings into a small number of clear, location-specific recommendations telling the owner what is happening, what to prioritize, what to do, what evidence supports it, who should support, and what they must do next.
+This is NOT a re-summary of the survey. Translate the findings into a top 5 of clear, location-specific recommendations telling the owner what is happening, what to prioritize, what to do, what evidence supports it, who should support, and what they must do next.
 
 DATA VOCABULARY (use these exact structures; do not invent others)
 - Overall PulsePoint Experience Index Score (0-100): the unweighted average of the four Dimension Scores. This is the only Index figure you may cite. Never reference any "weighted" variant.
 - Four Dimension Scores (0-100): Work Activity, Physical Feature, Service Level, Digital & Tech. When you cite a "score", it is a Dimension Score, not a category.
 - Importance vs. Support items: each has Support and Importance (1-5), a Gap (Support - Importance), and a status. Under-supported % and Friction (0-100) come from here.
+- Digital & Tech items are agreement-only (1-5, no Importance): cite the agreement score, its band (Strong >= 4.0, Moderate 3.5-3.9, Needs attention < 3.5) and the company average. Never quote a Gap, Friction or under-supported % for them.
 - 7 Comment Categories (groupings) and 29 Themes (the atomic unit). Themes are the level at which you define priorities.
 - Computed Priority ranking: the card ranks comment CATEGORIES by 0.40*volume + 0.35*%negative + 0.25*friction. Use this ranking to identify the most material areas; then define priorities at the THEME level within/across the top categories.
 - Representative quotes: the only source for concrete examples.
@@ -317,9 +344,9 @@ DATA VOCABULARY (use these exact structures; do not invent others)
 
 EXPECTATIONS
 1. Start from the computed Priority ranking and the candidate priority themes provided; do not re-rank from scratch. Weigh frequency + severity + impact + quantitative + qualitative evidence together. Volume is already 40% of the ranking, so do not lean on volume alone.
-2. Preserve THEME integrity: do not merge two distinct themes into one priority just because they sound related or share a parent category (e.g. Furniture & Ergonomics vs. Temperature/Thermal are separate even though both sit under Physical Environment). Combine only if this location's own evidence clearly shows one underlying problem. Do not create artificial groupings to fit the 3-5 limit; list extra material issues as secondary/monitor items.
+2. Preserve THEME integrity: do not merge two distinct themes into one priority just because they sound related or share a parent category (e.g. Furniture & Ergonomics vs. Temperature/Thermal are separate even though both sit under Physical Environment). Combine only if this location's own evidence clearly shows one underlying problem. Do not create artificial groupings to fit the five priorities; list extra material issues as secondary/monitor items.
 3. Identify the actual workplace problem, not the theme label. Say what is happening, who/what work is affected, and how it shows up day-to-day.
-4. Recommend only 3-5 priorities.
+4. Recommend the top 5 priorities: five distinct, material issues with no overlap between them. Return fewer only if this location's evidence does not support five distinct issues, and say why under assumptions; never pad with weak, duplicate or overlapping items.
 5. For each priority give: a specific name; the source theme(s); the issue (<= 2 sentences); what it looks like here (<= 3 items, drawn ONLY from the representative quotes provided — never extrapolate; if the quotes lack detail, say local validation is required); evidence (real fields only, each tagged Finding/Interpretation/Recommendation); a specific proposed action (no vague verbs); the proposed team (Primary is always the owner, plus appropriate Support); a direct "site team must do" instruction in action verbs; and one action type.
 6. Do not jump straight to a capital solution: prefer utilization / space allocation / booking rules / operations / behavior / technology / maintenance / communication first, and recommend a validation step where the root cause is not established.
 7. Action types (choose one): LOCAL ACTION, LOCAL PROJECT, WORKSTREAM / ENTERPRISE, MONITOR / PROTECT. Do NOT use "Quick Win".
@@ -354,11 +381,13 @@ OUTPUT — return ONE valid JSON object and nothing else, matching exactly this 
   "evidenceConfidence": [{{"priorityName": "string", "supportingDataPoints": ["string"], "needsLocalValidation": ["string"]}}]
 }}
 
-Rules for the JSON: 3-5 priorities ordered by the computed ranking; one operationalResponseTable row per priority with the decision fields (actionType, finalOwner, cost, targetOrEscalation) left blank; reviewFullReportCardRecommended always true; evidenceConfidence replaces any 1-10 score. Output JSON only — no prose, no code fences."""
+Rules for the JSON: 5 priorities (fewer only when the evidence does not support five distinct issues), ordered by the computed ranking; one operationalResponseTable row per priority with the decision fields (actionType, finalOwner, cost, targetOrEscalation) left blank; reviewFullReportCardRecommended always true; evidenceConfidence replaces any 1-10 score. Output JSON only — no prose, no code fences."""
 
 
 def build_prompt(owner: str) -> str:
-    return PROMPT_TEMPLATE.replace("{OWNER}", owner)
+    # The template escapes literal JSON braces as {{ }} (str.format style); since the
+    # owner is filled with replace(), un-escape them too so the model sees valid JSON.
+    return PROMPT_TEMPLATE.replace("{OWNER}", owner).replace("{{", "{").replace("}}", "}")
 
 
 # ---------------------------------------------------------------------------
@@ -477,7 +506,7 @@ def validate_plan(plan: dict, owner: str) -> dict:
     pri = plan.get("priorities")
     if not isinstance(pri, list) or not pri:
         raise ValueError("plan has no priorities")
-    plan["priorities"] = pri[:5]  # hard cap 3-5 -> keep at most 5
+    plan["priorities"] = pri[:5]  # the plan targets a top 5 -> keep at most 5
     for p in plan["priorities"]:
         p.setdefault("name", "Priority")
         p.setdefault("issue", "")
@@ -541,7 +570,7 @@ def generate_action_plan(data: dict, owner: str = None, include_verbatims: bool 
         "owner": owner,
         "include_verbatims": bool(include_verbatims),
         "elapsed_s": round(time.time() - t0, 1),
-        "prompt_version": "v3",
+        "prompt_version": "v3.1 (top 5)",
     }
     return plan
 
