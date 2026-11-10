@@ -230,12 +230,17 @@ section and the tab shows a one-line setup hint — nothing breaks.
   as unmet needs rather than praise — the single biggest thing generic sentiment gets
   wrong on this data.
 
-  On a hand-labeled validation sample it scored **~60% accurate vs ~31% for plain
-  VADER** (nearly 2×), and its output is internally coherent: the "what limits you"
-  question comes out most negative, and the most under-supported themes (noise,
-  temperature, privacy) skew 55–65% negative. It still isn't perfect on genuinely
-  ambiguous polite requests — which is exactly what the Tagging Workspace override is
-  for. Lean on theme + gap context alongside sentiment, not sentiment alone.
+  **Accuracy is not yet established.** An earlier claim of "~60% accurate vs ~31% for
+  plain VADER" could not be reproduced and has been removed. A 300-comment gold set now
+  lives in `data/gold/gold_labels.csv` (IDs and labels only); its rows were pre-filled by an
+  AI assistant and must be confirmed by a person in the Tagging Workspace (*Gold set*).
+  `python tools/eval_tagging.py` writes `data/gold/eval_report.md` with per-theme
+  precision/recall/F1 and sentiment accuracy, separately for verified and draft labels.
+  Until at least 30 rows are verified, every card's method note says the comment themes
+  and sentiment are automated and not yet validated. Against the draft labels the known
+  bias is clear: nearly every sentiment error is *more positive* than the comment, so
+  read sentiment shares as a floor on negativity. Lean on theme + Friction context
+  alongside sentiment, not sentiment alone.
 
   *(We evaluated a full RoBERTa transformer too, but chose this offline model so the
   tool needs no ~500MB model download or GPU/torch install and runs anywhere.)*

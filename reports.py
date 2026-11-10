@@ -603,6 +603,28 @@ def company_value(ctx, measure):
     return round(float(v.iloc[0]), 1) if len(v) else np.nan
 
 
+GOLD_MIN_VERIFIED = 30   # print an accuracy figure only once this many rows are human-verified
+UNVALIDATED_NOTE = "Comment themes and sentiment are automated and not yet validated."
+
+
+def tagging_accuracy_note():
+    """Method-note sentence on comment-tagging accuracy: the verified gold-set figure
+    when enough rows have been checked by a person, otherwise an explicit 'not yet
+    validated'. Never quotes draft (AI-prefilled) labels as accuracy."""
+    path = os.path.join(DATA, "gold", "gold_labels.csv")
+    try:
+        import tools.eval_tagging as EV
+        g = EV.load_gold(path)
+        v = g[g["verified"]]
+        if len(v) < GOLD_MIN_VERIFIED:
+            return UNVALIDATED_NOTE
+        res = EV.score(v, EV.load_rules())
+        return (f"Comment themes and sentiment are automated; checked against {res['n']} comments labelled by a "
+                f"person: theme F1 {res['micro']['f1']:.0%}, sentiment accuracy {res['sent_acc']:.0%}.")
+    except Exception:
+        return UNVALIDATED_NOTE
+
+
 def company_comments(ctx):
     """Company = the 10 in-scope sites pooled, in the selected population (real comments)."""
     c = ctx.comments
@@ -1308,7 +1330,8 @@ A comment that touches more than one category appears under each.</p>
 0–100 scale; each dimension is the average of its items; the <b>Overall PulsePoint Experience Index Score</b> is the
 <b>unweighted</b> average of the four Dimension Scores — the same calculation as the Tableau deck. Friction &amp; RYG per
 the official Tableau spec · Priority = 40% people raising it + 35% share of comments negative + 25% Friction.
-Theme prevalence counts people (one person can answer five open questions), with comment counts secondary. {COMPANY_DEF}</div>
+Theme prevalence counts people (one person can answer five open questions), with comment counts secondary. {COMPANY_DEF}
+{tagging_accuracy_note()}</div>
 </body></html>"""
 
 def build_site_pdf(ctx, site, data=None):
@@ -1753,7 +1776,7 @@ Themes come from a keyword taxonomy ({N_THEMES} themes across {N_CATEGORIES} cat
 <div class="foot"><b>Data source &amp; method.</b> PulsePoint survey export ·
 {'completed responses only' if completers_flag else 'all responses'} · {dd['n_sites']} in-scope sites. The Index Score is
 the unweighted average of the four Dimension Scores (0–100) — the same calculation as the Tableau deck. Friction &amp; RYG
-per the official Tableau spec. {COMPANY_DEF}</div>
+per the official Tableau spec. {COMPANY_DEF} {tagging_accuracy_note()}</div>
 </body></html>"""
 
 def build_portfolio_pdf(ctx, data=None):

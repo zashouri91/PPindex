@@ -214,3 +214,10 @@ def test_severity_bands():
     assert R.item_severity(row(4.0, 2.9))["severity"] == "severe"
     assert R.item_severity(row(4.0, 3.7, lo=-0.6, hi=0.05))["borderline"]
     assert R.item_severity(row(3.0, 3.2, ryg="Target", s100=55))["low_support"]
+
+
+def test_method_note_states_validation_status(ctx):
+    note = R.tagging_accuracy_note()
+    # the shipped gold set has no human-verified rows yet
+    assert note == R.UNVALIDATED_NOTE
+    assert note in R.build_site_report(ctx, "OH-Mason") and note in R.build_portfolio_report(ctx)
