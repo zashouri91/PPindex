@@ -3,6 +3,7 @@ __pycache__/
 *.pyc
 *.pyo
 .venv/
+.pytest_cache/
 venv/
 
 # Runtime / user-generated
