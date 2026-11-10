@@ -1,7 +1,6 @@
 {
   "location": "VA-Norfolk",
   "indexScore": 69.8,
-  "indexTier": "Middle third",
   "reviewFullReportCardRecommended": true,
   "priorities": [
     {
@@ -18,11 +17,11 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Noise & Distraction: 125 comments, 75% negative — the most-negative theme at the site."
+          "text": "Noise & Distraction: 97 people (21% of respondents), 125 comments, 79% negative — the 2nd most-negative theme at the site (after Lighting)."
         },
         {
           "type": "Finding",
-          "text": "Focused / Private Work is the #2 priority category (73/100); focused-work friction 28/100 (53% under-supported)."
+          "text": "Focused / Private Work is the #1 priority category (88/100); focused-work friction 28/100 (53% under-supported)."
         }
       ],
       "proposedAction": "Assess phone-booth/private-space capacity and a call-etiquette norm against demand before adding enclosed space.",
@@ -48,11 +47,11 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Physical Environment is the #1 priority category (75/100); Desk Availability 222 comments (50% neg)."
+          "text": "Physical Environment is the #2 priority category (79/100); Desk Availability: 75 people (17% of respondents), 92 comments, 57% negative."
         },
         {
           "type": "Finding",
-          "text": "Hardware: 150 comments, 53% negative."
+          "text": "Hardware: 104 people (23% of respondents), 150 comments, 58% negative."
         }
       ],
       "proposedAction": "Review desk mix (offices, sit/stand) against demand and standardize workstation setup with routine checks.",
@@ -76,7 +75,7 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Temperature / Thermal: 101 comments, 62% negative."
+          "text": "Temperature / Thermal: 77 people (17% of respondents), 93 comments, 73% negative."
         },
         {
           "type": "Finding",
@@ -106,7 +105,7 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Food & Beverage: 122 comments, 44% negative — cited in 16% of comments vs 14% company-wide; Cost / Pricing: 30 comments, 50% negative."
+          "text": "Food & Beverage: 97 people (21% of respondents), 122 comments, 44% negative — raised by 21% of respondents vs 19% company-wide; Cost / Pricing: 26 people (6% of respondents), 30 comments, 50% negative."
         },
         {
           "type": "Finding",
@@ -144,7 +143,7 @@
         },
         {
           "type": "Finding",
-          "text": "Cleanliness & Upkeep: 65 comments, 45% negative; Building Operations: 51 comments, 39% negative."
+          "text": "Cleanliness & Upkeep: 53 people (12% of respondents), 64 comments, 50% negative; Building Operations: 29 people (6% of respondents), 32 comments, 31% negative."
         }
       ],
       "proposedAction": "Run a floor-by-floor restroom fixture audit, repair non-working sinks and toilets, and check cleaning frequency against current occupancy, including the Annex.",
@@ -159,34 +158,34 @@
   "protectWhatIsWorking": [
     {
       "area": "Reception & Entry",
-      "evidence": "82% positive across 56 comments — front desk, security, on-site gym and medical are praised",
+      "evidence": "55% positive and 18% negative across 55 comments from 49 people — front desk, security, on-site gym and medical are praised",
       "note": "Maintain the current service level and monitor performance."
     },
     {
       "area": "Community & Events",
-      "evidence": "85% positive",
+      "evidence": "53% positive and 15% negative across 34 comments from 29 people",
       "note": "Maintain the current service level and monitor performance."
     },
     {
       "area": "Parking & Commute",
-      "evidence": "74% positive",
+      "evidence": "41% positive and 28% negative across 39 comments from 35 people",
       "note": "Maintain the current service level and monitor performance."
     },
     {
       "area": "Wellbeing / Wellness Spaces",
-      "evidence": "77% positive",
+      "evidence": "41% positive and 27% negative across 22 comments from 19 people",
       "note": "Maintain the current service level and monitor performance."
     }
   ],
   "assumptions": [
-    "Norfolk is a mid-tier site (5 of 10) that's well-liked; the priorities target its few sharp negatives (noise especially)."
+    "Norfolk is in line with the company average overall (Index 70 ± 1); the priorities target its few sharp negatives (noise especially)."
   ],
   "evidenceConfidence": [
     {
       "priorityName": "Quiet, private space for calls and meetings",
       "supportingDataPoints": [
-        "Noise & Distraction: 125 comments, 75% negative — the most-negative theme at the site.",
-        "Focused / Private Work is the #2 priority category (73/100); focused-work friction 28/100 (53% under-supported)."
+        "Noise & Distraction: 97 people (21% of respondents), 125 comments, 79% negative — the 2nd most-negative theme at the site (after Lighting).",
+        "Focused / Private Work is the #1 priority category (88/100); focused-work friction 28/100 (53% under-supported)."
       ],
       "needsLocalValidation": [
         "Onsite validation of the specific condition before any capital step."
@@ -195,8 +194,8 @@
     {
       "priorityName": "Desk availability and sit/stand + workstation setup",
       "supportingDataPoints": [
-        "Physical Environment is the #1 priority category (75/100); Desk Availability 222 comments (50% neg).",
-        "Hardware: 150 comments, 53% negative."
+        "Physical Environment is the #2 priority category (79/100); Desk Availability: 75 people (17% of respondents), 92 comments, 57% negative.",
+        "Hardware: 104 people (23% of respondents), 150 comments, 58% negative."
       ],
       "needsLocalValidation": [
         "Onsite validation of the specific condition before any capital step."
@@ -205,7 +204,7 @@
     {
       "priorityName": "Thermal comfort (temperature)",
       "supportingDataPoints": [
-        "Temperature / Thermal: 101 comments, 62% negative.",
+        "Temperature / Thermal: 77 people (17% of respondents), 93 comments, 73% negative.",
         "Thermal comfort friction is 24/100 (47% under-supported)."
       ],
       "needsLocalValidation": [
@@ -215,7 +214,7 @@
     {
       "priorityName": "On-site food and coffee",
       "supportingDataPoints": [
-        "Food & Beverage: 122 comments, 44% negative — cited in 16% of comments vs 14% company-wide; Cost / Pricing: 30 comments, 50% negative.",
+        "Food & Beverage: 97 people (21% of respondents), 122 comments, 44% negative — raised by 21% of respondents vs 19% company-wide; Cost / Pricing: 26 people (6% of respondents), 30 comments, 50% negative.",
         "Availability of on-site food and beverage options: Under Supported — friction 19/100 (36% under-supported)."
       ],
       "needsLocalValidation": [
@@ -227,7 +226,7 @@
       "supportingDataPoints": [
         "Reliability of building operations (elevators, restrooms): Under Supported — friction 13/100 (33% under-supported).",
         "Cleanliness & upkeep: Under Supported — friction 12/100 (27% under-supported).",
-        "Cleanliness & Upkeep: 65 comments, 45% negative; Building Operations: 51 comments, 39% negative."
+        "Cleanliness & Upkeep: 53 people (12% of respondents), 64 comments, 50% negative; Building Operations: 29 people (6% of respondents), 32 comments, 31% negative."
       ],
       "needsLocalValidation": [
         "Restroom fixture audit by floor; cleaning schedule vs occupancy."
@@ -285,6 +284,14 @@
     "prompt_version": "v3",
     "generated_by": "Claude Opus (Cowork session, batch)",
     "priorities": 5,
-    "revision": "Expanded to top 5 (P1–P3 unchanged; P4–P5 added from site evidence)"
-  }
+    "revision": "Expanded to top 5 (P1–P3 unchanged; P4–P5 added from site evidence)",
+    "evidence_refreshed_at": "2026-11-10",
+    "evidence_refresh_note": "Numbers in evidence, data points and protect lines refreshed to the November 2026 corrected data (people-based counts, true positive shares, standing instead of rank). Priorities, order, quotes and actions unchanged; not regenerated.",
+    "evidence_flags": [
+      "Priority 5 (Restroom repairs and building upkeep): Building Operations comments fall from 51 to 32 (29 people) and are 31% negative; the priority now rests mainly on the two Under Supported survey items (building operations and cleanliness), both with low Friction (13 and 12).",
+      "Protect item 'Parking & Commute': the true positive share is 41% (28% negative) — it no longer clears the What's-working bar",
+      "Protect item 'Wellbeing / Wellness Spaces': the true positive share is 41% (27% negative) — it no longer clears the What's-working bar"
+    ]
+  },
+  "indexStanding": "In line with the company average"
 }

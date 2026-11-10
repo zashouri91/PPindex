@@ -1,7 +1,6 @@
 {
   "location": "NY-New York (Penn1)",
   "indexScore": 71.4,
-  "indexTier": "Top third",
   "reviewFullReportCardRecommended": true,
   "priorities": [
     {
@@ -18,11 +17,11 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Focused / Private Work is the #1 priority category (86/100 — the highest of any category at any site)."
+          "text": "Focused / Private Work is the #1 priority category (89/100)."
         },
         {
           "type": "Finding",
-          "text": "Noise & Distraction: 28 comments (68% neg); Privacy & Confidentiality: 30 comments (57% neg)."
+          "text": "Noise & Distraction: 22 people (22% of respondents), 28 comments, 71% negative; Privacy & Confidentiality: 22 people (22% of respondents), 30 comments, 63% negative."
         }
       ],
       "proposedAction": "Assess pod/booth capacity and camping behavior against call-heavy demand; test time limits/occupancy signals before adding pods.",
@@ -46,7 +45,7 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Connectivity is cited at 16% of comments vs. 11% company-wide; Technology priority score 67/100."
+          "text": "Connectivity is raised by 18% of respondents vs 14% company-wide; Technology priority score 66/100."
         },
         {
           "type": "Interpretation",
@@ -75,7 +74,7 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Hardware: 26 comments, 65% negative — a high negative rate on a maintenance-type issue."
+          "text": "Hardware: 19 people (19% of respondents), 26 comments, 69% negative — a high negative rate on a maintenance-type issue."
         }
       ],
       "proposedAction": "Run an equipment-condition sweep and replace worn peripherals/cables on a schedule.",
@@ -100,7 +99,7 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Temperature / Thermal: 22 comments, 77% negative."
+          "text": "Temperature / Thermal: 20 people (20% of respondents), 21 comments, 86% negative."
         },
         {
           "type": "Finding",
@@ -134,7 +133,7 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Meeting & Conference Rooms: 12 comments, 67% negative; AV / Video Conferencing: 7 comments, 57% negative."
+          "text": "Meeting & Conference Rooms: 12 people (12% of respondents), 12 comments, 67% negative; AV / Video Conferencing: 4 people (4% of respondents), 5 comments, 80% negative."
         },
         {
           "type": "Finding",
@@ -162,30 +161,30 @@
   "protectWhatIsWorking": [
     {
       "area": "Community & Events",
-      "evidence": "100% positive (small sample)",
+      "evidence": "50% positive and 0% negative across 6 comments from 6 people (small sample)",
       "note": "Maintain the current service level and monitor performance."
     },
     {
       "area": "Parking & Commute",
-      "evidence": "100% positive (small sample)",
+      "evidence": "80% positive and 0% negative across 5 comments from 4 people (small sample)",
       "note": "Maintain the current service level and monitor performance."
     },
     {
       "area": "Physical Feature",
-      "evidence": "70.8/100, rank 2 — a strong physical space overall (thermal comfort is the exception — see priority 4)",
+      "evidence": "70.8 ± 4, above the company average (66.1) — a strong physical space overall (thermal comfort is the exception — see priority 4)",
       "note": "Maintain the current service level and monitor performance."
     }
   ],
   "assumptions": [
-    "New York rates well overall (3 of 10) but comment sentiment skews negative (53%); the strongest signal is the concentrated pod-capacity and Wi-Fi issues.",
+    "New York is in line with the company average overall (Index 71 ± 3) but comment sentiment skews negative (57% of comments); the strongest signal is the concentrated pod-capacity and Wi-Fi issues.",
     "That Elevance lacks direct control of the temperature is associate-reported; confirm it against the lease."
   ],
   "evidenceConfidence": [
     {
       "priorityName": "Enough pods/private space for call-heavy roles",
       "supportingDataPoints": [
-        "Focused / Private Work is the #1 priority category (86/100 — the highest of any category at any site).",
-        "Noise & Distraction: 28 comments (68% neg); Privacy & Confidentiality: 30 comments (57% neg)."
+        "Focused / Private Work is the #1 priority category (89/100).",
+        "Noise & Distraction: 22 people (22% of respondents), 28 comments, 71% negative; Privacy & Confidentiality: 22 people (22% of respondents), 30 comments, 63% negative."
       ],
       "needsLocalValidation": [
         "Onsite validation of the specific condition before any capital step."
@@ -194,7 +193,7 @@
     {
       "priorityName": "Wi-Fi reliability on upper floors",
       "supportingDataPoints": [
-        "Connectivity is cited at 16% of comments vs. 11% company-wide; Technology priority score 67/100."
+        "Connectivity is raised by 18% of respondents vs 14% company-wide; Technology priority score 66/100."
       ],
       "needsLocalValidation": [
         "Onsite validation of the specific condition before any capital step."
@@ -203,7 +202,7 @@
     {
       "priorityName": "Workstation equipment condition",
       "supportingDataPoints": [
-        "Hardware: 26 comments, 65% negative — a high negative rate on a maintenance-type issue."
+        "Hardware: 19 people (19% of respondents), 26 comments, 69% negative — a high negative rate on a maintenance-type issue."
       ],
       "needsLocalValidation": [
         "Onsite validation of the specific condition before any capital step."
@@ -212,7 +211,7 @@
     {
       "priorityName": "Thermal comfort — building-controlled cooling",
       "supportingDataPoints": [
-        "Temperature / Thermal: 22 comments, 77% negative.",
+        "Temperature / Thermal: 20 people (20% of respondents), 21 comments, 86% negative.",
         "Thermal / temperature comfort: Under Supported — friction 24/100 (45% under-supported)."
       ],
       "needsLocalValidation": [
@@ -222,7 +221,7 @@
     {
       "priorityName": "Meeting-room hookups, guides and booking",
       "supportingDataPoints": [
-        "Meeting & Conference Rooms: 12 comments, 67% negative; AV / Video Conferencing: 7 comments, 57% negative.",
+        "Meeting & Conference Rooms: 12 people (12% of respondents), 12 comments, 67% negative; AV / Video Conferencing: 4 people (4% of respondents), 5 comments, 80% negative.",
         "Virtual collaboration with remote/hybrid colleagues: Under Supported — friction 21/100 (37% under-supported).",
         "Availability of meeting & collaboration spaces: on Target — friction 10/100 (22% under-supported)."
       ],
@@ -282,6 +281,12 @@
     "prompt_version": "v3",
     "generated_by": "Claude Opus (Cowork session, batch)",
     "priorities": 5,
-    "revision": "Expanded to top 5 (P1–P3 unchanged; P4–P5 added from site evidence)"
-  }
+    "revision": "Expanded to top 5 (P1–P3 unchanged; P4–P5 added from site evidence)",
+    "evidence_refreshed_at": "2026-11-10",
+    "evidence_refresh_note": "Numbers in evidence, data points and protect lines refreshed to the November 2026 corrected data (people-based counts, true positive shares, standing instead of rank). Priorities, order, quotes and actions unchanged; not regenerated.",
+    "evidence_flags": [
+      "Priority 5 (Meeting-room hookups, guides and booking): the AV / Video Conferencing leg is 5 comments from 4 people; Meeting & Conference Rooms (12 comments, 12 people) and the Under Supported virtual-collaboration item carry it."
+    ]
+  },
+  "indexStanding": "In line with the company average"
 }

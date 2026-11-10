@@ -1,7 +1,6 @@
 {
   "location": "FL-Tampa",
   "indexScore": 67.8,
-  "indexTier": "Bottom third",
   "reviewFullReportCardRecommended": true,
   "priorities": [
     {
@@ -18,11 +17,11 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Focused / Private Work is the #1 priority category (76/100)."
+          "text": "Focused / Private Work is the #1 priority category (88/100)."
         },
         {
           "type": "Finding",
-          "text": "Privacy & Confidentiality: 57 comments, 65% negative; Noise & Distraction: 47 comments, 62% negative."
+          "text": "Privacy & Confidentiality: 39 people (22% of respondents), 57 comments, 72% negative; Noise & Distraction: 38 people (21% of respondents), 47 comments, 72% negative."
         },
         {
           "type": "Finding",
@@ -51,7 +50,7 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Desk Availability & Reservations: 77 comments, 48% negative (highest-volume theme)."
+          "text": "Desk Availability & Reservations: 29 people (16% of respondents), 36 comments, 56% negative — the 5th most-raised theme by people (it was the highest-volume theme before the November 2026 re-tag)."
         }
       ],
       "proposedAction": "Review room/desk booking visibility (when a space frees up) and set a standard for how a workstation should be left.",
@@ -76,7 +75,7 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Hardware: 64 comments, 52% negative. Connectivity: 31 comments, 65% negative."
+          "text": "Hardware: 47 people (27% of respondents), 64 comments, 61% negative. Connectivity: 26 people (15% of respondents), 29 comments, 69% negative."
         }
       ],
       "proposedAction": "Standardize the dock/monitor setup and run routine equipment checks; validate connectivity in weak spots and route to Technology.",
@@ -101,7 +100,7 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Temperature / Thermal: 25 comments, 68% negative."
+          "text": "Temperature / Thermal: 24 people (14% of respondents), 27 comments, 74% negative."
         },
         {
           "type": "Finding",
@@ -133,7 +132,7 @@
         },
         {
           "type": "Finding",
-          "text": "Support / Help Services: 9 comments, 56% negative."
+          "text": "Support / Help Services: 7 people (4% of respondents), 9 comments, 56% negative."
         },
         {
           "type": "Interpretation",
@@ -153,17 +152,17 @@
   "protectWhatIsWorking": [
     {
       "area": "Cleanliness & Upkeep",
-      "evidence": "88% positive across 24 comments — the cleaning staff are singled out",
+      "evidence": "62% positive and 17% negative across 24 comments from 20 people — the cleaning staff are singled out",
       "note": "Maintain the current service level and monitor performance."
     },
     {
       "area": "Reception & Entry",
-      "evidence": "73% positive",
+      "evidence": "30% positive and 30% negative across 10 comments from 8 people",
       "note": "Maintain the current service level and monitor performance."
     },
     {
       "area": "Wellbeing / Wellness Spaces",
-      "evidence": "83% positive",
+      "evidence": "60% positive and 20% negative across 5 comments from 4 people",
       "note": "Maintain the current service level and monitor performance."
     }
   ],
@@ -175,8 +174,8 @@
     {
       "priorityName": "Private space for confidential conversations and calls",
       "supportingDataPoints": [
-        "Focused / Private Work is the #1 priority category (76/100).",
-        "Privacy & Confidentiality: 57 comments, 65% negative; Noise & Distraction: 47 comments, 62% negative.",
+        "Focused / Private Work is the #1 priority category (88/100).",
+        "Privacy & Confidentiality: 39 people (22% of respondents), 57 comments, 72% negative; Noise & Distraction: 38 people (21% of respondents), 47 comments, 72% negative.",
         "Discretion-space friction is 27/100 (49% under-supported)."
       ],
       "needsLocalValidation": [
@@ -186,7 +185,7 @@
     {
       "priorityName": "Desk reservation clarity and workstation setup",
       "supportingDataPoints": [
-        "Desk Availability & Reservations: 77 comments, 48% negative (highest-volume theme)."
+        "Desk Availability & Reservations: 29 people (16% of respondents), 36 comments, 56% negative — the 5th most-raised theme by people (it was the highest-volume theme before the November 2026 re-tag)."
       ],
       "needsLocalValidation": [
         "Onsite validation of the specific condition before any capital step."
@@ -195,7 +194,7 @@
     {
       "priorityName": "Workstation hardware reliability",
       "supportingDataPoints": [
-        "Hardware: 64 comments, 52% negative. Connectivity: 31 comments, 65% negative."
+        "Hardware: 47 people (27% of respondents), 64 comments, 61% negative. Connectivity: 26 people (15% of respondents), 29 comments, 69% negative."
       ],
       "needsLocalValidation": [
         "Onsite validation of the specific condition before any capital step."
@@ -204,7 +203,7 @@
     {
       "priorityName": "Thermal comfort (temperature)",
       "supportingDataPoints": [
-        "Temperature / Thermal: 25 comments, 68% negative.",
+        "Temperature / Thermal: 24 people (14% of respondents), 27 comments, 74% negative.",
         "Thermal / temperature comfort: Under Supported — friction 21/100 (43% under-supported)."
       ],
       "needsLocalValidation": [
@@ -215,7 +214,7 @@
       "priorityName": "Faster IT issue resolution on site",
       "supportingDataPoints": [
         "'Technical issues are resolved in a timely manner' agreement: 3.53 vs 3.81 company average (Moderate) — just above the 3.5 'Needs attention' line.",
-        "Support / Help Services: 9 comments, 56% negative."
+        "Support / Help Services: 7 people (4% of respondents), 9 comments, 56% negative."
       ],
       "needsLocalValidation": [
         "Actual support model at Tampa, plus 30 days of issue type and time-to-fix."
@@ -273,6 +272,12 @@
     "prompt_version": "v3",
     "generated_by": "Claude Opus (Cowork session, batch)",
     "priorities": 5,
-    "revision": "Expanded to top 5 (P1–P3 unchanged; P4–P5 added from site evidence)"
-  }
+    "revision": "Expanded to top 5 (P1–P3 unchanged; P4–P5 added from site evidence)",
+    "evidence_refreshed_at": "2026-11-10",
+    "evidence_refresh_note": "Numbers in evidence, data points and protect lines refreshed to the November 2026 corrected data (people-based counts, true positive shares, standing instead of rank). Priorities, order, quotes and actions unchanged; not regenerated.",
+    "evidence_flags": [
+      "Protect item 'Reception & Entry': the true positive share is 30% (30% negative) — it no longer clears the What's-working bar"
+    ]
+  },
+  "indexStanding": "In line with the company average"
 }

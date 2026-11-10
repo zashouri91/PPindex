@@ -669,7 +669,20 @@ with tab_report:
         if _pm:
             st.caption(f"Current plan for **{rsite}**: generated {_pm.get('generated_at','?')} · "
                        f"{_pm.get('provider','?')}/{_pm.get('model','?')}"
-                       + (" · aggregate-only" if _pm.get('include_verbatims') is False else ""))
+                       + (" · aggregate-only" if _pm.get('include_verbatims') is False else "")
+                       + (f" · evidence refreshed {_pm['evidence_refreshed_at']}" if _pm.get('evidence_refreshed_at') else ""))
+            _v = _pm.get("validation")
+            if _v is None:
+                st.caption("Grounding check: this plan was stored before the check existed (its numbers were "
+                           "refreshed by hand in November 2026).")
+            elif _v.get("ok"):
+                st.caption(f"Grounding check passed ({_v.get('checked', 0)} numbers and quote lines checked).")
+            for _fl in _pm.get("evidence_flags") or []:
+                st.warning(_fl)
+        st.caption("⚠️ " + action_plan.PROMPT_SIGNOFF_NOTE)
+        _lf = st.session_state.get("oap_last_failures")
+        if _lf and _lf.get("site") == rsite:
+            st.error("Last generation was rejected by the grounding check:\n\n- " + "\n- ".join(_lf["failures"]))
         else:
             st.caption(f"No action plan generated yet for **{rsite}** — it appears below the Vs. org theme table once created.")
         oc = st.columns([3, 2, 2])
@@ -688,10 +701,17 @@ with tab_report:
                 with st.spinner(f"Generating action plan for {rsite} via {_prov}…"):
                     _data = site_report_data(rsite, completers_only)
                     _plan = action_plan.generate_action_plan(_data, owner=_owner, include_verbatims=_incl)
+                _val = _plan["_meta"].get("validation") or {}
+                if not _val.get("ok"):
+                    st.session_state["oap_last_failures"] = {"site": rsite, "failures": _val.get("failures", [])}
+                    st.error(f"The generated plan for {rsite} failed the grounding check and was NOT saved "
+                             f"({len(_val.get('failures', []))} problem(s)) — see below.")
+                else:
                     action_plan.save_plan(rsite, _plan)
                     build_site_pdf.clear()
-                st.success(f"Action plan generated for {rsite}.")
-                st.rerun()
+                    st.session_state.pop("oap_last_failures", None)
+                    st.success(f"Action plan generated for {rsite}.")
+                    st.rerun()
             except Exception as e:
                 st.error(f"Generation failed: {e}")
         if _prov is None:
@@ -707,7 +727,12 @@ with tab_report:
                 try:
                     _d = site_report_data(_s, completers_only)
                     _pl = action_plan.generate_action_plan(_d, owner=_owner, include_verbatims=_incl)
-                    action_plan.save_plan(_s, _pl)
+                    _v = _pl["_meta"].get("validation") or {}
+                    if _v.get("ok"):
+                        action_plan.save_plan(_s, _pl)
+                    else:
+                        _fail.append(f"{_s}: failed the grounding check, not saved — "
+                                     + "; ".join(_v.get("failures", [])[:3]))
                 except Exception as e:
                     _fail.append(f"{_s}: {e}")
                 _prog.progress((_i + 1) / len(report_sites), text=f"{_i+1}/{len(report_sites)} — {_s}")

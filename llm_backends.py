@@ -48,11 +48,17 @@ def model_name(provider: str) -> str:
     m = os.environ.get("PULSEPOINT_LLM_MODEL")
     if m:
         return m
+    # Defaults checked against each vendor's model docs in November 2026:
+    #   OpenAI developers.openai.com/api/docs/models — gpt-6.1-sol (balanced flagship tier)
+    #   Anthropic platform.claude.com API primer — claude-sonnet-5-5 (the old default was a
+    #   Sonnet; claude-3-5-sonnet-latest points at a family retired in October 2025)
+    #   Ollama library — llama3.1 is still published; any capable local model works.
+    # Override with PULSEPOINT_LLM_MODEL. Hosted providers remain opt-in.
     return {
         "ollama": "llama3.1",
-        "openai": "gpt-4o",
+        "openai": "gpt-6.1-sol",
         "azure": os.environ.get("PULSEPOINT_AZURE_DEPLOYMENT", ""),
-        "anthropic": "claude-3-5-sonnet-latest",
+        "anthropic": "claude-sonnet-5-5",
     }.get(provider, "")
 
 
