@@ -99,3 +99,30 @@ def test_copy_theme_count_and_population():
         for html in (site_html, port_html):
             assert f"{len(THEMES)} themes" in html and "28 themes" not in html
             assert R.population_label(flag) in html
+
+
+def test_standing_rule():
+    assert R.standing_label(70, 72, 69.0) == R.STANDING_ABOVE
+    assert R.standing_label(66, 68.9, 69.0) == R.STANDING_BELOW
+    assert R.standing_label(67, 69.3, 69.0) == R.STANDING_INLINE
+    assert R.fmt_margin(68.17, 1.11) == "68 ± 1" and R.fmt_margin(70.0, 0.2) == "70 ± 1"
+
+
+def test_index_standings_match_review(site_data):
+    want = {s: R.STANDING_INLINE for s in site_data}
+    want.update({"GA-Atlanta": R.STANDING_ABOVE, "VA-Richmond": R.STANDING_BELOW,
+                 "CA-Woodland Hills": R.STANDING_BELOW})
+    assert {s: d["card"]["standing"] for s, d in site_data.items()} == want
+
+
+def test_no_rank_language_in_cards_or_payload(ctx, site_data):
+    import re
+    import action_plan
+    for site, d in site_data.items():
+        p = action_plan.build_report_card_payload(d, include_verbatims=False)
+        flat = str(p)
+        assert "rank_of_sites" not in flat and "tier" not in flat.lower()
+    port = R.build_portfolio_report(ctx)
+    assert not re.search(r"third|#\d+ of|[Rr]ank\b", port)
+    order = [b["site"] for b in R.portfolio_data(ctx)["board"]]
+    assert order == sorted(order)

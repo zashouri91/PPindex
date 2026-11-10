@@ -614,7 +614,7 @@ with tab_diag:
 # ===========================================================================
 with tab_report:
     st.subheader("📋 10 PulsePoints — Portfolio report card")
-    st.caption("A company-wide exec brief across the 10 in-scope sites: an Index-Score leaderboard, a site×dimension "
+    st.caption("A company-wide exec brief across the 10 in-scope sites: Index Score by site with its margin and standing, a site×dimension "
                "heatmap, Importance-vs-Support gaps, company Friction & strengths, top comment themes with a "
                "site×theme heatmap, and the respondent profile. Download as HTML or PDF.")
     pf_html = build_portfolio_report(completers_only)

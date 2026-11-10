@@ -146,6 +146,11 @@ def _round(x, n=1):
         return None
 
 
+def _standing(label):
+    """'Above' / 'In line with' / 'Below' -> '... the company average' (None if missing)."""
+    return f"{label} the company average" if label else None
+
+
 def _cat(theme: str) -> str:
     return THEME_TO_CATEGORY.get(theme, "")
 
@@ -164,15 +169,15 @@ def build_report_card_payload(data: dict, include_verbatims: bool = True) -> dic
             out.append({k: r[v] for k, v in cols.items() if v in r})
         return out
 
-    # Dimension scores (0-100) + company average + rank/tier
+    # Dimension scores (0-100) + company average + 95% margin + standing (no rank)
     dimension_scores = []
     for a in (card.get("areas") or []):
         dimension_scores.append({
             "dimension": a.get("dim"),
             "score_0_100": _round(a.get("score")),
+            "margin_95": _round(a.get("margin")),
             "company_avg": _round(a.get("org")),
-            "rank_of_sites": a.get("rank"),
-            "tier": a.get("tier"),
+            "standing_vs_company": _standing(a.get("standing")),
         })
 
     # Importance vs Support, per dimension (1-5, Gap, status)
@@ -274,9 +279,8 @@ def build_report_card_payload(data: dict, include_verbatims: bool = True) -> dic
         "respondents_all_10_sites": data.get("all_participants"),
         "comments_analyzed": data.get("n"),
         "overall_index_score_0_100_unweighted": _round(card.get("overall")),
-        "overall_index_tier": card.get("tier"),
-        "overall_index_rank": (f"{card.get('rank')} of {card.get('n_sites')}"
-                               if card.get("rank") else None),
+        "overall_index_margin_95": _round(card.get("margin")),
+        "overall_index_standing": _standing(card.get("standing")),
         "company_index_score_0_100": _round(card.get("org_overall")),
         "overall_comment_sentiment": {
             "pct_negative": _round(data.get("neg"), 0),
@@ -338,6 +342,7 @@ This is NOT a re-summary of the survey. Translate the findings into a top 5 of c
 DATA VOCABULARY (use these exact structures; do not invent others)
 - Overall PulsePoint Experience Index Score (0-100): the unweighted average of the four Dimension Scores. This is the only Index figure you may cite. Never reference any "weighted" variant.
 - Four Dimension Scores (0-100): Work Activity, Physical Feature, Service Level, Digital & Tech. When you cite a "score", it is a Dimension Score, not a category.
+- Each score carries a 95% margin and a standing vs the company average (Above / In line with / Below), decided by the margin of error. Never rank sites, never say "lowest"/"highest" of all sites or "N of 10", and never call a site above or below the company unless its standing says so.
 - Importance vs. Support items: each has Support and Importance (1-5), a Gap (Support - Importance), and a status. Under-supported % and Friction (0-100) come from here.
 - Digital & Tech items are agreement-only (1-5, no Importance): cite the agreement score, its band (Strong >= 4.0, Moderate 3.5-3.9, Needs attention < 3.5) and the company average. Never quote a Gap, Friction or under-supported % for them.
 - 7 Comment Categories (groupings) and 29 Themes (the atomic unit). Themes are the level at which you define priorities.
@@ -362,7 +367,7 @@ OUTPUT — return ONE valid JSON object and nothing else, matching exactly this 
 {{
   "location": "string",
   "indexScore": number,
-  "indexTier": "string",
+  "indexStanding": "Above|In line with|Below the company average",
   "reviewFullReportCardRecommended": true,
   "priorities": [
     {{

@@ -49,6 +49,7 @@ class Ctx:
     meta: dict
     completers_only: bool
     theme_friction_all: dict = field(default_factory=dict)
+    intervals: pd.DataFrame = field(default_factory=pd.DataFrame)  # data/site_intervals*.csv
 
 
 def make_context(comments_full, resp_scores_full, scores, meta, completers_only):
@@ -60,7 +61,8 @@ def make_context(comments_full, resp_scores_full, scores, meta, completers_only)
     else:
         c, r = comments_full.copy(), resp_scores_full.copy()
     ctx = Ctx(comments=c, resp_scores=r, scores=scores[k], scores_site=scores[k + "_site"],
-              scores_dim=scores[k + "_dim"], meta=meta, completers_only=bool(completers_only))
+              scores_dim=scores[k + "_dim"], meta=meta, completers_only=bool(completers_only),
+              intervals=scores.get(k + "_iv", pd.DataFrame()))
     ctx.theme_friction_all = _theme_friction_from(ctx.scores)
     return ctx
 
@@ -183,6 +185,7 @@ def load_scores():
     return {
         "comp": rd("scores_overall.csv"), "comp_site": rd("scores_by_site.csv"), "comp_dim": rd("scores_dimension.csv"),
         "all": rd("scores_overall_all.csv"), "all_site": rd("scores_by_site_all.csv"), "all_dim": rd("scores_dimension_all.csv"),
+        "comp_iv": rd("site_intervals.csv"), "all_iv": rd("site_intervals_all.csv"),
     }
 
 
@@ -469,27 +472,71 @@ def _gp(v):
     """Signed one-decimal gap, or em-dash for agreement-only items."""
     return "—" if pd.isna(v) else f"{v:+.1f}"
 
-# --- Relative standing among the in-scope sites (replaces absolute A–F letter grades) ---
-TIER_HEX = {"Top third": "#1E7D32", "Middle third": "#E0A400",
-            "Bottom third": "#C0392B", "—": "#999999"}
+# --- Standing vs the company (replaces rank numbers and thirds) -------------------
+# A site is Above / Below the company average only when the printed company value
+# lies outside the site's 95% interval (respondent bootstrap, data/site_intervals.csv);
+# otherwise it is In line. No ranks, no thirds.
+STANDING_ABOVE, STANDING_INLINE, STANDING_BELOW = "Above", "In line with", "Below"
+STANDING_SHORT = {STANDING_ABOVE: "Above", STANDING_INLINE: "In line", STANDING_BELOW: "Below"}
+COMPANY_DEF = ("“Company” means the 10 in-scope sites pooled, in the selected population "
+               "(completed responses or all responses).")
 
-def rank_tier(value, dist):
-    """Rank (1 = best) + distribution tercile for a value within the 10-site spread.
-    Returns (rank, n_sites, tier_label, tier_hex, percentile). Descriptive, not an
-    invented cutoff — the tier is defined by where the site falls among its peers."""
-    vals = sorted([float(v) for v in dist if pd.notna(v)], reverse=True)
-    n = len(vals)
-    if n == 0 or pd.isna(value):
-        return (None, n, "—", TIER_HEX["—"], None)
-    rank = sum(1 for v in vals if v > value) + 1
-    p33, p67 = np.percentile(vals, [100 / 3, 200 / 3])
-    tier = "Top third" if value >= p67 else ("Bottom third" if value <= p33 else "Middle third")
-    pctl = round(100 * sum(1 for v in vals if v < value) / n)
-    return (rank, n, tier, TIER_HEX[tier], pctl)
+
+def standing_label(lo, hi, company):
+    """Three-way standing from a 95% interval and the printed company value."""
+    if any(pd.isna(v) for v in (lo, hi, company)):
+        return None
+    if company < lo:
+        return STANDING_ABOVE
+    if company > hi:
+        return STANDING_BELOW
+    return STANDING_INLINE
+
+
+def standing_text(label):
+    return f"{label} the company average" if label else ""
+
+
+def fmt_margin(est, margin, nd=0):
+    """'68 ± 1' — margin shown at the same precision, never as ± 0."""
+    if pd.isna(est):
+        return "—"
+    if pd.isna(margin):
+        return f"{est:.{nd}f}"
+    m = max(round(float(margin), nd), 10 ** -nd)
+    return f"{est:.{nd}f} ± {m:.{nd}f}"
+
+
+def company_value(ctx, measure):
+    """The printed company value (1 decimal) for 'Index' or a dimension name."""
+    sd = ctx.scores_dim
+    if sd is None or sd.empty:
+        return np.nan
+    key = "OVERALL (equal)" if measure == "Index" else measure
+    v = pd.to_numeric(sd.loc[sd["dimension"] == key, "composite"], errors="coerce")
+    return round(float(v.iloc[0]), 1) if len(v) else np.nan
+
+
+def site_interval(ctx, site, measure):
+    iv = ctx.intervals
+    if iv is None or iv.empty:
+        return {"lo": np.nan, "hi": np.nan, "margin": np.nan, "se": np.nan}
+    r = iv[(iv["site"] == site) & (iv["measure"] == measure)]
+    if not len(r):
+        return {"lo": np.nan, "hi": np.nan, "margin": np.nan, "se": np.nan}
+    r = r.iloc[0]
+    return {"lo": float(r["lo"]), "hi": float(r["hi"]), "margin": float(r["margin"]), "se": float(r["se"])}
+
+
+def site_standing(ctx, site, measure):
+    """{'lo','hi','margin','company','standing'} for a site's Index or dimension."""
+    iv = site_interval(ctx, site, measure)
+    comp = company_value(ctx, measure)
+    return {**iv, "company": comp, "standing": standing_label(iv["lo"], iv["hi"], comp)}
 
 def site_standings(ctx):
     """Per-site overall Index Score (unweighted mean of the four dimension composites,
-    0–100 — this is what matches the Tableau deck) + per-dimension composites, for ranking."""
+    0–100 — this is what matches the Tableau deck) + per-dimension composites."""
     ss = ctx.scores_site
     res = {"overall": {}, "dims": {}}
     if ss is None or ss.empty:
@@ -605,19 +652,18 @@ def site_report_data(ctx, site):
         # Overall PulsePoint Experience Index Score = unweighted mean of the four dimension
         # composites (0–100). This is the calculation that matches the Tableau deck.
         site_overall = float(dcomp.mean())
-        o_rank, o_n, o_tier, o_hex, o_pctl = rank_tier(site_overall, list(standings["overall"].values()))
+        o_st = site_standing(ctx, site, "Index")
         areas = []
         for dm in ["Work Activity", "Physical Feature", "Service Level", "Digital & Tech"]:
             if dm in dcomp.index:
-                a_rank, a_n, a_tier, a_hex, _ap = rank_tier(
-                    float(dcomp[dm]), list(standings["dims"].get(dm, {}).values()))
-                areas.append({"dim": dm, "score": float(dcomp[dm]), "org": float(orgd.get(dm, np.nan)),
-                              "rank": a_rank, "n": a_n, "tier": a_tier, "hex": a_hex})
+                a_st = site_standing(ctx, site, dm)
+                areas.append({"dim": dm, "score": float(dcomp[dm]), "org": a_st["company"],
+                              "lo": a_st["lo"], "hi": a_st["hi"], "margin": a_st["margin"],
+                              "standing": a_st["standing"]})
         ovals = [v for v in standings["overall"].values() if pd.notna(v)]
-        data["card"] = {"overall": site_overall,
-                        "org_overall": float(orgd.get("OVERALL (equal)", np.nan)),
-                        "areas": areas, "rank": o_rank, "n_sites": o_n, "tier": o_tier,
-                        "tier_hex": o_hex, "pctl": o_pctl,
+        data["card"] = {"overall": site_overall, "org_overall": o_st["company"],
+                        "lo": o_st["lo"], "hi": o_st["hi"], "margin": o_st["margin"],
+                        "standing": o_st["standing"], "areas": areas,
                         "dist_min": (min(ovals) if ovals else np.nan),
                         "dist_max": (max(ovals) if ovals else np.nan)}
     else:
@@ -944,19 +990,18 @@ def build_site_report(ctx, site, data=None):
     card_html = ""
     if d.get("card"):
         cc = d["card"]
-        oh = cc.get("tier_hex", "#5A9E3A")
-        ovm = vs_mark(cc["overall"], cc["org_overall"])
+        oh = "#2b3a67"   # neutral badge: standing is carried by the text label, not colour
         badges = ""
         for a in cc["areas"]:
-            ah = a.get("hex", "#888")
-            rank_chip = f"#{a['rank']} of {a['n']}" if a.get("rank") else ""
+            margin = "—" if pd.isna(a.get("margin")) else f"{max(round(a['margin']), 1)}"
+            comp = "" if pd.isna(a.get("org")) else f" · company {a['org']:.1f}"
             badges += (f"<div class='area'><div class='an'>{_html.escape(AREA_SHORT.get(a['dim'], a['dim']))}</div>"
-                       f"<div class='ab' style='background:{ah}'>{a['score']:.0f}</div>"
-                       f"<div class='as'>{rank_chip}</div>"
-                       f"<div class='am'>{vs_mark(a['score'], a['org'])}</div></div>")
-        rank_str = (f"Rank <b>{cc['rank']} of {cc['n_sites']}</b> · {cc['tier']} of sites"
-                    if cc.get("rank") else "")
-        org_str = f"Company average {cc['org_overall']:.0f}/100" if pd.notna(cc.get("org_overall")) else ""
+                       f"<div class='ab' style='background:{oh}'>{a['score']:.0f}</div>"
+                       f"<div class='as'>± {margin}</div>"
+                       f"<div class='am'><b>{STANDING_SHORT.get(a.get('standing'), '')}</b>{comp}</div></div>")
+        rank_str = (f"<b>{standing_text(cc.get('standing'))}</b> · 95% interval "
+                    f"{cc['lo']:.1f}–{cc['hi']:.1f}" if cc.get("standing") else "")
+        org_str = f"Company average {cc['org_overall']:.1f}/100" if pd.notna(cc.get("org_overall")) else ""
         rng = (f" · sites range {cc['dist_min']:.0f}–{cc['dist_max']:.0f}"
                if pd.notna(cc.get("dist_min")) else "")
         allp = d.get("all_participants") or 0
@@ -965,17 +1010,18 @@ def build_site_report(ctx, site, data=None):
         card_html = (
             f"<div class='rc'><div class='rc-o'>"
             f"<div class='rc-badge' style='background:{oh}'>{cc['overall']:.0f}</div>"
-            f"<div><div class='rc-t'>Overall PulsePoint Experience Index Score (0–100) · {cc['tier']} of sites</div>"
-            f"<div class='rc-s'>{rank_str} &nbsp; {ovm}</div>"
+            f"<div><div class='rc-t'>Overall PulsePoint Experience Index Score (0–100): "
+            f"{fmt_margin(cc['overall'], cc.get('margin'))}</div>"
+            f"<div class='rc-s'>{rank_str}</div>"
             f"<div class='rc-p'>{org_str}{rng}</div>"
             f"<div class='rc-p'>{part_str} · {d['n']:,} written comments</div>"
             f"</div></div>"
             f"<div class='rc-dimlab'>Dimension Scores (0–100)</div>"
             f"<div class='rc-areas'>{badges}</div>"
             f"<div class='rc-key'>The <b>Index Score</b> is the average of the four Dimension Scores (0–100) — the "
-            f"same calculation as the Tableau deck. Area boxes show each dimension's score and its rank among the 10 "
-            f"sites. <b>Tier</b> = thirds of the 10-site distribution (relative standing, not an absolute cutoff). "
-            f"&#9650;/&#9660; = vs. the company average.</div></div>")
+            f"same calculation as the Tableau deck. <b>±</b> is the 95% margin of error from resampling this site's "
+            f"respondents. <b>Above</b> / <b>Below</b> means the company value lies outside the site's 95% interval; "
+            f"otherwise the site is <b>In line</b> with the company. {COMPANY_DEF}</div></div>")
 
     # All-comments appendix — by category then sentiment (collapsible)
     appendix_html = ""
@@ -1319,13 +1365,14 @@ def portfolio_data(ctx):
     dd["comp_index"] = _dim_val("OVERALL (equal)")
     dims = ["Work Activity", "Physical Feature", "Service Level", "Digital & Tech"]
     dd["dim_comp"] = {dm: _dim_val(dm) for dm in dims}
-    # per-site index + rank + tier
+    # per-site index with margin + standing; alphabetical everywhere (no rank)
     stand = site_standings(ctx)
-    overalls = stand["overall"]; ovals = list(overalls.values())
+    overalls = stand["overall"]
     board = []
-    for site, idx in sorted(overalls.items(), key=lambda kv: -kv[1]):
-        r, n, tier, hexc, _p = rank_tier(idx, ovals)
-        board.append({"site": site, "index": idx, "rank": r, "n": n, "tier": tier, "hex": hexc})
+    for site, idx in sorted(overalls.items(), key=lambda kv: kv[0]):
+        st_ = site_standing(ctx, site, "Index")
+        board.append({"site": site, "index": idx, "margin": st_["margin"], "lo": st_["lo"],
+                      "hi": st_["hi"], "standing": st_["standing"]})
     dd["board"] = board
     dd["dim_by_site"] = stand["dims"]
     # company dimension gaps (Importance vs Support, 1–5) from item-level scores
@@ -1467,7 +1514,7 @@ def _portfolio_qgrid(ctx, site_order):
         "<b>Digital &amp; Tech</b> is agreement-only (no Importance/Gap, shown as “—”) — shaded by agreement band "
         "(green ≥4.0 / amber 3.5–3.9 / red &lt;3.5). Questions are ordered by company Friction (worst first) "
         "within each dimension.</p>"
-        f"<p class='lgd'>Sites (ordered by overall Index): {codes}.</p>")
+        f"<p class='lgd'>Sites (alphabetical): {codes}.</p>")
     return (
         "<section class='qgrid-sec'>"
         "<h3>Question-level detail — Importance / Support / Gap / Friction by site</h3>"
@@ -1489,8 +1536,8 @@ def build_portfolio_report(ctx, data=None):
     for b in sorted(board, key=lambda x: x["site"]):
         s = dd["sent_by_site"].get(b["site"], np.nan)
         lead += (f"<tr><td>{_html.escape(b['site'])}</td>"
-                 f"<td style='font-weight:800'>{b['index']:.0f}</td>"
-                 f"<td>{vs_mark(b['index'], cx)}</td>"
+                 f"<td style='font-weight:800'>{fmt_margin(b['index'], b.get('margin'))}</td>"
+                 f"<td>{standing_text(b.get('standing'))}</td>"
                  f"<td>{'—' if pd.isna(s) else f'{s:.2f}'} {_sent_mark(s, dd['comp_sentiment'])}</td></tr>")
     # dimension gaps table
     def _dstat(g):
@@ -1566,7 +1613,10 @@ def build_portfolio_report(ctx, data=None):
   <span style="color:#D1495B">{dd['neg']:.0f}% negative</span></div>
 </div></div>
 <h3>Overall Index Score by site</h3>
-<table><tr><th>Site</th><th>Index</th><th>vs company</th><th>Sentiment (1–5)</th></tr>{lead}</table>
+<table><tr><th>Site</th><th>Index ± 95% margin</th><th>Standing</th><th>Sentiment (1–5)</th></tr>{lead}</table>
+<p class="lgd">Sites are listed alphabetically. Standing: <b>Above</b> / <b>Below</b> when the company Index
+({cx:.1f}) lies outside the site's 95% interval (resampling respondents within the site); otherwise <b>In line</b>.
+{COMPANY_DEF}</p>
 <div class="charts">{img('leaderboard')}</div>
 <h3>Dimension Scores by site</h3>
 <div class="charts">{img('heatmap_dim')}</div>
