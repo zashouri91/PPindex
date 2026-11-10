@@ -137,3 +137,15 @@ def test_company_is_ten_sites_pooled(ctx, site_data):
         assert org_rate == pytest.approx(want), theme
     html = R.build_site_report(ctx, "IN-Indianapolis")
     assert R.COMPANY_DEF in html and R.COMPANY_DEF in R.build_portfolio_report(ctx)
+
+
+def test_sentiment_table_uses_margin_and_company(ctx, site_data):
+    comp = R.company_respondents(ctx)
+    for site, d in site_data.items():
+        for a in d["agreement"]:
+            col = R.DIM_TO_SCORECOL[a["dim"]]
+            assert a["org_mean"] == pytest.approx(round(comp[col].mean(), 2))
+            assert a["standing"] == R.standing_label(a["lo"], a["hi"], a["org_mean"])
+    from conftest import strip_comment_text
+    html = strip_comment_text(R.build_site_report(ctx, "GA-Atlanta"))
+    assert "Welch" not in html and "p=" not in html and "significant" not in html

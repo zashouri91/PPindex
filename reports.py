@@ -563,32 +563,31 @@ def site_standings(ctx):
             res["overall"][site] = float(np.mean(list(dd.values())))  # unweighted = deck method
     return res
 
-def agreement_sig(ctx, site, col, ten_sites):
-    """Welch's t-test of a site's 1–5 summary-agreement scores vs the OTHER in-scope
-    sites. Returns site/rest means, delta, p, a plain-language verdict, and a color.
-    This is the defensible 'raw number + a statistical thing' for the overall grade."""
+def agreement_sig(ctx, site, col, ten_sites=None):
+    """A site's 1–5 summary-agreement score with its 95% margin (t-interval) against the
+    company mean (10 sites pooled). Standing uses the same three-way rule as the Index:
+    Above / Below only when the printed company mean (2 dp) lies outside the site's
+    interval. `p` (one-sample t-test vs the company mean) is kept for the multiple-
+    comparison check in the change report only — it is not printed on the card."""
+    from scipy import stats
     resp_scores = ctx.resp_scores
     if resp_scores is None or resp_scores.empty or col not in resp_scores.columns:
         return None
-    insc = resp_scores[resp_scores["site"].isin(ten_sites)]
-    a = pd.to_numeric(insc.loc[insc["site"] == site, col], errors="coerce").dropna()
-    b = pd.to_numeric(insc.loc[insc["site"] != site, col], errors="coerce").dropna()
+    comp = company_respondents(ctx)
+    a = pd.to_numeric(resp_scores.loc[resp_scores["site"] == site, col], errors="coerce").dropna()
+    c = pd.to_numeric(comp[col], errors="coerce").dropna()
     sm = float(a.mean()) if len(a) else np.nan
-    om = float(b.mean()) if len(b) else np.nan
-    if len(a) < 10 or len(b) < 10:
-        return {"n": int(len(a)), "site_mean": sm, "org_mean": om, "delta": (sm - om),
-                "p": np.nan, "verdict": "too few responses to test", "hex": "#999999"}
-    from scipy.stats import ttest_ind
-    _t, p = ttest_ind(a, b, equal_var=False)
-    delta = sm - om
-    if pd.notna(p) and p < 0.05 and delta > 0:
-        verdict, hexc = "above company (significant)", "#1E7D32"
-    elif pd.notna(p) and p < 0.05 and delta < 0:
-        verdict, hexc = "below company (significant)", "#C0392B"
-    else:
-        verdict, hexc = "in line with company", "#6b7280"
-    return {"n": int(len(a)), "site_mean": sm, "org_mean": om, "delta": float(delta),
-            "p": float(p), "verdict": verdict, "hex": hexc}
+    om = round(float(c.mean()), 2) if len(c) else np.nan
+    out = {"n": int(len(a)), "site_mean": sm, "org_mean": om, "delta": sm - om,
+           "margin": np.nan, "lo": np.nan, "hi": np.nan, "standing": None, "p": np.nan}
+    if len(a) < 10:
+        out["standing_note"] = "too few responses"
+        return out
+    se = float(a.std(ddof=1) / np.sqrt(len(a)))
+    h = float(stats.t.ppf(0.975, len(a) - 1)) * se
+    out.update(margin=h, lo=sm - h, hi=sm + h, standing=standing_label(sm - h, sm + h, om),
+               p=float(stats.ttest_1samp(a, om).pvalue))
+    return out
 
 def site_report_data(ctx, site):
     """All computed pieces for a site's report."""
@@ -719,7 +718,7 @@ def site_report_data(ctx, site):
                 data["scores"].append((lab, float(sv), float(ov)))
     # --- Employee sentiment: the survey's own summary agreement questions (1–5) ------
     #     Each dimension has one summary Likert item (Q8/Q12/Q16/Q19). We surface them
-    #     here with a Welch t-test vs the other in-scope sites (the "statistical thing").
+    #     here with a site mean ± 95% margin and a standing vs the company (10 sites pooled).
     # Q16 (services block) and Q19 (technology block) carry identical wording in the export;
     # they are distinguished here by survey position, per confirmation to relabel by position.
     AGREE_Q = {
@@ -739,8 +738,7 @@ def site_report_data(ctx, site):
         amap = {a["dim"]: a for a in agreement}
         ds = data["dim_summary"]
         ds["agree"] = ds["dimension"].map(lambda dm: amap.get(dm, {}).get("site_mean", np.nan))
-        ds["agree_verdict"] = ds["dimension"].map(lambda dm: amap.get(dm, {}).get("verdict", ""))
-        ds["agree_hex"] = ds["dimension"].map(lambda dm: amap.get(dm, {}).get("hex", "#888"))
+        ds["agree_standing"] = ds["dimension"].map(lambda dm: amap.get(dm, {}).get("standing"))
     # verbatims: top themes -> representative negative quote each; + positives
     seen_ids, seen_texts = set(), set()
     quotes = []
@@ -962,24 +960,24 @@ def build_site_report(ctx, site, data=None):
     # Associate Sentiment section rows (standalone) — the Q8/Q12/Q16/Q19 summary items
     AREA_SHORT2 = {"Work Activity": "Work Activity", "Physical Feature": "Physical space",
                    "Service Level": "Services", "Digital & Tech": "Technology"}
-    sent_rows = ""
-    for a in d.get("agreement", []):
-        sm = a.get("site_mean"); om = a.get("org_mean")
+    def _sent_row(label, q, a, cls=""):
+        sm, om = a.get("site_mean"), a.get("org_mean")
         if pd.isna(sm):
-            continue
-        sent_rows += (f"<tr><td>{_html.escape(AREA_SHORT2.get(a['dim'], a['dim']))}</td>"
-                      f"<td class='q'>{_html.escape(a.get('q',''))}</td>"
-                      f"<td style='font-weight:700'>{sm:.2f}</td>"
-                      f"<td>{'' if pd.isna(om) else f'{om:.2f}'}</td>"
-                      f"<td style='color:{a.get('hex','#888')};font-weight:600'>{a.get('verdict','')}</td></tr>")
+            return ""
+        site_s = (f"{sm:.2f} ± {a['margin']:.2f}" if pd.notna(a.get("margin")) else f"{sm:.2f}")
+        stand = (standing_text(a.get("standing")) if a.get("standing")
+                 else a.get("standing_note", ""))
+        return (f"<tr{cls}><td>{label}</td><td class='q'>{_html.escape(q)}</td>"
+                f"<td style='font-weight:700'>{site_s}</td>"
+                f"<td>{'' if pd.isna(om) else f'{om:.2f}'}</td>"
+                f"<td>{'' if pd.isna(om) else f'{sm - om:+.2f}'}</td>"
+                f"<td style='font-weight:600'>{stand}</td></tr>")
+    sent_rows = "".join(_sent_row(_html.escape(AREA_SHORT2.get(a["dim"], a["dim"])), a.get("q", ""), a)
+                        for a in d.get("agreement", []))
     so = d.get("sentiment_overall")
-    if so and pd.notna(so.get("site_mean")):
-        pstr = f", p={so['p']:.2f}" if pd.notna(so.get("p")) else ""
-        sent_rows += (f"<tr class='ovr'><td><b>Overall</b></td><td class='q'>Average of the four items</td>"
-                      f"<td style='font-weight:800'>{so['site_mean']:.2f}</td>"
-                      f"<td>{so['org_mean']:.2f}</td>"
-                      f"<td style='color:{so['hex']};font-weight:700'>{so['verdict']}{pstr}</td></tr>")
-    sent_rows = sent_rows or "<tr><td colspan='5'>Not one of the 10 in-scope sites.</td></tr>"
+    if so:
+        sent_rows += _sent_row("<b>Overall</b>", "Average of the four items", so, " class='ovr'")
+    sent_rows = sent_rows or "<tr><td colspan='6'>Not one of the 10 in-scope sites.</td></tr>"
     if len(d["detail"]):
         detail_rows = ""
         for dim in d["detail"]["dimension"].drop_duplicates():
@@ -1177,8 +1175,9 @@ rated on the 1–5 agreement level — <span style="color:#2E7D32">■</span> St
 <span style="color:#E0A400">■</span> Moderate (3.5–3.9) · <span style="color:#C0392B">■</span> Needs attention (&lt;3.5).</p>
 <h3>Associate Sentiment Score</h3>
 <p class="lgd">The survey's summary sentiment items — one per dimension (Q8/Q12/Q16/Q19, 1–5; Q16 = Services, Q19 = Technology
-by survey position). “Company” is the other in-scope sites; “vs company” is a Welch t-test (significant at p&lt;0.05).</p>
-<table class="sent"><tr><th>Dimension</th><th>Summary sentiment question</th><th>Site</th><th>Company</th><th>vs company</th></tr>{sent_rows}</table>
+by survey position). Site = mean ± 95% margin. Standing: <b>Above</b> / <b>Below</b> when the company mean lies outside
+the site's 95% interval; otherwise <b>In line</b>. Company = the 10 in-scope sites pooled.</p>
+<table class="sent"><tr><th>Dimension</th><th>Summary sentiment question</th><th>Site</th><th>Company</th><th>Difference</th><th>Standing</th></tr>{sent_rows}</table>
 <h3>Friction &amp; strength themes</h3>
 <div class="charts">{img('gap')}{img('strength')}</div>
 <h3>Open-ended comment themes</h3>
