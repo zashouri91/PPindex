@@ -20,6 +20,8 @@ PPindex/
 ├── llm_backends.py     # shared model backends (Ollama default; hosted providers opt-in)
 ├── llm_tagger.py       # optional model-based comment tagger — OFF unless PULSEPOINT_TAGGER=llm
 ├── deid.py             # the identifying columns dropped from the raw export
+├── waves.py            # survey rounds: data folder, site list, benchmark wording, round 2 site names
+├── combined_report.py  # combined portfolio card (round 1 + round 2 side by side)
 ├── tools/              # deidentify_raw.py, make_gold_sample.py, eval_tagging.py, refresh_plan_evidence.py
 ├── tests/              # pytest — baseline, de-identification guard, card checks, contrast, rules
 ├── data/
@@ -34,8 +36,11 @@ PPindex/
 │   ├── gold/                  # gold_labels.csv (IDs + labels only) and eval_report.md
 │   ├── action_plans/          # stored Operational Action Plans, one JSON per site
 │   ├── emerging_themes.json   # clusters of Unclassified comments
-│   └── meta.json              # filter option lists
+│   ├── item_support.csv       # respondent × item Support (0–100, no text) for like-for-like round comparisons
+│   ├── meta.json              # filter option lists, wave, items not asked
+│   └── round2/                # the same files for Round 2 (30 sites), built with --wave round2
 ├── docs/CHANGES-2026-11.md    # what the November 2026 review pass changed, with before/after
+├── docs/ROUND2-2026-11.md     # Round 2: decisions, data findings, results
 └── samples/                   # example site and portfolio cards (HTML + PDF)
 ```
 
@@ -324,6 +329,23 @@ section and the tab shows a one-line setup hint — nothing breaks.
   re-applied on top as long as `comment_id`s stay stable (same raw file, same row order).
 
 - To load a **new survey export**, de-identify it first, then `python build_data.py data/your_file_deid.xlsx`.
+
+## Survey rounds
+
+Round 1 (10 sites) and Round 2 (30 different sites, same questionnaire) are built and reported
+separately; each site's standing is against its own round's average.
+
+```
+python tools/deidentify_raw.py ~/path/round2_export.xlsx data/round2/raw_deid.xlsx
+python build_data.py --wave round2      # writes data/round2/
+python build_data.py                    # round 1, unchanged
+```
+
+In the app, the sidebar **Survey round** switch selects the round. The Site Reports tab has the
+portfolio card for the selected round and, when both rounds are built, the **combined** card
+(both rounds side by side, compared only on items both rounds asked). Round 2 site cards flag
+sites under 30 responses as "small sample". Round 2 action plans are stored in
+`data/round2/action_plans/`. See `docs/ROUND2-2026-11.md`.
 
 ## Privacy and sharing
 

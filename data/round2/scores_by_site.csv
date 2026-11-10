@@ -1,0 +1,841 @@
+dimension,item,site,n,mean_importance,mean_support,importance_100,support_100,composite,friction,friction_pct,ryg,gap,gap_se,gap_lo,gap_hi,support_se
+Work Activity,Focused individual work that requires concentration and minimal interruption,CA-Costa Mesa,65,4.354,3.015,83.8,50.4,50.4,39.6,65.0,Under Supported,-1.338,0.225,-1.788,-0.889,0.1648
+Work Activity,Focused individual work that requires concentration and minimal interruption,CA-Walnut Creek,37,4.189,3.432,79.7,60.8,60.8,24.3,46.0,Under Supported,-0.757,0.264,-1.292,-0.221,0.2244
+Work Activity,Focused individual work that requires concentration and minimal interruption,CT-Rocky Hill,28,4.0,2.464,75.0,36.6,36.6,39.3,71.0,Under Supported,-1.536,0.2492,-2.047,-1.024,0.2151
+Work Activity,Focused individual work that requires concentration and minimal interruption,CT-Wallingford,205,4.376,3.068,84.4,51.7,51.7,36.5,66.0,Under Supported,-1.307,0.1102,-1.525,-1.09,0.0876
+Work Activity,Focused individual work that requires concentration and minimal interruption,DC-Washington,10,4.1,4.1,77.5,77.5,77.5,15.0,30.0,Target,0.0,0.4944,-1.118,1.118,0.4333
+Work Activity,Focused individual work that requires concentration and minimal interruption,DE-Wilmington,44,4.25,3.318,81.2,58.0,58.0,30.1,52.0,Under Supported,-0.932,0.2629,-1.462,-0.402,0.2176
+Work Activity,Focused individual work that requires concentration and minimal interruption,FL-Lake Mary,117,4.316,3.385,82.9,59.6,59.6,29.7,51.0,Under Supported,-0.932,0.1529,-1.235,-0.629,0.117
+Work Activity,Focused individual work that requires concentration and minimal interruption,GA-Columbus,153,4.431,3.111,85.8,52.8,52.8,36.8,67.0,Under Supported,-1.32,0.1287,-1.575,-1.066,0.1001
+Work Activity,Focused individual work that requires concentration and minimal interruption,IA-Urbandale,18,3.944,3.556,73.6,63.9,63.9,20.8,44.0,Under Supported,-0.389,0.3804,-1.191,0.414,0.2826
+Work Activity,Focused individual work that requires concentration and minimal interruption,IL-Chicago-Bryn Mawr,98,4.204,3.153,80.1,53.8,53.8,30.9,59.0,Under Supported,-1.051,0.1624,-1.373,-0.729,0.1276
+Work Activity,Focused individual work that requires concentration and minimal interruption,KS-Overland Park,12,4.167,3.083,79.2,52.1,52.1,35.4,50.0,Under Supported,-1.083,0.5962,-2.396,0.229,0.4167
+Work Activity,Focused individual work that requires concentration and minimal interruption,KY-Louisville,197,4.162,3.579,79.1,64.5,64.5,23.4,47.0,Under Supported,-0.584,0.1151,-0.811,-0.357,0.0852
+Work Activity,Focused individual work that requires concentration and minimal interruption,LA-Harvey,23,4.217,3.174,80.4,54.3,54.3,29.3,52.0,Under Supported,-1.043,0.3235,-1.714,-0.373,0.2487
+Work Activity,Focused individual work that requires concentration and minimal interruption,MA-Woburn,44,4.045,3.182,76.1,54.5,54.5,27.8,52.0,Under Supported,-0.864,0.2531,-1.374,-0.353,0.1931
+Work Activity,Focused individual work that requires concentration and minimal interruption,MD-Hanover,58,4.19,3.052,79.7,51.3,51.3,32.8,59.0,Under Supported,-1.138,0.2178,-1.574,-0.702,0.1525
+Work Activity,Focused individual work that requires concentration and minimal interruption,MN-Mendota Heights,171,4.257,2.76,81.4,44.0,44.0,41.4,71.0,Under Supported,-1.497,0.1262,-1.746,-1.248,0.0918
+Work Activity,Focused individual work that requires concentration and minimal interruption,MO-St. Louis,165,4.158,3.121,78.9,53.0,53.0,31.8,59.0,Under Supported,-1.036,0.1295,-1.292,-0.781,0.0994
+Work Activity,Focused individual work that requires concentration and minimal interruption,NC-Durham,55,4.255,3.055,81.4,51.4,51.4,35.5,56.0,Under Supported,-1.2,0.2426,-1.686,-0.714,0.1806
+Work Activity,Focused individual work that requires concentration and minimal interruption,NC-Winston-Salem,24,4.208,2.792,80.2,44.8,44.8,39.6,62.0,Under Supported,-1.417,0.3755,-2.193,-0.64,0.2757
+Work Activity,Focused individual work that requires concentration and minimal interruption,NH-Manchester,85,4.4,3.047,85.0,51.2,51.2,36.2,71.0,Under Supported,-1.353,0.1594,-1.67,-1.036,0.1295
+Work Activity,Focused individual work that requires concentration and minimal interruption,NJ-Iselin,79,4.203,3.278,80.1,57.0,57.0,27.8,54.0,Under Supported,-0.924,0.1707,-1.264,-0.584,0.1429
+Work Activity,Focused individual work that requires concentration and minimal interruption,NV-Las Vegas-Maryland Pkwy,41,4.488,3.073,87.2,51.8,51.8,38.4,71.0,Under Supported,-1.415,0.2659,-1.952,-0.877,0.2018
+Work Activity,Focused individual work that requires concentration and minimal interruption,NV-Las Vegas-Russell,52,4.135,3.115,78.4,52.9,52.9,30.8,58.0,Under Supported,-1.019,0.2136,-1.448,-0.59,0.1685
+Work Activity,Focused individual work that requires concentration and minimal interruption,NY-Lake Success,48,4.312,3.042,82.8,51.0,51.0,34.4,60.0,Under Supported,-1.271,0.2223,-1.718,-0.824,0.176
+Work Activity,Focused individual work that requires concentration and minimal interruption,NY-Latham,195,4.262,2.61,81.5,40.3,40.3,45.4,76.0,Under Supported,-1.651,0.1234,-1.895,-1.408,0.0897
+Work Activity,Focused individual work that requires concentration and minimal interruption,PA-Seven Fields,8,4.375,3.25,84.4,56.2,56.2,37.5,62.0,Under Supported,-1.125,0.7662,-2.937,0.687,0.5261
+Work Activity,Focused individual work that requires concentration and minimal interruption,TN-Nashville,64,4.469,3.047,86.7,51.2,51.2,39.1,66.0,Under Supported,-1.422,0.2134,-1.848,-0.995,0.1702
+Work Activity,Focused individual work that requires concentration and minimal interruption,VA-Ashburn,42,4.262,3.214,81.5,55.4,55.4,31.0,55.0,Under Supported,-1.048,0.2409,-1.534,-0.561,0.1974
+Work Activity,Focused individual work that requires concentration and minimal interruption,WA-Seattle,20,4.2,2.95,80.0,48.8,48.8,37.5,60.0,Under Supported,-1.25,0.4222,-2.134,-0.366,0.3118
+Work Activity,Focused individual work that requires concentration and minimal interruption,WI-Waukesha,130,4.254,3.062,81.3,51.5,51.5,35.2,62.0,Under Supported,-1.192,0.1514,-1.492,-0.893,0.1149
+Work Activity,Tasks requiring discretion,CA-Costa Mesa,65,3.892,3.169,72.3,54.2,54.2,26.9,51.0,Under Supported,-0.723,0.2187,-1.16,-0.286,0.162
+Work Activity,Tasks requiring discretion,CA-Walnut Creek,37,3.973,3.351,74.3,58.8,58.8,26.4,51.0,Under Supported,-0.622,0.3035,-1.237,-0.006,0.2233
+Work Activity,Tasks requiring discretion,CT-Rocky Hill,28,3.571,2.571,64.3,39.3,39.3,26.8,61.0,Under Supported,-1.0,0.2182,-1.448,-0.552,0.1885
+Work Activity,Tasks requiring discretion,CT-Wallingford,205,3.8,3.117,70.0,52.9,52.9,27.2,52.0,Under Supported,-0.683,0.1239,-0.927,-0.439,0.086
+Work Activity,Tasks requiring discretion,DC-Washington,10,3.7,4.2,67.5,80.0,80.0,10.0,20.0,Target,0.5,0.5217,-0.68,1.68,0.2906
+Work Activity,Tasks requiring discretion,DE-Wilmington,44,3.568,3.295,64.2,57.4,57.4,21.0,41.0,Under Supported,-0.273,0.2804,-0.838,0.293,0.2146
+Work Activity,Tasks requiring discretion,FL-Lake Mary,117,4.145,3.402,78.6,60.0,60.0,26.7,49.0,Under Supported,-0.744,0.1602,-1.061,-0.426,0.1158
+Work Activity,Tasks requiring discretion,GA-Columbus,153,4.046,3.183,76.1,54.6,54.6,28.8,54.0,Under Supported,-0.863,0.1341,-1.128,-0.598,0.097
+Work Activity,Tasks requiring discretion,IA-Urbandale,18,3.889,3.778,72.2,69.4,69.4,18.1,33.0,Under Supported,-0.111,0.4113,-0.979,0.757,0.2865
+Work Activity,Tasks requiring discretion,IL-Chicago-Bryn Mawr,98,3.847,3.235,71.2,55.9,55.9,25.0,47.0,Under Supported,-0.612,0.1756,-0.961,-0.264,0.1212
+Work Activity,Tasks requiring discretion,KS-Overland Park,12,3.833,3.25,70.8,56.2,56.2,27.1,42.0,Under Supported,-0.583,0.6332,-1.977,0.81,0.4286
+Work Activity,Tasks requiring discretion,KY-Louisville,197,3.792,3.431,69.8,60.8,60.8,21.6,44.0,Under Supported,-0.36,0.1229,-0.603,-0.118,0.0867
+Work Activity,Tasks requiring discretion,LA-Harvey,23,4.0,3.217,75.0,55.4,55.4,26.1,52.0,Under Supported,-0.783,0.3264,-1.46,-0.106,0.2737
+Work Activity,Tasks requiring discretion,MA-Woburn,44,3.432,3.182,60.8,54.5,54.5,16.5,30.0,Under Supported,-0.25,0.2414,-0.737,0.237,0.1958
+Work Activity,Tasks requiring discretion,MD-Hanover,58,3.569,2.948,64.2,48.7,48.7,25.9,50.0,Under Supported,-0.621,0.2305,-1.082,-0.159,0.1505
+Work Activity,Tasks requiring discretion,MN-Mendota Heights,171,3.643,2.673,66.1,41.8,41.8,32.2,56.0,Under Supported,-0.971,0.1367,-1.241,-0.701,0.0865
+Work Activity,Tasks requiring discretion,MO-St. Louis,165,3.697,3.194,67.4,54.8,54.8,23.8,45.0,Under Supported,-0.503,0.1383,-0.776,-0.23,0.0991
+Work Activity,Tasks requiring discretion,NC-Durham,55,3.818,3.073,70.5,51.8,51.8,26.8,51.0,Under Supported,-0.745,0.2367,-1.22,-0.271,0.1699
+Work Activity,Tasks requiring discretion,NC-Winston-Salem,24,3.958,2.417,74.0,35.4,35.4,41.7,67.0,Under Supported,-1.542,0.356,-2.278,-0.805,0.2401
+Work Activity,Tasks requiring discretion,NH-Manchester,85,3.871,3.118,71.8,52.9,52.9,27.1,56.0,Under Supported,-0.753,0.1778,-1.107,-0.399,0.129
+Work Activity,Tasks requiring discretion,NJ-Iselin,79,3.785,3.354,69.6,58.9,58.9,21.2,39.0,Under Supported,-0.43,0.187,-0.803,-0.058,0.1287
+Work Activity,Tasks requiring discretion,NV-Las Vegas-Maryland Pkwy,41,4.341,3.171,83.5,54.3,54.3,35.4,61.0,Under Supported,-1.171,0.2878,-1.752,-0.589,0.2003
+Work Activity,Tasks requiring discretion,NV-Las Vegas-Russell,52,4.038,3.173,76.0,54.3,54.3,29.8,54.0,Under Supported,-0.865,0.2363,-1.34,-0.391,0.1641
+Work Activity,Tasks requiring discretion,NY-Lake Success,48,4.104,3.167,77.6,54.2,54.2,27.6,56.0,Under Supported,-0.938,0.2072,-1.354,-0.521,0.1585
+Work Activity,Tasks requiring discretion,NY-Latham,195,3.759,2.728,69.0,43.2,43.2,34.5,59.0,Under Supported,-1.031,0.1358,-1.299,-0.763,0.0906
+Work Activity,Tasks requiring discretion,PA-Seven Fields,8,4.0,3.25,75.0,56.2,56.2,34.4,50.0,Under Supported,-0.75,0.8399,-2.736,1.236,0.5901
+Work Activity,Tasks requiring discretion,TN-Nashville,64,4.359,3.094,84.0,52.3,52.3,35.2,64.0,Under Supported,-1.266,0.197,-1.659,-0.872,0.1602
+Work Activity,Tasks requiring discretion,VA-Ashburn,42,4.119,3.214,78.0,55.4,55.4,28.6,57.0,Under Supported,-0.905,0.2332,-1.376,-0.434,0.1974
+Work Activity,Tasks requiring discretion,WA-Seattle,20,4.05,3.0,76.2,50.0,50.0,32.5,55.0,Under Supported,-1.05,0.4197,-1.929,-0.171,0.2991
+Work Activity,Tasks requiring discretion,WI-Waukesha,130,3.892,3.062,72.3,51.5,51.5,29.6,52.0,Under Supported,-0.831,0.1606,-1.148,-0.513,0.1149
+Work Activity,Planned in-person meetings at a PulsePoint,CA-Costa Mesa,65,1.738,3.262,18.5,56.5,56.5,0.4,2.0,Over Supported,1.523,0.1742,1.175,1.871,0.1772
+Work Activity,Planned in-person meetings at a PulsePoint,CA-Walnut Creek,37,1.865,2.838,21.6,45.9,45.9,3.4,11.0,Target,0.973,0.2341,0.498,1.448,0.2585
+Work Activity,Planned in-person meetings at a PulsePoint,CT-Rocky Hill,28,1.893,3.357,22.3,58.9,58.9,0.9,4.0,Target,1.464,0.2384,0.975,1.953,0.2683
+Work Activity,Planned in-person meetings at a PulsePoint,CT-Wallingford,205,1.615,3.385,15.4,59.6,59.6,1.2,4.0,Over Supported,1.771,0.091,1.591,1.95,0.0842
+Work Activity,Planned in-person meetings at a PulsePoint,DC-Washington,10,2.9,4.4,47.5,85.0,85.0,2.5,10.0,Over Supported,1.5,0.4534,0.474,2.526,0.4
+Work Activity,Planned in-person meetings at a PulsePoint,DE-Wilmington,44,1.568,2.841,14.2,46.0,46.0,2.8,5.0,Target,1.273,0.2526,0.763,1.782,0.2453
+Work Activity,Planned in-person meetings at a PulsePoint,FL-Lake Mary,117,2.162,3.778,29.1,69.4,69.4,1.7,4.0,Over Supported,1.615,0.1389,1.34,1.89,0.1113
+Work Activity,Planned in-person meetings at a PulsePoint,GA-Columbus,153,1.974,3.49,24.3,62.3,62.3,1.0,3.0,Over Supported,1.516,0.105,1.309,1.724,0.1066
+Work Activity,Planned in-person meetings at a PulsePoint,IA-Urbandale,18,2.056,3.778,26.4,69.4,69.4,0.0,0.0,Over Supported,1.722,0.2778,1.136,2.308,0.3189
+Work Activity,Planned in-person meetings at a PulsePoint,IL-Chicago-Bryn Mawr,98,1.99,3.52,24.7,63.0,63.0,0.5,2.0,Over Supported,1.531,0.1355,1.262,1.799,0.1323
+Work Activity,Planned in-person meetings at a PulsePoint,KS-Overland Park,12,2.417,3.417,35.4,60.4,60.4,0.0,0.0,Target,1.0,0.3693,0.187,1.813,0.4167
+Work Activity,Planned in-person meetings at a PulsePoint,KY-Louisville,197,1.883,3.548,22.1,63.7,63.7,0.9,3.0,Over Supported,1.665,0.0899,1.488,1.842,0.0865
+Work Activity,Planned in-person meetings at a PulsePoint,LA-Harvey,23,2.13,3.565,28.3,64.1,64.1,1.1,4.0,Target,1.435,0.2937,0.826,2.044,0.2654
+Work Activity,Planned in-person meetings at a PulsePoint,MA-Woburn,44,1.636,3.25,15.9,56.2,56.2,2.3,5.0,Over Supported,1.614,0.2281,1.154,2.074,0.1981
+Work Activity,Planned in-person meetings at a PulsePoint,MD-Hanover,58,1.569,3.224,14.2,55.6,55.6,0.9,2.0,Over Supported,1.655,0.1714,1.312,1.998,0.1651
+Work Activity,Planned in-person meetings at a PulsePoint,MN-Mendota Heights,171,1.561,3.468,14.0,61.7,61.7,0.4,2.0,Over Supported,1.906,0.0943,1.72,2.093,0.0891
+Work Activity,Planned in-person meetings at a PulsePoint,MO-St. Louis,165,1.703,3.37,17.6,59.2,59.2,1.4,2.0,Over Supported,1.667,0.1158,1.438,1.895,0.1105
+Work Activity,Planned in-person meetings at a PulsePoint,NC-Durham,55,1.582,3.291,14.5,57.3,57.3,2.3,9.0,Over Supported,1.709,0.1954,1.317,2.101,0.1655
+Work Activity,Planned in-person meetings at a PulsePoint,NC-Winston-Salem,24,1.542,2.542,13.5,38.5,38.5,1.0,4.0,Target,1.0,0.2085,0.569,1.431,0.2406
+Work Activity,Planned in-person meetings at a PulsePoint,NH-Manchester,85,1.847,3.235,21.2,55.9,55.9,2.6,6.0,Target,1.388,0.1632,1.064,1.713,0.1465
+Work Activity,Planned in-person meetings at a PulsePoint,NJ-Iselin,79,1.899,3.392,22.5,59.8,59.8,1.6,5.0,Target,1.494,0.166,1.163,1.824,0.1595
+Work Activity,Planned in-person meetings at a PulsePoint,NV-Las Vegas-Maryland Pkwy,41,2.049,3.341,26.2,58.5,58.5,3.0,7.0,Target,1.293,0.2215,0.845,1.74,0.2113
+Work Activity,Planned in-person meetings at a PulsePoint,NV-Las Vegas-Russell,52,1.942,3.346,23.6,58.7,58.7,1.0,4.0,Target,1.404,0.1827,1.037,1.771,0.192
+Work Activity,Planned in-person meetings at a PulsePoint,NY-Lake Success,48,1.938,2.938,23.4,48.4,48.4,3.6,12.0,Target,1.0,0.193,0.612,1.388,0.2006
+Work Activity,Planned in-person meetings at a PulsePoint,NY-Latham,195,1.656,3.303,16.4,57.6,57.6,2.1,4.0,Over Supported,1.646,0.1039,1.441,1.851,0.0895
+Work Activity,Planned in-person meetings at a PulsePoint,PA-Seven Fields,8,1.75,3.625,18.8,65.6,65.6,3.1,12.0,Over Supported,1.875,0.6105,0.431,3.319,0.4605
+Work Activity,Planned in-person meetings at a PulsePoint,TN-Nashville,64,1.719,3.234,18.0,55.9,55.9,2.3,3.0,Over Supported,1.516,0.1942,1.128,1.904,0.182
+Work Activity,Planned in-person meetings at a PulsePoint,VA-Ashburn,42,2.143,3.548,28.6,63.7,63.7,4.2,7.0,Target,1.405,0.2387,0.923,1.887,0.1904
+Work Activity,Planned in-person meetings at a PulsePoint,WA-Seattle,20,1.85,3.15,21.2,53.8,53.8,3.8,5.0,Target,1.3,0.3914,0.481,2.119,0.3647
+Work Activity,Planned in-person meetings at a PulsePoint,WI-Waukesha,130,1.654,3.408,16.3,60.2,60.2,0.4,2.0,Over Supported,1.754,0.1119,1.532,1.975,0.1205
+Work Activity,Informal or spontaneous collaboration with colleagues,CA-Costa Mesa,65,2.446,3.062,36.2,51.5,51.5,9.6,20.0,Target,0.615,0.2156,0.185,1.046,0.1711
+Work Activity,Informal or spontaneous collaboration with colleagues,CA-Walnut Creek,37,2.514,2.595,37.8,39.9,39.9,14.2,27.0,Target,0.081,0.275,-0.477,0.639,0.2434
+Work Activity,Informal or spontaneous collaboration with colleagues,CT-Rocky Hill,28,2.321,2.786,33.0,44.6,44.6,7.1,18.0,Target,0.464,0.2439,-0.036,0.965,0.2486
+Work Activity,Informal or spontaneous collaboration with colleagues,CT-Wallingford,205,2.249,3.156,31.2,53.9,53.9,7.3,16.0,Target,0.907,0.1158,0.679,1.136,0.0862
+Work Activity,Informal or spontaneous collaboration with colleagues,DC-Washington,10,3.5,4.4,62.5,85.0,85.0,0.0,0.0,Target,0.9,0.348,0.113,1.687,0.2667
+Work Activity,Informal or spontaneous collaboration with colleagues,DE-Wilmington,44,2.545,2.659,38.6,41.5,41.5,15.3,27.0,Target,0.114,0.2912,-0.474,0.701,0.2388
+Work Activity,Informal or spontaneous collaboration with colleagues,FL-Lake Mary,117,2.838,3.53,45.9,63.2,63.2,6.2,15.0,Target,0.692,0.1413,0.412,0.972,0.1136
+Work Activity,Informal or spontaneous collaboration with colleagues,GA-Columbus,153,2.536,3.327,38.4,58.2,58.2,5.7,12.0,Target,0.791,0.1157,0.562,1.019,0.0994
+Work Activity,Informal or spontaneous collaboration with colleagues,IA-Urbandale,18,2.778,3.5,44.4,62.5,62.5,11.1,17.0,Target,0.722,0.4186,-0.161,1.605,0.3454
+Work Activity,Informal or spontaneous collaboration with colleagues,IL-Chicago-Bryn Mawr,98,2.531,3.122,38.3,53.1,53.1,8.9,19.0,Target,0.592,0.1594,0.275,0.908,0.1347
+Work Activity,Informal or spontaneous collaboration with colleagues,KS-Overland Park,12,2.833,3.25,45.8,56.2,56.2,10.4,25.0,Target,0.417,0.5143,-0.715,1.549,0.4286
+Work Activity,Informal or spontaneous collaboration with colleagues,KY-Louisville,197,2.442,3.234,36.0,55.8,55.8,8.0,17.0,Target,0.792,0.1143,0.566,1.017,0.0935
+Work Activity,Informal or spontaneous collaboration with colleagues,LA-Harvey,23,3.043,3.609,51.1,65.2,65.2,5.4,22.0,Target,0.565,0.2728,-0.001,1.131,0.233
+Work Activity,Informal or spontaneous collaboration with colleagues,MA-Woburn,44,2.318,2.932,33.0,48.3,48.3,8.0,11.0,Target,0.614,0.2666,0.076,1.151,0.1962
+Work Activity,Informal or spontaneous collaboration with colleagues,MD-Hanover,58,2.276,2.776,31.9,44.4,44.4,6.5,16.0,Target,0.5,0.1795,0.141,0.859,0.1614
+Work Activity,Informal or spontaneous collaboration with colleagues,MN-Mendota Heights,171,2.076,3.012,26.9,50.3,50.3,5.4,12.0,Target,0.936,0.1126,0.713,1.158,0.0924
+Work Activity,Informal or spontaneous collaboration with colleagues,MO-St. Louis,165,2.158,3.048,28.9,51.2,51.2,7.0,15.0,Target,0.891,0.1243,0.645,1.136,0.1063
+Work Activity,Informal or spontaneous collaboration with colleagues,NC-Durham,55,2.418,2.964,35.5,49.1,49.1,12.7,27.0,Target,0.545,0.25,0.044,1.047,0.1701
+Work Activity,Informal or spontaneous collaboration with colleagues,NC-Winston-Salem,24,1.917,2.333,22.9,33.3,33.3,7.3,12.0,Target,0.417,0.3005,-0.205,1.038,0.253
+Work Activity,Informal or spontaneous collaboration with colleagues,NH-Manchester,85,2.353,2.929,33.8,48.2,48.2,6.2,15.0,Target,0.576,0.1582,0.262,0.891,0.1486
+Work Activity,Informal or spontaneous collaboration with colleagues,NJ-Iselin,79,2.557,3.19,38.9,54.7,54.7,8.5,15.0,Target,0.633,0.1891,0.256,1.009,0.1519
+Work Activity,Informal or spontaneous collaboration with colleagues,NV-Las Vegas-Maryland Pkwy,41,2.268,3.122,31.7,53.0,53.0,2.4,7.0,Target,0.854,0.1931,0.463,1.244,0.213
+Work Activity,Informal or spontaneous collaboration with colleagues,NV-Las Vegas-Russell,52,2.731,3.154,43.3,53.8,53.8,6.7,15.0,Target,0.423,0.189,0.044,0.802,0.185
+Work Activity,Informal or spontaneous collaboration with colleagues,NY-Lake Success,48,2.562,3.083,39.1,52.1,52.1,9.4,19.0,Target,0.521,0.2248,0.069,0.973,0.1903
+Work Activity,Informal or spontaneous collaboration with colleagues,NY-Latham,195,2.39,3.097,34.7,52.4,52.4,8.2,19.0,Target,0.708,0.1191,0.473,0.943,0.0918
+Work Activity,Informal or spontaneous collaboration with colleagues,PA-Seven Fields,8,2.375,3.25,34.4,56.2,56.2,15.6,25.0,Target,0.875,0.875,-1.194,2.944,0.6196
+Work Activity,Informal or spontaneous collaboration with colleagues,TN-Nashville,64,2.281,2.922,32.0,48.0,48.0,8.2,19.0,Target,0.641,0.2009,0.239,1.042,0.1671
+Work Activity,Informal or spontaneous collaboration with colleagues,VA-Ashburn,42,2.738,3.143,43.5,53.6,53.6,10.7,24.0,Target,0.405,0.2411,-0.082,0.892,0.2089
+Work Activity,Informal or spontaneous collaboration with colleagues,WA-Seattle,20,2.7,3.0,42.5,50.0,50.0,13.8,20.0,Target,0.3,0.4236,-0.587,1.187,0.3325
+Work Activity,Informal or spontaneous collaboration with colleagues,WI-Waukesha,130,2.423,3.162,35.6,54.0,54.0,7.3,16.0,Target,0.738,0.1344,0.472,1.004,0.1144
+Work Activity,Working with others on shared tasks or problem-solving,CA-Costa Mesa,65,2.877,2.954,46.9,48.8,48.8,18.5,34.0,Target,0.077,0.2425,-0.408,0.561,0.1801
+Work Activity,Working with others on shared tasks or problem-solving,CA-Walnut Creek,37,2.892,2.649,47.3,41.2,41.2,24.3,46.0,Under Supported,-0.243,0.3228,-0.898,0.411,0.2488
+Work Activity,Working with others on shared tasks or problem-solving,CT-Rocky Hill,28,2.964,2.786,49.1,44.6,44.6,16.1,36.0,Under Supported,-0.179,0.2957,-0.785,0.428,0.2321
+Work Activity,Working with others on shared tasks or problem-solving,CT-Wallingford,205,2.527,3.185,38.2,54.6,54.6,10.0,22.0,Target,0.659,0.1222,0.418,0.899,0.0845
+Work Activity,Working with others on shared tasks or problem-solving,DC-Washington,10,3.1,4.4,52.5,85.0,85.0,0.0,0.0,Target,1.3,0.3,0.621,1.979,0.2667
+Work Activity,Working with others on shared tasks or problem-solving,DE-Wilmington,44,3.091,2.659,52.3,41.5,41.5,24.4,41.0,Under Supported,-0.432,0.2897,-1.016,0.152,0.2321
+Work Activity,Working with others on shared tasks or problem-solving,FL-Lake Mary,117,3.077,3.581,51.9,64.5,64.5,8.5,20.0,Target,0.504,0.1455,0.216,0.792,0.1134
+Work Activity,Working with others on shared tasks or problem-solving,GA-Columbus,153,2.876,3.255,46.9,56.4,56.4,10.5,22.0,Target,0.379,0.1308,0.121,0.638,0.1091
+Work Activity,Working with others on shared tasks or problem-solving,IA-Urbandale,18,2.889,3.222,47.2,55.6,55.6,13.9,22.0,Target,0.333,0.4428,-0.601,1.268,0.3665
+Work Activity,Working with others on shared tasks or problem-solving,IL-Chicago-Bryn Mawr,98,3.071,3.082,51.8,52.0,52.0,16.1,34.0,Target,0.01,0.1713,-0.33,0.35,0.1311
+Work Activity,Working with others on shared tasks or problem-solving,KS-Overland Park,12,3.333,3.083,58.3,52.1,52.1,16.7,50.0,Under Supported,-0.25,0.4286,-1.193,0.693,0.3981
+Work Activity,Working with others on shared tasks or problem-solving,KY-Louisville,197,2.726,3.193,43.1,54.8,54.8,11.0,25.0,Target,0.467,0.1188,0.233,0.701,0.0942
+Work Activity,Working with others on shared tasks or problem-solving,LA-Harvey,23,3.0,3.652,50.0,66.3,66.3,5.4,22.0,Target,0.652,0.2712,0.09,1.215,0.2232
+Work Activity,Working with others on shared tasks or problem-solving,MA-Woburn,44,2.727,3.068,43.2,51.7,51.7,11.4,20.0,Target,0.341,0.2719,-0.207,0.889,0.2015
+Work Activity,Working with others on shared tasks or problem-solving,MD-Hanover,58,2.724,2.81,43.1,45.3,45.3,12.5,26.0,Target,0.086,0.1987,-0.312,0.484,0.1658
+Work Activity,Working with others on shared tasks or problem-solving,MN-Mendota Heights,171,2.556,2.971,38.9,49.3,49.3,9.8,22.0,Target,0.415,0.1213,0.176,0.655,0.0914
+Work Activity,Working with others on shared tasks or problem-solving,MO-St. Louis,165,2.642,2.939,41.1,48.5,48.5,14.4,27.0,Target,0.297,0.1452,0.01,0.584,0.109
+Work Activity,Working with others on shared tasks or problem-solving,NC-Durham,55,2.764,2.873,44.1,46.8,46.8,17.3,29.0,Target,0.109,0.2668,-0.426,0.644,0.1761
+Work Activity,Working with others on shared tasks or problem-solving,NC-Winston-Salem,24,2.25,2.458,31.2,36.5,36.5,12.5,25.0,Target,0.208,0.335,-0.485,0.901,0.2552
+Work Activity,Working with others on shared tasks or problem-solving,NH-Manchester,85,2.541,3.047,38.5,51.2,51.2,9.7,18.0,Target,0.506,0.1846,0.139,0.873,0.1389
+Work Activity,Working with others on shared tasks or problem-solving,NJ-Iselin,79,2.911,3.139,47.8,53.5,53.5,11.4,24.0,Target,0.228,0.1792,-0.129,0.585,0.1404
+Work Activity,Working with others on shared tasks or problem-solving,NV-Las Vegas-Maryland Pkwy,41,2.756,3.171,43.9,54.3,54.3,9.1,24.0,Target,0.415,0.2393,-0.069,0.898,0.215
+Work Activity,Working with others on shared tasks or problem-solving,NV-Las Vegas-Russell,52,2.981,3.058,49.5,51.4,51.4,13.0,29.0,Target,0.077,0.2089,-0.342,0.496,0.2044
+Work Activity,Working with others on shared tasks or problem-solving,NY-Lake Success,48,2.958,2.896,49.0,47.4,47.4,14.1,27.0,Under Supported,-0.062,0.2196,-0.504,0.379,0.1958
+Work Activity,Working with others on shared tasks or problem-solving,NY-Latham,195,2.733,3.092,43.3,52.3,52.3,11.0,25.0,Target,0.359,0.1194,0.124,0.594,0.09
+Work Activity,Working with others on shared tasks or problem-solving,PA-Seven Fields,8,2.875,3.375,46.9,59.4,59.4,12.5,38.0,Target,0.5,0.7071,-1.172,2.172,0.4978
+Work Activity,Working with others on shared tasks or problem-solving,TN-Nashville,64,2.594,2.812,39.8,45.3,45.3,14.1,28.0,Target,0.219,0.2255,-0.232,0.669,0.1821
+Work Activity,Working with others on shared tasks or problem-solving,VA-Ashburn,42,3.071,3.167,51.8,54.2,54.2,13.1,26.0,Target,0.095,0.2356,-0.381,0.571,0.2042
+Work Activity,Working with others on shared tasks or problem-solving,WA-Seattle,20,3.1,2.95,52.5,48.8,48.8,17.5,35.0,Under Supported,-0.15,0.3858,-0.957,0.657,0.3033
+Work Activity,Working with others on shared tasks or problem-solving,WI-Waukesha,130,2.808,3.185,45.2,54.6,54.6,12.7,24.0,Target,0.377,0.1545,0.071,0.683,0.1129
+Work Activity,Virtual collaboration with remote or hybrid colleagues,CA-Costa Mesa,65,3.938,3.385,73.5,59.6,59.6,23.5,48.0,Under Supported,-0.554,0.2126,-0.979,-0.129,0.1498
+Work Activity,Virtual collaboration with remote or hybrid colleagues,CA-Walnut Creek,37,4.297,3.378,82.4,59.5,59.5,29.7,46.0,Under Supported,-0.919,0.3133,-1.554,-0.283,0.2368
+Work Activity,Virtual collaboration with remote or hybrid colleagues,CT-Rocky Hill,28,4.0,2.857,75.0,46.4,46.4,33.9,64.0,Under Supported,-1.143,0.3159,-1.791,-0.495,0.2608
+Work Activity,Virtual collaboration with remote or hybrid colleagues,CT-Wallingford,205,4.068,3.483,76.7,62.1,62.1,23.4,47.0,Under Supported,-0.585,0.1132,-0.809,-0.362,0.0868
+Work Activity,Virtual collaboration with remote or hybrid colleagues,DC-Washington,10,4.0,4.5,75.0,87.5,87.5,2.5,10.0,Target,0.5,0.3073,-0.195,1.195,0.2236
+Work Activity,Virtual collaboration with remote or hybrid colleagues,DE-Wilmington,44,4.182,3.159,79.5,54.0,54.0,30.7,52.0,Under Supported,-1.023,0.2529,-1.533,-0.513,0.2251
+Work Activity,Virtual collaboration with remote or hybrid colleagues,FL-Lake Mary,117,3.855,3.667,71.4,66.7,66.7,15.4,32.0,Under Supported,-0.188,0.1441,-0.473,0.097,0.1171
+Work Activity,Virtual collaboration with remote or hybrid colleagues,GA-Columbus,153,3.954,3.614,73.9,65.4,65.4,17.8,39.0,Under Supported,-0.34,0.1188,-0.575,-0.105,0.1029
+Work Activity,Virtual collaboration with remote or hybrid colleagues,IA-Urbandale,18,4.278,3.778,81.9,69.4,69.4,22.2,44.0,Under Supported,-0.5,0.3898,-1.322,0.322,0.2865
+Work Activity,Virtual collaboration with remote or hybrid colleagues,IL-Chicago-Bryn Mawr,98,4.153,3.52,78.8,63.0,63.0,23.0,45.0,Under Supported,-0.633,0.1598,-0.95,-0.315,0.1258
+Work Activity,Virtual collaboration with remote or hybrid colleagues,KS-Overland Park,12,4.0,3.083,75.0,52.1,52.1,29.2,50.0,Under Supported,-0.917,0.4994,-2.016,0.182,0.3981
+Work Activity,Virtual collaboration with remote or hybrid colleagues,KY-Louisville,197,3.848,3.376,71.2,59.4,59.4,23.5,47.0,Under Supported,-0.472,0.1266,-0.722,-0.222,0.0876
+Work Activity,Virtual collaboration with remote or hybrid colleagues,LA-Harvey,23,3.565,3.696,64.1,67.4,67.4,6.5,22.0,Target,0.13,0.2018,-0.288,0.549,0.2625
+Work Activity,Virtual collaboration with remote or hybrid colleagues,MA-Woburn,44,3.727,3.5,68.2,62.5,62.5,19.9,41.0,Under Supported,-0.227,0.2813,-0.795,0.34,0.1937
+Work Activity,Virtual collaboration with remote or hybrid colleagues,MD-Hanover,58,4.069,3.328,76.7,58.2,58.2,26.7,48.0,Under Supported,-0.741,0.2248,-1.192,-0.291,0.1711
+Work Activity,Virtual collaboration with remote or hybrid colleagues,MN-Mendota Heights,171,4.041,3.199,76.0,55.0,55.0,29.4,54.0,Under Supported,-0.842,0.1328,-1.104,-0.58,0.0959
+Work Activity,Virtual collaboration with remote or hybrid colleagues,MO-St. Louis,165,3.976,3.455,74.4,61.4,61.4,22.1,44.0,Under Supported,-0.521,0.1262,-0.77,-0.272,0.0967
+Work Activity,Virtual collaboration with remote or hybrid colleagues,NC-Durham,55,4.073,3.455,76.8,61.4,61.4,25.0,49.0,Under Supported,-0.618,0.2299,-1.079,-0.157,0.1617
+Work Activity,Virtual collaboration with remote or hybrid colleagues,NC-Winston-Salem,24,4.042,3.0,76.0,50.0,50.0,32.3,58.0,Under Supported,-1.042,0.3734,-1.814,-0.269,0.3069
+Work Activity,Virtual collaboration with remote or hybrid colleagues,NH-Manchester,85,3.976,3.341,74.4,58.5,58.5,23.2,46.0,Under Supported,-0.635,0.1706,-0.974,-0.296,0.1324
+Work Activity,Virtual collaboration with remote or hybrid colleagues,NJ-Iselin,79,4.215,3.519,80.4,63.0,63.0,22.2,47.0,Under Supported,-0.696,0.1595,-1.014,-0.379,0.1382
+Work Activity,Virtual collaboration with remote or hybrid colleagues,NV-Las Vegas-Maryland Pkwy,41,3.951,3.634,73.8,65.9,65.9,17.1,34.0,Under Supported,-0.317,0.248,-0.818,0.184,0.1968
+Work Activity,Virtual collaboration with remote or hybrid colleagues,NV-Las Vegas-Russell,52,4.0,3.519,75.0,63.0,63.0,19.2,46.0,Under Supported,-0.481,0.1951,-0.873,-0.089,0.1636
+Work Activity,Virtual collaboration with remote or hybrid colleagues,NY-Lake Success,48,4.0,3.312,75.0,57.8,57.8,21.9,48.0,Under Supported,-0.688,0.1933,-1.076,-0.299,0.1765
+Work Activity,Virtual collaboration with remote or hybrid colleagues,NY-Latham,195,3.897,3.185,72.4,54.6,54.6,27.3,48.0,Under Supported,-0.713,0.1313,-0.972,-0.454,0.089
+Work Activity,Virtual collaboration with remote or hybrid colleagues,PA-Seven Fields,8,4.25,3.125,81.2,53.1,53.1,43.8,75.0,Under Supported,-1.125,0.9149,-3.288,1.038,0.5489
+Work Activity,Virtual collaboration with remote or hybrid colleagues,TN-Nashville,64,4.297,3.281,82.4,57.0,57.0,32.0,55.0,Under Supported,-1.016,0.2277,-1.471,-0.561,0.1816
+Work Activity,Virtual collaboration with remote or hybrid colleagues,VA-Ashburn,42,4.095,3.786,77.4,69.6,69.6,19.6,38.0,Under Supported,-0.31,0.2606,-0.836,0.217,0.1821
+Work Activity,Virtual collaboration with remote or hybrid colleagues,WA-Seattle,20,4.25,3.3,81.2,57.5,57.5,33.8,45.0,Under Supported,-0.95,0.4728,-1.94,0.04,0.3561
+Work Activity,Virtual collaboration with remote or hybrid colleagues,WI-Waukesha,130,4.154,3.4,78.8,60.0,60.0,24.6,53.0,Under Supported,-0.754,0.1306,-1.012,-0.495,0.1039
+Work Activity,"Learning, training, or skill development",CA-Costa Mesa,65,3.077,3.077,51.9,51.9,51.9,14.6,28.0,Target,0.0,0.2033,-0.406,0.406,0.1674
+Work Activity,"Learning, training, or skill development",CA-Walnut Creek,37,3.27,3.027,56.8,50.7,50.7,14.2,30.0,Under Supported,-0.243,0.2137,-0.677,0.19,0.2341
+Work Activity,"Learning, training, or skill development",CT-Rocky Hill,28,2.857,2.607,46.4,40.2,40.2,17.0,43.0,Under Supported,-0.25,0.2552,-0.774,0.274,0.2376
+Work Activity,"Learning, training, or skill development",CT-Wallingford,205,2.966,3.376,49.1,59.4,59.4,11.1,26.0,Target,0.41,0.1125,0.188,0.632,0.0856
+Work Activity,"Learning, training, or skill development",DC-Washington,10,3.5,4.0,62.5,75.0,75.0,10.0,20.0,Target,0.5,0.4773,-0.58,1.58,0.3944
+Work Activity,"Learning, training, or skill development",DE-Wilmington,44,3.068,2.795,51.7,44.9,44.9,19.3,39.0,Under Supported,-0.273,0.2547,-0.786,0.241,0.2171
+Work Activity,"Learning, training, or skill development",FL-Lake Mary,117,3.744,3.573,68.6,64.3,64.3,14.7,33.0,Under Supported,-0.171,0.1348,-0.438,0.096,0.1074
+Work Activity,"Learning, training, or skill development",GA-Columbus,153,3.314,3.294,57.8,57.4,57.4,15.0,32.0,Target,-0.02,0.13,-0.276,0.237,0.1089
+Work Activity,"Learning, training, or skill development",IA-Urbandale,18,3.167,3.111,54.2,52.8,52.8,13.9,28.0,Under Supported,-0.056,0.3917,-0.882,0.771,0.3322
+Work Activity,"Learning, training, or skill development",IL-Chicago-Bryn Mawr,98,3.357,3.204,58.9,55.1,55.1,14.3,34.0,Under Supported,-0.153,0.1379,-0.427,0.121,0.1222
+Work Activity,"Learning, training, or skill development",KS-Overland Park,12,3.0,3.333,50.0,58.3,58.3,8.3,25.0,Target,0.333,0.3761,-0.494,1.161,0.3333
+Work Activity,"Learning, training, or skill development",KY-Louisville,197,3.046,3.274,51.1,56.9,56.9,11.8,24.0,Target,0.228,0.1161,-0.001,0.457,0.0909
+Work Activity,"Learning, training, or skill development",LA-Harvey,23,3.565,3.783,64.1,69.6,69.6,6.5,26.0,Target,0.217,0.2174,-0.233,0.668,0.2511
+Work Activity,"Learning, training, or skill development",MA-Woburn,44,2.795,3.159,44.9,54.0,54.0,9.7,23.0,Target,0.364,0.2278,-0.096,0.823,0.2003
+Work Activity,"Learning, training, or skill development",MD-Hanover,58,3.224,3.086,55.6,52.2,52.2,16.8,33.0,Under Supported,-0.138,0.202,-0.542,0.267,0.1761
+Work Activity,"Learning, training, or skill development",MN-Mendota Heights,171,2.895,3.111,47.4,52.8,52.8,10.2,24.0,Target,0.216,0.1083,0.003,0.43,0.0925
+Work Activity,"Learning, training, or skill development",MO-St. Louis,165,3.055,3.164,51.4,54.1,54.1,15.3,31.0,Target,0.109,0.1365,-0.16,0.379,0.0993
+Work Activity,"Learning, training, or skill development",NC-Durham,55,3.182,2.891,54.5,47.3,47.3,20.9,38.0,Under Supported,-0.291,0.2498,-0.792,0.21,0.1675
+Work Activity,"Learning, training, or skill development",NC-Winston-Salem,24,2.667,2.833,41.7,45.8,45.8,12.5,25.0,Target,0.167,0.3333,-0.523,0.856,0.299
+Work Activity,"Learning, training, or skill development",NH-Manchester,85,3.141,3.129,53.5,53.2,53.2,14.4,31.0,Target,-0.012,0.1703,-0.35,0.327,0.1418
+Work Activity,"Learning, training, or skill development",NJ-Iselin,79,3.241,3.342,56.0,58.5,58.5,12.0,27.0,Target,0.101,0.1647,-0.227,0.429,0.1451
+Work Activity,"Learning, training, or skill development",NV-Las Vegas-Maryland Pkwy,41,3.439,3.341,61.0,58.5,58.5,14.6,32.0,Under Supported,-0.098,0.2415,-0.586,0.39,0.217
+Work Activity,"Learning, training, or skill development",NV-Las Vegas-Russell,52,3.519,3.308,63.0,57.7,57.7,17.3,35.0,Under Supported,-0.212,0.2303,-0.674,0.251,0.1705
+Work Activity,"Learning, training, or skill development",NY-Lake Success,48,3.479,3.208,62.0,55.2,55.2,13.5,35.0,Under Supported,-0.271,0.1651,-0.603,0.061,0.1906
+Work Activity,"Learning, training, or skill development",NY-Latham,195,3.067,2.831,51.7,45.8,45.8,17.7,36.0,Under Supported,-0.236,0.1158,-0.464,-0.008,0.089
+Work Activity,"Learning, training, or skill development",PA-Seven Fields,8,2.875,3.125,46.9,53.1,53.1,12.5,12.0,Target,0.25,0.6748,-1.346,1.846,0.5154
+Work Activity,"Learning, training, or skill development",TN-Nashville,64,3.156,3.031,53.9,50.8,50.8,19.9,38.0,Under Supported,-0.125,0.2373,-0.599,0.349,0.159
+Work Activity,"Learning, training, or skill development",VA-Ashburn,42,3.167,3.476,54.2,61.9,61.9,11.9,21.0,Target,0.31,0.2651,-0.226,0.845,0.1874
+Work Activity,"Learning, training, or skill development",WA-Seattle,20,3.7,2.85,67.5,46.2,46.2,30.0,55.0,Under Supported,-0.85,0.4057,-1.699,-0.001,0.3185
+Work Activity,"Learning, training, or skill development",WI-Waukesha,130,3.038,3.354,51.0,58.8,58.8,9.0,21.0,Target,0.315,0.1191,0.08,0.551,0.1102
+Physical Feature,Availability of spaces that support focused work,CA-Costa Mesa,65,4.431,3.292,85.8,57.3,57.3,33.1,58.0,Under Supported,-1.138,0.2055,-1.549,-0.728,0.1531
+Physical Feature,Availability of spaces that support focused work,CA-Walnut Creek,37,4.297,3.595,82.4,64.9,64.9,22.3,43.0,Under Supported,-0.703,0.2447,-1.199,-0.207,0.1955
+Physical Feature,Availability of spaces that support focused work,CT-Rocky Hill,28,4.179,3.143,79.5,53.6,53.6,29.5,64.0,Under Supported,-1.036,0.2545,-1.558,-0.514,0.1834
+Physical Feature,Availability of spaces that support focused work,CT-Wallingford,205,4.337,3.005,83.4,50.1,50.1,36.2,63.0,Under Supported,-1.332,0.1095,-1.548,-1.116,0.0843
+Physical Feature,Availability of spaces that support focused work,DC-Washington,10,4.6,4.2,90.0,80.0,80.0,12.5,20.0,Under Supported,-0.4,0.3712,-1.24,0.44,0.3887
+Physical Feature,Availability of spaces that support focused work,DE-Wilmington,44,4.364,3.114,84.1,52.8,52.8,35.2,59.0,Under Supported,-1.25,0.2604,-1.775,-0.725,0.2062
+Physical Feature,Availability of spaces that support focused work,FL-Lake Mary,117,4.171,3.487,79.3,62.2,62.2,23.5,47.0,Under Supported,-0.684,0.135,-0.951,-0.416,0.1063
+Physical Feature,Availability of spaces that support focused work,GA-Columbus,153,4.346,3.176,83.7,54.4,54.4,33.2,60.0,Under Supported,-1.17,0.1288,-1.424,-0.916,0.0978
+Physical Feature,Availability of spaces that support focused work,IA-Urbandale,18,4.167,3.889,79.2,72.2,72.2,16.7,28.0,Under Supported,-0.278,0.3688,-1.056,0.5,0.2788
+Physical Feature,Availability of spaces that support focused work,IL-Chicago-Bryn Mawr,98,4.337,3.357,83.4,58.9,58.9,26.5,62.0,Under Supported,-0.98,0.1264,-1.231,-0.729,0.1154
+Physical Feature,Availability of spaces that support focused work,KS-Overland Park,12,4.167,3.0,79.2,50.0,50.0,37.5,58.0,Under Supported,-1.167,0.5752,-2.433,0.099,0.3892
+Physical Feature,Availability of spaces that support focused work,KY-Louisville,197,4.112,3.624,77.8,65.6,65.6,19.9,44.0,Under Supported,-0.487,0.1052,-0.695,-0.28,0.0741
+Physical Feature,Availability of spaces that support focused work,LA-Harvey,23,4.174,3.043,79.3,51.1,51.1,30.4,61.0,Under Supported,-1.13,0.2833,-1.718,-0.543,0.2473
+Physical Feature,Availability of spaces that support focused work,MA-Woburn,44,4.068,3.5,76.7,62.5,62.5,23.3,39.0,Under Supported,-0.568,0.2548,-1.082,-0.054,0.1766
+Physical Feature,Availability of spaces that support focused work,MD-Hanover,58,4.0,3.224,75.0,55.6,55.6,25.0,48.0,Under Supported,-0.776,0.2029,-1.182,-0.37,0.1414
+Physical Feature,Availability of spaces that support focused work,MN-Mendota Heights,171,4.17,2.83,79.2,45.8,45.8,38.0,64.0,Under Supported,-1.339,0.1299,-1.596,-1.083,0.0874
+Physical Feature,Availability of spaces that support focused work,MO-St. Louis,165,4.091,3.364,77.3,59.1,59.1,25.2,50.0,Under Supported,-0.727,0.1229,-0.97,-0.485,0.0902
+Physical Feature,Availability of spaces that support focused work,NC-Durham,55,4.345,3.164,83.6,54.1,54.1,32.7,58.0,Under Supported,-1.182,0.2045,-1.592,-0.772,0.1552
+Physical Feature,Availability of spaces that support focused work,NC-Winston-Salem,24,3.958,3.167,74.0,54.2,54.2,28.1,54.0,Under Supported,-0.792,0.3457,-1.507,-0.077,0.2225
+Physical Feature,Availability of spaces that support focused work,NH-Manchester,85,4.259,3.153,81.5,53.8,53.8,31.2,60.0,Under Supported,-1.106,0.1614,-1.427,-0.785,0.1236
+Physical Feature,Availability of spaces that support focused work,NJ-Iselin,79,4.278,3.316,82.0,57.9,57.9,26.6,52.0,Under Supported,-0.962,0.1585,-1.278,-0.646,0.1378
+Physical Feature,Availability of spaces that support focused work,NV-Las Vegas-Maryland Pkwy,41,4.293,3.098,82.3,52.4,52.4,32.9,63.0,Under Supported,-1.195,0.2425,-1.685,-0.705,0.1739
+Physical Feature,Availability of spaces that support focused work,NV-Las Vegas-Russell,52,4.269,3.346,81.7,58.7,58.7,27.4,50.0,Under Supported,-0.923,0.2194,-1.364,-0.483,0.1501
+Physical Feature,Availability of spaces that support focused work,NY-Lake Success,48,4.312,3.146,82.8,53.6,53.6,31.2,56.0,Under Supported,-1.167,0.2091,-1.587,-0.746,0.1786
+Physical Feature,Availability of spaces that support focused work,NY-Latham,195,4.19,2.779,79.7,44.5,44.5,38.3,68.0,Under Supported,-1.41,0.1149,-1.637,-1.184,0.0835
+Physical Feature,Availability of spaces that support focused work,PA-Seven Fields,8,4.25,3.5,81.2,62.5,62.5,18.8,50.0,Under Supported,-0.75,0.366,-1.615,0.115,0.2673
+Physical Feature,Availability of spaces that support focused work,TN-Nashville,64,4.156,3.5,78.9,62.5,62.5,25.0,45.0,Under Supported,-0.656,0.2185,-1.093,-0.22,0.1527
+Physical Feature,Availability of spaces that support focused work,VA-Ashburn,42,4.238,3.333,81.0,58.3,58.3,29.2,48.0,Under Supported,-0.905,0.2701,-1.45,-0.359,0.1948
+Physical Feature,Availability of spaces that support focused work,WA-Seattle,20,4.5,3.05,87.5,51.2,51.2,40.0,65.0,Under Supported,-1.45,0.3733,-2.231,-0.669,0.2854
+Physical Feature,Availability of spaces that support focused work,WI-Waukesha,130,4.238,3.185,81.0,54.6,54.6,30.6,56.0,Under Supported,-1.054,0.1391,-1.329,-0.779,0.0994
+Physical Feature,Availability of spaces that support discretion,CA-Costa Mesa,65,4.108,3.123,77.7,53.1,53.1,31.9,55.0,Under Supported,-0.985,0.2263,-1.437,-0.533,0.1589
+Physical Feature,Availability of spaces that support discretion,CA-Walnut Creek,37,4.189,3.514,79.7,62.8,62.8,23.0,41.0,Under Supported,-0.676,0.2601,-1.203,-0.148,0.1999
+Physical Feature,Availability of spaces that support discretion,CT-Rocky Hill,28,3.75,2.929,68.8,48.2,48.2,25.9,57.0,Under Supported,-0.821,0.2675,-1.37,-0.273,0.1448
+Physical Feature,Availability of spaces that support discretion,CT-Wallingford,205,4.049,2.985,76.2,49.6,49.6,32.9,57.0,Under Supported,-1.063,0.1243,-1.308,-0.818,0.084
+Physical Feature,Availability of spaces that support discretion,DC-Washington,10,4.2,4.0,80.0,75.0,75.0,12.5,20.0,Under Supported,-0.2,0.4422,-1.2,0.8,0.3944
+Physical Feature,Availability of spaces that support discretion,DE-Wilmington,44,3.818,3.295,70.5,57.4,57.4,25.0,41.0,Under Supported,-0.523,0.2917,-1.111,0.066,0.1993
+Physical Feature,Availability of spaces that support discretion,FL-Lake Mary,117,4.103,3.427,77.6,60.7,60.7,24.6,49.0,Under Supported,-0.675,0.1451,-0.963,-0.388,0.1046
+Physical Feature,Availability of spaces that support discretion,GA-Columbus,153,4.242,3.052,81.0,51.3,51.3,33.2,60.0,Under Supported,-1.19,0.126,-1.439,-0.941,0.0994
+Physical Feature,Availability of spaces that support discretion,IA-Urbandale,18,4.111,3.944,77.8,73.6,73.6,15.3,22.0,Under Supported,-0.167,0.3727,-0.953,0.62,0.2738
+Physical Feature,Availability of spaces that support discretion,IL-Chicago-Bryn Mawr,98,4.112,3.204,77.8,55.1,55.1,28.1,56.0,Under Supported,-0.908,0.1583,-1.222,-0.594,0.1151
+Physical Feature,Availability of spaces that support discretion,KS-Overland Park,12,4.167,3.0,79.2,50.0,50.0,37.5,58.0,Under Supported,-1.167,0.5482,-2.373,0.04,0.3693
+Physical Feature,Availability of spaces that support discretion,KY-Louisville,197,3.975,3.401,74.4,60.0,60.0,23.2,43.0,Under Supported,-0.574,0.1189,-0.808,-0.339,0.0816
+Physical Feature,Availability of spaces that support discretion,LA-Harvey,23,3.957,3.0,73.9,50.0,50.0,26.1,48.0,Under Supported,-0.957,0.2914,-1.561,-0.352,0.2352
+Physical Feature,Availability of spaces that support discretion,MA-Woburn,44,3.682,3.523,67.0,63.1,63.1,17.0,32.0,Under Supported,-0.159,0.2517,-0.667,0.349,0.1735
+Physical Feature,Availability of spaces that support discretion,MD-Hanover,58,3.707,3.155,67.7,53.9,53.9,24.6,48.0,Under Supported,-0.552,0.2257,-1.004,-0.1,0.1387
+Physical Feature,Availability of spaces that support discretion,MN-Mendota Heights,171,3.842,2.708,71.1,42.7,42.7,35.4,59.0,Under Supported,-1.135,0.1393,-1.409,-0.86,0.082
+Physical Feature,Availability of spaces that support discretion,MO-St. Louis,165,3.867,3.327,71.7,58.2,58.2,23.2,41.0,Under Supported,-0.539,0.1328,-0.802,-0.277,0.0902
+Physical Feature,Availability of spaces that support discretion,NC-Durham,55,4.036,3.018,75.9,50.5,50.5,31.4,58.0,Under Supported,-1.018,0.2255,-1.47,-0.566,0.1479
+Physical Feature,Availability of spaces that support discretion,NC-Winston-Salem,24,4.0,2.75,75.0,43.8,43.8,36.5,71.0,Under Supported,-1.25,0.3311,-1.935,-0.565,0.2351
+Physical Feature,Availability of spaces that support discretion,NH-Manchester,85,4.012,3.153,75.3,53.8,53.8,26.8,53.0,Under Supported,-0.859,0.1607,-1.178,-0.539,0.1141
+Physical Feature,Availability of spaces that support discretion,NJ-Iselin,79,4.063,3.228,76.6,55.7,55.7,25.6,48.0,Under Supported,-0.835,0.1675,-1.169,-0.502,0.1323
+Physical Feature,Availability of spaces that support discretion,NV-Las Vegas-Maryland Pkwy,41,4.22,2.805,80.5,45.1,45.1,39.0,68.0,Under Supported,-1.415,0.2589,-1.938,-0.891,0.1788
+Physical Feature,Availability of spaces that support discretion,NV-Las Vegas-Russell,52,4.135,3.077,78.4,51.9,51.9,32.7,63.0,Under Supported,-1.058,0.2321,-1.524,-0.592,0.155
+Physical Feature,Availability of spaces that support discretion,NY-Lake Success,48,4.208,3.167,80.2,54.2,54.2,27.6,58.0,Under Supported,-1.042,0.1858,-1.416,-0.668,0.164
+Physical Feature,Availability of spaces that support discretion,NY-Latham,195,3.974,2.651,74.4,41.3,41.3,38.5,67.0,Under Supported,-1.323,0.122,-1.564,-1.083,0.076
+Physical Feature,Availability of spaces that support discretion,PA-Seven Fields,8,4.0,3.25,75.0,56.2,56.2,28.1,62.0,Under Supported,-0.75,0.6196,-2.215,0.715,0.3134
+Physical Feature,Availability of spaces that support discretion,TN-Nashville,64,4.234,3.344,80.9,58.6,58.6,28.5,50.0,Under Supported,-0.891,0.2172,-1.325,-0.457,0.164
+Physical Feature,Availability of spaces that support discretion,VA-Ashburn,42,4.214,3.286,80.4,57.1,57.1,30.4,45.0,Under Supported,-0.929,0.2818,-1.498,-0.359,0.1966
+Physical Feature,Availability of spaces that support discretion,WA-Seattle,20,4.4,2.85,85.0,46.2,46.2,41.2,65.0,Under Supported,-1.55,0.3733,-2.331,-0.769,0.2927
+Physical Feature,Availability of spaces that support discretion,WI-Waukesha,130,4.054,3.038,76.3,51.0,51.0,32.1,58.0,Under Supported,-1.015,0.1509,-1.314,-0.717,0.1027
+Physical Feature,Availability of meeting and collaboration spaces (individual and group),CA-Costa Mesa,65,2.923,3.785,48.1,69.6,69.6,4.6,14.0,Target,0.862,0.1609,0.54,1.183,0.0968
+Physical Feature,Availability of meeting and collaboration spaces (individual and group),CA-Walnut Creek,37,2.919,3.595,48.0,64.9,64.9,4.7,11.0,Target,0.676,0.2228,0.224,1.127,0.1619
+Physical Feature,Availability of meeting and collaboration spaces (individual and group),CT-Rocky Hill,28,3.107,3.214,52.7,55.4,55.4,13.4,25.0,Target,0.107,0.3101,-0.529,0.743,0.1949
+Physical Feature,Availability of meeting and collaboration spaces (individual and group),CT-Wallingford,205,2.824,3.444,45.6,61.1,61.1,7.6,20.0,Target,0.62,0.1007,0.421,0.818,0.0555
+Physical Feature,Availability of meeting and collaboration spaces (individual and group),DC-Washington,10,3.9,4.2,72.5,80.0,80.0,5.0,20.0,Target,0.3,0.3,-0.379,0.979,0.2
+Physical Feature,Availability of meeting and collaboration spaces (individual and group),DE-Wilmington,44,2.886,3.386,47.2,59.7,59.7,9.7,18.0,Target,0.5,0.2487,-0.002,1.002,0.1425
+Physical Feature,Availability of meeting and collaboration spaces (individual and group),FL-Lake Mary,117,3.222,3.855,55.6,71.4,71.4,6.4,18.0,Target,0.632,0.1282,0.378,0.886,0.0817
+Physical Feature,Availability of meeting and collaboration spaces (individual and group),GA-Columbus,153,3.359,3.562,59.0,64.1,64.1,9.5,27.0,Target,0.203,0.1063,-0.007,0.413,0.0741
+Physical Feature,Availability of meeting and collaboration spaces (individual and group),IA-Urbandale,18,2.833,4.056,45.8,76.4,76.4,1.4,6.0,Target,1.222,0.2499,0.695,1.749,0.2057
+Physical Feature,Availability of meeting and collaboration spaces (individual and group),IL-Chicago-Bryn Mawr,98,2.857,3.633,46.4,65.8,65.8,4.3,12.0,Target,0.776,0.1252,0.527,1.024,0.0851
+Physical Feature,Availability of meeting and collaboration spaces (individual and group),KS-Overland Park,12,2.5,3.833,37.5,70.8,70.8,2.1,8.0,Target,1.333,0.3333,0.6,2.067,0.2072
+Physical Feature,Availability of meeting and collaboration spaces (individual and group),KY-Louisville,197,3.015,3.584,50.4,64.6,64.6,8.2,19.0,Target,0.569,0.1058,0.36,0.777,0.0643
+Physical Feature,Availability of meeting and collaboration spaces (individual and group),LA-Harvey,23,3.304,3.565,57.6,64.1,64.1,5.4,13.0,Target,0.261,0.201,-0.156,0.678,0.1643
+Physical Feature,Availability of meeting and collaboration spaces (individual and group),MA-Woburn,44,2.932,3.682,48.3,67.0,67.0,4.5,14.0,Target,0.75,0.2008,0.345,1.155,0.1332
+Physical Feature,Availability of meeting and collaboration spaces (individual and group),MD-Hanover,58,2.759,3.466,44.0,61.6,61.6,8.2,17.0,Target,0.707,0.1937,0.319,1.095,0.1106
+Physical Feature,Availability of meeting and collaboration spaces (individual and group),MN-Mendota Heights,171,2.62,3.31,40.5,57.7,57.7,8.9,18.0,Target,0.69,0.125,0.443,0.937,0.0705
+Physical Feature,Availability of meeting and collaboration spaces (individual and group),MO-St. Louis,165,2.552,3.715,38.8,67.9,67.9,3.9,12.0,Target,1.164,0.1071,0.952,1.375,0.0676
+Physical Feature,Availability of meeting and collaboration spaces (individual and group),NC-Durham,55,2.727,3.364,43.2,59.1,59.1,10.0,22.0,Target,0.636,0.2297,0.176,1.097,0.1081
+Physical Feature,Availability of meeting and collaboration spaces (individual and group),NC-Winston-Salem,24,2.292,2.917,32.3,47.9,47.9,6.2,12.0,Target,0.625,0.2746,0.057,1.193,0.1694
+Physical Feature,Availability of meeting and collaboration spaces (individual and group),NH-Manchester,85,2.671,3.447,41.8,61.2,61.2,7.1,19.0,Target,0.776,0.1582,0.462,1.091,0.0909
+Physical Feature,Availability of meeting and collaboration spaces (individual and group),NJ-Iselin,79,3.342,3.43,58.5,60.8,60.8,13.0,28.0,Target,0.089,0.1776,-0.265,0.442,0.1191
+Physical Feature,Availability of meeting and collaboration spaces (individual and group),NV-Las Vegas-Maryland Pkwy,41,3.073,3.244,51.8,56.1,56.1,11.6,29.0,Target,0.171,0.2092,-0.252,0.594,0.1387
+Physical Feature,Availability of meeting and collaboration spaces (individual and group),NV-Las Vegas-Russell,52,3.058,3.519,51.4,63.0,63.0,8.7,27.0,Target,0.462,0.197,0.066,0.857,0.1045
+Physical Feature,Availability of meeting and collaboration spaces (individual and group),NY-Lake Success,48,2.875,3.417,46.9,60.4,60.4,4.7,10.0,Target,0.542,0.176,0.188,0.896,0.1423
+Physical Feature,Availability of meeting and collaboration spaces (individual and group),NY-Latham,195,2.759,3.128,44.0,53.2,53.2,12.2,26.0,Target,0.369,0.1163,0.14,0.599,0.0693
+Physical Feature,Availability of meeting and collaboration spaces (individual and group),PA-Seven Fields,8,2.75,3.125,43.8,53.1,53.1,12.5,38.0,Target,0.375,0.5957,-1.034,1.784,0.125
+Physical Feature,Availability of meeting and collaboration spaces (individual and group),TN-Nashville,64,2.812,3.781,45.3,69.5,69.5,5.1,12.0,Target,0.969,0.1823,0.605,1.333,0.1209
+Physical Feature,Availability of meeting and collaboration spaces (individual and group),VA-Ashburn,42,3.024,3.524,50.6,63.1,63.1,9.5,17.0,Target,0.5,0.2367,0.022,0.978,0.1571
+Physical Feature,Availability of meeting and collaboration spaces (individual and group),WA-Seattle,20,2.95,3.8,48.8,70.0,70.0,6.2,20.0,Target,0.85,0.3346,0.15,1.55,0.1717
+Physical Feature,Availability of meeting and collaboration spaces (individual and group),WI-Waukesha,130,2.838,3.538,46.0,63.5,63.5,7.1,15.0,Target,0.7,0.1253,0.452,0.948,0.075
+Physical Feature,"Availability of community spaces (i.e. gathering, event spaces, café)",CA-Costa Mesa,65,2.523,3.738,38.1,68.5,68.5,1.2,5.0,Target,1.215,0.1325,0.951,1.48,0.0937
+Physical Feature,"Availability of community spaces (i.e. gathering, event spaces, café)",CA-Walnut Creek,37,2.784,3.378,44.6,59.5,59.5,6.8,16.0,Target,0.595,0.234,0.12,1.069,0.1748
+Physical Feature,"Availability of community spaces (i.e. gathering, event spaces, café)",CT-Rocky Hill,28,2.607,3.357,40.2,58.9,58.9,5.4,18.0,Target,0.75,0.2604,0.216,1.284,0.1474
+Physical Feature,"Availability of community spaces (i.e. gathering, event spaces, café)",CT-Wallingford,205,2.254,3.663,31.3,66.6,66.6,1.1,4.0,Target,1.41,0.0734,1.265,1.555,0.0508
+Physical Feature,"Availability of community spaces (i.e. gathering, event spaces, café)",DC-Washington,10,3.7,4.4,67.5,85.0,85.0,0.0,0.0,Target,0.7,0.3,0.021,1.379,0.1633
+Physical Feature,"Availability of community spaces (i.e. gathering, event spaces, café)",DE-Wilmington,44,2.318,3.364,33.0,59.1,59.1,5.7,14.0,Target,1.045,0.2366,0.568,1.523,0.1493
+Physical Feature,"Availability of community spaces (i.e. gathering, event spaces, café)",FL-Lake Mary,117,3.085,3.991,52.1,74.8,74.8,3.4,10.0,Target,0.906,0.1171,0.674,1.138,0.0733
+Physical Feature,"Availability of community spaces (i.e. gathering, event spaces, café)",GA-Columbus,153,2.673,3.444,41.8,61.1,61.1,5.4,12.0,Target,0.771,0.1107,0.553,0.99,0.0813
+Physical Feature,"Availability of community spaces (i.e. gathering, event spaces, café)",IA-Urbandale,18,2.5,4.111,37.5,77.8,77.8,0.0,0.0,Over Supported,1.611,0.2003,1.188,2.034,0.2271
+Physical Feature,"Availability of community spaces (i.e. gathering, event spaces, café)",IL-Chicago-Bryn Mawr,98,2.5,3.429,37.5,60.7,60.7,2.6,8.0,Target,0.929,0.1181,0.694,1.163,0.0917
+Physical Feature,"Availability of community spaces (i.e. gathering, event spaces, café)",KS-Overland Park,12,2.25,3.583,31.2,64.6,64.6,4.2,17.0,Target,1.333,0.3957,0.462,2.204,0.2289
+Physical Feature,"Availability of community spaces (i.e. gathering, event spaces, café)",KY-Louisville,197,2.401,3.685,35.0,67.1,67.1,1.8,5.0,Target,1.284,0.0849,1.117,1.452,0.0581
+Physical Feature,"Availability of community spaces (i.e. gathering, event spaces, café)",LA-Harvey,23,3.13,2.957,53.3,48.9,48.9,17.4,22.0,Under Supported,-0.174,0.3754,-0.952,0.605,0.2221
+Physical Feature,"Availability of community spaces (i.e. gathering, event spaces, café)",MA-Woburn,44,2.614,3.591,40.3,64.8,64.8,6.8,11.0,Target,0.977,0.257,0.459,1.496,0.1536
+Physical Feature,"Availability of community spaces (i.e. gathering, event spaces, café)",MD-Hanover,58,2.448,3.655,36.2,66.4,66.4,5.2,10.0,Target,1.207,0.1933,0.82,1.594,0.1059
+Physical Feature,"Availability of community spaces (i.e. gathering, event spaces, café)",MN-Mendota Heights,171,2.035,3.503,25.9,62.6,62.6,1.6,5.0,Target,1.468,0.0859,1.298,1.637,0.0612
+Physical Feature,"Availability of community spaces (i.e. gathering, event spaces, café)",MO-St. Louis,165,2.291,3.776,32.3,69.4,69.4,2.3,7.0,Target,1.485,0.1059,1.276,1.694,0.0673
+Physical Feature,"Availability of community spaces (i.e. gathering, event spaces, café)",NC-Durham,55,2.182,3.473,29.5,61.8,61.8,4.1,11.0,Target,1.291,0.2021,0.886,1.696,0.1097
+Physical Feature,"Availability of community spaces (i.e. gathering, event spaces, café)",NC-Winston-Salem,24,2.125,2.667,28.1,41.7,41.7,11.5,21.0,Target,0.542,0.3457,-0.173,1.257,0.1871
+Physical Feature,"Availability of community spaces (i.e. gathering, event spaces, café)",NH-Manchester,85,2.4,3.494,35.0,62.4,62.4,5.0,12.0,Target,1.094,0.1521,0.792,1.397,0.0864
+Physical Feature,"Availability of community spaces (i.e. gathering, event spaces, café)",NJ-Iselin,79,2.506,3.759,37.7,69.0,69.0,0.6,3.0,Target,1.253,0.1342,0.986,1.52,0.1023
+Physical Feature,"Availability of community spaces (i.e. gathering, event spaces, café)",NV-Las Vegas-Maryland Pkwy,41,2.561,3.293,39.0,57.3,57.3,4.9,12.0,Target,0.732,0.1976,0.332,1.131,0.1532
+Physical Feature,"Availability of community spaces (i.e. gathering, event spaces, café)",NV-Las Vegas-Russell,52,2.404,3.404,35.1,60.1,60.1,6.7,17.0,Target,1.0,0.2055,0.587,1.413,0.1
+Physical Feature,"Availability of community spaces (i.e. gathering, event spaces, café)",NY-Lake Success,48,2.833,3.208,45.8,55.2,55.2,9.9,25.0,Target,0.375,0.2118,-0.051,0.801,0.1395
+Physical Feature,"Availability of community spaces (i.e. gathering, event spaces, café)",NY-Latham,195,2.426,2.944,35.6,48.6,48.6,12.4,28.0,Target,0.518,0.1233,0.275,0.761,0.0746
+Physical Feature,"Availability of community spaces (i.e. gathering, event spaces, café)",PA-Seven Fields,8,1.75,3.0,18.8,50.0,50.0,0.0,0.0,Target,1.25,0.366,0.385,2.115,0.189
+Physical Feature,"Availability of community spaces (i.e. gathering, event spaces, café)",TN-Nashville,64,2.203,3.797,30.1,69.9,69.9,0.8,2.0,Over Supported,1.594,0.1489,1.296,1.891,0.114
+Physical Feature,"Availability of community spaces (i.e. gathering, event spaces, café)",VA-Ashburn,42,2.595,3.714,39.9,67.9,67.9,3.0,7.0,Target,1.119,0.1842,0.747,1.491,0.1375
+Physical Feature,"Availability of community spaces (i.e. gathering, event spaces, café)",WA-Seattle,20,2.35,3.7,33.8,67.5,67.5,3.8,10.0,Target,1.35,0.3101,0.701,1.999,0.2188
+Physical Feature,"Availability of community spaces (i.e. gathering, event spaces, café)",WI-Waukesha,130,2.262,3.685,31.5,67.1,67.1,1.9,4.0,Target,1.423,0.1052,1.215,1.631,0.0691
+Physical Feature,Furniture comfort and ergonomics (including adjustability of chair and workstation),CA-Costa Mesa,65,3.923,3.554,73.1,63.8,63.8,16.5,42.0,Under Supported,-0.369,0.1664,-0.702,-0.037,0.114
+Physical Feature,Furniture comfort and ergonomics (including adjustability of chair and workstation),CA-Walnut Creek,37,4.108,3.541,77.7,63.5,63.5,17.6,43.0,Under Supported,-0.568,0.1958,-0.965,-0.17,0.1715
+Physical Feature,Furniture comfort and ergonomics (including adjustability of chair and workstation),CT-Rocky Hill,28,3.679,3.357,67.0,58.9,58.9,16.1,43.0,Under Supported,-0.321,0.2303,-0.794,0.151,0.1722
+Physical Feature,Furniture comfort and ergonomics (including adjustability of chair and workstation),CT-Wallingford,205,3.746,3.493,68.7,62.3,62.3,17.6,39.0,Under Supported,-0.254,0.1068,-0.464,-0.043,0.0701
+Physical Feature,Furniture comfort and ergonomics (including adjustability of chair and workstation),DC-Washington,10,4.7,4.1,92.5,77.5,77.5,17.5,50.0,Under Supported,-0.6,0.3055,-1.291,0.091,0.2333
+Physical Feature,Furniture comfort and ergonomics (including adjustability of chair and workstation),DE-Wilmington,44,3.727,3.5,68.2,62.5,62.5,16.5,34.0,Under Supported,-0.227,0.2341,-0.699,0.245,0.1542
+Physical Feature,Furniture comfort and ergonomics (including adjustability of chair and workstation),FL-Lake Mary,117,3.803,3.974,70.1,74.4,74.4,7.1,21.0,Target,0.171,0.1018,-0.031,0.373,0.0772
+Physical Feature,Furniture comfort and ergonomics (including adjustability of chair and workstation),GA-Columbus,153,3.935,3.34,73.4,58.5,58.5,21.2,44.0,Under Supported,-0.595,0.1167,-0.825,-0.364,0.0914
+Physical Feature,Furniture comfort and ergonomics (including adjustability of chair and workstation),IA-Urbandale,18,3.611,4.111,65.3,77.8,77.8,4.2,17.0,Target,0.5,0.2322,0.01,0.99,0.1594
+Physical Feature,Furniture comfort and ergonomics (including adjustability of chair and workstation),IL-Chicago-Bryn Mawr,98,4.031,3.49,75.8,62.2,62.2,17.9,39.0,Under Supported,-0.541,0.1291,-0.797,-0.285,0.1007
+Physical Feature,Furniture comfort and ergonomics (including adjustability of chair and workstation),KS-Overland Park,12,3.583,3.917,64.6,72.9,72.9,2.1,8.0,Target,0.333,0.2843,-0.292,0.959,0.2599
+Physical Feature,Furniture comfort and ergonomics (including adjustability of chair and workstation),KY-Louisville,197,3.919,3.802,73.0,70.1,70.1,11.9,31.0,Under Supported,-0.117,0.0894,-0.293,0.059,0.0654
+Physical Feature,Furniture comfort and ergonomics (including adjustability of chair and workstation),LA-Harvey,23,4.087,2.826,77.2,45.7,45.7,35.9,61.0,Under Supported,-1.261,0.328,-1.941,-0.581,0.2407
+Physical Feature,Furniture comfort and ergonomics (including adjustability of chair and workstation),MA-Woburn,44,3.977,3.432,74.4,60.8,60.8,19.3,41.0,Under Supported,-0.545,0.2093,-0.968,-0.123,0.1822
+Physical Feature,Furniture comfort and ergonomics (including adjustability of chair and workstation),MD-Hanover,58,3.655,3.431,66.4,60.8,60.8,16.8,43.0,Under Supported,-0.224,0.1808,-0.586,0.138,0.1182
+Physical Feature,Furniture comfort and ergonomics (including adjustability of chair and workstation),MN-Mendota Heights,171,3.719,3.386,68.0,59.6,59.6,17.8,43.0,Under Supported,-0.333,0.1075,-0.546,-0.121,0.0628
+Physical Feature,Furniture comfort and ergonomics (including adjustability of chair and workstation),MO-St. Louis,165,3.739,3.83,68.5,70.8,70.8,10.0,25.0,Target,0.091,0.1027,-0.112,0.294,0.0702
+Physical Feature,Furniture comfort and ergonomics (including adjustability of chair and workstation),NC-Durham,55,3.909,3.527,72.7,63.2,63.2,17.3,40.0,Under Supported,-0.382,0.1898,-0.762,-0.001,0.1241
+Physical Feature,Furniture comfort and ergonomics (including adjustability of chair and workstation),NC-Winston-Salem,24,3.458,3.167,61.5,54.2,54.2,18.8,42.0,Under Supported,-0.292,0.3323,-0.979,0.396,0.1871
+Physical Feature,Furniture comfort and ergonomics (including adjustability of chair and workstation),NH-Manchester,85,4.094,3.224,77.4,55.6,55.6,26.8,55.0,Under Supported,-0.871,0.1532,-1.175,-0.566,0.1115
+Physical Feature,Furniture comfort and ergonomics (including adjustability of chair and workstation),NJ-Iselin,79,3.861,3.848,71.5,71.2,71.2,10.1,30.0,Target,-0.013,0.1305,-0.273,0.247,0.0955
+Physical Feature,Furniture comfort and ergonomics (including adjustability of chair and workstation),NV-Las Vegas-Maryland Pkwy,41,3.61,3.0,65.2,50.0,50.0,23.2,44.0,Under Supported,-0.61,0.2539,-1.123,-0.097,0.1815
+Physical Feature,Furniture comfort and ergonomics (including adjustability of chair and workstation),NV-Las Vegas-Russell,52,4.25,3.173,81.2,54.3,54.3,30.8,67.0,Under Supported,-1.077,0.1977,-1.474,-0.68,0.1338
+Physical Feature,Furniture comfort and ergonomics (including adjustability of chair and workstation),NY-Lake Success,48,4.062,3.125,76.6,53.1,53.1,28.6,56.0,Under Supported,-0.938,0.2236,-1.387,-0.488,0.1674
+Physical Feature,Furniture comfort and ergonomics (including adjustability of chair and workstation),NY-Latham,195,3.744,3.092,68.6,52.3,52.3,25.0,49.0,Under Supported,-0.651,0.1186,-0.885,-0.417,0.0739
+Physical Feature,Furniture comfort and ergonomics (including adjustability of chair and workstation),PA-Seven Fields,8,3.5,3.625,62.5,65.6,65.6,9.4,38.0,Target,0.125,0.4795,-1.009,1.259,0.2631
+Physical Feature,Furniture comfort and ergonomics (including adjustability of chair and workstation),TN-Nashville,64,3.391,3.844,59.8,71.1,71.1,8.6,20.0,Target,0.453,0.1849,0.084,0.823,0.1026
+Physical Feature,Furniture comfort and ergonomics (including adjustability of chair and workstation),VA-Ashburn,42,3.69,3.786,67.3,69.6,69.6,11.3,29.0,Target,0.095,0.2096,-0.328,0.518,0.1427
+Physical Feature,Furniture comfort and ergonomics (including adjustability of chair and workstation),WA-Seattle,20,4.1,3.9,77.5,72.5,72.5,12.5,30.0,Under Supported,-0.2,0.2865,-0.8,0.4,0.2039
+Physical Feature,Furniture comfort and ergonomics (including adjustability of chair and workstation),WI-Waukesha,130,3.738,3.585,68.5,64.6,64.6,14.4,32.0,Under Supported,-0.154,0.1228,-0.397,0.089,0.0837
+Physical Feature,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",CA-Costa Mesa,65,3.015,3.169,50.4,54.2,54.2,15.0,35.0,Target,0.154,0.1988,-0.243,0.551,0.1232
+Physical Feature,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",CA-Walnut Creek,37,3.486,3.216,62.2,55.4,55.4,20.3,41.0,Under Supported,-0.27,0.2785,-0.835,0.295,0.1695
+Physical Feature,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",CT-Rocky Hill,28,2.929,3.071,48.2,51.8,51.8,13.4,36.0,Target,0.143,0.2804,-0.432,0.718,0.1448
+Physical Feature,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",CT-Wallingford,205,2.737,3.517,43.4,62.9,62.9,6.6,19.0,Target,0.78,0.0957,0.592,0.969,0.0516
+Physical Feature,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",DC-Washington,10,3.9,4.0,72.5,75.0,75.0,10.0,30.0,Target,0.1,0.4069,-0.82,1.02,0.2582
+Physical Feature,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",DE-Wilmington,44,3.023,2.841,50.6,46.0,46.0,19.9,41.0,Under Supported,-0.182,0.2726,-0.731,0.368,0.1624
+Physical Feature,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",FL-Lake Mary,117,3.496,3.769,62.4,69.2,69.2,6.8,20.0,Target,0.274,0.111,0.054,0.493,0.0809
+Physical Feature,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",GA-Columbus,153,3.209,3.386,55.2,59.6,59.6,10.8,27.0,Target,0.176,0.1117,-0.044,0.397,0.0777
+Physical Feature,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",IA-Urbandale,18,2.722,4.0,43.1,75.0,75.0,0.0,0.0,Target,1.278,0.2259,0.801,1.754,0.1617
+Physical Feature,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",IL-Chicago-Bryn Mawr,98,3.347,2.908,58.7,47.7,47.7,21.9,44.0,Under Supported,-0.439,0.1698,-0.776,-0.102,0.1077
+Physical Feature,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",KS-Overland Park,12,2.917,3.417,47.9,60.4,60.4,2.1,8.0,Target,0.5,0.2887,-0.135,1.135,0.2289
+Physical Feature,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",KY-Louisville,197,2.817,3.619,45.4,65.5,65.5,4.2,12.0,Target,0.802,0.0841,0.636,0.968,0.0577
+Physical Feature,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",LA-Harvey,23,4.043,2.304,76.1,32.6,32.6,47.8,70.0,Under Supported,-1.739,0.3887,-2.545,-0.933,0.2549
+Physical Feature,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",MA-Woburn,44,3.318,3.091,58.0,52.3,52.3,20.5,36.0,Under Supported,-0.227,0.2756,-0.783,0.329,0.1946
+Physical Feature,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",MD-Hanover,58,2.931,3.052,48.3,51.3,51.3,14.2,29.0,Target,0.121,0.2131,-0.306,0.547,0.1334
+Physical Feature,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",MN-Mendota Heights,171,2.69,2.889,42.3,47.2,47.2,17.1,32.0,Target,0.199,0.1455,-0.088,0.486,0.0753
+Physical Feature,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",MO-St. Louis,165,2.885,3.624,47.1,65.6,65.6,5.8,15.0,Target,0.739,0.1084,0.525,0.953,0.0662
+Physical Feature,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",NC-Durham,55,3.218,2.745,55.5,43.6,43.6,23.6,45.0,Under Supported,-0.473,0.2418,-0.958,0.012,0.1378
+Physical Feature,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",NC-Winston-Salem,24,2.75,2.25,43.8,31.2,31.2,26.0,46.0,Under Supported,-0.5,0.3711,-1.268,0.268,0.1831
+Physical Feature,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",NH-Manchester,85,3.0,3.294,50.0,57.4,57.4,11.2,24.0,Target,0.294,0.163,-0.03,0.618,0.0834
+Physical Feature,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",NJ-Iselin,79,3.152,3.367,53.8,59.2,59.2,12.0,27.0,Target,0.215,0.1734,-0.13,0.56,0.1142
+Physical Feature,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",NV-Las Vegas-Maryland Pkwy,41,3.39,2.927,59.8,48.2,48.2,25.0,49.0,Under Supported,-0.463,0.2924,-1.054,0.128,0.1794
+Physical Feature,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",NV-Las Vegas-Russell,52,3.192,2.923,54.8,48.1,48.1,23.1,44.0,Under Supported,-0.269,0.265,-0.801,0.263,0.1396
+Physical Feature,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",NY-Lake Success,48,3.688,2.792,67.2,44.8,44.8,28.6,54.0,Under Supported,-0.896,0.2349,-1.368,-0.423,0.1487
+Physical Feature,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",NY-Latham,195,2.964,3.062,49.1,51.5,51.5,15.9,33.0,Target,0.097,0.1258,-0.151,0.346,0.0715
+Physical Feature,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",PA-Seven Fields,8,2.25,2.5,31.2,37.5,37.5,15.6,25.0,Target,0.25,0.7008,-1.407,1.907,0.2673
+Physical Feature,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",TN-Nashville,64,2.875,3.641,46.9,66.0,66.0,7.0,17.0,Target,0.766,0.1833,0.399,1.132,0.1122
+Physical Feature,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",VA-Ashburn,42,3.143,3.262,53.6,56.5,56.5,17.3,36.0,Target,0.119,0.2896,-0.466,0.704,0.1672
+Physical Feature,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",WA-Seattle,20,3.0,2.85,50.0,46.2,46.2,20.0,35.0,Under Supported,-0.15,0.4122,-1.013,0.713,0.2325
+Physical Feature,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",WI-Waukesha,130,2.554,3.531,38.8,63.3,63.3,5.0,14.0,Target,0.977,0.1184,0.743,1.211,0.0718
+Physical Feature,Lighting comfort (natural and artificial),CA-Costa Mesa,65,3.831,3.585,70.8,64.6,64.6,15.8,38.0,Under Supported,-0.246,0.167,-0.58,0.088,0.1137
+Physical Feature,Lighting comfort (natural and artificial),CA-Walnut Creek,37,3.946,3.486,73.6,62.2,62.2,16.9,38.0,Under Supported,-0.459,0.2108,-0.887,-0.032,0.1999
+Physical Feature,Lighting comfort (natural and artificial),CT-Rocky Hill,28,3.607,2.893,65.2,47.3,47.3,20.5,46.0,Under Supported,-0.714,0.2234,-1.173,-0.256,0.1654
+Physical Feature,Lighting comfort (natural and artificial),CT-Wallingford,205,3.639,3.541,66.0,63.5,63.5,13.5,32.0,Under Supported,-0.098,0.0961,-0.287,0.092,0.0624
+Physical Feature,Lighting comfort (natural and artificial),DC-Washington,10,4.2,3.5,80.0,62.5,62.5,22.5,70.0,Under Supported,-0.7,0.3667,-1.529,0.129,0.3416
+Physical Feature,Lighting comfort (natural and artificial),DE-Wilmington,44,3.591,3.591,64.8,64.8,64.8,15.9,36.0,Target,0.0,0.2455,-0.495,0.495,0.1603
+Physical Feature,Lighting comfort (natural and artificial),FL-Lake Mary,117,3.855,3.692,71.4,67.3,67.3,14.1,28.0,Under Supported,-0.162,0.1335,-0.427,0.102,0.0959
+Physical Feature,Lighting comfort (natural and artificial),GA-Columbus,153,3.902,3.438,72.5,60.9,60.9,18.3,44.0,Under Supported,-0.464,0.1117,-0.685,-0.243,0.0889
+Physical Feature,Lighting comfort (natural and artificial),IA-Urbandale,18,3.111,3.889,52.8,72.2,72.2,1.4,6.0,Target,0.778,0.2499,0.251,1.305,0.1788
+Physical Feature,Lighting comfort (natural and artificial),IL-Chicago-Bryn Mawr,98,3.98,3.449,74.5,61.2,61.2,19.1,40.0,Under Supported,-0.531,0.1408,-0.81,-0.251,0.1077
+Physical Feature,Lighting comfort (natural and artificial),KS-Overland Park,12,3.167,3.833,54.2,70.8,70.8,2.1,8.0,Target,0.667,0.3098,-0.015,1.348,0.241
+Physical Feature,Lighting comfort (natural and artificial),KY-Louisville,197,3.726,3.802,68.1,70.1,70.1,8.6,25.0,Target,0.076,0.0801,-0.082,0.234,0.0622
+Physical Feature,Lighting comfort (natural and artificial),LA-Harvey,23,4.174,2.696,79.3,42.4,42.4,40.2,65.0,Under Supported,-1.478,0.3436,-2.191,-0.766,0.247
+Physical Feature,Lighting comfort (natural and artificial),MA-Woburn,44,3.841,3.432,71.0,60.8,60.8,18.8,39.0,Under Supported,-0.409,0.2189,-0.85,0.032,0.1733
+Physical Feature,Lighting comfort (natural and artificial),MD-Hanover,58,3.603,3.534,65.1,63.4,63.4,10.8,31.0,Under Supported,-0.069,0.1431,-0.356,0.218,0.099
+Physical Feature,Lighting comfort (natural and artificial),MN-Mendota Heights,171,3.632,3.287,65.8,57.2,57.2,18.1,39.0,Under Supported,-0.345,0.1162,-0.574,-0.116,0.0758
+Physical Feature,Lighting comfort (natural and artificial),MO-St. Louis,165,3.691,3.733,67.3,68.3,68.3,11.7,28.0,Target,0.042,0.1095,-0.174,0.259,0.0725
+Physical Feature,Lighting comfort (natural and artificial),NC-Durham,55,3.727,3.636,68.2,65.9,65.9,14.1,40.0,Under Supported,-0.091,0.184,-0.46,0.278,0.1112
+Physical Feature,Lighting comfort (natural and artificial),NC-Winston-Salem,24,3.542,3.167,63.5,54.2,54.2,17.7,38.0,Under Supported,-0.375,0.2937,-0.983,0.233,0.1966
+Physical Feature,Lighting comfort (natural and artificial),NH-Manchester,85,3.729,3.329,68.2,58.2,58.2,18.2,41.0,Under Supported,-0.4,0.1572,-0.713,-0.087,0.0996
+Physical Feature,Lighting comfort (natural and artificial),NJ-Iselin,79,3.684,3.785,67.1,69.6,69.6,9.5,24.0,Target,0.101,0.1437,-0.185,0.387,0.1045
+Physical Feature,Lighting comfort (natural and artificial),NV-Las Vegas-Maryland Pkwy,41,3.659,3.244,66.5,56.1,56.1,20.7,49.0,Under Supported,-0.415,0.2469,-0.914,0.084,0.1553
+Physical Feature,Lighting comfort (natural and artificial),NV-Las Vegas-Russell,52,4.058,3.269,76.4,56.7,56.7,25.5,54.0,Under Supported,-0.788,0.2024,-1.195,-0.382,0.1376
+Physical Feature,Lighting comfort (natural and artificial),NY-Lake Success,48,4.104,3.375,77.6,59.4,59.4,22.4,48.0,Under Supported,-0.729,0.1969,-1.125,-0.333,0.1447
+Physical Feature,Lighting comfort (natural and artificial),NY-Latham,195,3.569,3.144,64.2,53.6,53.6,20.4,42.0,Under Supported,-0.426,0.1147,-0.652,-0.199,0.0741
+Physical Feature,Lighting comfort (natural and artificial),PA-Seven Fields,8,3.75,3.125,68.8,53.1,53.1,31.2,62.0,Under Supported,-0.625,0.8224,-2.57,1.32,0.3981
+Physical Feature,Lighting comfort (natural and artificial),TN-Nashville,64,3.578,3.75,64.5,68.8,68.8,9.8,23.0,Target,0.172,0.1599,-0.148,0.491,0.1136
+Physical Feature,Lighting comfort (natural and artificial),VA-Ashburn,42,3.548,3.762,63.7,69.0,69.0,8.9,26.0,Target,0.214,0.2032,-0.196,0.625,0.1355
+Physical Feature,Lighting comfort (natural and artificial),WA-Seattle,20,3.9,3.75,72.5,68.8,68.8,13.8,25.0,Under Supported,-0.15,0.3101,-0.799,0.499,0.2392
+Physical Feature,Lighting comfort (natural and artificial),WI-Waukesha,130,3.538,3.646,63.5,66.2,66.2,10.8,26.0,Target,0.108,0.1172,-0.124,0.34,0.074
+Physical Feature,Thermal / temperature comfort,CA-Costa Mesa,65,3.908,3.631,72.7,65.8,65.8,15.0,42.0,Under Supported,-0.277,0.1543,-0.585,0.031,0.0994
+Physical Feature,Thermal / temperature comfort,CA-Walnut Creek,37,3.946,3.486,73.6,62.2,62.2,16.9,46.0,Under Supported,-0.459,0.1998,-0.865,-0.054,0.1627
+Physical Feature,Thermal / temperature comfort,CT-Rocky Hill,28,3.607,3.214,65.2,55.4,55.4,17.0,36.0,Under Supported,-0.393,0.264,-0.934,0.149,0.1733
+Physical Feature,Thermal / temperature comfort,CT-Wallingford,205,4.049,2.859,76.2,46.5,46.5,34.6,62.0,Under Supported,-1.19,0.1155,-1.418,-0.963,0.0793
+Physical Feature,Thermal / temperature comfort,DC-Washington,10,4.8,2.4,95.0,35.0,35.0,60.0,90.0,Under Supported,-2.4,0.4522,-3.423,-1.377,0.4
+Physical Feature,Thermal / temperature comfort,DE-Wilmington,44,3.886,3.295,72.2,57.4,57.4,25.0,48.0,Under Supported,-0.591,0.2668,-1.129,-0.053,0.1798
+Physical Feature,Thermal / temperature comfort,FL-Lake Mary,117,4.077,3.162,76.9,54.1,54.1,29.1,52.0,Under Supported,-0.915,0.159,-1.229,-0.6,0.1151
+Physical Feature,Thermal / temperature comfort,GA-Columbus,153,3.98,3.307,74.5,57.7,57.7,21.6,52.0,Under Supported,-0.673,0.1073,-0.885,-0.461,0.0866
+Physical Feature,Thermal / temperature comfort,IA-Urbandale,18,3.444,3.722,61.1,68.1,68.1,11.1,28.0,Target,0.278,0.3688,-0.5,1.056,0.1948
+Physical Feature,Thermal / temperature comfort,IL-Chicago-Bryn Mawr,98,4.153,3.02,78.8,50.5,50.5,31.6,62.0,Under Supported,-1.133,0.1505,-1.431,-0.834,0.116
+Physical Feature,Thermal / temperature comfort,KS-Overland Park,12,3.5,3.333,62.5,58.3,58.3,16.7,25.0,Under Supported,-0.167,0.4741,-1.21,0.877,0.3098
+Physical Feature,Thermal / temperature comfort,KY-Louisville,197,4.005,3.244,75.1,56.1,56.1,25.0,49.0,Under Supported,-0.761,0.1112,-0.981,-0.542,0.0762
+Physical Feature,Thermal / temperature comfort,LA-Harvey,23,4.13,2.478,78.3,37.0,37.0,44.6,70.0,Under Supported,-1.652,0.3535,-2.385,-0.919,0.2582
+Physical Feature,Thermal / temperature comfort,MA-Woburn,44,3.909,3.523,72.7,63.1,63.1,17.6,36.0,Under Supported,-0.386,0.221,-0.832,0.059,0.1673
+Physical Feature,Thermal / temperature comfort,MD-Hanover,58,3.759,3.293,69.0,57.3,57.3,18.5,41.0,Under Supported,-0.466,0.1725,-0.811,-0.12,0.1127
+Physical Feature,Thermal / temperature comfort,MN-Mendota Heights,171,3.813,3.058,70.3,51.5,51.5,26.0,52.0,Under Supported,-0.754,0.1216,-0.994,-0.514,0.0763
+Physical Feature,Thermal / temperature comfort,MO-St. Louis,165,3.806,3.545,70.2,63.6,63.6,15.9,35.0,Under Supported,-0.261,0.1147,-0.487,-0.034,0.0836
+Physical Feature,Thermal / temperature comfort,NC-Durham,55,3.782,3.582,69.5,64.5,64.5,15.9,38.0,Under Supported,-0.2,0.1966,-0.594,0.194,0.1289
+Physical Feature,Thermal / temperature comfort,NC-Winston-Salem,24,3.75,2.667,68.8,41.7,41.7,31.2,54.0,Under Supported,-1.083,0.3401,-1.787,-0.38,0.2225
+Physical Feature,Thermal / temperature comfort,NH-Manchester,85,3.918,3.106,72.9,52.6,52.6,25.0,54.0,Under Supported,-0.812,0.1538,-1.118,-0.506,0.111
+Physical Feature,Thermal / temperature comfort,NJ-Iselin,79,3.81,3.633,70.3,65.8,65.8,13.3,33.0,Under Supported,-0.177,0.1515,-0.479,0.124,0.1156
+Physical Feature,Thermal / temperature comfort,NV-Las Vegas-Maryland Pkwy,41,3.878,2.756,72.0,43.9,43.9,34.8,63.0,Under Supported,-1.122,0.2594,-1.646,-0.598,0.1667
+Physical Feature,Thermal / temperature comfort,NV-Las Vegas-Russell,52,4.269,3.077,81.7,51.9,51.9,32.7,67.0,Under Supported,-1.192,0.1802,-1.554,-0.831,0.1396
+Physical Feature,Thermal / temperature comfort,NY-Lake Success,48,4.229,3.188,80.7,54.7,54.7,28.1,60.0,Under Supported,-1.042,0.1906,-1.425,-0.658,0.1566
+Physical Feature,Thermal / temperature comfort,NY-Latham,195,3.908,2.815,72.7,45.4,45.4,33.2,58.0,Under Supported,-1.092,0.1221,-1.333,-0.851,0.0758
+Physical Feature,Thermal / temperature comfort,PA-Seven Fields,8,3.75,3.0,68.8,50.0,50.0,31.2,50.0,Under Supported,-0.75,0.7962,-2.633,1.133,0.4226
+Physical Feature,Thermal / temperature comfort,TN-Nashville,64,3.703,3.688,67.6,67.2,67.2,12.1,30.0,Target,-0.016,0.1614,-0.338,0.307,0.1217
+Physical Feature,Thermal / temperature comfort,VA-Ashburn,42,3.857,3.69,71.4,67.3,67.3,14.3,40.0,Under Supported,-0.167,0.2014,-0.573,0.24,0.1384
+Physical Feature,Thermal / temperature comfort,WA-Seattle,20,3.65,4.1,66.2,77.5,77.5,5.0,15.0,Target,0.45,0.2663,-0.107,1.007,0.1433
+Physical Feature,Thermal / temperature comfort,WI-Waukesha,130,3.8,3.346,70.0,58.7,58.7,20.8,44.0,Under Supported,-0.454,0.1347,-0.72,-0.187,0.0885
+Physical Feature,Ease of navigating and finding spaces (directions and signage),CA-Costa Mesa,65,3.4,3.754,60.0,68.8,68.8,7.3,22.0,Target,0.354,0.1557,0.043,0.665,0.1006
+Physical Feature,Ease of navigating and finding spaces (directions and signage),CA-Walnut Creek,37,3.568,3.703,64.2,67.6,67.6,10.8,27.0,Target,0.135,0.2362,-0.344,0.614,0.177
+Physical Feature,Ease of navigating and finding spaces (directions and signage),CT-Rocky Hill,28,3.143,3.786,53.6,69.6,69.6,6.2,21.0,Target,0.643,0.2531,0.124,1.162,0.1297
+Physical Feature,Ease of navigating and finding spaces (directions and signage),CT-Wallingford,205,3.361,3.605,59.0,65.1,65.1,10.1,29.0,Target,0.244,0.0933,0.06,0.428,0.0555
+Physical Feature,Ease of navigating and finding spaces (directions and signage),DC-Washington,10,3.9,3.9,72.5,72.5,72.5,10.0,20.0,Target,0.0,0.4216,-0.954,0.954,0.3145
+Physical Feature,Ease of navigating and finding spaces (directions and signage),DE-Wilmington,44,3.136,3.841,53.4,71.0,71.0,8.0,16.0,Target,0.705,0.2424,0.216,1.193,0.1452
+Physical Feature,Ease of navigating and finding spaces (directions and signage),FL-Lake Mary,117,3.701,3.88,67.5,72.0,72.0,7.7,20.0,Target,0.179,0.1097,-0.038,0.397,0.0779
+Physical Feature,Ease of navigating and finding spaces (directions and signage),GA-Columbus,153,3.595,3.686,64.9,67.2,67.2,9.5,24.0,Target,0.092,0.1013,-0.109,0.292,0.0778
+Physical Feature,Ease of navigating and finding spaces (directions and signage),IA-Urbandale,18,3.111,4.167,52.8,79.2,79.2,1.4,6.0,Target,1.056,0.221,0.589,1.522,0.1667
+Physical Feature,Ease of navigating and finding spaces (directions and signage),IL-Chicago-Bryn Mawr,98,3.551,3.755,63.8,68.9,68.9,8.2,20.0,Target,0.204,0.1213,-0.037,0.445,0.0795
+Physical Feature,Ease of navigating and finding spaces (directions and signage),KS-Overland Park,12,3.333,3.75,58.3,68.8,68.8,6.2,17.0,Target,0.417,0.3786,-0.417,1.25,0.2176
+Physical Feature,Ease of navigating and finding spaces (directions and signage),KY-Louisville,197,3.492,3.599,62.3,65.0,65.0,9.8,24.0,Target,0.107,0.0906,-0.072,0.285,0.065
+Physical Feature,Ease of navigating and finding spaces (directions and signage),LA-Harvey,23,3.261,3.522,56.5,63.0,63.0,10.9,22.0,Target,0.261,0.3029,-0.367,0.889,0.1523
+Physical Feature,Ease of navigating and finding spaces (directions and signage),MA-Woburn,44,3.295,3.841,57.4,71.0,71.0,5.1,11.0,Target,0.545,0.1908,0.161,0.93,0.1523
+Physical Feature,Ease of navigating and finding spaces (directions and signage),MD-Hanover,58,3.414,3.741,60.3,68.5,68.5,7.8,21.0,Target,0.328,0.1657,-0.004,0.659,0.106
+Physical Feature,Ease of navigating and finding spaces (directions and signage),MN-Mendota Heights,171,2.93,3.608,48.2,65.2,65.2,7.0,16.0,Target,0.678,0.1124,0.456,0.9,0.0644
+Physical Feature,Ease of navigating and finding spaces (directions and signage),MO-St. Louis,165,3.4,3.885,60.0,72.1,72.1,5.6,15.0,Target,0.485,0.0944,0.298,0.671,0.0628
+Physical Feature,Ease of navigating and finding spaces (directions and signage),NC-Durham,55,3.236,3.8,55.9,70.0,70.0,6.4,24.0,Target,0.564,0.1736,0.216,0.912,0.0985
+Physical Feature,Ease of navigating and finding spaces (directions and signage),NC-Winston-Salem,24,3.125,3.542,53.1,63.5,63.5,7.3,21.0,Target,0.417,0.2753,-0.153,0.986,0.17
+Physical Feature,Ease of navigating and finding spaces (directions and signage),NH-Manchester,85,3.2,3.718,55.0,67.9,67.9,6.2,19.0,Target,0.518,0.1366,0.246,0.789,0.0847
+Physical Feature,Ease of navigating and finding spaces (directions and signage),NJ-Iselin,79,3.608,3.873,65.2,71.8,71.8,6.0,18.0,Target,0.266,0.1205,0.026,0.506,0.0942
+Physical Feature,Ease of navigating and finding spaces (directions and signage),NV-Las Vegas-Maryland Pkwy,41,3.512,3.366,62.8,59.1,59.1,13.4,27.0,Under Supported,-0.146,0.2196,-0.59,0.298,0.1472
+Physical Feature,Ease of navigating and finding spaces (directions and signage),NV-Las Vegas-Russell,52,3.365,3.712,59.1,67.8,67.8,6.2,17.0,Target,0.346,0.1712,0.002,0.69,0.104
+Physical Feature,Ease of navigating and finding spaces (directions and signage),NY-Lake Success,48,3.688,3.625,67.2,65.6,65.6,14.6,35.0,Under Supported,-0.062,0.205,-0.475,0.35,0.1416
+Physical Feature,Ease of navigating and finding spaces (directions and signage),NY-Latham,195,3.118,3.467,52.9,61.7,61.7,9.4,23.0,Target,0.349,0.1026,0.146,0.551,0.0631
+Physical Feature,Ease of navigating and finding spaces (directions and signage),PA-Seven Fields,8,3.0,4.0,50.0,75.0,75.0,3.1,12.0,Target,1.0,0.4629,-0.095,2.095,0.189
+Physical Feature,Ease of navigating and finding spaces (directions and signage),TN-Nashville,64,3.219,3.922,55.5,73.0,73.0,3.9,9.0,Target,0.703,0.1586,0.386,1.02,0.1028
+Physical Feature,Ease of navigating and finding spaces (directions and signage),VA-Ashburn,42,3.595,3.857,64.9,71.4,71.4,10.1,24.0,Target,0.262,0.2236,-0.19,0.714,0.1546
+Physical Feature,Ease of navigating and finding spaces (directions and signage),WA-Seattle,20,3.05,4.05,51.2,76.2,76.2,2.5,10.0,Target,1.0,0.3162,0.338,1.662,0.1698
+Physical Feature,Ease of navigating and finding spaces (directions and signage),WI-Waukesha,130,3.115,3.877,52.9,71.9,71.9,5.6,15.0,Target,0.762,0.12,0.524,0.999,0.0664
+Service Level,Entry and reception,CA-Costa Mesa,65,2.723,3.662,43.1,66.5,66.5,4.2,9.0,Target,0.938,0.178,0.583,1.294,0.1058
+Service Level,Entry and reception,CA-Walnut Creek,37,2.919,3.919,48.0,73.0,73.0,1.4,5.0,Target,1.0,0.1898,0.615,1.385,0.1568
+Service Level,Entry and reception,CT-Rocky Hill,28,2.429,4.214,35.7,80.4,80.4,0.0,0.0,Over Supported,1.786,0.2204,1.334,2.238,0.119
+Service Level,Entry and reception,CT-Wallingford,205,2.639,3.854,41.0,71.3,71.3,3.3,7.0,Target,1.215,0.0931,1.031,1.398,0.059
+Service Level,Entry and reception,DC-Washington,10,3.5,4.6,62.5,90.0,90.0,0.0,0.0,Target,1.1,0.3145,0.389,1.811,0.1633
+Service Level,Entry and reception,DE-Wilmington,44,2.205,3.864,30.1,71.6,71.6,2.8,9.0,Over Supported,1.659,0.2228,1.21,2.108,0.1439
+Service Level,Entry and reception,FL-Lake Mary,117,3.188,4.085,54.7,77.1,77.1,2.8,6.0,Target,0.897,0.1154,0.669,1.126,0.0801
+Service Level,Entry and reception,GA-Columbus,153,3.013,3.856,50.3,71.4,71.4,3.3,10.0,Target,0.843,0.1008,0.644,1.042,0.0811
+Service Level,Entry and reception,IA-Urbandale,18,2.111,3.722,27.8,68.1,68.1,0.0,0.0,Over Supported,1.611,0.216,1.155,2.067,0.2399
+Service Level,Entry and reception,IL-Chicago-Bryn Mawr,98,2.796,3.867,44.9,71.7,71.7,2.6,5.0,Target,1.071,0.1216,0.83,1.313,0.079
+Service Level,Entry and reception,KS-Overland Park,12,2.667,3.667,41.7,66.7,66.7,2.1,8.0,Target,1.0,0.3257,0.283,1.717,0.2843
+Service Level,Entry and reception,KY-Louisville,197,2.756,3.949,43.9,73.7,73.7,2.8,7.0,Target,1.193,0.0908,1.014,1.372,0.0579
+Service Level,Entry and reception,LA-Harvey,23,3.043,3.87,51.1,71.7,71.7,3.3,9.0,Target,0.826,0.2566,0.294,1.358,0.1918
+Service Level,Entry and reception,MA-Woburn,44,2.545,3.75,38.6,68.8,68.8,2.3,5.0,Target,1.205,0.1856,0.83,1.579,0.1494
+Service Level,Entry and reception,MD-Hanover,58,2.345,3.5,33.6,62.5,62.5,2.2,5.0,Target,1.155,0.1492,0.856,1.454,0.1079
+Service Level,Entry and reception,MN-Mendota Heights,171,2.234,4.012,30.8,75.3,75.3,0.3,1.0,Over Supported,1.778,0.0833,1.613,1.942,0.055
+Service Level,Entry and reception,MO-St. Louis,165,2.503,4.152,37.6,78.8,78.8,1.5,5.0,Over Supported,1.648,0.0976,1.456,1.841,0.0581
+Service Level,Entry and reception,NC-Durham,55,2.564,3.909,39.1,72.7,72.7,2.7,7.0,Target,1.345,0.1857,0.973,1.718,0.098
+Service Level,Entry and reception,NC-Winston-Salem,24,2.25,3.75,31.2,68.8,68.8,2.1,4.0,Target,1.5,0.2624,0.957,2.043,0.2019
+Service Level,Entry and reception,NH-Manchester,85,2.718,3.929,42.9,73.2,73.2,3.5,8.0,Target,1.212,0.147,0.92,1.504,0.0833
+Service Level,Entry and reception,NJ-Iselin,79,2.709,4.051,42.7,76.3,76.3,0.6,1.0,Target,1.342,0.1335,1.076,1.607,0.0934
+Service Level,Entry and reception,NV-Las Vegas-Maryland Pkwy,41,3.122,4.0,53.0,75.0,75.0,6.1,17.0,Target,0.878,0.2295,0.414,1.342,0.1397
+Service Level,Entry and reception,NV-Las Vegas-Russell,52,2.788,4.231,44.7,80.8,80.8,1.4,4.0,Target,1.442,0.1746,1.092,1.793,0.0936
+Service Level,Entry and reception,NY-Lake Success,48,3.062,3.875,51.6,71.9,71.9,3.1,10.0,Target,0.812,0.1675,0.475,1.15,0.1058
+Service Level,Entry and reception,NY-Latham,195,2.467,3.6,36.7,65.0,65.0,5.1,9.0,Target,1.133,0.1064,0.923,1.343,0.0631
+Service Level,Entry and reception,PA-Seven Fields,8,2.25,4.125,31.2,78.1,78.1,0.0,0.0,Over Supported,1.875,0.4795,0.741,3.009,0.2266
+Service Level,Entry and reception,TN-Nashville,64,2.312,4.078,32.8,77.0,77.0,1.6,3.0,Over Supported,1.766,0.1404,1.485,2.046,0.0953
+Service Level,Entry and reception,VA-Ashburn,42,2.5,4.071,37.5,76.8,76.8,0.0,0.0,Over Supported,1.571,0.184,1.2,1.943,0.115
+Service Level,Entry and reception,WA-Seattle,20,2.95,3.35,48.8,58.8,58.8,11.2,25.0,Target,0.4,0.3584,-0.35,1.15,0.1957
+Service Level,Entry and reception,WI-Waukesha,130,2.446,4.154,36.2,78.8,78.8,0.2,1.0,Over Supported,1.708,0.0973,1.515,1.9,0.0603
+Service Level,Availability of on-site food and beverage options,CA-Costa Mesa,65,3.215,3.169,55.4,54.2,54.2,17.7,31.0,Target,-0.046,0.2262,-0.498,0.406,0.1362
+Service Level,Availability of on-site food and beverage options,CA-Walnut Creek,37,3.514,2.378,62.8,34.5,34.5,35.8,62.0,Under Supported,-1.135,0.2955,-1.734,-0.536,0.1518
+Service Level,Availability of on-site food and beverage options,CT-Rocky Hill,28,2.821,3.071,45.5,51.8,51.8,15.2,32.0,Target,0.25,0.3238,-0.414,0.914,0.1987
+Service Level,Availability of on-site food and beverage options,CT-Wallingford,205,3.044,3.063,51.1,51.6,51.6,16.3,35.0,Target,0.02,0.1169,-0.211,0.25,0.0767
+Service Level,Availability of on-site food and beverage options,DC-Washington,10,4.4,3.6,85.0,65.0,65.0,27.5,50.0,Under Supported,-0.8,0.5735,-2.097,0.497,0.4
+Service Level,Availability of on-site food and beverage options,DE-Wilmington,44,3.068,3.068,51.7,51.7,51.7,17.0,34.0,Target,0.0,0.2539,-0.512,0.512,0.1639
+Service Level,Availability of on-site food and beverage options,FL-Lake Mary,117,3.325,3.479,58.1,62.0,62.0,12.8,26.0,Target,0.154,0.146,-0.135,0.443,0.0983
+Service Level,Availability of on-site food and beverage options,GA-Columbus,153,3.379,2.601,59.5,40.0,40.0,29.7,54.0,Under Supported,-0.778,0.1507,-1.076,-0.48,0.1009
+Service Level,Availability of on-site food and beverage options,IA-Urbandale,18,2.611,3.222,40.3,55.6,55.6,4.2,11.0,Target,0.611,0.2574,0.068,1.154,0.2222
+Service Level,Availability of on-site food and beverage options,IL-Chicago-Bryn Mawr,98,3.173,3.173,54.3,54.3,54.3,16.1,33.0,Target,0.0,0.1647,-0.327,0.327,0.1076
+Service Level,Availability of on-site food and beverage options,KS-Overland Park,12,2.583,2.583,39.6,39.6,39.6,16.7,33.0,Target,0.0,0.5222,-1.149,1.149,0.2876
+Service Level,Availability of on-site food and beverage options,KY-Louisville,197,2.924,3.401,48.1,60.0,60.0,11.3,23.0,Target,0.477,0.1171,0.246,0.708,0.0754
+Service Level,Availability of on-site food and beverage options,LA-Harvey,23,3.565,2.304,64.1,32.6,32.6,39.1,57.0,Under Supported,-1.261,0.4228,-2.138,-0.384,0.2625
+Service Level,Availability of on-site food and beverage options,MA-Woburn,44,3.023,3.409,50.6,60.2,60.2,14.2,25.0,Target,0.386,0.2875,-0.194,0.966,0.182
+Service Level,Availability of on-site food and beverage options,MD-Hanover,58,2.724,3.121,43.1,53.0,53.0,10.8,26.0,Target,0.397,0.2012,-0.006,0.8,0.1349
+Service Level,Availability of on-site food and beverage options,MN-Mendota Heights,171,2.567,2.977,39.2,49.4,49.4,15.1,29.0,Target,0.409,0.1441,0.125,0.694,0.0778
+Service Level,Availability of on-site food and beverage options,MO-St. Louis,165,2.915,3.327,47.9,58.2,58.2,9.8,25.0,Target,0.412,0.1147,0.186,0.639,0.075
+Service Level,Availability of on-site food and beverage options,NC-Durham,55,2.945,2.964,48.6,49.1,49.1,17.3,33.0,Target,0.018,0.2441,-0.471,0.508,0.149
+Service Level,Availability of on-site food and beverage options,NC-Winston-Salem,24,3.0,2.833,50.0,45.8,45.8,18.8,38.0,Under Supported,-0.167,0.3839,-0.961,0.627,0.2142
+Service Level,Availability of on-site food and beverage options,NH-Manchester,85,2.859,2.953,46.5,48.8,48.8,17.6,32.0,Target,0.094,0.204,-0.312,0.5,0.1109
+Service Level,Availability of on-site food and beverage options,NJ-Iselin,79,3.038,3.519,50.9,63.0,63.0,10.4,25.0,Target,0.481,0.1764,0.13,0.832,0.1123
+Service Level,Availability of on-site food and beverage options,NV-Las Vegas-Maryland Pkwy,41,3.122,3.024,53.0,50.6,50.6,20.7,37.0,Under Supported,-0.098,0.3,-0.704,0.509,0.1896
+Service Level,Availability of on-site food and beverage options,NV-Las Vegas-Russell,52,2.904,2.827,47.6,45.7,45.7,20.2,38.0,Under Supported,-0.077,0.2674,-0.614,0.46,0.1618
+Service Level,Availability of on-site food and beverage options,NY-Lake Success,48,3.729,2.354,68.2,33.9,33.9,41.7,69.0,Under Supported,-1.375,0.2819,-1.942,-0.808,0.1799
+Service Level,Availability of on-site food and beverage options,NY-Latham,195,3.482,2.231,62.1,30.8,30.8,40.5,65.0,Under Supported,-1.251,0.1418,-1.531,-0.972,0.0767
+Service Level,Availability of on-site food and beverage options,PA-Seven Fields,8,2.5,3.25,37.5,56.2,56.2,15.6,25.0,Target,0.75,0.75,-1.023,2.523,0.3134
+Service Level,Availability of on-site food and beverage options,TN-Nashville,64,2.531,3.203,38.3,55.1,55.1,10.5,23.0,Target,0.672,0.2102,0.252,1.092,0.1446
+Service Level,Availability of on-site food and beverage options,VA-Ashburn,42,3.119,3.595,53.0,64.9,64.9,11.3,21.0,Target,0.476,0.271,-0.071,1.024,0.1672
+Service Level,Availability of on-site food and beverage options,WA-Seattle,20,3.5,2.35,62.5,33.8,33.8,36.2,50.0,Under Supported,-1.15,0.4369,-2.065,-0.235,0.2436
+Service Level,Availability of on-site food and beverage options,WI-Waukesha,130,2.569,3.354,39.2,58.8,58.8,6.2,15.0,Target,0.785,0.1216,0.544,1.025,0.0838
+Service Level,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",CA-Costa Mesa,65,2.877,3.215,46.9,55.4,55.4,10.0,25.0,Target,0.338,0.1758,-0.013,0.69,0.1129
+Service Level,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",CA-Walnut Creek,37,3.162,3.108,54.1,52.7,52.7,16.9,32.0,Under Supported,-0.054,0.2846,-0.631,0.523,0.1724
+Service Level,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",CT-Rocky Hill,28,3.107,3.536,52.7,63.4,63.4,10.7,32.0,Target,0.429,0.2644,-0.114,0.971,0.1584
+Service Level,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",CT-Wallingford,205,2.761,3.337,44.0,58.4,58.4,8.5,21.0,Target,0.576,0.1028,0.373,0.778,0.0618
+Service Level,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",DC-Washington,10,4.5,3.9,87.5,72.5,72.5,20.0,40.0,Under Supported,-0.6,0.4269,-1.566,0.366,0.3145
+Service Level,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",DE-Wilmington,44,2.591,3.545,39.8,63.6,63.6,2.8,11.0,Target,0.955,0.1688,0.614,1.295,0.1278
+Service Level,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",FL-Lake Mary,117,3.359,3.94,59.0,73.5,73.5,4.7,11.0,Target,0.581,0.1108,0.362,0.801,0.0799
+Service Level,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",GA-Columbus,153,2.837,3.444,45.9,61.1,61.1,7.0,18.0,Target,0.608,0.1106,0.389,0.826,0.0747
+Service Level,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",IA-Urbandale,18,2.5,3.667,37.5,66.7,66.7,0.0,0.0,Target,1.167,0.2712,0.595,1.739,0.1808
+Service Level,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",IL-Chicago-Bryn Mawr,98,3.051,3.153,51.3,53.8,53.8,14.0,30.0,Target,0.102,0.1559,-0.207,0.411,0.0933
+Service Level,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",KS-Overland Park,12,2.5,3.75,37.5,68.8,68.8,0.0,0.0,Target,1.25,0.3046,0.58,1.92,0.2176
+Service Level,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",KY-Louisville,197,2.736,3.467,43.4,61.7,61.7,6.3,13.0,Target,0.731,0.0993,0.535,0.927,0.0662
+Service Level,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",LA-Harvey,23,3.348,3.043,58.7,51.1,51.1,19.6,35.0,Under Supported,-0.304,0.3468,-1.024,0.415,0.213
+Service Level,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",MA-Woburn,44,3.0,3.523,50.0,63.1,63.1,11.4,25.0,Target,0.523,0.2651,-0.012,1.057,0.1641
+Service Level,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",MD-Hanover,58,2.759,3.31,44.0,57.8,57.8,6.0,17.0,Target,0.552,0.1578,0.236,0.868,0.1106
+Service Level,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",MN-Mendota Heights,171,2.579,3.456,39.5,61.4,61.4,5.1,13.0,Target,0.877,0.1017,0.677,1.078,0.0659
+Service Level,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",MO-St. Louis,165,2.491,3.509,37.3,62.7,62.7,4.1,8.0,Target,1.018,0.1044,0.812,1.224,0.0696
+Service Level,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",NC-Durham,55,2.745,3.309,43.6,57.7,57.7,10.0,25.0,Target,0.564,0.2006,0.161,0.966,0.1066
+Service Level,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",NC-Winston-Salem,24,2.417,3.333,35.4,58.3,58.3,5.2,12.0,Target,0.917,0.2882,0.321,1.513,0.1554
+Service Level,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",NH-Manchester,85,2.518,3.471,37.9,61.8,61.8,5.9,13.0,Target,0.953,0.1578,0.639,1.267,0.083
+Service Level,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",NJ-Iselin,79,2.899,3.595,47.5,64.9,64.9,4.7,13.0,Target,0.696,0.1376,0.422,0.97,0.0979
+Service Level,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",NV-Las Vegas-Maryland Pkwy,41,3.0,3.585,50.0,64.6,64.6,6.7,20.0,Target,0.585,0.1912,0.199,0.972,0.1439
+Service Level,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",NV-Las Vegas-Russell,52,3.077,3.577,51.9,64.4,64.4,9.1,27.0,Target,0.5,0.2046,0.089,0.911,0.1144
+Service Level,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",NY-Lake Success,48,3.292,3.396,57.3,59.9,59.9,13.0,31.0,Target,0.104,0.2253,-0.349,0.557,0.1481
+Service Level,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",NY-Latham,195,2.718,2.99,42.9,49.7,49.7,13.1,31.0,Target,0.272,0.1169,0.041,0.502,0.0666
+Service Level,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",PA-Seven Fields,8,2.25,3.75,31.2,68.8,68.8,0.0,0.0,Target,1.5,0.189,1.053,1.947,0.1637
+Service Level,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",TN-Nashville,64,2.438,3.578,35.9,64.5,64.5,5.5,9.0,Target,1.141,0.1875,0.766,1.515,0.1195
+Service Level,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",VA-Ashburn,42,3.048,3.524,51.2,63.1,63.1,8.3,24.0,Target,0.476,0.2317,0.008,0.944,0.1533
+Service Level,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",WA-Seattle,20,3.05,3.25,51.2,56.2,56.2,15.0,30.0,Target,0.2,0.4078,-0.654,1.054,0.2161
+Service Level,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",WI-Waukesha,130,2.538,3.592,38.5,64.8,64.8,3.5,10.0,Target,1.054,0.1038,0.849,1.259,0.0679
+Service Level,Cleanliness and upkeep of PulsePoint,CA-Costa Mesa,65,4.169,3.908,79.2,72.7,72.7,13.5,32.0,Under Supported,-0.262,0.1539,-0.569,0.046,0.1133
+Service Level,Cleanliness and upkeep of PulsePoint,CA-Walnut Creek,37,4.027,3.838,75.7,70.9,70.9,10.8,24.0,Under Supported,-0.189,0.1892,-0.573,0.195,0.1712
+Service Level,Cleanliness and upkeep of PulsePoint,CT-Rocky Hill,28,3.821,4.0,70.5,75.0,75.0,6.2,21.0,Target,0.179,0.171,-0.172,0.529,0.1029
+Service Level,Cleanliness and upkeep of PulsePoint,CT-Wallingford,205,4.171,3.956,79.3,73.9,73.9,14.1,36.0,Under Supported,-0.215,0.0897,-0.392,-0.038,0.0639
+Service Level,Cleanliness and upkeep of PulsePoint,DC-Washington,10,4.5,4.5,87.5,87.5,87.5,7.5,30.0,Target,0.0,0.2582,-0.584,0.584,0.1667
+Service Level,Cleanliness and upkeep of PulsePoint,DE-Wilmington,44,3.841,3.977,71.0,74.4,74.4,8.5,23.0,Target,0.136,0.1769,-0.22,0.493,0.1194
+Service Level,Cleanliness and upkeep of PulsePoint,FL-Lake Mary,117,4.231,4.171,80.8,79.3,79.3,10.0,29.0,Under Supported,-0.06,0.1032,-0.264,0.145,0.0761
+Service Level,Cleanliness and upkeep of PulsePoint,GA-Columbus,153,4.301,3.458,82.5,61.4,61.4,26.0,52.0,Under Supported,-0.843,0.1206,-1.081,-0.605,0.0968
+Service Level,Cleanliness and upkeep of PulsePoint,IA-Urbandale,18,3.722,4.333,68.1,83.3,83.3,5.6,17.0,Target,0.611,0.2698,0.042,1.18,0.198
+Service Level,Cleanliness and upkeep of PulsePoint,IL-Chicago-Bryn Mawr,98,4.286,3.551,82.1,63.8,63.8,23.2,51.0,Under Supported,-0.735,0.141,-1.015,-0.455,0.1017
+Service Level,Cleanliness and upkeep of PulsePoint,KS-Overland Park,12,3.75,4.167,68.8,79.2,79.2,2.1,8.0,Target,0.417,0.2876,-0.216,1.05,0.241
+Service Level,Cleanliness and upkeep of PulsePoint,KY-Louisville,197,4.086,3.69,77.2,67.3,67.3,17.1,36.0,Under Supported,-0.396,0.0991,-0.591,-0.201,0.0762
+Service Level,Cleanliness and upkeep of PulsePoint,LA-Harvey,23,4.304,3.522,82.6,63.0,63.0,21.7,43.0,Under Supported,-0.783,0.2809,-1.365,-0.2,0.2505
+Service Level,Cleanliness and upkeep of PulsePoint,MA-Woburn,44,3.795,3.727,69.9,68.2,68.2,14.8,34.0,Under Supported,-0.068,0.2191,-0.51,0.374,0.1669
+Service Level,Cleanliness and upkeep of PulsePoint,MD-Hanover,58,3.862,3.5,71.6,62.5,62.5,17.7,26.0,Under Supported,-0.362,0.2112,-0.785,0.061,0.1541
+Service Level,Cleanliness and upkeep of PulsePoint,MN-Mendota Heights,171,3.795,3.678,69.9,67.0,67.0,14.0,30.0,Under Supported,-0.117,0.1106,-0.335,0.101,0.0768
+Service Level,Cleanliness and upkeep of PulsePoint,MO-St. Louis,165,3.958,4.024,73.9,75.6,75.6,9.5,24.0,Target,0.067,0.0981,-0.127,0.26,0.0719
+Service Level,Cleanliness and upkeep of PulsePoint,NC-Durham,55,4.036,3.909,75.9,72.7,72.7,15.0,33.0,Under Supported,-0.127,0.1925,-0.513,0.259,0.1252
+Service Level,Cleanliness and upkeep of PulsePoint,NC-Winston-Salem,24,4.292,3.375,82.3,59.4,59.4,26.0,71.0,Under Supported,-0.917,0.2163,-1.364,-0.469,0.1571
+Service Level,Cleanliness and upkeep of PulsePoint,NH-Manchester,85,3.871,3.965,71.8,74.1,74.1,9.1,27.0,Target,0.094,0.1259,-0.156,0.345,0.0861
+Service Level,Cleanliness and upkeep of PulsePoint,NJ-Iselin,79,4.025,4.165,75.6,79.1,79.1,7.3,23.0,Target,0.139,0.1164,-0.092,0.371,0.0926
+Service Level,Cleanliness and upkeep of PulsePoint,NV-Las Vegas-Maryland Pkwy,41,4.098,4.22,77.4,80.5,80.5,10.4,22.0,Target,0.122,0.2072,-0.297,0.541,0.1582
+Service Level,Cleanliness and upkeep of PulsePoint,NV-Las Vegas-Russell,52,4.058,3.904,76.4,72.6,72.6,13.0,40.0,Under Supported,-0.154,0.1656,-0.486,0.179,0.0962
+Service Level,Cleanliness and upkeep of PulsePoint,NY-Lake Success,48,4.333,3.583,83.3,64.6,64.6,22.4,50.0,Under Supported,-0.75,0.1918,-1.136,-0.364,0.1571
+Service Level,Cleanliness and upkeep of PulsePoint,NY-Latham,195,4.0,3.467,75.0,61.7,61.7,19.6,44.0,Under Supported,-0.533,0.0976,-0.726,-0.341,0.0717
+Service Level,Cleanliness and upkeep of PulsePoint,PA-Seven Fields,8,3.625,3.75,65.6,68.8,68.8,15.6,38.0,Target,0.125,0.5489,-1.173,1.423,0.3134
+Service Level,Cleanliness and upkeep of PulsePoint,TN-Nashville,64,3.766,4.141,69.1,78.5,78.5,5.9,17.0,Target,0.375,0.1435,0.088,0.662,0.0993
+Service Level,Cleanliness and upkeep of PulsePoint,VA-Ashburn,42,3.881,4.31,72.0,82.7,82.7,5.4,17.0,Target,0.429,0.1743,0.077,0.78,0.1155
+Service Level,Cleanliness and upkeep of PulsePoint,WA-Seattle,20,3.5,3.7,62.5,67.5,67.5,8.8,15.0,Target,0.2,0.3044,-0.437,0.837,0.2188
+Service Level,Cleanliness and upkeep of PulsePoint,WI-Waukesha,130,3.838,4.038,71.0,76.0,76.0,7.3,20.0,Target,0.2,0.0997,0.003,0.397,0.0668
+Service Level,"Reliability of building operations (e.g., elevators, restrooms, etc.)",CA-Costa Mesa,65,4.323,4.092,83.1,77.3,77.3,10.8,35.0,Under Supported,-0.231,0.1176,-0.466,0.004,0.0897
+Service Level,"Reliability of building operations (e.g., elevators, restrooms, etc.)",CA-Walnut Creek,37,4.108,4.081,77.7,77.0,77.0,5.4,16.0,Target,-0.027,0.1255,-0.282,0.227,0.152
+Service Level,"Reliability of building operations (e.g., elevators, restrooms, etc.)",CT-Rocky Hill,28,3.786,4.036,69.6,75.9,75.9,6.2,21.0,Target,0.25,0.1899,-0.14,0.64,0.096
+Service Level,"Reliability of building operations (e.g., elevators, restrooms, etc.)",CT-Wallingford,205,4.151,3.907,78.8,72.7,72.7,13.7,38.0,Under Supported,-0.244,0.083,-0.407,-0.08,0.0609
+Service Level,"Reliability of building operations (e.g., elevators, restrooms, etc.)",DC-Washington,10,4.4,4.0,85.0,75.0,75.0,20.0,40.0,Under Supported,-0.4,0.4761,-1.477,0.677,0.3333
+Service Level,"Reliability of building operations (e.g., elevators, restrooms, etc.)",DE-Wilmington,44,3.818,4.068,70.5,76.7,76.7,6.2,23.0,Target,0.25,0.1494,-0.051,0.551,0.1145
+Service Level,"Reliability of building operations (e.g., elevators, restrooms, etc.)",FL-Lake Mary,117,4.205,4.111,80.1,77.8,77.8,9.8,29.0,Under Supported,-0.094,0.0971,-0.286,0.098,0.0766
+Service Level,"Reliability of building operations (e.g., elevators, restrooms, etc.)",GA-Columbus,153,4.255,3.856,81.4,71.4,71.4,14.7,42.0,Under Supported,-0.399,0.0886,-0.574,-0.224,0.0744
+Service Level,"Reliability of building operations (e.g., elevators, restrooms, etc.)",IA-Urbandale,18,3.778,4.167,69.4,79.2,79.2,4.2,11.0,Target,0.389,0.2444,-0.127,0.905,0.1667
+Service Level,"Reliability of building operations (e.g., elevators, restrooms, etc.)",IL-Chicago-Bryn Mawr,98,4.306,4.02,82.7,75.5,75.5,11.7,39.0,Under Supported,-0.286,0.0929,-0.47,-0.101,0.0664
+Service Level,"Reliability of building operations (e.g., elevators, restrooms, etc.)",KS-Overland Park,12,3.833,4.167,70.8,79.2,79.2,4.2,17.0,Target,0.333,0.3333,-0.4,1.067,0.241
+Service Level,"Reliability of building operations (e.g., elevators, restrooms, etc.)",KY-Louisville,197,4.183,3.838,79.6,70.9,70.9,15.0,40.0,Under Supported,-0.345,0.0843,-0.511,-0.179,0.0645
+Service Level,"Reliability of building operations (e.g., elevators, restrooms, etc.)",LA-Harvey,23,4.261,3.609,81.5,65.2,65.2,19.6,43.0,Under Supported,-0.652,0.2712,-1.215,-0.09,0.206
+Service Level,"Reliability of building operations (e.g., elevators, restrooms, etc.)",MA-Woburn,44,4.0,3.591,75.0,64.8,64.8,20.5,39.0,Under Supported,-0.409,0.244,-0.901,0.083,0.179
+Service Level,"Reliability of building operations (e.g., elevators, restrooms, etc.)",MD-Hanover,58,3.879,3.914,72.0,72.8,72.8,8.6,21.0,Target,0.034,0.1475,-0.261,0.33,0.1023
+Service Level,"Reliability of building operations (e.g., elevators, restrooms, etc.)",MN-Mendota Heights,171,3.895,3.86,72.4,71.5,71.5,9.6,26.0,Target,-0.035,0.0873,-0.208,0.137,0.0611
+Service Level,"Reliability of building operations (e.g., elevators, restrooms, etc.)",MO-St. Louis,165,4.255,4.115,81.4,77.9,77.9,9.8,30.0,Under Supported,-0.139,0.0778,-0.293,0.014,0.0604
+Service Level,"Reliability of building operations (e.g., elevators, restrooms, etc.)",NC-Durham,55,4.145,3.236,78.6,55.9,55.9,29.5,58.0,Under Supported,-0.909,0.2144,-1.339,-0.479,0.149
+Service Level,"Reliability of building operations (e.g., elevators, restrooms, etc.)",NC-Winston-Salem,24,4.167,3.542,79.2,63.5,63.5,19.8,42.0,Under Supported,-0.625,0.2679,-1.179,-0.071,0.1994
+Service Level,"Reliability of building operations (e.g., elevators, restrooms, etc.)",NH-Manchester,85,4.012,3.941,75.3,73.5,73.5,10.9,34.0,Under Supported,-0.071,0.1239,-0.317,0.176,0.0809
+Service Level,"Reliability of building operations (e.g., elevators, restrooms, etc.)",NJ-Iselin,79,3.962,4.19,74.1,79.7,79.7,5.7,22.0,Target,0.228,0.111,0.007,0.449,0.0766
+Service Level,"Reliability of building operations (e.g., elevators, restrooms, etc.)",NV-Las Vegas-Maryland Pkwy,41,4.195,4.049,79.9,76.2,76.2,11.6,27.0,Under Supported,-0.146,0.18,-0.51,0.217,0.148
+Service Level,"Reliability of building operations (e.g., elevators, restrooms, etc.)",NV-Las Vegas-Russell,52,4.173,4.0,79.3,75.0,75.0,11.5,37.0,Under Supported,-0.173,0.1472,-0.469,0.122,0.0951
+Service Level,"Reliability of building operations (e.g., elevators, restrooms, etc.)",NY-Lake Success,48,4.354,3.479,83.9,62.0,62.0,24.0,52.0,Under Supported,-0.875,0.1874,-1.252,-0.498,0.1575
+Service Level,"Reliability of building operations (e.g., elevators, restrooms, etc.)",NY-Latham,195,3.985,3.477,74.6,61.9,61.9,18.5,42.0,Under Supported,-0.508,0.0955,-0.696,-0.319,0.0736
+Service Level,"Reliability of building operations (e.g., elevators, restrooms, etc.)",PA-Seven Fields,8,4.0,4.0,75.0,75.0,75.0,12.5,38.0,Target,0.0,0.4226,-0.999,0.999,0.2673
+Service Level,"Reliability of building operations (e.g., elevators, restrooms, etc.)",TN-Nashville,64,3.906,4.156,72.7,78.9,78.9,5.5,16.0,Target,0.25,0.122,0.006,0.494,0.1026
+Service Level,"Reliability of building operations (e.g., elevators, restrooms, etc.)",VA-Ashburn,42,4.071,4.214,76.8,80.4,80.4,7.7,24.0,Target,0.143,0.1655,-0.191,0.477,0.1106
+Service Level,"Reliability of building operations (e.g., elevators, restrooms, etc.)",WA-Seattle,20,3.8,3.7,70.0,67.5,67.5,12.5,30.0,Under Supported,-0.1,0.2893,-0.705,0.505,0.1933
+Service Level,"Reliability of building operations (e.g., elevators, restrooms, etc.)",WI-Waukesha,130,3.938,4.0,73.5,75.0,75.0,7.7,22.0,Target,0.062,0.0912,-0.119,0.242,0.0724
+Service Level,"Communication about workplace updates, changes, or disruptions",CA-Costa Mesa,65,3.862,3.692,71.5,67.3,67.3,12.7,35.0,Under Supported,-0.169,0.1464,-0.462,0.123,0.1027
+Service Level,"Communication about workplace updates, changes, or disruptions",CA-Walnut Creek,37,3.919,3.973,73.0,74.3,74.3,6.8,22.0,Target,0.054,0.1498,-0.25,0.358,0.162
+Service Level,"Communication about workplace updates, changes, or disruptions",CT-Rocky Hill,28,3.679,4.0,67.0,75.0,75.0,3.6,14.0,Target,0.321,0.1548,0.004,0.639,0.1029
+Service Level,"Communication about workplace updates, changes, or disruptions",CT-Wallingford,205,3.82,3.922,70.5,73.0,73.0,8.5,25.0,Target,0.102,0.0784,-0.052,0.257,0.0528
+Service Level,"Communication about workplace updates, changes, or disruptions",DC-Washington,10,4.5,4.7,87.5,92.5,92.5,2.5,10.0,Target,0.2,0.2,-0.252,0.652,0.1528
+Service Level,"Communication about workplace updates, changes, or disruptions",DE-Wilmington,44,3.659,4.273,66.5,81.8,81.8,2.3,9.0,Target,0.614,0.1388,0.334,0.893,0.0995
+Service Level,"Communication about workplace updates, changes, or disruptions",FL-Lake Mary,117,3.983,3.889,74.6,72.2,72.2,10.9,30.0,Under Supported,-0.094,0.1037,-0.299,0.111,0.0785
+Service Level,"Communication about workplace updates, changes, or disruptions",GA-Columbus,153,3.935,3.908,73.4,72.7,72.7,8.8,25.0,Target,-0.026,0.0875,-0.199,0.147,0.072
+Service Level,"Communication about workplace updates, changes, or disruptions",IA-Urbandale,18,3.611,3.611,65.3,65.3,65.3,12.5,22.0,Target,0.0,0.343,-0.724,0.724,0.2306
+Service Level,"Communication about workplace updates, changes, or disruptions",IL-Chicago-Bryn Mawr,98,3.98,3.776,74.5,69.4,69.4,11.5,33.0,Under Supported,-0.204,0.1046,-0.412,0.003,0.0788
+Service Level,"Communication about workplace updates, changes, or disruptions",KS-Overland Park,12,3.5,3.75,62.5,68.8,68.8,6.2,17.0,Target,0.25,0.3718,-0.568,1.068,0.3509
+Service Level,"Communication about workplace updates, changes, or disruptions",KY-Louisville,197,3.848,3.898,71.2,72.5,72.5,9.4,29.0,Target,0.051,0.0764,-0.1,0.201,0.0529
+Service Level,"Communication about workplace updates, changes, or disruptions",LA-Harvey,23,4.348,3.348,83.7,58.7,58.7,27.2,61.0,Under Supported,-1.0,0.2667,-1.553,-0.447,0.1949
+Service Level,"Communication about workplace updates, changes, or disruptions",MA-Woburn,44,3.477,3.841,61.9,71.0,71.0,5.1,14.0,Target,0.364,0.1562,0.049,0.679,0.1298
+Service Level,"Communication about workplace updates, changes, or disruptions",MD-Hanover,58,3.638,3.966,65.9,74.1,74.1,6.0,17.0,Target,0.328,0.1421,0.043,0.612,0.0952
+Service Level,"Communication about workplace updates, changes, or disruptions",MN-Mendota Heights,171,3.532,3.813,63.3,70.3,70.3,6.1,19.0,Target,0.281,0.0826,0.118,0.444,0.0575
+Service Level,"Communication about workplace updates, changes, or disruptions",MO-St. Louis,165,3.988,4.024,74.7,75.6,75.6,8.2,25.0,Target,0.036,0.082,-0.125,0.198,0.0601
+Service Level,"Communication about workplace updates, changes, or disruptions",NC-Durham,55,3.836,3.455,70.9,61.4,61.4,19.1,42.0,Under Supported,-0.382,0.1933,-0.769,0.006,0.1155
+Service Level,"Communication about workplace updates, changes, or disruptions",NC-Winston-Salem,24,3.667,3.5,66.7,62.5,62.5,12.5,38.0,Under Supported,-0.167,0.2305,-0.644,0.31,0.1346
+Service Level,"Communication about workplace updates, changes, or disruptions",NH-Manchester,85,3.835,4.071,70.9,76.8,76.8,4.4,14.0,Target,0.235,0.0985,0.039,0.431,0.0799
+Service Level,"Communication about workplace updates, changes, or disruptions",NJ-Iselin,79,3.911,4.013,72.8,75.3,75.3,5.7,18.0,Target,0.101,0.106,-0.11,0.312,0.0978
+Service Level,"Communication about workplace updates, changes, or disruptions",NV-Las Vegas-Maryland Pkwy,41,3.902,3.732,72.6,68.3,68.3,15.9,39.0,Under Supported,-0.171,0.2287,-0.633,0.292,0.1441
+Service Level,"Communication about workplace updates, changes, or disruptions",NV-Las Vegas-Russell,52,3.808,3.731,70.2,68.3,68.3,11.5,35.0,Under Supported,-0.077,0.1689,-0.416,0.262,0.1068
+Service Level,"Communication about workplace updates, changes, or disruptions",NY-Lake Success,48,4.25,3.333,81.2,58.3,58.3,24.5,56.0,Under Supported,-0.917,0.1757,-1.27,-0.563,0.1469
+Service Level,"Communication about workplace updates, changes, or disruptions",NY-Latham,195,3.682,3.605,67.1,65.1,65.1,11.7,32.0,Under Supported,-0.077,0.0866,-0.248,0.094,0.0588
+Service Level,"Communication about workplace updates, changes, or disruptions",PA-Seven Fields,8,3.875,3.625,71.9,65.6,65.6,18.8,38.0,Under Supported,-0.25,0.559,-1.572,1.072,0.3239
+Service Level,"Communication about workplace updates, changes, or disruptions",TN-Nashville,64,3.625,3.812,65.6,70.3,70.3,10.9,22.0,Target,0.188,0.1794,-0.171,0.546,0.1217
+Service Level,"Communication about workplace updates, changes, or disruptions",VA-Ashburn,42,3.786,4.048,69.6,76.2,76.2,4.2,14.0,Target,0.262,0.1366,-0.014,0.538,0.1128
+Service Level,"Communication about workplace updates, changes, or disruptions",WA-Seattle,20,3.65,3.65,66.2,66.2,66.2,10.0,25.0,Target,0.0,0.2616,-0.547,0.547,0.1666
+Service Level,"Communication about workplace updates, changes, or disruptions",WI-Waukesha,130,3.638,4.0,66.0,75.0,75.0,4.8,13.0,Target,0.362,0.0901,0.183,0.54,0.0637
+Digital & Tech,"I can connect and start working at a PulsePoint without unnecessary technical friction (WiFi, power or cabling, monitors or peripherals, log-in/system access)",CA-Costa Mesa,65,,3.554,,63.8,63.8,36.2,77.0,,,,,,0.1471
+Digital & Tech,"I can connect and start working at a PulsePoint without unnecessary technical friction (WiFi, power or cabling, monitors or peripherals, log-in/system access)",CA-Walnut Creek,37,,3.703,,67.6,67.6,32.4,73.0,,,,,,0.1727
+Digital & Tech,"I can connect and start working at a PulsePoint without unnecessary technical friction (WiFi, power or cabling, monitors or peripherals, log-in/system access)",CT-Rocky Hill,28,,2.786,,44.6,44.6,55.4,96.0,,,,,,0.1733
+Digital & Tech,"I can connect and start working at a PulsePoint without unnecessary technical friction (WiFi, power or cabling, monitors or peripherals, log-in/system access)",CT-Wallingford,205,,3.956,,73.9,73.9,26.1,73.0,,,,,,0.0604
+Digital & Tech,"I can connect and start working at a PulsePoint without unnecessary technical friction (WiFi, power or cabling, monitors or peripherals, log-in/system access)",DC-Washington,10,,4.2,,80.0,80.0,20.0,50.0,,,,,,0.3887
+Digital & Tech,"I can connect and start working at a PulsePoint without unnecessary technical friction (WiFi, power or cabling, monitors or peripherals, log-in/system access)",DE-Wilmington,44,,3.432,,60.8,60.8,39.2,73.0,,,,,,0.2066
+Digital & Tech,"I can connect and start working at a PulsePoint without unnecessary technical friction (WiFi, power or cabling, monitors or peripherals, log-in/system access)",FL-Lake Mary,117,,3.932,,73.3,73.3,26.7,69.0,,,,,,0.0938
+Digital & Tech,"I can connect and start working at a PulsePoint without unnecessary technical friction (WiFi, power or cabling, monitors or peripherals, log-in/system access)",GA-Columbus,153,,3.902,,72.5,72.5,27.5,67.0,,,,,,0.0874
+Digital & Tech,"I can connect and start working at a PulsePoint without unnecessary technical friction (WiFi, power or cabling, monitors or peripherals, log-in/system access)",IA-Urbandale,18,,4.167,,79.2,79.2,20.8,61.0,,,,,,0.2021
+Digital & Tech,"I can connect and start working at a PulsePoint without unnecessary technical friction (WiFi, power or cabling, monitors or peripherals, log-in/system access)",IL-Chicago-Bryn Mawr,98,,3.439,,61.0,61.0,39.0,83.0,,,,,,0.1197
+Digital & Tech,"I can connect and start working at a PulsePoint without unnecessary technical friction (WiFi, power or cabling, monitors or peripherals, log-in/system access)",KS-Overland Park,12,,4.167,,79.2,79.2,20.8,58.0,,,,,,0.2706
+Digital & Tech,"I can connect and start working at a PulsePoint without unnecessary technical friction (WiFi, power or cabling, monitors or peripherals, log-in/system access)",KY-Louisville,197,,3.69,,67.3,67.3,32.7,80.0,,,,,,0.0758
+Digital & Tech,"I can connect and start working at a PulsePoint without unnecessary technical friction (WiFi, power or cabling, monitors or peripherals, log-in/system access)",LA-Harvey,23,,3.13,,53.3,53.3,46.7,91.0,,,,,,0.2378
+Digital & Tech,"I can connect and start working at a PulsePoint without unnecessary technical friction (WiFi, power or cabling, monitors or peripherals, log-in/system access)",MA-Woburn,44,,3.455,,61.4,61.4,38.6,82.0,,,,,,0.1823
+Digital & Tech,"I can connect and start working at a PulsePoint without unnecessary technical friction (WiFi, power or cabling, monitors or peripherals, log-in/system access)",MD-Hanover,58,,3.621,,65.5,65.5,34.5,79.0,,,,,,0.1472
+Digital & Tech,"I can connect and start working at a PulsePoint without unnecessary technical friction (WiFi, power or cabling, monitors or peripherals, log-in/system access)",MN-Mendota Heights,171,,3.719,,68.0,68.0,32.0,81.0,,,,,,0.0743
+Digital & Tech,"I can connect and start working at a PulsePoint without unnecessary technical friction (WiFi, power or cabling, monitors or peripherals, log-in/system access)",MO-St. Louis,165,,3.927,,73.2,73.2,26.8,70.0,,,,,,0.0752
+Digital & Tech,"I can connect and start working at a PulsePoint without unnecessary technical friction (WiFi, power or cabling, monitors or peripherals, log-in/system access)",NC-Durham,55,,3.527,,63.2,63.2,36.8,84.0,,,,,,0.1465
+Digital & Tech,"I can connect and start working at a PulsePoint without unnecessary technical friction (WiFi, power or cabling, monitors or peripherals, log-in/system access)",NC-Winston-Salem,24,,3.708,,67.7,67.7,32.3,75.0,,,,,,0.229
+Digital & Tech,"I can connect and start working at a PulsePoint without unnecessary technical friction (WiFi, power or cabling, monitors or peripherals, log-in/system access)",NH-Manchester,85,,3.8,,70.0,70.0,30.0,84.0,,,,,,0.0973
+Digital & Tech,"I can connect and start working at a PulsePoint without unnecessary technical friction (WiFi, power or cabling, monitors or peripherals, log-in/system access)",NJ-Iselin,79,,3.797,,69.9,69.9,30.1,76.0,,,,,,0.1187
+Digital & Tech,"I can connect and start working at a PulsePoint without unnecessary technical friction (WiFi, power or cabling, monitors or peripherals, log-in/system access)",NV-Las Vegas-Maryland Pkwy,41,,3.293,,57.3,57.3,42.7,73.0,,,,,,0.2296
+Digital & Tech,"I can connect and start working at a PulsePoint without unnecessary technical friction (WiFi, power or cabling, monitors or peripherals, log-in/system access)",NV-Las Vegas-Russell,52,,3.673,,66.8,66.8,33.2,75.0,,,,,,0.1571
+Digital & Tech,"I can connect and start working at a PulsePoint without unnecessary technical friction (WiFi, power or cabling, monitors or peripherals, log-in/system access)",NY-Lake Success,48,,3.896,,72.4,72.4,27.6,73.0,,,,,,0.1372
+Digital & Tech,"I can connect and start working at a PulsePoint without unnecessary technical friction (WiFi, power or cabling, monitors or peripherals, log-in/system access)",NY-Latham,195,,3.379,,59.5,59.5,40.5,84.0,,,,,,0.0845
+Digital & Tech,"I can connect and start working at a PulsePoint without unnecessary technical friction (WiFi, power or cabling, monitors or peripherals, log-in/system access)",PA-Seven Fields,8,,1.75,,18.8,18.8,81.2,100.0,,,,,,0.1637
+Digital & Tech,"I can connect and start working at a PulsePoint without unnecessary technical friction (WiFi, power or cabling, monitors or peripherals, log-in/system access)",TN-Nashville,64,,3.625,,65.6,65.6,34.4,77.0,,,,,,0.1519
+Digital & Tech,"I can connect and start working at a PulsePoint without unnecessary technical friction (WiFi, power or cabling, monitors or peripherals, log-in/system access)",VA-Ashburn,42,,3.714,,67.9,67.9,32.1,74.0,,,,,,0.1572
+Digital & Tech,"I can connect and start working at a PulsePoint without unnecessary technical friction (WiFi, power or cabling, monitors or peripherals, log-in/system access)",WA-Seattle,20,,3.7,,67.5,67.5,32.5,85.0,,,,,,0.2065
+Digital & Tech,"I can connect and start working at a PulsePoint without unnecessary technical friction (WiFi, power or cabling, monitors or peripherals, log-in/system access)",WI-Waukesha,130,,3.762,,69.0,69.0,31.0,79.0,,,,,,0.0845
+Digital & Tech,Video conferencing and meeting room technology reliably support in-person and virtual meetings,CA-Costa Mesa,65,,3.646,,66.2,66.2,33.8,77.0,,,,,,0.1249
+Digital & Tech,Video conferencing and meeting room technology reliably support in-person and virtual meetings,CA-Walnut Creek,37,,3.676,,66.9,66.9,33.1,76.0,,,,,,0.1453
+Digital & Tech,Video conferencing and meeting room technology reliably support in-person and virtual meetings,CT-Rocky Hill,28,,2.964,,49.1,49.1,50.9,96.0,,,,,,0.1665
+Digital & Tech,Video conferencing and meeting room technology reliably support in-person and virtual meetings,CT-Wallingford,205,,3.62,,65.5,65.5,34.5,87.0,,,,,,0.0583
+Digital & Tech,Video conferencing and meeting room technology reliably support in-person and virtual meetings,DC-Washington,10,,4.4,,85.0,85.0,15.0,50.0,,,,,,0.2211
+Digital & Tech,Video conferencing and meeting room technology reliably support in-person and virtual meetings,DE-Wilmington,44,,3.477,,61.9,61.9,38.1,84.0,,,,,,0.1398
+Digital & Tech,Video conferencing and meeting room technology reliably support in-person and virtual meetings,FL-Lake Mary,117,,3.863,,71.6,71.6,28.4,77.0,,,,,,0.0727
+Digital & Tech,Video conferencing and meeting room technology reliably support in-person and virtual meetings,GA-Columbus,153,,3.752,,68.8,68.8,31.2,77.0,,,,,,0.0766
+Digital & Tech,Video conferencing and meeting room technology reliably support in-person and virtual meetings,IA-Urbandale,18,,4.0,,75.0,75.0,25.0,67.0,,,,,,0.198
+Digital & Tech,Video conferencing and meeting room technology reliably support in-person and virtual meetings,IL-Chicago-Bryn Mawr,98,,3.337,,58.4,58.4,41.6,89.0,,,,,,0.0962
+Digital & Tech,Video conferencing and meeting room technology reliably support in-person and virtual meetings,KS-Overland Park,12,,3.667,,66.7,66.7,33.3,83.0,,,,,,0.2562
+Digital & Tech,Video conferencing and meeting room technology reliably support in-person and virtual meetings,KY-Louisville,197,,3.594,,64.8,64.8,35.2,90.0,,,,,,0.0528
+Digital & Tech,Video conferencing and meeting room technology reliably support in-person and virtual meetings,LA-Harvey,23,,3.435,,60.9,60.9,39.1,96.0,,,,,,0.1517
+Digital & Tech,Video conferencing and meeting room technology reliably support in-person and virtual meetings,MA-Woburn,44,,3.341,,58.5,58.5,41.5,93.0,,,,,,0.1415
+Digital & Tech,Video conferencing and meeting room technology reliably support in-person and virtual meetings,MD-Hanover,58,,3.448,,61.2,61.2,38.8,88.0,,,,,,0.1132
+Digital & Tech,Video conferencing and meeting room technology reliably support in-person and virtual meetings,MN-Mendota Heights,171,,3.345,,58.6,58.6,41.4,92.0,,,,,,0.0655
+Digital & Tech,Video conferencing and meeting room technology reliably support in-person and virtual meetings,MO-St. Louis,165,,3.6,,65.0,65.0,35.0,85.0,,,,,,0.0642
+Digital & Tech,Video conferencing and meeting room technology reliably support in-person and virtual meetings,NC-Durham,55,,3.145,,53.6,53.6,46.4,96.0,,,,,,0.1144
+Digital & Tech,Video conferencing and meeting room technology reliably support in-person and virtual meetings,NC-Winston-Salem,24,,3.25,,56.2,56.2,43.8,96.0,,,,,,0.2019
+Digital & Tech,Video conferencing and meeting room technology reliably support in-person and virtual meetings,NH-Manchester,85,,3.341,,58.5,58.5,41.5,89.0,,,,,,0.0969
+Digital & Tech,Video conferencing and meeting room technology reliably support in-person and virtual meetings,NJ-Iselin,79,,3.671,,66.8,66.8,33.2,85.0,,,,,,0.0914
+Digital & Tech,Video conferencing and meeting room technology reliably support in-person and virtual meetings,NV-Las Vegas-Maryland Pkwy,41,,3.512,,62.8,62.8,37.2,80.0,,,,,,0.175
+Digital & Tech,Video conferencing and meeting room technology reliably support in-person and virtual meetings,NV-Las Vegas-Russell,52,,3.5,,62.5,62.5,37.5,87.0,,,,,,0.1213
+Digital & Tech,Video conferencing and meeting room technology reliably support in-person and virtual meetings,NY-Lake Success,48,,3.771,,69.3,69.3,30.7,81.0,,,,,,0.1162
+Digital & Tech,Video conferencing and meeting room technology reliably support in-person and virtual meetings,NY-Latham,195,,3.338,,58.5,58.5,41.5,94.0,,,,,,0.059
+Digital & Tech,Video conferencing and meeting room technology reliably support in-person and virtual meetings,PA-Seven Fields,8,,2.875,,46.9,46.9,53.1,100.0,,,,,,0.295
+Digital & Tech,Video conferencing and meeting room technology reliably support in-person and virtual meetings,TN-Nashville,64,,3.594,,64.8,64.8,35.2,88.0,,,,,,0.1038
+Digital & Tech,Video conferencing and meeting room technology reliably support in-person and virtual meetings,VA-Ashburn,42,,3.667,,66.7,66.7,33.3,81.0,,,,,,0.1391
+Digital & Tech,Video conferencing and meeting room technology reliably support in-person and virtual meetings,WA-Seattle,20,,3.2,,55.0,55.0,45.0,85.0,,,,,,0.2675
+Digital & Tech,Video conferencing and meeting room technology reliably support in-person and virtual meetings,WI-Waukesha,130,,3.6,,65.0,65.0,35.0,87.0,,,,,,0.0729
+Digital & Tech,"Workplace-provided hardware (e.g., monitors, keyboards, mice, power) is readily available and works as expected",CA-Costa Mesa,65,,3.169,,54.2,54.2,45.8,86.0,,,,,,0.1512
+Digital & Tech,"Workplace-provided hardware (e.g., monitors, keyboards, mice, power) is readily available and works as expected",CA-Walnut Creek,37,,3.703,,67.6,67.6,32.4,73.0,,,,,,0.1638
+Digital & Tech,"Workplace-provided hardware (e.g., monitors, keyboards, mice, power) is readily available and works as expected",CT-Rocky Hill,28,,3.643,,66.1,66.1,33.9,82.0,,,,,,0.187
+Digital & Tech,"Workplace-provided hardware (e.g., monitors, keyboards, mice, power) is readily available and works as expected",CT-Wallingford,205,,3.839,,71.0,71.0,29.0,82.0,,,,,,0.0561
+Digital & Tech,"Workplace-provided hardware (e.g., monitors, keyboards, mice, power) is readily available and works as expected",DC-Washington,10,,4.4,,85.0,85.0,15.0,50.0,,,,,,0.2211
+Digital & Tech,"Workplace-provided hardware (e.g., monitors, keyboards, mice, power) is readily available and works as expected",DE-Wilmington,44,,3.364,,59.1,59.1,40.9,75.0,,,,,,0.2007
+Digital & Tech,"Workplace-provided hardware (e.g., monitors, keyboards, mice, power) is readily available and works as expected",FL-Lake Mary,117,,4.017,,75.4,75.4,24.6,71.0,,,,,,0.0814
+Digital & Tech,"Workplace-provided hardware (e.g., monitors, keyboards, mice, power) is readily available and works as expected",GA-Columbus,153,,3.425,,60.6,60.6,39.4,76.0,,,,,,0.1015
+Digital & Tech,"Workplace-provided hardware (e.g., monitors, keyboards, mice, power) is readily available and works as expected",IA-Urbandale,18,,3.778,,69.4,69.4,30.6,72.0,,,,,,0.2499
+Digital & Tech,"Workplace-provided hardware (e.g., monitors, keyboards, mice, power) is readily available and works as expected",IL-Chicago-Bryn Mawr,98,,3.408,,60.2,60.2,39.8,86.0,,,,,,0.1131
+Digital & Tech,"Workplace-provided hardware (e.g., monitors, keyboards, mice, power) is readily available and works as expected",KS-Overland Park,12,,4.25,,81.2,81.2,18.8,58.0,,,,,,0.2176
+Digital & Tech,"Workplace-provided hardware (e.g., monitors, keyboards, mice, power) is readily available and works as expected",KY-Louisville,197,,3.67,,66.8,66.8,33.2,83.0,,,,,,0.0663
+Digital & Tech,"Workplace-provided hardware (e.g., monitors, keyboards, mice, power) is readily available and works as expected",LA-Harvey,23,,3.348,,58.7,58.7,41.3,91.0,,,,,,0.2142
+Digital & Tech,"Workplace-provided hardware (e.g., monitors, keyboards, mice, power) is readily available and works as expected",MA-Woburn,44,,3.591,,64.8,64.8,35.2,84.0,,,,,,0.1636
+Digital & Tech,"Workplace-provided hardware (e.g., monitors, keyboards, mice, power) is readily available and works as expected",MD-Hanover,58,,3.603,,65.1,65.1,34.9,90.0,,,,,,0.1152
+Digital & Tech,"Workplace-provided hardware (e.g., monitors, keyboards, mice, power) is readily available and works as expected",MN-Mendota Heights,171,,3.515,,62.9,62.9,37.1,89.0,,,,,,0.0734
+Digital & Tech,"Workplace-provided hardware (e.g., monitors, keyboards, mice, power) is readily available and works as expected",MO-St. Louis,165,,3.842,,71.1,71.1,28.9,79.0,,,,,,0.0698
+Digital & Tech,"Workplace-provided hardware (e.g., monitors, keyboards, mice, power) is readily available and works as expected",NC-Durham,55,,3.527,,63.2,63.2,36.8,89.0,,,,,,0.1319
+Digital & Tech,"Workplace-provided hardware (e.g., monitors, keyboards, mice, power) is readily available and works as expected",NC-Winston-Salem,24,,3.542,,63.5,63.5,36.5,83.0,,,,,,0.2251
+Digital & Tech,"Workplace-provided hardware (e.g., monitors, keyboards, mice, power) is readily available and works as expected",NH-Manchester,85,,3.765,,69.1,69.1,30.9,86.0,,,,,,0.0831
+Digital & Tech,"Workplace-provided hardware (e.g., monitors, keyboards, mice, power) is readily available and works as expected",NJ-Iselin,79,,3.734,,68.4,68.4,31.6,78.0,,,,,,0.1135
+Digital & Tech,"Workplace-provided hardware (e.g., monitors, keyboards, mice, power) is readily available and works as expected",NV-Las Vegas-Maryland Pkwy,41,,3.268,,56.7,56.7,43.3,78.0,,,,,,0.2153
+Digital & Tech,"Workplace-provided hardware (e.g., monitors, keyboards, mice, power) is readily available and works as expected",NV-Las Vegas-Russell,52,,3.615,,65.4,65.4,34.6,79.0,,,,,,0.1533
+Digital & Tech,"Workplace-provided hardware (e.g., monitors, keyboards, mice, power) is readily available and works as expected",NY-Lake Success,48,,4.0,,75.0,75.0,25.0,69.0,,,,,,0.1263
+Digital & Tech,"Workplace-provided hardware (e.g., monitors, keyboards, mice, power) is readily available and works as expected",NY-Latham,195,,3.231,,55.8,55.8,44.2,92.0,,,,,,0.0757
+Digital & Tech,"Workplace-provided hardware (e.g., monitors, keyboards, mice, power) is readily available and works as expected",PA-Seven Fields,8,,3.375,,59.4,59.4,40.6,88.0,,,,,,0.375
+Digital & Tech,"Workplace-provided hardware (e.g., monitors, keyboards, mice, power) is readily available and works as expected",TN-Nashville,64,,3.766,,69.1,69.1,30.9,78.0,,,,,,0.1332
+Digital & Tech,"Workplace-provided hardware (e.g., monitors, keyboards, mice, power) is readily available and works as expected",VA-Ashburn,42,,3.619,,65.5,65.5,34.5,83.0,,,,,,0.1403
+Digital & Tech,"Workplace-provided hardware (e.g., monitors, keyboards, mice, power) is readily available and works as expected",WA-Seattle,20,,3.95,,73.8,73.8,26.2,70.0,,,,,,0.2112
+Digital & Tech,"Workplace-provided hardware (e.g., monitors, keyboards, mice, power) is readily available and works as expected",WI-Waukesha,130,,3.792,,69.8,69.8,30.2,80.0,,,,,,0.0785
+Digital & Tech,"Digital collaboration tools (e.g., Microsoft tools) support effective work with remote or hybrid colleagues",CA-Costa Mesa,65,,3.892,,72.3,72.3,27.7,72.0,,,,,,0.1223
+Digital & Tech,"Digital collaboration tools (e.g., Microsoft tools) support effective work with remote or hybrid colleagues",CA-Walnut Creek,37,,4.054,,76.4,76.4,23.6,62.0,,,,,,0.1447
+Digital & Tech,"Digital collaboration tools (e.g., Microsoft tools) support effective work with remote or hybrid colleagues",CT-Rocky Hill,28,,3.679,,67.0,67.0,33.0,93.0,,,,,,0.146
+Digital & Tech,"Digital collaboration tools (e.g., Microsoft tools) support effective work with remote or hybrid colleagues",CT-Wallingford,205,,4.01,,75.2,75.2,24.8,75.0,,,,,,0.0536
+Digital & Tech,"Digital collaboration tools (e.g., Microsoft tools) support effective work with remote or hybrid colleagues",DC-Washington,10,,4.4,,85.0,85.0,15.0,50.0,,,,,,0.2211
+Digital & Tech,"Digital collaboration tools (e.g., Microsoft tools) support effective work with remote or hybrid colleagues",DE-Wilmington,44,,4.023,,75.6,75.6,24.4,68.0,,,,,,0.128
+Digital & Tech,"Digital collaboration tools (e.g., Microsoft tools) support effective work with remote or hybrid colleagues",FL-Lake Mary,117,,4.026,,75.6,75.6,24.4,72.0,,,,,,0.0763
+Digital & Tech,"Digital collaboration tools (e.g., Microsoft tools) support effective work with remote or hybrid colleagues",GA-Columbus,153,,3.987,,74.7,74.7,25.3,68.0,,,,,,0.0742
+Digital & Tech,"Digital collaboration tools (e.g., Microsoft tools) support effective work with remote or hybrid colleagues",IA-Urbandale,18,,4.278,,81.9,81.9,18.1,61.0,,,,,,0.1577
+Digital & Tech,"Digital collaboration tools (e.g., Microsoft tools) support effective work with remote or hybrid colleagues",IL-Chicago-Bryn Mawr,98,,4.061,,76.5,76.5,23.5,71.0,,,,,,0.0805
+Digital & Tech,"Digital collaboration tools (e.g., Microsoft tools) support effective work with remote or hybrid colleagues",KS-Overland Park,12,,4.083,,77.1,77.1,22.9,67.0,,,,,,0.2289
+Digital & Tech,"Digital collaboration tools (e.g., Microsoft tools) support effective work with remote or hybrid colleagues",KY-Louisville,197,,3.883,,72.1,72.1,27.9,81.0,,,,,,0.0572
+Digital & Tech,"Digital collaboration tools (e.g., Microsoft tools) support effective work with remote or hybrid colleagues",LA-Harvey,23,,3.826,,70.7,70.7,29.3,91.0,,,,,,0.1201
+Digital & Tech,"Digital collaboration tools (e.g., Microsoft tools) support effective work with remote or hybrid colleagues",MA-Woburn,44,,3.795,,69.9,69.9,30.1,84.0,,,,,,0.1241
+Digital & Tech,"Digital collaboration tools (e.g., Microsoft tools) support effective work with remote or hybrid colleagues",MD-Hanover,58,,3.897,,72.4,72.4,27.6,79.0,,,,,,0.1091
+Digital & Tech,"Digital collaboration tools (e.g., Microsoft tools) support effective work with remote or hybrid colleagues",MN-Mendota Heights,171,,3.842,,71.1,71.1,28.9,82.0,,,,,,0.0594
+Digital & Tech,"Digital collaboration tools (e.g., Microsoft tools) support effective work with remote or hybrid colleagues",MO-St. Louis,165,,4.109,,77.7,77.7,22.3,70.0,,,,,,0.057
+Digital & Tech,"Digital collaboration tools (e.g., Microsoft tools) support effective work with remote or hybrid colleagues",NC-Durham,55,,3.782,,69.5,69.5,30.5,85.0,,,,,,0.106
+Digital & Tech,"Digital collaboration tools (e.g., Microsoft tools) support effective work with remote or hybrid colleagues",NC-Winston-Salem,24,,3.833,,70.8,70.8,29.2,83.0,,,,,,0.1667
+Digital & Tech,"Digital collaboration tools (e.g., Microsoft tools) support effective work with remote or hybrid colleagues",NH-Manchester,85,,3.882,,72.1,72.1,27.9,81.0,,,,,,0.0827
+Digital & Tech,"Digital collaboration tools (e.g., Microsoft tools) support effective work with remote or hybrid colleagues",NJ-Iselin,79,,4.0,,75.0,75.0,25.0,70.0,,,,,,0.0953
+Digital & Tech,"Digital collaboration tools (e.g., Microsoft tools) support effective work with remote or hybrid colleagues",NV-Las Vegas-Maryland Pkwy,41,,3.902,,72.6,72.6,27.4,73.0,,,,,,0.1432
+Digital & Tech,"Digital collaboration tools (e.g., Microsoft tools) support effective work with remote or hybrid colleagues",NV-Las Vegas-Russell,52,,3.962,,74.0,74.0,26.0,71.0,,,,,,0.1164
+Digital & Tech,"Digital collaboration tools (e.g., Microsoft tools) support effective work with remote or hybrid colleagues",NY-Lake Success,48,,4.125,,78.1,78.1,21.9,69.0,,,,,,0.1015
+Digital & Tech,"Digital collaboration tools (e.g., Microsoft tools) support effective work with remote or hybrid colleagues",NY-Latham,195,,3.754,,68.8,68.8,31.2,85.0,,,,,,0.0587
+Digital & Tech,"Digital collaboration tools (e.g., Microsoft tools) support effective work with remote or hybrid colleagues",PA-Seven Fields,8,,4.25,,81.2,81.2,18.8,62.0,,,,,,0.25
+Digital & Tech,"Digital collaboration tools (e.g., Microsoft tools) support effective work with remote or hybrid colleagues",TN-Nashville,64,,3.984,,74.6,74.6,25.4,73.0,,,,,,0.1102
+Digital & Tech,"Digital collaboration tools (e.g., Microsoft tools) support effective work with remote or hybrid colleagues",VA-Ashburn,42,,4.024,,75.6,75.6,24.4,74.0,,,,,,0.1155
+Digital & Tech,"Digital collaboration tools (e.g., Microsoft tools) support effective work with remote or hybrid colleagues",WA-Seattle,20,,4.0,,75.0,75.0,25.0,65.0,,,,,,0.2052
+Digital & Tech,"Digital collaboration tools (e.g., Microsoft tools) support effective work with remote or hybrid colleagues",WI-Waukesha,130,,3.962,,74.0,74.0,26.0,80.0,,,,,,0.0612
+Digital & Tech,Technical issues that affect my ability to work are resolved in a timely manner,CA-Costa Mesa,65,,3.369,,59.2,59.2,40.8,89.0,,,,,,0.1232
+Digital & Tech,Technical issues that affect my ability to work are resolved in a timely manner,CA-Walnut Creek,37,,3.324,,58.1,58.1,41.9,81.0,,,,,,0.1861
+Digital & Tech,Technical issues that affect my ability to work are resolved in a timely manner,CT-Rocky Hill,28,,3.25,,56.2,56.2,43.8,96.0,,,,,,0.1511
+Digital & Tech,Technical issues that affect my ability to work are resolved in a timely manner,CT-Wallingford,205,,3.576,,64.4,64.4,35.6,87.0,,,,,,0.0634
+Digital & Tech,Technical issues that affect my ability to work are resolved in a timely manner,DC-Washington,10,,4.1,,77.5,77.5,22.5,70.0,,,,,,0.2333
+Digital & Tech,Technical issues that affect my ability to work are resolved in a timely manner,DE-Wilmington,44,,3.068,,51.7,51.7,48.3,89.0,,,,,,0.1539
+Digital & Tech,Technical issues that affect my ability to work are resolved in a timely manner,FL-Lake Mary,117,,3.556,,63.9,63.9,36.1,76.0,,,,,,0.1054
+Digital & Tech,Technical issues that affect my ability to work are resolved in a timely manner,GA-Columbus,153,,3.556,,63.9,63.9,36.1,82.0,,,,,,0.0808
+Digital & Tech,Technical issues that affect my ability to work are resolved in a timely manner,IA-Urbandale,18,,3.833,,70.8,70.8,29.2,72.0,,,,,,0.2322
+Digital & Tech,Technical issues that affect my ability to work are resolved in a timely manner,IL-Chicago-Bryn Mawr,98,,3.276,,56.9,56.9,43.1,91.0,,,,,,0.1044
+Digital & Tech,Technical issues that affect my ability to work are resolved in a timely manner,KS-Overland Park,12,,3.667,,66.7,66.7,33.3,83.0,,,,,,0.2562
+Digital & Tech,Technical issues that affect my ability to work are resolved in a timely manner,KY-Louisville,197,,3.477,,61.9,61.9,38.1,89.0,,,,,,0.0646
+Digital & Tech,Technical issues that affect my ability to work are resolved in a timely manner,LA-Harvey,23,,3.13,,53.3,53.3,46.7,96.0,,,,,,0.1812
+Digital & Tech,Technical issues that affect my ability to work are resolved in a timely manner,MA-Woburn,44,,3.568,,64.2,64.2,35.8,82.0,,,,,,0.167
+Digital & Tech,Technical issues that affect my ability to work are resolved in a timely manner,MD-Hanover,58,,3.138,,53.4,53.4,46.6,93.0,,,,,,0.1289
+Digital & Tech,Technical issues that affect my ability to work are resolved in a timely manner,MN-Mendota Heights,171,,3.269,,56.7,56.7,43.3,94.0,,,,,,0.0683
+Digital & Tech,Technical issues that affect my ability to work are resolved in a timely manner,MO-St. Louis,165,,3.606,,65.2,65.2,34.8,84.0,,,,,,0.0675
+Digital & Tech,Technical issues that affect my ability to work are resolved in a timely manner,NC-Durham,55,,3.291,,57.3,57.3,42.7,95.0,,,,,,0.1315
+Digital & Tech,Technical issues that affect my ability to work are resolved in a timely manner,NC-Winston-Salem,24,,3.333,,58.3,58.3,41.7,96.0,,,,,,0.1667
+Digital & Tech,Technical issues that affect my ability to work are resolved in a timely manner,NH-Manchester,85,,3.471,,61.8,61.8,38.2,91.0,,,,,,0.097
+Digital & Tech,Technical issues that affect my ability to work are resolved in a timely manner,NJ-Iselin,79,,3.62,,65.5,65.5,34.5,80.0,,,,,,0.11
+Digital & Tech,Technical issues that affect my ability to work are resolved in a timely manner,NV-Las Vegas-Maryland Pkwy,41,,3.61,,65.2,65.2,34.8,78.0,,,,,,0.167
+Digital & Tech,Technical issues that affect my ability to work are resolved in a timely manner,NV-Las Vegas-Russell,52,,3.462,,61.5,61.5,38.5,85.0,,,,,,0.1302
+Digital & Tech,Technical issues that affect my ability to work are resolved in a timely manner,NY-Lake Success,48,,3.625,,65.6,65.6,34.4,83.0,,,,,,0.1416
+Digital & Tech,Technical issues that affect my ability to work are resolved in a timely manner,NY-Latham,195,,3.318,,57.9,57.9,42.1,93.0,,,,,,0.0618
+Digital & Tech,Technical issues that affect my ability to work are resolved in a timely manner,PA-Seven Fields,8,,3.125,,53.1,53.1,46.9,100.0,,,,,,0.295
+Digital & Tech,Technical issues that affect my ability to work are resolved in a timely manner,TN-Nashville,64,,3.266,,56.6,56.6,43.4,86.0,,,,,,0.1377
+Digital & Tech,Technical issues that affect my ability to work are resolved in a timely manner,VA-Ashburn,42,,3.643,,66.1,66.1,33.9,83.0,,,,,,0.1398
+Digital & Tech,Technical issues that affect my ability to work are resolved in a timely manner,WA-Seattle,20,,3.6,,65.0,65.0,35.0,85.0,,,,,,0.2224
+Digital & Tech,Technical issues that affect my ability to work are resolved in a timely manner,WI-Waukesha,130,,3.6,,65.0,65.0,35.0,88.0,,,,,,0.0696
+Digital & Tech,Reservation tools are easy to use,CA-Costa Mesa,65,,3.892,,72.3,72.3,27.7,69.0,,,,,,0.1281
+Digital & Tech,Reservation tools are easy to use,CA-Walnut Creek,37,,4.027,,75.7,75.7,24.3,68.0,,,,,,0.1423
+Digital & Tech,Reservation tools are easy to use,CT-Rocky Hill,28,,4.143,,78.6,78.6,21.4,68.0,,,,,,0.1429
+Digital & Tech,Reservation tools are easy to use,CT-Wallingford,205,,3.78,,69.5,69.5,30.5,79.0,,,,,,0.068
+Digital & Tech,Reservation tools are easy to use,DC-Washington,10,,4.3,,82.5,82.5,17.5,60.0,,,,,,0.2134
+Digital & Tech,Reservation tools are easy to use,DE-Wilmington,44,,4.091,,77.3,77.3,22.7,64.0,,,,,,0.1293
+Digital & Tech,Reservation tools are easy to use,FL-Lake Mary,117,,4.077,,76.9,76.9,23.1,70.0,,,,,,0.072
+Digital & Tech,Reservation tools are easy to use,GA-Columbus,153,,3.908,,72.7,72.7,27.3,72.0,,,,,,0.0761
+Digital & Tech,Reservation tools are easy to use,IA-Urbandale,18,,4.222,,80.6,80.6,19.4,61.0,,,,,,0.1726
+Digital & Tech,Reservation tools are easy to use,IL-Chicago-Bryn Mawr,98,,4.061,,76.5,76.5,23.5,69.0,,,,,,0.0843
+Digital & Tech,Reservation tools are easy to use,KS-Overland Park,12,,4.167,,79.2,79.2,20.8,58.0,,,,,,0.2706
+Digital & Tech,Reservation tools are easy to use,KY-Louisville,197,,3.858,,71.4,71.4,28.6,80.0,,,,,,0.0611
+Digital & Tech,Reservation tools are easy to use,LA-Harvey,23,,3.913,,72.8,72.8,27.2,78.0,,,,,,0.1529
+Digital & Tech,Reservation tools are easy to use,MA-Woburn,44,,3.773,,69.3,69.3,30.7,80.0,,,,,,0.1374
+Digital & Tech,Reservation tools are easy to use,MD-Hanover,58,,3.966,,74.1,74.1,25.9,76.0,,,,,,0.1126
+Digital & Tech,Reservation tools are easy to use,MN-Mendota Heights,171,,3.86,,71.5,71.5,28.5,82.0,,,,,,0.06
+Digital & Tech,Reservation tools are easy to use,MO-St. Louis,165,,4.145,,78.6,78.6,21.4,68.0,,,,,,0.0552
+Digital & Tech,Reservation tools are easy to use,NC-Durham,55,,4.073,,76.8,76.8,23.2,80.0,,,,,,0.0815
+Digital & Tech,Reservation tools are easy to use,NC-Winston-Salem,24,,3.958,,74.0,74.0,26.0,75.0,,,,,,0.1646
+Digital & Tech,Reservation tools are easy to use,NH-Manchester,85,,4.071,,76.8,76.8,23.2,71.0,,,,,,0.0833
+Digital & Tech,Reservation tools are easy to use,NJ-Iselin,79,,4.038,,75.9,75.9,24.1,66.0,,,,,,0.0961
+Digital & Tech,Reservation tools are easy to use,NV-Las Vegas-Maryland Pkwy,41,,3.707,,67.7,67.7,32.3,78.0,,,,,,0.1684
+Digital & Tech,Reservation tools are easy to use,NV-Las Vegas-Russell,52,,4.115,,77.9,77.9,22.1,67.0,,,,,,0.1051
+Digital & Tech,Reservation tools are easy to use,NY-Lake Success,48,,4.208,,80.2,80.2,19.8,62.0,,,,,,0.1072
+Digital & Tech,Reservation tools are easy to use,NY-Latham,195,,3.779,,69.5,69.5,30.5,84.0,,,,,,0.0603
+Digital & Tech,Reservation tools are easy to use,PA-Seven Fields,8,,4.5,,87.5,87.5,12.5,38.0,,,,,,0.2673
+Digital & Tech,Reservation tools are easy to use,TN-Nashville,64,,3.984,,74.6,74.6,25.4,70.0,,,,,,0.1056
+Digital & Tech,Reservation tools are easy to use,VA-Ashburn,42,,4.143,,78.6,78.6,21.4,64.0,,,,,,0.1208
+Digital & Tech,Reservation tools are easy to use,WA-Seattle,20,,3.75,,68.8,68.8,31.2,80.0,,,,,,0.1758
+Digital & Tech,Reservation tools are easy to use,WI-Waukesha,130,,3.985,,74.6,74.6,25.4,76.0,,,,,,0.0699

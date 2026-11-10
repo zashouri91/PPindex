@@ -19,7 +19,9 @@ import altair as alt
 
 import action_plan  # Operational Action Plan — "What to Do Next" section (LLM-generated, stored per site)
 import reports as R
-from reports import (SENT_COLORS, RYG_HEX, SCORE_LABELS, OVERRIDES, themes_for_item,
+import combined_report as C
+import waves
+from reports import (SENT_COLORS, RYG_HEX, SCORE_LABELS, themes_for_item,
                      explode_level, build_priority, exemplars, build_hotspots, build_driver)
 
 EV_COLS = ["comment_id", "themes", "sentiment", "labeler", "verified", "notes"]
@@ -34,10 +36,21 @@ load_all = st.cache_data(R.load_all)
 load_scores = st.cache_data(R.load_scores)
 load_extra = st.cache_data(R.load_extra)
 
-comments_full, meta, GAPS = load_all()
-SCORES = load_scores()
+# --- Survey round: each round is built into its own data folder (waves.py) -----
+_WAVES_BUILT = [k for k, w in waves.WAVES.items() if os.path.exists(os.path.join(w["data_dir"], "meta.json"))]
+WAVE = st.sidebar.radio("Survey round", _WAVES_BUILT, format_func=lambda k: waves.WAVES[k]["label"],
+                        horizontal=True, key="wave",
+                        help="Round 2 surveyed different sites; each round is benchmarked against its own sites. "
+                             "The combined portfolio card (Site Reports tab) shows both side by side.") \
+    if len(_WAVES_BUILT) > 1 else "round1"
+DATA_DIR = R.wave_data_dir(WAVE)
+OVERRIDES = os.path.join(DATA_DIR, "overrides.csv")
+
+comments_full, meta, GAPS = load_all(DATA_DIR)
+SCORES = load_scores(DATA_DIR)
 THEME_TO_CAT = meta["theme_to_category"]
-resp_scores_full, emerging = load_extra()
+resp_scores_full, emerging = load_extra(DATA_DIR)
+N_SCOPE = len(meta.get("ten_sites", []))
 
 # ---------------------------------------------------------------------------
 # Sidebar filters
@@ -50,7 +63,8 @@ completers_only = st.sidebar.toggle(
     "Completed responses only", value=True,
     help=f"Only analyze the {n_comp:,} respondents who reached the end of the survey "
          f"(of {meta['n_responses']:,} total). Turn off to include partial responses.")
-CTX = R.make_context(comments_full, resp_scores_full, SCORES, meta, completers_only)
+CTX = R.make_context(comments_full, resp_scores_full, SCORES, meta, completers_only, data_dir=DATA_DIR)
+PLANS_DIR = R.plans_dir(CTX)
 comments, resp_scores = CTX.comments, CTX.resp_scores
 scores, scores_site, scores_dim = CTX.scores, CTX.scores_site, CTX.scores_dim
 if completers_only:
@@ -68,39 +82,39 @@ def theme_friction_map(site=None):
     return R.theme_friction_map(CTX, site)
 
 @st.cache_data(show_spinner=False)
-def site_report_data(site, completers_flag):
+def site_report_data(site, completers_flag, wave=None):
     return R.site_report_data(CTX, site)
 
 def build_site_report(site):
-    return R.build_site_report(CTX, site, site_report_data(site, completers_only))
+    return R.build_site_report(CTX, site, site_report_data(site, completers_only, WAVE))
 
 @st.cache_data(show_spinner=False)
-def build_site_pdf(site, completers_flag):
-    return R.build_site_pdf(CTX, site, site_report_data(site, completers_flag))
+def build_site_pdf(site, completers_flag, wave=None):
+    return R.build_site_pdf(CTX, site, site_report_data(site, completers_flag, WAVE))
 
 def build_site_pptx(sites, completers_flag):
-    return R.build_site_pptx(CTX, sites, lambda s: site_report_data(s, completers_flag))
+    return R.build_site_pptx(CTX, sites, lambda s: site_report_data(s, completers_flag, WAVE))
 
 @st.cache_data(show_spinner=False)
-def portfolio_data(completers_flag):
+def portfolio_data(completers_flag, wave=None):
     return R.portfolio_data(CTX)
 
 def build_portfolio_report(completers_flag):
-    return R.build_portfolio_report(CTX, portfolio_data(completers_flag))
+    return R.build_portfolio_report(CTX, portfolio_data(completers_flag, WAVE))
 
 @st.cache_data(show_spinner=False)
-def build_portfolio_pdf(completers_flag):
-    return R.build_portfolio_pdf(CTX, portfolio_data(completers_flag))
+def build_portfolio_pdf(completers_flag, wave=None):
+    return R.build_portfolio_pdf(CTX, portfolio_data(completers_flag, WAVE))
 
 def verbatim_export(site=None):
     return R.verbatim_export(CTX, site)
 
 @st.cache_data(show_spinner=False)
-def build_excel_workbook(completers_flag):
+def build_excel_workbook(completers_flag, wave=None):
     return R.build_excel_workbook(CTX)
 
 @st.cache_data(show_spinner=False)
-def build_standalone_dashboard(completers_flag):
+def build_standalone_dashboard(completers_flag, wave=None):
     return R.build_standalone_dashboard(CTX)
 
 def _safe_pdf_button(container, label, build_fn, filename, key=None):
@@ -285,7 +299,7 @@ with tab_gap:
     st.caption("**Composite** = average Support on a 0–100 scale (Importance not factored). "
                "**Friction** = each respondent's shortfall of Support vs Importance, floored at 0, then averaged — "
                "so over-supported areas can't mask under-supported ones. Scope per the official spec: "
-               "completed responses across the 10 in-scope sites.")
+               f"completed responses across the {R.wave_info(CTX)['scope_phrase']}.")
 
     if scores.empty:
         st.info("Scores not available — rebuild with build_data.py.")
@@ -303,8 +317,8 @@ with tab_gap:
         st.divider()
         gsel1, gsel2 = st.columns(2)
         dsel = gsel1.selectbox("Dimension", ["All dimensions"] + dimr["dimension"].tolist())
-        ssel = gsel2.selectbox("Site view", ["All 10 sites (overall)"] + meta.get("ten_sites", []))
-        src = scores if ssel.startswith("All 10") else scores_site[scores_site["site"] == ssel]
+        ssel = gsel2.selectbox("Site view", [f"All {N_SCOPE} sites (overall)"] + meta.get("ten_sites", []))
+        src = scores if ssel.startswith("All ") else scores_site[scores_site["site"] == ssel]
         sd = src if dsel == "All dimensions" else src[src["dimension"] == dsel]
         sd = sd.dropna(subset=["friction"]).sort_values("friction", ascending=False).copy()
         sd["ryg"] = sd["ryg"].fillna("Agreement-only").replace("", "Agreement-only")
@@ -359,7 +373,7 @@ with tab_gap:
             rel_themes = themes_for_item(item_sel)
             st.caption("Related comment themes: " + (", ".join(rel_themes) if rel_themes else "—"))
             link = comments[~comments["eff_junk"]].copy()
-            if not ssel.startswith("All 10"):
+            if not ssel.startswith("All "):
                 link = link[link["site"] == ssel]
             if rel_themes:
                 pat = "|".join([t.replace("(", "\\(").replace(")", "\\)").replace("/", "\\/") for t in rel_themes])
@@ -529,7 +543,7 @@ with tab_browse:
             st.markdown("**📊 Excel analysis workbook**")
             st.caption("Comments, theme summary, site×theme and sentiment×theme pivots, verbatims, and gaps — "
                        "each on its own sheet for slicing in Excel.")
-            st.download_button("⬇️ Download workbook (.xlsx)", build_excel_workbook(completers_only),
+            st.download_button("⬇️ Download workbook (.xlsx)", build_excel_workbook(completers_only, WAVE),
                                "pulsepoint_analysis.xlsx",
                                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                                use_container_width=True)
@@ -537,7 +551,7 @@ with tab_browse:
             st.markdown("**🌐 No-install dashboard**")
             st.caption("A single self-contained HTML file with filters, live theme bars, and a searchable "
                        "comment browser. Double-click to open in any browser — no Python needed.")
-            st.download_button("⬇️ Download dashboard (.html)", build_standalone_dashboard(completers_only),
+            st.download_button("⬇️ Download dashboard (.html)", build_standalone_dashboard(completers_only, WAVE),
                                "pulsepoint_dashboard.html", "text/html", use_container_width=True)
 
 # ===========================================================================
@@ -623,36 +637,49 @@ with tab_diag:
 # TAB — SITE REPORTS (one-pager export)
 # ===========================================================================
 with tab_report:
-    st.subheader("📋 10 PulsePoints — Portfolio report card")
-    st.caption("A company-wide exec brief across the 10 in-scope sites: Index Score by site with its margin and standing, a site×dimension "
+    _WL = R.wave_info(CTX)["label"]
+    st.subheader("📋 10 PulsePoints — Portfolio report card" if WAVE == "round1"
+                 else f"📋 {_WL} PulsePoints — Portfolio report card")
+    st.caption(f"An exec brief across the {R.wave_info(CTX)['scope_phrase']}: Index Score by site with its margin and standing, a site×dimension "
                "heatmap, Importance-vs-Support gaps, company Friction & strengths, top comment themes with a "
                "site×theme heatmap, and the respondent profile. Download as HTML or PDF.")
     pf_html = build_portfolio_report(completers_only)
     _pcol = st.columns(4)
-    _pcol[0].download_button("⬇️ Portfolio HTML", pf_html, "pulsepoint_portfolio.html", "text/html",
+    _pfx = "pulsepoint_portfolio" if WAVE == "round1" else f"pulsepoint_portfolio_{WAVE}"
+    _pcol[0].download_button("⬇️ Portfolio HTML", pf_html, f"{_pfx}.html", "text/html",
                              use_container_width=True)
-    _safe_pdf_button(_pcol[1], "⬇️ Portfolio PDF", lambda: build_portfolio_pdf(completers_only),
-                     "pulsepoint_portfolio.pdf", key="pf_pdf")
+    _safe_pdf_button(_pcol[1], "⬇️ Portfolio PDF", lambda: build_portfolio_pdf(completers_only, WAVE),
+                     f"{_pfx}.pdf", key="pf_pdf")
+    if len(_WAVES_BUILT) > 1:
+        @st.cache_data(show_spinner=False)
+        def _combined_html(completers_flag):
+            _c1 = R.load_context(completers_flag, "round1"); _c2 = R.load_context(completers_flag, "round2")
+            return C.build_combined_portfolio(_c1, _c2)
+        _cmb = _combined_html(completers_only)
+        _pcol[2].download_button("⬇️ Combined (R1 + R2) HTML", _cmb, "pulsepoint_portfolio_combined.html",
+                                 "text/html", use_container_width=True)
+        _safe_pdf_button(_pcol[3], "⬇️ Combined PDF", lambda: R.html_to_pdf(_combined_html(completers_only)),
+                         "pulsepoint_portfolio_combined.pdf", key="cmb_pdf")
     components.html(pf_html, height=780, scrolling=True)
     st.divider()
 
     st.subheader("Site one-pagers")
     st.caption("A leadership-ready summary for a single site — top priorities, highest-Friction items, "
-               "org benchmark, and representative quotes, with an auto-written recap. The 10 in-scope "
-               "sites (per the Tableau spec) carry official Friction/Composite scores; others show the "
-               "comment analysis only. Download as HTML, PDF, or PowerPoint.")
+               "org benchmark, and representative quotes, with an auto-written recap. In-scope sites "
+               "carry official Friction/Composite scores; others show the comment analysis only. "
+               "Download as HTML, PDF, or PowerPoint.")
     report_sites = meta.get("ten_sites", meta["sites"])
     rc = st.columns([2, 1])
     _order = comments[comments["site"].isin(report_sites) & ~comments["eff_junk"]]["site"].value_counts()
     _default = _order.index[0] if len(_order) else report_sites[0]
     _idx = report_sites.index(_default) if _default in report_sites else 0
-    rsite = rc[0].selectbox("Site (10 in-scope, defaults to largest)", report_sites, index=_idx, key="rep_site")
+    rsite = rc[0].selectbox(f"Site ({N_SCOPE} in scope, defaults to largest)", report_sites, index=_idx, key="rep_site")
     safe = rsite.replace("/", "-")
     report_html = build_site_report(rsite)
     with rc[1]:
         st.download_button("⬇️ HTML", report_html, f"pulsepoint_{safe}.html", "text/html",
                            use_container_width=True)
-        _safe_pdf_button(st, "⬇️ PDF", lambda: build_site_pdf(rsite, completers_only),
+        _safe_pdf_button(st, "⬇️ PDF", lambda: build_site_pdf(rsite, completers_only, WAVE),
                          f"pulsepoint_{safe}.pdf", key="site_pdf")
         st.download_button("⬇️ PowerPoint", build_site_pptx([rsite], completers_only), f"pulsepoint_{safe}.pptx",
                            "application/vnd.openxmlformats-officedocument.presentationml.presentation",
@@ -660,12 +687,12 @@ with tab_report:
 
     # --- Operational Action Plan — What to Do Next (generate / regenerate) -----------
     with st.expander("🧭 Operational Action Plan — generate / regenerate",
-                     expanded=not action_plan.plan_exists(rsite)):
+                     expanded=not action_plan.plan_exists(rsite, PLANS_DIR)):
         st.caption("An auto-generated, validate-before-acting **What to Do Next** section. On the site card it "
                    "renders after the theme tables and before the quotes. Grounded only in this site's evidence; "
                    "generated once and stored.")
         _prov = action_plan.configured_provider()
-        _pm = action_plan.plan_meta(rsite)
+        _pm = action_plan.plan_meta(rsite, PLANS_DIR)
         if _pm:
             st.caption(f"Current plan for **{rsite}**: generated {_pm.get('generated_at','?')} · "
                        f"{_pm.get('provider','?')}/{_pm.get('model','?')}"
@@ -699,7 +726,7 @@ with tab_report:
                         disabled=(_prov is None), key="oap_gen"):
             try:
                 with st.spinner(f"Generating action plan for {rsite} via {_prov}…"):
-                    _data = site_report_data(rsite, completers_only)
+                    _data = site_report_data(rsite, completers_only, WAVE)
                     _plan = action_plan.generate_action_plan(_data, owner=_owner, include_verbatims=_incl)
                 _val = _plan["_meta"].get("validation") or {}
                 if not _val.get("ok"):
@@ -707,7 +734,7 @@ with tab_report:
                     st.error(f"The generated plan for {rsite} failed the grounding check and was NOT saved "
                              f"({len(_val.get('failures', []))} problem(s)) — see below.")
                 else:
-                    action_plan.save_plan(rsite, _plan)
+                    action_plan.save_plan(rsite, _plan, plans_dir=PLANS_DIR)
                     build_site_pdf.clear()
                     st.session_state.pop("oap_last_failures", None)
                     st.success(f"Action plan generated for {rsite}.")
@@ -719,17 +746,17 @@ with tab_report:
                     "[Ollama](https://ollama.com), run `ollama pull llama3.1`, then set "
                     "`PULSEPOINT_LLM_PROVIDER=ollama` and restart the app. Azure / OpenAI / Anthropic are also "
                     "supported — see the README → *Operational Action Plan*.")
-        elif st.button("Generate for all 10 sites", key="oap_gen_all",
+        elif st.button(f"Generate for all {N_SCOPE} sites", key="oap_gen_all",
                        help="Runs the model once per site and stores each plan."):
             _prog = st.progress(0.0, text="Starting…")
             _fail = []
             for _i, _s in enumerate(report_sites):
                 try:
-                    _d = site_report_data(_s, completers_only)
+                    _d = site_report_data(_s, completers_only, WAVE)
                     _pl = action_plan.generate_action_plan(_d, owner=_owner, include_verbatims=_incl)
                     _v = _pl["_meta"].get("validation") or {}
                     if _v.get("ok"):
-                        action_plan.save_plan(_s, _pl)
+                        action_plan.save_plan(_s, _pl, plans_dir=PLANS_DIR)
                     else:
                         _fail.append(f"{_s}: failed the grounding check, not saved — "
                                      + "; ".join(_v.get("failures", [])[:3]))
@@ -746,14 +773,15 @@ with tab_report:
     st.divider()
     st.markdown("**Bulk exports & verbatims**")
     bc = st.columns(3)
-    if bc[0].button("📦 All 10 sites — HTML (zip)", use_container_width=True):
+    if bc[0].button(f"📦 All {N_SCOPE} sites — HTML (zip)", use_container_width=True):
         buf = io.BytesIO()
         with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as z:
             for s in report_sites:
                 z.writestr(f"pulsepoint_{s.replace('/', '-')}.html", build_site_report(s))
         st.download_button("⬇️ Download HTML zip", buf.getvalue(),
-                           "pulsepoint_site_reports.zip", "application/zip")
-    if bc[1].button("📊 All 10 sites — PowerPoint deck", use_container_width=True):
+                           "pulsepoint_site_reports.zip" if WAVE == "round1" else f"pulsepoint_site_reports_{WAVE}.zip",
+                           "application/zip")
+    if bc[1].button(f"📊 All {N_SCOPE} sites — PowerPoint deck", use_container_width=True):
         st.download_button("⬇️ Download deck (.pptx)", build_site_pptx(report_sites, completers_only),
                            "pulsepoint_all_sites.pptx",
                            "application/vnd.openxmlformats-officedocument.presentationml.presentation")
@@ -787,7 +815,10 @@ with tab_tag:
     # --- Gold set: confirm or correct the labels used to measure tagging accuracy -------
     GOLD_PATH = os.path.join(R.DATA, "gold", "gold_labels.csv")
     with st.expander("🥇 Gold set — confirm or correct the accuracy labels", expanded=False):
-        if not os.path.exists(GOLD_PATH):
+        if WAVE != "round1":
+            st.info("The gold set is drawn from Round 1 comments (comment IDs are per round). Switch the sidebar "
+                    "to Round 1 to review it.")
+        elif not os.path.exists(GOLD_PATH):
             st.info("No gold set yet. Run `python tools/make_gold_sample.py` to draw one.")
         else:
             import tools.eval_tagging as EV

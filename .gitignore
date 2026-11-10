@@ -8,10 +8,12 @@ venv/
 
 # Runtime / user-generated
 data/overrides.csv
+data/*/overrides.csv
 
 # The ORIGINAL raw export carries network IDs, IPs and locations. Keep it on disk
 # only; the tracked copy is data/raw_deid.xlsx (tools/deidentify_raw.py).
 data/raw.xlsx
+data/*/raw.xlsx
 
 # Model-tagger cache (labels keyed by comment_id; regenerate any time)
 data/llm_cache/

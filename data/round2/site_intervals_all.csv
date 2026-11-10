@@ -1,0 +1,156 @@
+site,measure,estimate,lo,hi,margin,se,n,n_boot
+CA-Costa Mesa,Index,61.58,57.72,65.8,4.04,2.099,88,2000
+CA-Costa Mesa,Work Activity,53.37,47.11,59.86,6.37,3.247,88,2000
+CA-Costa Mesa,Physical Feature,62.44,58.22,66.95,4.37,2.252,88,2000
+CA-Costa Mesa,Service Level,65.59,62.06,69.57,3.76,1.936,88,2000
+CA-Costa Mesa,Digital & Tech,64.9,59.85,69.88,5.02,2.551,88,2000
+CA-Walnut Creek,Index,61.32,56.0,66.68,5.34,2.758,51,2000
+CA-Walnut Creek,Work Activity,51.25,42.18,60.02,8.92,4.618,51,2000
+CA-Walnut Creek,Physical Feature,62.13,55.34,68.21,6.43,3.286,51,2000
+CA-Walnut Creek,Service Level,63.25,57.32,68.7,5.69,2.898,51,2000
+CA-Walnut Creek,Digital & Tech,68.64,62.5,74.8,6.15,3.123,51,2000
+CT-Rocky Hill,Index,58.17,53.36,63.23,4.94,2.508,38,2000
+CT-Rocky Hill,Work Activity,46.43,37.95,54.87,8.46,4.389,38,2000
+CT-Rocky Hill,Physical Feature,55.75,50.65,61.03,5.19,2.647,38,2000
+CT-Rocky Hill,Service Level,70.24,65.62,75.15,4.76,2.385,38,2000
+CT-Rocky Hill,Digital & Tech,60.27,54.8,65.77,5.49,2.825,38,2000
+CT-Wallingford,Index,62.8,60.9,64.85,1.98,1.009,263,2000
+CT-Wallingford,Work Activity,55.61,52.29,58.78,3.25,1.651,263,2000
+CT-Wallingford,Physical Feature,58.78,56.52,61.06,2.27,1.154,263,2000
+CT-Wallingford,Service Level,66.93,64.89,69.28,2.2,1.111,263,2000
+CT-Wallingford,Digital & Tech,69.9,67.77,72.1,2.16,1.097,263,2000
+DC-Washington,Index,79.11,72.75,85.04,6.14,3.153,10,2000
+DC-Washington,Work Activity,82.14,67.86,92.86,12.5,6.462,10,2000
+DC-Washington,Physical Feature,71.39,62.22,80.84,9.31,4.931,10,2000
+DC-Washington,Service Level,80.42,71.67,88.75,8.54,4.406,10,2000
+DC-Washington,Digital & Tech,82.5,75.0,90.0,7.5,3.822,10,2000
+DE-Wilmington,Index,60.22,55.03,65.35,5.16,2.678,59,2000
+DE-Wilmington,Work Activity,48.78,40.02,58.19,9.08,4.641,59,2000
+DE-Wilmington,Physical Feature,58.58,52.14,64.58,6.22,3.146,59,2000
+DE-Wilmington,Service Level,69.54,65.09,73.85,4.38,2.257,59,2000
+DE-Wilmington,Digital & Tech,63.98,57.95,69.84,5.94,3.022,59,2000
+FL-Lake Mary,Index,69.37,66.38,72.27,2.95,1.508,161,2000
+FL-Lake Mary,Work Activity,63.91,59.46,68.06,4.3,2.219,161,2000
+FL-Lake Mary,Physical Feature,67.1,63.82,70.36,3.27,1.697,161,2000
+FL-Lake Mary,Service Level,73.63,70.42,76.65,3.11,1.61,161,2000
+FL-Lake Mary,Digital & Tech,72.85,69.53,76.08,3.27,1.675,161,2000
+GA-Columbus,Index,62.26,59.35,65.2,2.93,1.497,205,2000
+GA-Columbus,Work Activity,58.25,54.38,62.15,3.88,1.986,205,2000
+GA-Columbus,Physical Feature,59.27,56.03,62.62,3.29,1.693,205,2000
+GA-Columbus,Service Level,62.77,59.66,65.95,3.15,1.59,205,2000
+GA-Columbus,Digital & Tech,68.75,65.63,71.85,3.11,1.599,205,2000
+IA-Urbandale,Index,69.35,61.41,77.03,7.81,3.941,21,2000
+IA-Urbandale,Work Activity,61.09,48.3,73.44,12.57,6.537,21,2000
+IA-Urbandale,Physical Feature,73.1,64.97,81.08,8.05,4.124,21,2000
+IA-Urbandale,Service Level,68.64,62.71,75.0,6.15,3.172,21,2000
+IA-Urbandale,Digital & Tech,74.56,66.46,82.46,8.0,4.079,21,2000
+IL-Chicago-Bryn Mawr,Index,61.43,58.04,64.72,3.34,1.677,121,2000
+IL-Chicago-Bryn Mawr,Work Activity,56.91,52.15,61.63,4.74,2.49,121,2000
+IL-Chicago-Bryn Mawr,Physical Feature,59.39,55.48,63.1,3.81,1.946,121,2000
+IL-Chicago-Bryn Mawr,Service Level,64.6,61.46,67.7,3.12,1.575,121,2000
+IL-Chicago-Bryn Mawr,Digital & Tech,64.81,61.07,68.66,3.8,1.925,121,2000
+KS-Overland Park,Index,64.5,55.07,73.77,9.35,4.811,15,2000
+KS-Overland Park,Work Activity,53.02,35.44,70.46,17.51,8.977,15,2000
+KS-Overland Park,Physical Feature,62.96,53.84,72.92,9.54,5.029,15,2000
+KS-Overland Park,Service Level,67.01,58.33,75.76,8.72,4.525,15,2000
+KS-Overland Park,Digital & Tech,75.0,65.42,84.26,9.42,4.922,15,2000
+KY-Louisville,Index,64.88,62.75,67.07,2.16,1.13,243,2000
+KY-Louisville,Work Activity,59.43,56.17,63.05,3.44,1.754,243,2000
+KY-Louisville,Physical Feature,64.76,62.36,67.17,2.41,1.251,243,2000
+KY-Louisville,Service Level,67.92,65.45,70.35,2.45,1.266,243,2000
+KY-Louisville,Digital & Tech,67.42,65.1,69.62,2.26,1.172,243,2000
+LA-Harvey,Index,58.21,51.62,64.9,6.64,3.376,39,2000
+LA-Harvey,Work Activity,64.67,54.72,74.17,9.72,4.802,39,2000
+LA-Harvey,Physical Feature,48.78,41.02,57.31,8.14,4.146,39,2000
+LA-Harvey,Service Level,57.81,50.52,65.43,7.46,3.772,39,2000
+LA-Harvey,Digital & Tech,61.59,55.56,67.75,6.1,3.039,39,2000
+MA-Woburn,Index,62.3,56.73,67.62,5.44,2.793,56,2000
+MA-Woburn,Work Activity,55.57,47.94,62.71,7.38,3.854,56,2000
+MA-Woburn,Physical Feature,62.96,56.46,69.38,6.46,3.282,56,2000
+MA-Woburn,Service Level,66.0,59.64,72.16,6.26,3.234,56,2000
+MA-Woburn,Digital & Tech,64.68,58.63,70.24,5.81,3.015,56,2000
+MD-Hanover,Index,59.94,56.25,63.64,3.7,1.869,81,2000
+MD-Hanover,Work Activity,50.11,44.06,55.83,5.88,2.982,81,2000
+MD-Hanover,Physical Feature,60.25,56.21,64.33,4.06,2.065,81,2000
+MD-Hanover,Service Level,64.1,60.1,67.98,3.94,2.02,81,2000
+MD-Hanover,Digital & Tech,65.3,61.08,69.45,4.18,2.178,81,2000
+MN-Mendota Heights,Index,58.74,56.69,60.85,2.08,1.029,213,2000
+MN-Mendota Heights,Work Activity,49.96,46.64,53.26,3.31,1.69,213,2000
+MN-Mendota Heights,Physical Feature,54.37,52.01,56.75,2.37,1.2,213,2000
+MN-Mendota Heights,Service Level,65.81,63.49,68.23,2.37,1.189,213,2000
+MN-Mendota Heights,Digital & Tech,64.79,62.28,67.04,2.38,1.235,213,2000
+MO-St. Louis,Index,65.57,63.24,67.87,2.31,1.211,219,2000
+MO-St. Louis,Work Activity,53.97,49.94,57.93,3.99,2.004,219,2000
+MO-St. Louis,Physical Feature,65.77,63.03,68.47,2.72,1.4,219,2000
+MO-St. Louis,Service Level,71.11,68.66,73.42,2.38,1.219,219,2000
+MO-St. Louis,Digital & Tech,71.43,68.93,73.85,2.46,1.268,219,2000
+NC-Durham,Index,58.5,54.16,62.83,4.33,2.222,72,2000
+NC-Durham,Work Activity,51.73,45.11,58.2,6.54,3.354,72,2000
+NC-Durham,Physical Feature,58.8,53.67,63.71,5.02,2.542,72,2000
+NC-Durham,Service Level,60.38,55.82,64.7,4.44,2.262,72,2000
+NC-Durham,Digital & Tech,63.1,58.41,67.46,4.52,2.309,72,2000
+NC-Winston-Salem,Index,51.88,47.22,56.7,4.74,2.463,29,2000
+NC-Winston-Salem,Work Activity,38.01,28.45,47.71,9.63,4.937,29,2000
+NC-Winston-Salem,Physical Feature,46.19,40.53,51.69,5.58,2.92,29,2000
+NC-Winston-Salem,Service Level,58.97,53.7,64.58,5.44,2.796,29,2000
+NC-Winston-Salem,Digital & Tech,64.33,57.95,70.66,6.35,3.285,29,2000
+NH-Manchester,Index,62.1,59.33,65.02,2.84,1.456,113,2000
+NH-Manchester,Work Activity,54.17,49.57,59.08,4.75,2.426,113,2000
+NH-Manchester,Physical Feature,58.8,55.65,62.11,3.23,1.667,113,2000
+NH-Manchester,Service Level,67.73,64.78,70.42,2.82,1.461,113,2000
+NH-Manchester,Digital & Tech,67.71,64.31,70.98,3.34,1.709,113,2000
+NJ-Iselin,Index,65.71,61.49,69.46,3.99,1.996,122,2000
+NJ-Iselin,Work Activity,57.07,51.55,62.1,5.27,2.724,122,2000
+NJ-Iselin,Physical Feature,63.79,59.37,68.03,4.33,2.243,122,2000
+NJ-Iselin,Service Level,72.24,68.2,76.07,3.94,2.053,122,2000
+NJ-Iselin,Digital & Tech,69.75,65.26,74.05,4.39,2.22,122,2000
+NV-Las Vegas-Maryland Pkwy,Index,60.85,55.73,65.68,4.98,2.636,53,2000
+NV-Las Vegas-Maryland Pkwy,Work Activity,57.14,49.11,64.64,7.77,3.964,53,2000
+NV-Las Vegas-Maryland Pkwy,Physical Feature,53.35,48.09,58.53,5.22,2.712,53,2000
+NV-Las Vegas-Maryland Pkwy,Service Level,69.21,64.06,74.32,5.13,2.648,53,2000
+NV-Las Vegas-Maryland Pkwy,Digital & Tech,63.72,56.2,70.84,7.32,3.693,53,2000
+NV-Las Vegas-Russell,Index,62.35,57.87,66.82,4.47,2.309,69,2000
+NV-Las Vegas-Russell,Work Activity,55.81,48.24,63.52,7.64,3.804,69,2000
+NV-Las Vegas-Russell,Physical Feature,57.76,53.22,62.91,4.85,2.517,69,2000
+NV-Las Vegas-Russell,Service Level,67.79,63.91,71.86,3.97,2.049,69,2000
+NV-Las Vegas-Russell,Digital & Tech,68.03,63.01,73.14,5.06,2.593,69,2000
+NY-Lake Success,Index,59.91,55.23,64.5,4.64,2.363,66,2000
+NY-Lake Success,Work Activity,52.13,45.36,58.83,6.74,3.503,66,2000
+NY-Lake Success,Physical Feature,55.67,49.94,61.23,5.64,2.883,66,2000
+NY-Lake Success,Service Level,58.42,52.94,63.73,5.39,2.721,66,2000
+NY-Lake Success,Digital & Tech,73.44,68.66,78.06,4.7,2.438,66,2000
+NY-Latham,Index,54.51,52.32,56.68,2.18,1.108,255,2000
+NY-Latham,Work Activity,49.97,46.67,53.25,3.29,1.644,255,2000
+NY-Latham,Physical Feature,50.38,47.95,52.98,2.52,1.281,255,2000
+NY-Latham,Service Level,55.9,53.49,58.25,2.38,1.231,255,2000
+NY-Latham,Digital & Tech,61.8,59.44,64.11,2.34,1.2,255,2000
+PA-Seven Fields,Index,59.9,54.53,65.07,5.27,2.717,10,2000
+PA-Seven Fields,Work Activity,57.14,34.69,77.68,21.49,11.071,10,2000
+PA-Seven Fields,Physical Feature,55.9,48.81,62.5,6.85,3.602,10,2000
+PA-Seven Fields,Service Level,68.75,64.88,72.02,3.57,1.832,10,2000
+PA-Seven Fields,Digital & Tech,57.81,49.48,64.35,7.44,3.776,10,2000
+TN-Nashville,Index,64.04,60.2,67.9,3.85,1.966,92,2000
+TN-Nashville,Work Activity,51.49,45.51,57.39,5.94,3.119,92,2000
+TN-Nashville,Physical Feature,66.79,62.01,71.26,4.63,2.333,92,2000
+TN-Nashville,Service Level,70.58,66.47,74.55,4.04,2.094,92,2000
+TN-Nashville,Digital & Tech,67.31,62.62,71.86,4.62,2.343,92,2000
+VA-Ashburn,Index,67.08,62.13,71.84,4.86,2.453,52,2000
+VA-Ashburn,Work Activity,59.42,52.38,66.79,7.2,3.65,52,2000
+VA-Ashburn,Physical Feature,64.92,59.16,70.44,5.64,2.874,52,2000
+VA-Ashburn,Service Level,73.93,68.43,79.07,5.32,2.66,52,2000
+VA-Ashburn,Digital & Tech,70.04,64.81,75.0,5.09,2.601,52,2000
+WA-Seattle,Index,61.4,55.4,67.3,5.95,3.013,32,2000
+WA-Seattle,Work Activity,55.74,46.01,64.67,9.33,4.864,32,2000
+WA-Seattle,Physical Feature,64.03,57.83,70.11,6.14,3.085,32,2000
+WA-Seattle,Service Level,58.33,52.56,65.13,6.28,3.145,32,2000
+WA-Seattle,Digital & Tech,67.5,59.47,75.66,8.09,4.044,32,2000
+WI-Waukesha,Index,64.66,62.0,67.22,2.61,1.339,159,2000
+WI-Waukesha,Work Activity,55.38,51.08,59.66,4.29,2.214,159,2000
+WI-Waukesha,Physical Feature,62.5,59.49,65.42,2.96,1.508,159,2000
+WI-Waukesha,Service Level,71.31,68.66,73.74,2.54,1.292,159,2000
+WI-Waukesha,Digital & Tech,69.47,66.89,71.97,2.54,1.316,159,2000
+Round 2 (30 sites),Index,62.19,61.53,62.85,0.66,0.334,3007,2000
+Round 2 (30 sites),Work Activity,54.9,53.91,55.91,1.0,0.508,3007,2000
+Round 2 (30 sites),Physical Feature,60.01,59.24,60.79,0.77,0.386,3007,2000
+Round 2 (30 sites),Service Level,66.4,65.71,67.11,0.7,0.354,3007,2000
+Round 2 (30 sites),Digital & Tech,67.46,66.74,68.19,0.73,0.369,3007,2000
