@@ -517,6 +517,18 @@ def company_value(ctx, measure):
     return round(float(v.iloc[0]), 1) if len(v) else np.nan
 
 
+def company_comments(ctx):
+    """Company = the 10 in-scope sites pooled, in the selected population (real comments)."""
+    c = ctx.comments
+    return c[c["site"].isin(ctx.meta.get("ten_sites", [])) & ~c["eff_junk"]]
+
+
+def company_respondents(ctx):
+    """Company = the 10 in-scope sites pooled, in the selected population (respondents)."""
+    r = ctx.resp_scores
+    return r[r["site"].isin(ctx.meta.get("ten_sites", []))] if len(r) else r
+
+
 def site_interval(ctx, site, measure):
     iv = ctx.intervals
     if iv is None or iv.empty:
@@ -640,8 +652,7 @@ def site_report_data(ctx, site):
 
     # Report card: dimension composites (0–100) -> grades, vs org average
     data["participation"] = int((resp_scores["site"] == site).sum()) if not resp_scores.empty else data["n"]
-    _insc = resp_scores[resp_scores["site"].isin(meta.get("ten_sites", []))] if not resp_scores.empty else pd.DataFrame()
-    data["all_participants"] = int(len(_insc))
+    data["all_participants"] = int(len(company_respondents(ctx)))
     # full comment log for the appendix (all real comments at this site)
     data["real_df"] = real[["respondent", "comment", "eff_sentiment", "eff_themes", "role", "tenure"]].reset_index(drop=True)
     ten = meta.get("ten_sites", [])
@@ -691,7 +702,7 @@ def site_report_data(ctx, site):
     data["demographics"] = demo
     data["demo_total"] = int(len(rs_site_all))
     # benchmark vs org: theme rate lift
-    org_real = comments[~comments["eff_junk"]]
+    org_real = company_comments(ctx)   # one definition of "company": the 10 sites pooled
     org_tot = len(org_real)
     org_rate = {t: (org_real["eff_themes"].str.contains(re.escape(t), na=False)).sum() / org_tot
                 for t in tvol.index[:8]}
@@ -703,7 +714,7 @@ def site_report_data(ctx, site):
     data["scores"] = []
     for lab, col in scoremap.items():
         if col in resp_scores.columns:
-            sv = rs_site[col].mean(); ov = resp_scores[col].mean()
+            sv = rs_site[col].mean(); ov = company_respondents(ctx)[col].mean()
             if pd.notna(sv):
                 data["scores"].append((lab, float(sv), float(ov)))
     # --- Employee sentiment: the survey's own summary agreement questions (1–5) ------
@@ -1195,7 +1206,7 @@ A comment that touches more than one category appears under each.</p>
 {'completed responses only' if completers_only else 'all responses'} · 10 in-scope sites. Support responses map to a
 0–100 scale; each dimension is the average of its items; the <b>Overall PulsePoint Experience Index Score</b> is the
 <b>unweighted</b> average of the four Dimension Scores — the same calculation as the Tableau deck. Friction &amp; RYG per
-the official Tableau spec · Priority = 40% volume + 35% share negative + 25% Friction.</div>
+the official Tableau spec · Priority = 40% volume + 35% share negative + 25% Friction. {COMPANY_DEF}</div>
 </body></html>"""
 
 def build_site_pdf(ctx, site, data=None):
@@ -1390,7 +1401,7 @@ def portfolio_data(ctx):
                          "support100": dd["dim_comp"].get(dm, np.nan)})
     dd["dim_gaps"] = gaps
     # per-site associate sentiment (composite 1–5) + company
-    rs = resp_scores[resp_scores["site"].isin(ten)] if not resp_scores.empty else pd.DataFrame()
+    rs = company_respondents(ctx)
     dd["comp_sentiment"] = float(rs["composite"].mean()) if len(rs) else np.nan
     dd["sent_by_site"] = {s: float(g["composite"].mean()) for s, g in rs.groupby("site")} if len(rs) else {}
     dd["n_participants"] = int(len(rs)); dd["n_sites"] = len(board)
@@ -1406,8 +1417,7 @@ def portfolio_data(ctx):
     else:
         dd["friction"] = []; dd["strength"] = []
     # open-ended: company comment sentiment + top themes + site×theme
-    real = comments[~comments["eff_junk"]]
-    real10 = real[real["site"].isin(ten)]
+    real10 = company_comments(ctx)
     dd["n_comments"] = int(len(real10)); dd["n_commenters"] = int(real10["respondent"].nunique())
     dd["pos"] = float((real10["eff_sentiment"] == "Positive").mean() * 100) if len(real10) else 0.0
     dd["neg"] = float((real10["eff_sentiment"] == "Negative").mean() * 100) if len(real10) else 0.0
@@ -1639,7 +1649,7 @@ Themes come from a keyword taxonomy ({N_THEMES} themes across {N_CATEGORIES} cat
 <div class="foot"><b>Data source &amp; method.</b> PulsePoint survey export ·
 {'completed responses only' if completers_flag else 'all responses'} · {dd['n_sites']} in-scope sites. The Index Score is
 the unweighted average of the four Dimension Scores (0–100) — the same calculation as the Tableau deck. Friction &amp; RYG
-per the official Tableau spec.</div>
+per the official Tableau spec. {COMPANY_DEF}</div>
 </body></html>"""
 
 def build_portfolio_pdf(ctx, data=None):

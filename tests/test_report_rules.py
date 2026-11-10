@@ -126,3 +126,14 @@ def test_no_rank_language_in_cards_or_payload(ctx, site_data):
     assert not re.search(r"third|#\d+ of|[Rr]ank\b", port)
     order = [b["site"] for b in R.portfolio_data(ctx)["board"]]
     assert order == sorted(order)
+
+
+def test_company_is_ten_sites_pooled(ctx, site_data):
+    comp = R.company_comments(ctx)
+    assert set(comp["site"]) == set(ctx.meta["ten_sites"])
+    d = site_data["IN-Indianapolis"]
+    for theme, _site_rate, org_rate in d["bench"]:
+        want = comp["eff_themes"].str.contains(theme, regex=False).sum() / len(comp)
+        assert org_rate == pytest.approx(want), theme
+    html = R.build_site_report(ctx, "IN-Indianapolis")
+    assert R.COMPANY_DEF in html and R.COMPANY_DEF in R.build_portfolio_report(ctx)
