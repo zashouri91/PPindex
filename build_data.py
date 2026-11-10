@@ -255,9 +255,10 @@ sa_dim.to_csv(os.path.join(DATA, "scores_dimension_all.csv"), index=False)
 # ---------------------------------------------------------------------------
 # 3. Open-ended -> long, tagged
 # ---------------------------------------------------------------------------
-def sentiment(text, domain=None):
-    # domain-tuned ensemble; returns (signed score in [-1,1], label)
-    return score_sentiment(text, domain)
+def sentiment(text, question_label=None):
+    # domain-tuned ensemble; returns (signed score in [-1,1], label). The question
+    # prior is keyed by the question LABEL (sentiment.QUESTION_PRIOR).
+    return score_sentiment(text, question_label)
 
 records = []
 cid = 0
@@ -270,7 +271,7 @@ for qcol, qlabel, qdomain in OPEN_ENDED:
         text = str(row[qcol]).strip()
         junk = is_junk(text)
         themes, cats = tag_themes(text)
-        sc, slab = sentiment(text, qdomain)
+        sc, slab = sentiment(text, qlabel)
         # If nothing matched but it's a real comment, mark Unclassified
         if not junk and not themes:
             themes, cats = ["Unclassified"], ["Uncategorized"]
