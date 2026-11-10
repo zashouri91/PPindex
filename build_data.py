@@ -7,24 +7,29 @@ Reads the raw survey export, produces:
   data/gap_by_site.csv     - same, broken out by site
   data/meta.json           - filter option lists + counts
 
-Run:  python build_data.py <raw_xlsx_path>
+Run:  python build_data.py [raw_xlsx_path]      (default: data/raw_deid.xlsx)
+
+Identifying columns (network-ID contact question, IP, location, browser, OS,
+response date, referring sites) are dropped on load whatever file is given —
+see deid.py and tools/deidentify_raw.py.
 """
 import sys, os, json, re
 import pandas as pd
 import numpy as np
 from taxonomy import tag_themes, is_junk, CATEGORIES, THEMES, THEME_TO_CATEGORY
 from sentiment import score_sentiment  # domain-tuned ensemble (VADER + facilities lexicon)
+from deid import drop_pii_columns
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(HERE, "data")
 os.makedirs(DATA, exist_ok=True)
 
-RAW = sys.argv[1] if len(sys.argv) > 1 else os.path.join(DATA, "raw.xlsx")
+RAW = sys.argv[1] if len(sys.argv) > 1 else os.path.join(DATA, "raw_deid.xlsx")
 
 # ---------------------------------------------------------------------------
-# 1. Load
+# 1. Load (identifying columns are never carried past this point)
 # ---------------------------------------------------------------------------
-df = pd.read_excel(RAW, sheet_name=0)
+df = drop_pii_columns(pd.read_excel(RAW, sheet_name=0))
 cols = list(df.columns)
 
 def find(prefix):

@@ -8,6 +8,10 @@ venv/
 
 # Runtime / user-generated
 data/overrides.csv
+
+# The ORIGINAL raw export carries network IDs, IPs and locations. Keep it on disk
+# only; the tracked copy is data/raw_deid.xlsx (tools/deidentify_raw.py).
+data/raw.xlsx
 # Operational Action Plans (data/action_plans/*.json) are tracked so the whole
 # team sees the same generated plans in the report cards. Regenerate in-app to
 # update them. To keep them local-only instead, re-add: data/action_plans/*.json
