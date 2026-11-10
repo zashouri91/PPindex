@@ -70,3 +70,9 @@ def test_priorities_exclude_generic_buckets():
 def test_generic_comments_still_count_in_browser_views():
     df = _toy_comments()
     assert set(R.explode_level(df, "Themes")["key"]) >= {"Positive / Appreciation"}
+
+
+def test_no_represents_similar_comments_claim(ctx):
+    html = R.build_site_report(ctx, "IN-Indianapolis")
+    assert "represents ~" not in html
+    assert "similar comments" not in html

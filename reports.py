@@ -672,9 +672,12 @@ def site_report_data(ctx, site):
         qs = select_quotes(real, t, "Themes", "representative", 1, seen_ids, seen_texts)
         if qs:
             r = qs[0]
-            same = int(((tex["key"] == t) & (tex["eff_sentiment"] == r["eff_sentiment"])).sum())
+            # how many negative comments carry this theme (the quote is one of them) —
+            # a count of the pool it was drawn from, not a claim that they say the same
+            n_neg = int(((tex["key"] == t) & (tex["eff_sentiment"] == "Negative")).sum())
             quotes.append({"theme": t, "text": str(r["comment"]), "role": str(r["role"]),
-                           "tenure": str(r["tenure"]), "sentiment": r["eff_sentiment"], "represents": same})
+                           "tenure": str(r["tenure"]), "sentiment": r["eff_sentiment"],
+                           "n_negative_in_theme": n_neg})
         if len(quotes) >= 5:
             break
     data["quotes"] = quotes
@@ -996,10 +999,11 @@ def build_site_report(ctx, site, data=None):
         f"{sv-ov:+.2f}</td></tr>" for lab, sv, ov in d["scores"])
 
     def quote_html(q):
-        rep = f" · represents ~{q['represents']} similar comments" if q.get("represents", 0) >= 3 else ""
+        n_neg = q.get("n_negative_in_theme", 0)
+        tag = (f"one of {n_neg:,} negative comments tagged <b>{_html.escape(q['theme'])}</b>"
+               if n_neg > 1 else f"<b>{_html.escape(q['theme'])}</b>")
         return (f"<blockquote>{_html.escape(q['text'])}"
-                f"<cite>— {_html.escape(q['role'])}, {_html.escape(q['tenure'])} · "
-                f"<b>{_html.escape(q['theme'])}</b>{rep}</cite></blockquote>")
+                f"<cite>— {_html.escape(q['role'])}, {_html.escape(q['tenure'])} · {tag}</cite></blockquote>")
     neg_quotes = "".join(quote_html(q) for q in d["quotes"]) or "<p style='color:#888'>No representative critical quotes.</p>"
     pos_quotes = "".join(
         f"<blockquote class='pos'>{_html.escape(q['text'])}"
