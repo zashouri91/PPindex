@@ -218,6 +218,8 @@ def build_report_card_payload(data: dict, include_verbatims: bool = True) -> dic
         for _, r in P.iterrows():
             priority_ranking.append({
                 "category": r.get("key"),
+                "people": int(r.get("people")) if r.get("people") == r.get("people") else None,
+                "pct_of_respondents": _round(r.get("pct_resp"), 0),
                 "comments": int(r.get("volume")) if r.get("volume") == r.get("volume") else None,
                 "pct_negative": _round((r.get("neg_share") or 0) * 100, 0),
                 "friction_0_100": _round(r.get("friction"), 0),
@@ -238,24 +240,28 @@ def build_report_card_payload(data: dict, include_verbatims: bool = True) -> dic
     # Prefer the longer list (up to 10) so the model has enough distinct candidates for
     # five priorities; fall back to the card's 5-item list.
     candidate_themes = []
-    for t, cnt, neg in (data.get("fix_candidates") or data.get("fixes") or []):
+    for c in (data.get("fix_candidates") or data.get("fixes") or []):
+        t = c["theme"]
         if t in GENERIC_THEMES:
             continue
         candidate_themes.append({
-            "theme": t, "category": _cat(t),
-            "comments": int(cnt), "pct_negative": _round(neg * 100, 0),
+            "theme": t, "category": _cat(t), "people": c["people"],
+            "pct_of_respondents": _round(c["pct_resp"], 0),
+            "comments": c["comments"], "pct_negative": _round(c["neg"] * 100, 0),
         })
 
     # Strengths to protect: themes with a true positive majority (pct_positive is the
     # share of comments labelled Positive, not 100 - % negative), generic buckets
     # dropped; topped up with best-supported survey items, labelled as ratings.
     strengths = []
-    for t, cnt, pos in (data.get("strengths") or []):
+    for s in (data.get("strengths") or []):
+        t = s["theme"]
         if t in GENERIC_THEMES:
             continue
         strengths.append({
-            "theme": t, "category": _cat(t), "source": "comments",
-            "comments": int(cnt), "pct_positive": _round(pos * 100, 0),
+            "theme": t, "category": _cat(t), "source": "comments", "people": s["people"],
+            "pct_of_respondents": _round(s["pct_resp"], 0),
+            "comments": s["comments"], "pct_positive": _round(s["pos"] * 100, 0),
         })
     for si in (data.get("strength_items") or []):
         strengths.append({
@@ -269,8 +275,8 @@ def build_report_card_payload(data: dict, include_verbatims: bool = True) -> dic
         if t in GENERIC_THEMES:
             continue
         bench.append({
-            "theme": t, "site_rate_pct": _round(site_rate * 100, 0),
-            "company_rate_pct": _round(org_rate * 100, 0),
+            "theme": t, "site_pct_of_respondents": _round(site_rate * 100, 0),
+            "company_pct_of_respondents": _round(org_rate * 100, 0),
         })
 
     payload = {
@@ -346,12 +352,12 @@ DATA VOCABULARY (use these exact structures; do not invent others)
 - Importance vs. Support items: each has Support and Importance (1-5), a Gap (Support - Importance), and a status. Under-supported % and Friction (0-100) come from here.
 - Digital & Tech items are agreement-only (1-5, no Importance): cite the agreement score, its band (Strong >= 4.0, Moderate 3.5-3.9, Needs attention < 3.5) and the company average. Never quote a Gap, Friction or under-supported % for them.
 - 7 Comment Categories (groupings) and 29 Themes (the atomic unit). Themes are the level at which you define priorities.
-- Computed Priority ranking: the card ranks comment CATEGORIES by 0.40*volume + 0.35*%negative + 0.25*friction. Use this ranking to identify the most material areas; then define priorities at the THEME level within/across the top categories.
+- Computed Priority ranking: the card ranks comment CATEGORIES by 0.40*people raising it + 0.35*%negative + 0.25*friction. Prevalence is counted in PEOPLE (one person can write up to five comments); comment counts are secondary. Use this ranking to identify the most material areas; then define priorities at the THEME level within/across the top categories.
 - Representative quotes: the only source for concrete examples.
 - Ignore the themes "Positive / Appreciation" and "Overall Dissatisfaction" — they are generic and non-actionable (they are already excluded from the data you were given).
 
 EXPECTATIONS
-1. Start from the computed Priority ranking and the candidate priority themes provided; do not re-rank from scratch. Weigh frequency + severity + impact + quantitative + qualitative evidence together. Volume is already 40% of the ranking, so do not lean on volume alone.
+1. Start from the computed Priority ranking and the candidate priority themes provided; do not re-rank from scratch. Weigh frequency + severity + impact + quantitative + qualitative evidence together. People raising an issue are already 40% of the ranking, so do not lean on volume alone.
 2. Preserve THEME integrity: do not merge two distinct themes into one priority just because they sound related or share a parent category (e.g. Furniture & Ergonomics vs. Temperature/Thermal are separate even though both sit under Physical Environment). Combine only if this location's own evidence clearly shows one underlying problem. Do not create artificial groupings to fit the five priorities; list extra material issues as secondary/monitor items.
 3. Identify the actual workplace problem, not the theme label. Say what is happening, who/what work is affected, and how it shows up day-to-day.
 4. Recommend the top 5 priorities: five distinct, material issues with no overlap between them. Return fewer only if this location's evidence does not support five distinct issues, and say why under assumptions; never pad with weak, duplicate or overlapping items.

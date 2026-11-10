@@ -234,6 +234,10 @@ def explode_level(df, level, exclude_generic=False):
     return t.rename(columns={"_k": "key"}).reset_index(drop=True)
 
 def build_priority(df, level, tfric):
+    """Rank themes/categories. Volume is PEOPLE (unique respondents) — one person can
+    answer five open questions, so comment counts over-weight frequent writers; comment
+    counts are kept as a secondary column. % negative is over UNIQUE comments (a comment
+    with two themes in one category counts once for that category)."""
     real = df[~df["eff_junk"]]
     if real.empty:
         return pd.DataFrame()
@@ -241,16 +245,44 @@ def build_priority(df, level, tfric):
     fmap = category_friction_map(tfric) if level == "Categories" else tfric
     rows = []
     for k, gg in ex.groupby("key"):
-        rows.append((k, gg["comment_id"].nunique(),
-                     (gg["eff_sentiment"] == "Negative").mean(), fmap.get(k, np.nan)))
-    P = pd.DataFrame(rows, columns=["key", "volume", "neg_share", "friction"])
-    P["vol_norm"] = P["volume"] / P["volume"].max()
+        uniq = gg.drop_duplicates("comment_id")
+        rows.append((k, gg["respondent"].nunique(), uniq["comment_id"].nunique(),
+                     (uniq["eff_sentiment"] == "Negative").mean(), fmap.get(k, np.nan)))
+    P = pd.DataFrame(rows, columns=["key", "people", "volume", "neg_share", "friction"])
+    P["vol_norm"] = P["people"] / P["people"].max()
     fr = P["friction"].clip(lower=0)
     denom = fr.max() if fr.max() and fr.max() > 0 else 1.0
     fn = fr / denom
     P["fric_norm"] = fn.fillna(fn.median() if fn.notna().any() else 0.0)
     P["Priority"] = (0.40 * P["vol_norm"] + 0.35 * P["neg_share"] + 0.25 * P["fric_norm"]) * 100
     return P.sort_values("Priority", ascending=False)
+
+
+def theme_stats(real, n_respondents):
+    """Per-theme prevalence led by PEOPLE: people, % of respondents, comments, and the
+    negative/positive shares over unique comments. Generic buckets excluded. Sorted by
+    people (desc)."""
+    tex = explode_level(real, "Themes", exclude_generic=True)
+    if tex.empty:
+        return pd.DataFrame(columns=["people", "pct_resp", "comments", "neg", "pos"])
+    g = tex.groupby("key")
+    st_ = pd.DataFrame({
+        "people": g["respondent"].nunique(),
+        "comments": g["comment_id"].nunique(),
+        "neg": g["eff_sentiment"].apply(lambda s: (s == "Negative").mean()),
+        "pos": g["eff_sentiment"].apply(lambda s: (s == "Positive").mean()),
+    })
+    st_["pct_resp"] = st_["people"] / max(1, int(n_respondents)) * 100
+    return st_.sort_values(["people", "comments"], ascending=False)
+
+
+def fmt_people(people, pct_resp, comments=None):
+    """'N people (P% of respondents)' with comment count secondary."""
+    s = f"{int(people):,} {'person' if int(people) == 1 else 'people'} ({pct_resp:.0f}% of respondents)"
+    if comments is not None:
+        s += f" · {int(comments):,} comments"
+    return s
+
 
 def exemplars(df, key, level, n=3):
     real = df[~df["eff_junk"]]
@@ -617,24 +649,31 @@ def site_report_data(ctx, site):
     data["pos"] = float((real["eff_sentiment"] == "Positive").mean() * 100)
     data["neu"] = 100 - data["neg"] - data["pos"]
     # priorities (categories) + top themes
+    n_resp_site = int((resp_scores["site"] == site).sum()) if not resp_scores.empty else 0
+    data["n_respondents"] = n_resp_site
+    data["n_commenters"] = int(real["respondent"].nunique())
     data["P"] = build_priority(sc, "Categories", theme_friction_map(ctx, site)).head(5)
+    if len(data["P"]):
+        data["P"]["pct_resp"] = data["P"]["people"] / max(1, n_resp_site) * 100
+    # Theme prevalence is led by PEOPLE (unique respondents), comments secondary.
     # Generic buckets (taxonomy.GENERIC_THEMES) are hidden from every theme ranking on
     # the card; their comments still count toward sentiment and the comment appendix.
     tex = explode_level(real, "Themes", exclude_generic=True)
-    tcounts = tex["key"].value_counts()
-    data["top_themes"] = tcounts.head(8)
-    # theme sentiment for strengths/fixes
-    tsent = tex.groupby("key")["eff_sentiment"].apply(lambda s: (s == "Negative").mean())
-    tpos = tex.groupby("key")["eff_sentiment"].apply(lambda s: (s == "Positive").mean())
-    tvol = tcounts
-    fixes = [(t, int(tvol[t]), float(tsent[t])) for t in tvol.index
-             if tvol[t] >= 5 and tsent.get(t, 0) >= 0.45][:5]
+    TS = theme_stats(real, n_resp_site)
+    data["theme_stats"] = TS
+    data["top_themes"] = TS["people"].head(8)
+    tsent, tpos, tvol = TS["neg"], TS["pos"], TS["comments"]
+
+    def _row(t):
+        return {"theme": t, "people": int(TS.at[t, "people"]), "pct_resp": float(TS.at[t, "pct_resp"]),
+                "comments": int(TS.at[t, "comments"]), "neg": float(TS.at[t, "neg"]),
+                "pos": float(TS.at[t, "pos"])}
+    fixes = [_row(t) for t in TS.index if tvol[t] >= 5 and tsent[t] >= 0.45][:5]
     # What's working: the TRUE positive share (not 1 − negative). A theme qualifies with
     # enough comments, a positive majority, and more positive than negative comments.
-    strengths = [(t, int(tvol[t]), float(tpos.get(t, 0.0))) for t in tvol.index
+    strengths = [_row(t) for t in TS.index
                  if tvol[t] >= STRENGTH_MIN_COMMENTS
-                 and tpos.get(t, 0.0) >= STRENGTH_MIN_POS_SHARE
-                 and tpos.get(t, 0.0) > tsent.get(t, 1.0)][:5]
+                 and tpos[t] >= STRENGTH_MIN_POS_SHARE and tpos[t] > tsent[t]][:5]
     data["fixes"], data["strengths"] = fixes, strengths
     # official scores (Tableau spec) — only exist for the 10 in-scope sites
     ss = scores_site[scores_site["site"] == site].dropna(subset=["friction"]) if not scores_site.empty else pd.DataFrame()
@@ -714,11 +753,12 @@ def site_report_data(ctx, site):
     data["demographics"] = demo
     data["demo_total"] = int(len(rs_site_all))
     # benchmark vs org: theme rate lift
-    org_real = company_comments(ctx)   # one definition of "company": the 10 sites pooled
-    org_tot = len(org_real)
-    org_rate = {t: (org_real["eff_themes"].str.contains(re.escape(t), na=False)).sum() / org_tot
-                for t in tvol.index[:8]}
-    data["bench"] = [(t, tvol[t] / n, org_rate.get(t, 0)) for t in tvol.index[:6]]
+    # share of RESPONDENTS raising each theme: site vs company (10 sites pooled)
+    org_real = company_comments(ctx)
+    org_n = max(1, len(company_respondents(ctx)))
+    org_people = explode_level(org_real, "Themes", exclude_generic=True).groupby("key")["respondent"].nunique()
+    data["bench"] = [(t, TS.at[t, "people"] / max(1, n_resp_site), org_people.get(t, 0) / org_n)
+                     for t in TS.index[:6]]
     # satisfaction scores vs org
     rs_site = resp_scores[resp_scores["site"] == site]
     scoremap = {"Workspace": "score_work", "Physical space": "score_space",
@@ -755,7 +795,7 @@ def site_report_data(ctx, site):
     # verbatims: top themes -> representative negative quote each; + positives
     seen_ids, seen_texts = set(), set()
     quotes = []
-    for t in tvol.index[:6]:
+    for t in TS.index[:6]:
         qs = select_quotes(real, t, "Themes", "representative", 1, seen_ids, seen_texts)
         if qs:
             r = qs[0]
@@ -769,7 +809,7 @@ def site_report_data(ctx, site):
             break
     data["quotes"] = quotes
     pos_quotes = []
-    for t in [s[0] for s in strengths] or list(tvol.index[:4]):
+    for t in [s["theme"] for s in strengths] or list(TS.index[:4]):
         qs = select_quotes(real, t, "Themes", "positive", 1, seen_ids, seen_texts)
         if qs:
             r = qs[0]
@@ -781,12 +821,11 @@ def site_report_data(ctx, site):
     # Extra evidence for the Operational Action Plan generator only (not rendered on the
     # card): a top-5 plan needs more candidate themes than the 5-item "fixes" list, real
     # example quotes for each, and the Digital & Tech items vs the company average.
-    data["fix_candidates"] = [(t, int(tvol[t]), float(tsent[t])) for t in tvol.index
-                              if tvol[t] >= 5 and tsent.get(t, 0) >= 0.45][:10]
+    data["fix_candidates"] = [_row(t) for t in TS.index if tvol[t] >= 5 and tsent[t] >= 0.45][:10]
     cq_ids, cq_txt = set(), set()
     data["cand_quotes"] = [
         {"theme": t, "text": str(r["comment"]), "role": str(r["role"]), "sentiment": r["eff_sentiment"]}
-        for t, _, _ in data["fix_candidates"]
+        for t in [c["theme"] for c in data["fix_candidates"]]
         for r in select_quotes(real, t, "Themes", "representative", 2, cq_ids, cq_txt)]
     _tech = ss[ss["mean_importance"].isna()] if len(ss) else pd.DataFrame()
     _org_t = (scores.set_index("item")["mean_support"]
@@ -840,19 +879,20 @@ def _site_charts(d):
     ax.set(aspect="equal")
     ax.set_title("Comment sentiment\n(green +  ·  grey ~  ·  red −)", fontsize=9, weight="bold", color="#2b3a67")
     charts["donut"] = _b64png(fig)
-    # top themes bar — % of this site's comments + comment count on each bar
+    # top themes bar — PEOPLE raising each theme (% of respondents), comments secondary
     tt = d["top_themes"].head(7)[::-1]
-    n_real = max(1, int(d.get("n", 1)))
+    n_resp = max(1, int(d.get("n_respondents") or 1))
+    tcom = d["theme_stats"]["comments"] if "theme_stats" in d else {}
     fig, ax = plt.subplots(figsize=(6.2, 3.3))
     ax.barh(range(len(tt)), tt.values, color="#4C78A8", height=0.62)
     ax.set_yticks(range(len(tt))); ax.set_yticklabels([_wrap(str(t), 24) for t in tt.index], fontsize=7.5)
     tmax = float(tt.max()) if len(tt) else 1
     for i, (name, c) in enumerate(tt.items()):
-        ax.text(c + tmax * 0.02, i, f"{c / n_real * 100:.0f}% | {int(c)} comments",
+        ax.text(c + tmax * 0.02, i, f"{int(c)} people ({c / n_resp * 100:.0f}%) · {int(tcom.get(name, 0))} comments",
                 va="center", fontsize=7.5, color="#33475b", weight="bold")
-    ax.set_xlim(0, tmax * 1.42)
-    ax.set_xlabel("comment mentions", fontsize=8); ax.tick_params(axis="x", labelsize=8)
-    ax.set_title("Top comment themes (% of this site's comments)", fontsize=10.5,
+    ax.set_xlim(0, tmax * 1.62)
+    ax.set_xlabel("people raising the theme", fontsize=8); ax.tick_params(axis="x", labelsize=8)
+    ax.set_title("Top comment themes (people, % of respondents)", fontsize=10.5,
                  weight="bold", color="#2b3a67", loc="left")
     for s in ["top", "right"]: ax.spines[s].set_visible(False)
     fig.tight_layout(); charts["themes"] = _b64png(fig)
@@ -939,7 +979,8 @@ def build_site_report(ctx, site, data=None):
                  f"Overall comment sentiment is <b>{d['neg']:.0f}% negative</b> and {d['pos']:.0f}% positive. ")
     if tops:
         narrative += (f"The top area to address is <b>{_html.escape(tops[0])}</b> "
-                      f"({int(P.iloc[0]['neg_share']*100)}% negative across {int(P.iloc[0]['volume'])} comments)")
+                      f"(raised by {int(P.iloc[0]['people']):,} people, {P.iloc[0]['neg_share']*100:.0f}% of "
+                      f"{int(P.iloc[0]['volume']):,} comments negative)")
         if len(tops) > 1: narrative += f", then {_html.escape(tops[1])}"
         if len(tops) > 2: narrative += f" and {_html.escape(tops[2])}"
         narrative += ". "
@@ -949,9 +990,10 @@ def build_site_report(ctx, site, data=None):
                       f"(Friction {u0['friction']:.0f}/100, {int(u0['friction_pct'])}% feel under-supported).")
 
     prio_rows = "".join(
-        f"<tr><td>{_html.escape(r['key'])}</td><td>{int(r['volume'])}</td>"
-        f"<td>{int(r['neg_share']*100)}%</td></tr>"
-        for _, r in P.iterrows()) or "<tr><td colspan='3'>Not enough tagged comments to rank.</td></tr>"
+        f"<tr><td>{_html.escape(r['key'])}</td>"
+        f"<td>{int(r['people']):,} ({r.get('pct_resp', 0):.0f}%)</td><td>{int(r['volume']):,}</td>"
+        f"<td>{r['neg_share']*100:.0f}%</td></tr>"
+        for _, r in P.iterrows()) or "<tr><td colspan='4'>Not enough tagged comments to rank.</td></tr>"
     def _status_color(r):
         """Status word + color: importance dims use RYG; agreement-only (Tech) use the band.
         Item rows use the stored status; dimension-summary rows (no stored status) fall
@@ -1070,10 +1112,12 @@ def build_site_report(ctx, site, data=None):
                            f"{sname} · {len(ssub)}</div><ul class='clist'>{lis}</ul></div>")
             appendix_html += (f"<details class='catblk'><summary>{_html.escape(cat)} "
                               f"<span class='cct'>({len(sub)})</span></summary>{groups}</details>")
-    fix_rows = "".join(f"<li><b>{_html.escape(t)}</b> — {v} comments, {int(ns*100)}% negative</li>"
-                       for t, v, ns in d["fixes"]) or "<li>No clearly negative themes.</li>"
-    str_rows = "".join(f"<li><b>{_html.escape(t)}</b> — {v} comments, {ps*100:.0f}% positive</li>"
-                       for t, v, ps in d["strengths"])
+    fix_rows = "".join(f"<li><b>{_html.escape(f['theme'])}</b> — {fmt_people(f['people'], f['pct_resp'], f['comments'])}, "
+                       f"{f['neg']*100:.0f}% negative</li>"
+                       for f in d["fixes"]) or "<li>No clearly negative themes.</li>"
+    str_rows = "".join(f"<li><b>{_html.escape(s['theme'])}</b> — {fmt_people(s['people'], s['pct_resp'], s['comments'])}, "
+                       f"{s['pos']*100:.0f}% positive</li>"
+                       for s in d["strengths"])
     str_rows += "".join(f"<li><b>{_html.escape(si['item'])}</b> — survey rating: support "
                         f"{si['support_100']:.0f}/100 (best-supported item)</li>"
                         for si in d.get("strength_items", []))
@@ -1198,12 +1242,12 @@ the site's 95% interval; otherwise <b>In line</b>. Company = the 10 in-scope sit
 <div class="narr">{narrative}</div>
 <div class="charts">{img('donut')}{img('themes')}</div>
 <h3>Top priorities to address</h3>
-<table><tr><th>Category</th><th>#&nbsp;comments</th><th>%&nbsp;negative</th></tr>{prio_rows}</table>
+<table><tr><th>Category</th><th>People (% of respondents)</th><th>Comments</th><th>%&nbsp;negative</th></tr>{prio_rows}</table>
 <div class="two"><div>
 <h3>What needs attention</h3><ul>{fix_rows}</ul></div><div>
 <h3>What's working</h3><ul>{str_rows}</ul></div></div>
 <h3>Vs. org — theme rates</h3>
-<table><tr><th>Theme</th><th>site</th><th>org</th></tr>{bench_rows}</table>
+<table><tr><th>Theme</th><th>site (% of respondents)</th><th>company (% of respondents)</th></tr>{bench_rows}</table>
 <p class="lgd"><b>How comments are categorized:</b> themes are assigned by a transparent keyword taxonomy built for this
 survey ({N_THEMES} themes across {N_CATEGORIES} categories), kept separate from the PXIP category set by design so the open-ended read stands
 on its own. The mapping lives in <code>taxonomy.py</code> and can be tuned without touching the scores.</p>
@@ -1218,7 +1262,8 @@ A comment that touches more than one category appears under each.</p>
 {'completed responses only' if completers_only else 'all responses'} · 10 in-scope sites. Support responses map to a
 0–100 scale; each dimension is the average of its items; the <b>Overall PulsePoint Experience Index Score</b> is the
 <b>unweighted</b> average of the four Dimension Scores — the same calculation as the Tableau deck. Friction &amp; RYG per
-the official Tableau spec · Priority = 40% volume + 35% share negative + 25% Friction. {COMPANY_DEF}</div>
+the official Tableau spec · Priority = 40% people raising it + 35% share of comments negative + 25% Friction.
+Theme prevalence counts people (one person can answer five open questions), with comment counts secondary. {COMPANY_DEF}</div>
 </body></html>"""
 
 def build_site_pdf(ctx, site, data=None):
@@ -1255,10 +1300,10 @@ def build_site_pptx(ctx, sites, get_data=None):
         # priorities table
         rows = min(6, len(d["P"]) + 1)
         tbl = s.shapes.add_table(rows, 4, Inches(0.4), Inches(4.0), Inches(6.0), Inches(2.6)).table
-        for j, h in enumerate(["Category", "# comments", "% neg", "priority"]):
+        for j, h in enumerate(["Category", "People", "% neg", "priority"]):
             c = tbl.cell(0, j); c.text = h; c.text_frame.paragraphs[0].font.size = Pt(11); c.text_frame.paragraphs[0].font.bold = True
         for i, (_, r) in enumerate(d["P"].head(5).iterrows(), 1):
-            for j, v in enumerate([r["key"], int(r["volume"]), f"{int(r['neg_share']*100)}%", int(round(r["Priority"]))]):
+            for j, v in enumerate([r["key"], int(r["people"]), f"{r['neg_share']*100:.0f}%", int(round(r["Priority"]))]):
                 c = tbl.cell(i, j); c.text = str(v); c.text_frame.paragraphs[0].font.size = Pt(10)
         # top quotes
         qtf = s.shapes.add_textbox(Inches(6.7), Inches(4.0), Inches(6.2), Inches(3.0)).text_frame
@@ -1340,8 +1385,8 @@ def _portfolio_charts(dd):
         vmax = max([v for row in tmat for v in row if not np.isnan(v)] + [1])
         charts["heatmap_theme"] = _portfolio_heatmap(
             tmat, sites, [_wrap(t, 12) for t in themes], 0, vmax, "Blues", "{:.0f}",
-            "Comment theme prevalence by site (% of site's comments)", (8.6, 4.0), xrot=30,
-            cbar_label="% of site's comments")
+            "Comment theme prevalence by site (% of site's respondents raising it)", (8.6, 4.0), xrot=30,
+            cbar_label="% of site's respondents")
     # 4) Company friction + strengths (reuse the site chart renderer)
     if dd["friction"]:
         fr = pd.DataFrame(dd["friction"])
@@ -1434,16 +1479,17 @@ def portfolio_data(ctx):
     dd["pos"] = float((real10["eff_sentiment"] == "Positive").mean() * 100) if len(real10) else 0.0
     dd["neg"] = float((real10["eff_sentiment"] == "Negative").mean() * 100) if len(real10) else 0.0
     dd["neu"] = 100 - dd["pos"] - dd["neg"]
+    # theme prevalence by PEOPLE (share of respondents), comments secondary
     tex = explode_level(real10, "Themes", exclude_generic=True)
-    tcounts = tex["key"].value_counts()
-    tops = list(tcounts.head(8).index)
-    dd["top_themes"] = [{"theme": t, "n": int(tcounts[t]), "pct": tcounts[t] / max(1, len(real10)) * 100,
-                         "neg": float((tex[tex["key"] == t]["eff_sentiment"] == "Negative").mean() * 100)}
+    TS = theme_stats(real10, len(rs))
+    tops = list(TS.index[:8])
+    dd["top_themes"] = [{"theme": t, "people": int(TS.at[t, "people"]), "pct": float(TS.at[t, "pct_resp"]),
+                         "n": int(TS.at[t, "comments"]), "neg": float(TS.at[t, "neg"] * 100)}
                         for t in tops]
-    site_tot = real10.groupby("site")["comment_id"].nunique()
+    site_resp = rs.groupby("site").size()
     dd["site_theme_themes"] = tops
-    dd["site_theme"] = {b["site"]: {t: (tex[(tex["site"] == b["site"]) & (tex["key"] == t)]["comment_id"].nunique()
-                                        / max(1, int(site_tot.get(b["site"], 0))) * 100) for t in tops}
+    dd["site_theme"] = {b["site"]: {t: (tex[(tex["site"] == b["site"]) & (tex["key"] == t)]["respondent"].nunique()
+                                        / max(1, int(site_resp.get(b["site"], 0))) * 100) for t in tops}
                         for b in board}
     # company demographics
     demo = {}
@@ -1575,7 +1621,7 @@ def build_portfolio_report(ctx, data=None):
                      f"<td style='font-weight:700'>{g['support100']:.0f}</td></tr>")
     # top themes table
     th_rows = "".join(
-        f"<tr><td>{_html.escape(t['theme'])}</td><td>{t['pct']:.0f}%</td><td>{t['n']:,}</td>"
+        f"<tr><td>{_html.escape(t['theme'])}</td><td>{t['people']:,} ({t['pct']:.0f}%)</td><td>{t['n']:,}</td>"
         f"<td style='color:{'#C0392B' if t['neg']>=50 else '#555'}'>{t['neg']:.0f}% neg</td></tr>"
         for t in dd["top_themes"])
     qgrid_html = _portfolio_qgrid(ctx, [b["site"] for b in board])
@@ -1650,9 +1696,10 @@ Work Activity is the company's weakest dimension, so it reads amber/red across m
 <h3>Friction &amp; strength themes (company-wide)</h3>
 <div class="charts">{img('friction')}{img('strength')}</div>
 <h3>Open-ended comment themes</h3>
-<table><tr><th>Theme</th><th>% of comments</th><th>Mentions</th><th>Sentiment</th></tr>{th_rows}</table>
+<table><tr><th>Theme</th><th>People (% of respondents)</th><th>Comments</th><th>Sentiment</th></tr>{th_rows}</table>
 <div class="charts">{img('heatmap_theme')}</div>
-<p class="lgd">Prevalence = share of each site's comments mentioning the theme (a comment can touch several).
+<p class="lgd">Prevalence = share of each site's respondents who raised the theme in any comment (one person can
+answer five open questions, so people are counted once); comment counts are secondary.
 Themes come from a keyword taxonomy ({N_THEMES} themes across {N_CATEGORIES} categories), kept separate from PXIP categories by design.</p>
 <h3>Demographics — respondent profile</h3>
 <p class="lgd">Provided to help readers understand the respondent mix behind the results ({dd['n_participants']:,} respondents).</p>

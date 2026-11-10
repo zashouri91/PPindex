@@ -244,6 +244,7 @@ with tab_prio:
             color=alt.Color("neg_share:Q", scale=alt.Scale(scheme="reds"),
                             legend=alt.Legend(title="% negative", format="%")),
             tooltip=[alt.Tooltip("key:N", title=lvl[:-1]),
+                     alt.Tooltip("people:Q", title="# people"),
                      alt.Tooltip("volume:Q", title="# comments"),
                      alt.Tooltip("neg_share:Q", title="% negative", format=".0%"),
                      alt.Tooltip("friction:Q", title="Friction (0–100)", format=".0f"),
@@ -251,14 +252,15 @@ with tab_prio:
         st.altair_chart(bar, use_container_width=True)
 
         disp = show.assign(**{
+            "# people": show["people"],
             "# comments": show["volume"],
             "% negative": (show["neg_share"] * 100).round(0).astype(int),
             "Friction": show["friction"].round(0),
             "priority": show["Priority"].round(0).astype(int),
-        })[["key", "# comments", "% negative", "Friction", "priority"]] \
+        })[["key", "# people", "# comments", "% negative", "Friction", "priority"]] \
             .rename(columns={"key": lvl[:-1]})
         st.dataframe(disp, hide_index=True, use_container_width=True)
-        st.caption("Priority = 40% comment volume + 35% share negative + 25% Friction "
+        st.caption("Priority = 40% people raising it + 35% share of comments negative + 25% Friction "
                    "(each rescaled 0–1). Friction is the Tableau-spec under-support score (0–100); "
                    "themes with no matching rating item use the median. Org-wide unless one site is selected.")
 

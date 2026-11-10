@@ -23,7 +23,8 @@ def _theme_shares(ctx, site, theme):
 
 def test_whats_working_prints_true_positive_share(ctx, site_data):
     for site, d in site_data.items():
-        for theme, n, pos in d["strengths"]:
+        for s in d["strengths"]:
+            theme, n, pos = s["theme"], s["comments"], s["pos"]
             n2, pos2, neg2 = _theme_shares(ctx, site, theme)
             assert n == n2 and pos == pytest.approx(pos2), (site, theme)
             assert n >= R.STRENGTH_MIN_COMMENTS
@@ -34,7 +35,7 @@ def test_whats_working_prints_true_positive_share(ctx, site_data):
 
 def test_woodland_hills_reception_no_longer_91(site_data):
     d = site_data["CA-Woodland Hills"]
-    assert all(t != "Reception & Entry" for t, _n, _p in d["strengths"])
+    assert all(s["theme"] != "Reception & Entry" for s in d["strengths"])
 
 
 def _toy_comments():
@@ -132,8 +133,10 @@ def test_company_is_ten_sites_pooled(ctx, site_data):
     comp = R.company_comments(ctx)
     assert set(comp["site"]) == set(ctx.meta["ten_sites"])
     d = site_data["IN-Indianapolis"]
+    n_resp = len(R.company_respondents(ctx))
+    ex = R.explode_level(comp, "Themes", exclude_generic=True)
     for theme, _site_rate, org_rate in d["bench"]:
-        want = comp["eff_themes"].str.contains(theme, regex=False).sum() / len(comp)
+        want = ex[ex["key"] == theme]["respondent"].nunique() / n_resp
         assert org_rate == pytest.approx(want), theme
     html = R.build_site_report(ctx, "IN-Indianapolis")
     assert R.COMPANY_DEF in html and R.COMPANY_DEF in R.build_portfolio_report(ctx)
@@ -161,3 +164,28 @@ def test_key_drivers_compare_commenters_only(ctx):
     th = D.index[0]
     n_without = (D.loc[th, "n"])
     assert n_without < len(commenters)
+
+
+def test_prevalence_counts_people(ctx, site_data):
+    d = site_data["IN-Indianapolis"]
+    real = ctx.comments[(ctx.comments["site"] == "IN-Indianapolis") & ~ctx.comments["eff_junk"]]
+    ex = R.explode_level(real, "Themes", exclude_generic=True)
+    for theme, people in d["top_themes"].items():
+        assert people == ex[ex["key"] == theme]["respondent"].nunique()
+    for f in d["fixes"]:
+        assert f["people"] <= f["comments"]
+    P = d["P"]
+    assert {"people", "volume", "neg_share"} <= set(P.columns)
+
+
+def test_category_negative_share_counts_each_comment_once():
+    import pandas as pd
+    # one negative comment tagged with two themes in the same category + one positive
+    df = pd.DataFrame([
+        {"comment_id": 1, "respondent": 1, "eff_themes": "Temperature / Thermal|Lighting",
+         "eff_sentiment": "Negative", "eff_junk": False},
+        {"comment_id": 2, "respondent": 2, "eff_themes": "Lighting",
+         "eff_sentiment": "Positive", "eff_junk": False}])
+    P = R.build_priority(df, "Categories", {}).set_index("key")
+    assert P.loc["Physical Environment", "neg_share"] == pytest.approx(0.5)   # not 2/3
+    assert P.loc["Physical Environment", "people"] == 2
