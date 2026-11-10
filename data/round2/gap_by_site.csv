@@ -1,0 +1,661 @@
+block,domain,item,site,mean_importance,mean_delivery,gap,n,classification
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,CA-Costa Mesa,4.354,3.015,1.338,65,Severely Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,CA-Walnut Creek,4.189,3.432,0.757,37,Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,CT-Rocky Hill,4.0,2.464,1.536,28,Severely Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,CT-Wallingford,4.376,3.068,1.307,205,Severely Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,DC-Washington,4.1,4.1,0.0,10,Well-matched
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,DE-Wilmington,4.25,3.318,0.932,44,Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,FL-Lake Mary,4.316,3.385,0.932,117,Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,GA-Columbus,4.431,3.111,1.32,153,Severely Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,IA-Urbandale,3.944,3.556,0.389,18,Slightly Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,IL-Chicago-Bryn Mawr,4.204,3.153,1.051,98,Severely Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,KS-Overland Park,4.167,3.083,1.083,12,Severely Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,KY-Louisville,4.162,3.579,0.584,197,Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,LA-Harvey,4.217,3.174,1.043,23,Severely Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,MA-Woburn,4.045,3.182,0.864,44,Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,MD-Hanover,4.19,3.052,1.138,58,Severely Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,MN-Mendota Heights,4.257,2.76,1.497,171,Severely Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,MO-St. Louis,4.158,3.121,1.036,165,Severely Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,NC-Durham,4.255,3.055,1.2,55,Severely Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,NC-Winston-Salem,4.208,2.792,1.417,24,Severely Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,NH-Manchester,4.4,3.047,1.353,85,Severely Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,NJ-Iselin,4.203,3.278,0.924,79,Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,NV-Las Vegas-Maryland Pkwy,4.488,3.073,1.415,41,Severely Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,NV-Las Vegas-Russell,4.135,3.115,1.019,52,Severely Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,NY-Lake Success,4.312,3.042,1.271,48,Severely Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,NY-Latham,4.262,2.61,1.651,195,Severely Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,PA-Seven Fields,4.375,3.25,1.125,8,Severely Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,TN-Nashville,4.469,3.047,1.422,64,Severely Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,VA-Ashburn,4.262,3.214,1.048,42,Severely Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,WA-Seattle,4.2,2.95,1.25,20,Severely Under-supported
+Work Types,Focused / Private Work,Focused individual work that requires concentration and minimal interruption,WI-Waukesha,4.254,3.062,1.192,130,Severely Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,CA-Costa Mesa,3.892,3.169,0.723,65,Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,CA-Walnut Creek,3.973,3.351,0.622,37,Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,CT-Rocky Hill,3.571,2.571,1.0,28,Severely Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,CT-Wallingford,3.8,3.117,0.683,205,Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,DC-Washington,3.7,4.2,-0.5,10,Over-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,DE-Wilmington,3.568,3.295,0.273,44,Slightly Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,FL-Lake Mary,4.145,3.402,0.744,117,Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,GA-Columbus,4.046,3.183,0.863,153,Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,IA-Urbandale,3.889,3.778,0.111,18,Well-matched
+Work Types,Focused / Private Work,Tasks requiring discretion,IL-Chicago-Bryn Mawr,3.847,3.235,0.612,98,Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,KS-Overland Park,3.833,3.25,0.583,12,Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,KY-Louisville,3.792,3.431,0.36,197,Slightly Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,LA-Harvey,4.0,3.217,0.783,23,Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,MA-Woburn,3.432,3.182,0.25,44,Slightly Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,MD-Hanover,3.569,2.948,0.621,58,Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,MN-Mendota Heights,3.643,2.673,0.971,171,Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,MO-St. Louis,3.697,3.194,0.503,165,Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,NC-Durham,3.818,3.073,0.745,55,Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,NC-Winston-Salem,3.958,2.417,1.542,24,Severely Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,NH-Manchester,3.871,3.118,0.753,85,Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,NJ-Iselin,3.785,3.354,0.43,79,Slightly Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,NV-Las Vegas-Maryland Pkwy,4.341,3.171,1.171,41,Severely Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,NV-Las Vegas-Russell,4.038,3.173,0.865,52,Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,NY-Lake Success,4.104,3.167,0.938,48,Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,NY-Latham,3.759,2.728,1.031,195,Severely Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,PA-Seven Fields,4.0,3.25,0.75,8,Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,TN-Nashville,4.359,3.094,1.266,64,Severely Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,VA-Ashburn,4.119,3.214,0.905,42,Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,WA-Seattle,4.05,3.0,1.05,20,Severely Under-supported
+Work Types,Focused / Private Work,Tasks requiring discretion,WI-Waukesha,3.892,3.062,0.831,130,Under-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,CA-Costa Mesa,1.738,3.262,-1.523,65,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,CA-Walnut Creek,1.865,2.838,-0.973,37,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,CT-Rocky Hill,1.893,3.357,-1.464,28,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,CT-Wallingford,1.615,3.385,-1.771,205,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,DC-Washington,2.9,4.4,-1.5,10,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,DE-Wilmington,1.568,2.841,-1.273,44,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,FL-Lake Mary,2.162,3.778,-1.615,117,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,GA-Columbus,1.974,3.49,-1.516,153,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,IA-Urbandale,2.056,3.778,-1.722,18,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,IL-Chicago-Bryn Mawr,1.99,3.52,-1.531,98,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,KS-Overland Park,2.417,3.417,-1.0,12,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,KY-Louisville,1.883,3.548,-1.665,197,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,LA-Harvey,2.13,3.565,-1.435,23,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,MA-Woburn,1.636,3.25,-1.614,44,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,MD-Hanover,1.569,3.224,-1.655,58,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,MN-Mendota Heights,1.561,3.468,-1.906,171,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,MO-St. Louis,1.703,3.37,-1.667,165,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,NC-Durham,1.582,3.291,-1.709,55,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,NC-Winston-Salem,1.542,2.542,-1.0,24,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,NH-Manchester,1.847,3.235,-1.388,85,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,NJ-Iselin,1.899,3.392,-1.494,79,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,NV-Las Vegas-Maryland Pkwy,2.049,3.341,-1.293,41,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,NV-Las Vegas-Russell,1.942,3.346,-1.404,52,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,NY-Lake Success,1.938,2.938,-1.0,48,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,NY-Latham,1.656,3.303,-1.646,195,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,PA-Seven Fields,1.75,3.625,-1.875,8,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,TN-Nashville,1.719,3.234,-1.516,64,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,VA-Ashburn,2.143,3.548,-1.405,42,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,WA-Seattle,1.85,3.15,-1.3,20,Over-supported
+Work Types,Focused / Private Work,Planned in-person meetings at a PulsePoint,WI-Waukesha,1.654,3.408,-1.754,130,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,CA-Costa Mesa,2.446,3.062,-0.615,65,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,CA-Walnut Creek,2.514,2.595,-0.081,37,Well-matched
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,CT-Rocky Hill,2.321,2.786,-0.464,28,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,CT-Wallingford,2.249,3.156,-0.907,205,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,DC-Washington,3.5,4.4,-0.9,10,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,DE-Wilmington,2.545,2.659,-0.114,44,Well-matched
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,FL-Lake Mary,2.838,3.53,-0.692,117,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,GA-Columbus,2.536,3.327,-0.791,153,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,IA-Urbandale,2.778,3.5,-0.722,18,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,IL-Chicago-Bryn Mawr,2.531,3.122,-0.592,98,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,KS-Overland Park,2.833,3.25,-0.417,12,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,KY-Louisville,2.442,3.234,-0.792,197,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,LA-Harvey,3.043,3.609,-0.565,23,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,MA-Woburn,2.318,2.932,-0.614,44,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,MD-Hanover,2.276,2.776,-0.5,58,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,MN-Mendota Heights,2.076,3.012,-0.936,171,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,MO-St. Louis,2.158,3.048,-0.891,165,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,NC-Durham,2.418,2.964,-0.545,55,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,NC-Winston-Salem,1.917,2.333,-0.417,24,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,NH-Manchester,2.353,2.929,-0.576,85,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,NJ-Iselin,2.557,3.19,-0.633,79,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,NV-Las Vegas-Maryland Pkwy,2.268,3.122,-0.854,41,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,NV-Las Vegas-Russell,2.731,3.154,-0.423,52,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,NY-Lake Success,2.562,3.083,-0.521,48,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,NY-Latham,2.39,3.097,-0.708,195,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,PA-Seven Fields,2.375,3.25,-0.875,8,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,TN-Nashville,2.281,2.922,-0.641,64,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,VA-Ashburn,2.738,3.143,-0.405,42,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,WA-Seattle,2.7,3.0,-0.3,20,Over-supported
+Work Types,Focused / Private Work,Informal or spontaneous collaboration with colleagues,WI-Waukesha,2.423,3.162,-0.738,130,Over-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,CA-Costa Mesa,2.877,2.954,-0.077,65,Well-matched
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,CA-Walnut Creek,2.892,2.649,0.243,37,Slightly Under-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,CT-Rocky Hill,2.964,2.786,0.179,28,Slightly Under-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,CT-Wallingford,2.527,3.185,-0.659,205,Over-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,DC-Washington,3.1,4.4,-1.3,10,Over-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,DE-Wilmington,3.091,2.659,0.432,44,Slightly Under-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,FL-Lake Mary,3.077,3.581,-0.504,117,Over-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,GA-Columbus,2.876,3.255,-0.379,153,Over-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,IA-Urbandale,2.889,3.222,-0.333,18,Over-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,IL-Chicago-Bryn Mawr,3.071,3.082,-0.01,98,Well-matched
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,KS-Overland Park,3.333,3.083,0.25,12,Slightly Under-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,KY-Louisville,2.726,3.193,-0.467,197,Over-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,LA-Harvey,3.0,3.652,-0.652,23,Over-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,MA-Woburn,2.727,3.068,-0.341,44,Over-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,MD-Hanover,2.724,2.81,-0.086,58,Well-matched
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,MN-Mendota Heights,2.556,2.971,-0.415,171,Over-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,MO-St. Louis,2.642,2.939,-0.297,165,Over-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,NC-Durham,2.764,2.873,-0.109,55,Well-matched
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,NC-Winston-Salem,2.25,2.458,-0.208,24,Over-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,NH-Manchester,2.541,3.047,-0.506,85,Over-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,NJ-Iselin,2.911,3.139,-0.228,79,Over-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,NV-Las Vegas-Maryland Pkwy,2.756,3.171,-0.415,41,Over-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,NV-Las Vegas-Russell,2.981,3.058,-0.077,52,Well-matched
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,NY-Lake Success,2.958,2.896,0.062,48,Well-matched
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,NY-Latham,2.733,3.092,-0.359,195,Over-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,PA-Seven Fields,2.875,3.375,-0.5,8,Over-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,TN-Nashville,2.594,2.812,-0.219,64,Over-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,VA-Ashburn,3.071,3.167,-0.095,42,Well-matched
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,WA-Seattle,3.1,2.95,0.15,20,Slightly Under-supported
+Work Types,Focused / Private Work,Working with others on shared tasks or problem-solving,WI-Waukesha,2.808,3.185,-0.377,130,Over-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,CA-Costa Mesa,3.938,3.385,0.554,65,Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,CA-Walnut Creek,4.297,3.378,0.919,37,Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,CT-Rocky Hill,4.0,2.857,1.143,28,Severely Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,CT-Wallingford,4.068,3.483,0.585,205,Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,DC-Washington,4.0,4.5,-0.5,10,Over-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,DE-Wilmington,4.182,3.159,1.023,44,Severely Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,FL-Lake Mary,3.855,3.667,0.188,117,Slightly Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,GA-Columbus,3.954,3.614,0.34,153,Slightly Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,IA-Urbandale,4.278,3.778,0.5,18,Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,IL-Chicago-Bryn Mawr,4.153,3.52,0.633,98,Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,KS-Overland Park,4.0,3.083,0.917,12,Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,KY-Louisville,3.848,3.376,0.472,197,Slightly Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,LA-Harvey,3.565,3.696,-0.13,23,Well-matched
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,MA-Woburn,3.727,3.5,0.227,44,Slightly Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,MD-Hanover,4.069,3.328,0.741,58,Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,MN-Mendota Heights,4.041,3.199,0.842,171,Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,MO-St. Louis,3.976,3.455,0.521,165,Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,NC-Durham,4.073,3.455,0.618,55,Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,NC-Winston-Salem,4.042,3.0,1.042,24,Severely Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,NH-Manchester,3.976,3.341,0.635,85,Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,NJ-Iselin,4.215,3.519,0.696,79,Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,NV-Las Vegas-Maryland Pkwy,3.951,3.634,0.317,41,Slightly Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,NV-Las Vegas-Russell,4.0,3.519,0.481,52,Slightly Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,NY-Lake Success,4.0,3.312,0.688,48,Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,NY-Latham,3.897,3.185,0.713,195,Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,PA-Seven Fields,4.25,3.125,1.125,8,Severely Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,TN-Nashville,4.297,3.281,1.016,64,Severely Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,VA-Ashburn,4.095,3.786,0.31,42,Slightly Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,WA-Seattle,4.25,3.3,0.95,20,Under-supported
+Work Types,Focused / Private Work,Virtual collaboration with remote or hybrid colleagues,WI-Waukesha,4.154,3.4,0.754,130,Under-supported
+Work Types,Focused / Private Work,"Learning, training, or skill development",CA-Costa Mesa,3.077,3.077,0.0,65,Well-matched
+Work Types,Focused / Private Work,"Learning, training, or skill development",CA-Walnut Creek,3.27,3.027,0.243,37,Slightly Under-supported
+Work Types,Focused / Private Work,"Learning, training, or skill development",CT-Rocky Hill,2.857,2.607,0.25,28,Slightly Under-supported
+Work Types,Focused / Private Work,"Learning, training, or skill development",CT-Wallingford,2.966,3.376,-0.41,205,Over-supported
+Work Types,Focused / Private Work,"Learning, training, or skill development",DC-Washington,3.5,4.0,-0.5,10,Over-supported
+Work Types,Focused / Private Work,"Learning, training, or skill development",DE-Wilmington,3.068,2.795,0.273,44,Slightly Under-supported
+Work Types,Focused / Private Work,"Learning, training, or skill development",FL-Lake Mary,3.744,3.573,0.171,117,Slightly Under-supported
+Work Types,Focused / Private Work,"Learning, training, or skill development",GA-Columbus,3.314,3.294,0.02,153,Well-matched
+Work Types,Focused / Private Work,"Learning, training, or skill development",IA-Urbandale,3.167,3.111,0.056,18,Well-matched
+Work Types,Focused / Private Work,"Learning, training, or skill development",IL-Chicago-Bryn Mawr,3.357,3.204,0.153,98,Slightly Under-supported
+Work Types,Focused / Private Work,"Learning, training, or skill development",KS-Overland Park,3.0,3.333,-0.333,12,Over-supported
+Work Types,Focused / Private Work,"Learning, training, or skill development",KY-Louisville,3.046,3.274,-0.228,197,Over-supported
+Work Types,Focused / Private Work,"Learning, training, or skill development",LA-Harvey,3.565,3.783,-0.217,23,Over-supported
+Work Types,Focused / Private Work,"Learning, training, or skill development",MA-Woburn,2.795,3.159,-0.364,44,Over-supported
+Work Types,Focused / Private Work,"Learning, training, or skill development",MD-Hanover,3.224,3.086,0.138,58,Well-matched
+Work Types,Focused / Private Work,"Learning, training, or skill development",MN-Mendota Heights,2.895,3.111,-0.216,171,Over-supported
+Work Types,Focused / Private Work,"Learning, training, or skill development",MO-St. Louis,3.055,3.164,-0.109,165,Well-matched
+Work Types,Focused / Private Work,"Learning, training, or skill development",NC-Durham,3.182,2.891,0.291,55,Slightly Under-supported
+Work Types,Focused / Private Work,"Learning, training, or skill development",NC-Winston-Salem,2.667,2.833,-0.167,24,Over-supported
+Work Types,Focused / Private Work,"Learning, training, or skill development",NH-Manchester,3.141,3.129,0.012,85,Well-matched
+Work Types,Focused / Private Work,"Learning, training, or skill development",NJ-Iselin,3.241,3.342,-0.101,79,Well-matched
+Work Types,Focused / Private Work,"Learning, training, or skill development",NV-Las Vegas-Maryland Pkwy,3.439,3.341,0.098,41,Well-matched
+Work Types,Focused / Private Work,"Learning, training, or skill development",NV-Las Vegas-Russell,3.519,3.308,0.212,52,Slightly Under-supported
+Work Types,Focused / Private Work,"Learning, training, or skill development",NY-Lake Success,3.479,3.208,0.271,48,Slightly Under-supported
+Work Types,Focused / Private Work,"Learning, training, or skill development",NY-Latham,3.067,2.831,0.236,195,Slightly Under-supported
+Work Types,Focused / Private Work,"Learning, training, or skill development",PA-Seven Fields,2.875,3.125,-0.25,8,Over-supported
+Work Types,Focused / Private Work,"Learning, training, or skill development",TN-Nashville,3.156,3.031,0.125,64,Well-matched
+Work Types,Focused / Private Work,"Learning, training, or skill development",VA-Ashburn,3.167,3.476,-0.31,42,Over-supported
+Work Types,Focused / Private Work,"Learning, training, or skill development",WA-Seattle,3.7,2.85,0.85,20,Under-supported
+Work Types,Focused / Private Work,"Learning, training, or skill development",WI-Waukesha,3.038,3.354,-0.315,130,Over-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,CA-Costa Mesa,4.431,3.292,1.138,65,Severely Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,CA-Walnut Creek,4.297,3.595,0.703,37,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,CT-Rocky Hill,4.179,3.143,1.036,28,Severely Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,CT-Wallingford,4.337,3.005,1.332,205,Severely Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,DC-Washington,4.6,4.2,0.4,10,Slightly Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,DE-Wilmington,4.364,3.114,1.25,44,Severely Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,FL-Lake Mary,4.171,3.487,0.684,117,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,GA-Columbus,4.346,3.176,1.17,153,Severely Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,IA-Urbandale,4.167,3.889,0.278,18,Slightly Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,IL-Chicago-Bryn Mawr,4.337,3.357,0.98,98,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,KS-Overland Park,4.167,3.0,1.167,12,Severely Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,KY-Louisville,4.112,3.624,0.487,197,Slightly Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,LA-Harvey,4.174,3.043,1.13,23,Severely Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,MA-Woburn,4.068,3.5,0.568,44,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,MD-Hanover,4.0,3.224,0.776,58,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,MN-Mendota Heights,4.17,2.83,1.339,171,Severely Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,MO-St. Louis,4.091,3.364,0.727,165,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,NC-Durham,4.345,3.164,1.182,55,Severely Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,NC-Winston-Salem,3.958,3.167,0.792,24,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,NH-Manchester,4.259,3.153,1.106,85,Severely Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,NJ-Iselin,4.278,3.316,0.962,79,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,NV-Las Vegas-Maryland Pkwy,4.293,3.098,1.195,41,Severely Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,NV-Las Vegas-Russell,4.269,3.346,0.923,52,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,NY-Lake Success,4.312,3.146,1.167,48,Severely Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,NY-Latham,4.19,2.779,1.41,195,Severely Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,PA-Seven Fields,4.25,3.5,0.75,8,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,TN-Nashville,4.156,3.5,0.656,64,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,VA-Ashburn,4.238,3.333,0.905,42,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,WA-Seattle,4.5,3.05,1.45,20,Severely Under-supported
+Physical Space,Physical Environment,Availability of spaces that support focused work,WI-Waukesha,4.238,3.185,1.054,130,Severely Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,CA-Costa Mesa,4.108,3.123,0.985,65,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,CA-Walnut Creek,4.189,3.514,0.676,37,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,CT-Rocky Hill,3.75,2.929,0.821,28,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,CT-Wallingford,4.049,2.985,1.063,205,Severely Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,DC-Washington,4.2,4.0,0.2,10,Slightly Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,DE-Wilmington,3.818,3.295,0.523,44,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,FL-Lake Mary,4.103,3.427,0.675,117,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,GA-Columbus,4.242,3.052,1.19,153,Severely Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,IA-Urbandale,4.111,3.944,0.167,18,Slightly Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,IL-Chicago-Bryn Mawr,4.112,3.204,0.908,98,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,KS-Overland Park,4.167,3.0,1.167,12,Severely Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,KY-Louisville,3.975,3.401,0.574,197,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,LA-Harvey,3.957,3.0,0.957,23,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,MA-Woburn,3.682,3.523,0.159,44,Slightly Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,MD-Hanover,3.707,3.155,0.552,58,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,MN-Mendota Heights,3.842,2.708,1.135,171,Severely Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,MO-St. Louis,3.867,3.327,0.539,165,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,NC-Durham,4.036,3.018,1.018,55,Severely Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,NC-Winston-Salem,4.0,2.75,1.25,24,Severely Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,NH-Manchester,4.012,3.153,0.859,85,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,NJ-Iselin,4.063,3.228,0.835,79,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,NV-Las Vegas-Maryland Pkwy,4.22,2.805,1.415,41,Severely Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,NV-Las Vegas-Russell,4.135,3.077,1.058,52,Severely Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,NY-Lake Success,4.208,3.167,1.042,48,Severely Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,NY-Latham,3.974,2.651,1.323,195,Severely Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,PA-Seven Fields,4.0,3.25,0.75,8,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,TN-Nashville,4.234,3.344,0.891,64,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,VA-Ashburn,4.214,3.286,0.929,42,Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,WA-Seattle,4.4,2.85,1.55,20,Severely Under-supported
+Physical Space,Physical Environment,Availability of spaces that support discretion,WI-Waukesha,4.054,3.038,1.015,130,Severely Under-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),CA-Costa Mesa,2.923,3.785,-0.862,65,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),CA-Walnut Creek,2.919,3.595,-0.676,37,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),CT-Rocky Hill,3.107,3.214,-0.107,28,Well-matched
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),CT-Wallingford,2.824,3.444,-0.62,205,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),DC-Washington,3.9,4.2,-0.3,10,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),DE-Wilmington,2.886,3.386,-0.5,44,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),FL-Lake Mary,3.222,3.855,-0.632,117,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),GA-Columbus,3.359,3.562,-0.203,153,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),IA-Urbandale,2.833,4.056,-1.222,18,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),IL-Chicago-Bryn Mawr,2.857,3.633,-0.776,98,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),KS-Overland Park,2.5,3.833,-1.333,12,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),KY-Louisville,3.015,3.584,-0.569,197,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),LA-Harvey,3.304,3.565,-0.261,23,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),MA-Woburn,2.932,3.682,-0.75,44,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),MD-Hanover,2.759,3.466,-0.707,58,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),MN-Mendota Heights,2.62,3.31,-0.69,171,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),MO-St. Louis,2.552,3.715,-1.164,165,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),NC-Durham,2.727,3.364,-0.636,55,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),NC-Winston-Salem,2.292,2.917,-0.625,24,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),NH-Manchester,2.671,3.447,-0.776,85,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),NJ-Iselin,3.342,3.43,-0.089,79,Well-matched
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),NV-Las Vegas-Maryland Pkwy,3.073,3.244,-0.171,41,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),NV-Las Vegas-Russell,3.058,3.519,-0.462,52,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),NY-Lake Success,2.875,3.417,-0.542,48,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),NY-Latham,2.759,3.128,-0.369,195,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),PA-Seven Fields,2.75,3.125,-0.375,8,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),TN-Nashville,2.812,3.781,-0.969,64,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),VA-Ashburn,3.024,3.524,-0.5,42,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),WA-Seattle,2.95,3.8,-0.85,20,Over-supported
+Physical Space,Physical Environment,Availability of meeting and collaboration spaces (individual and group),WI-Waukesha,2.838,3.538,-0.7,130,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",CA-Costa Mesa,2.523,3.738,-1.215,65,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",CA-Walnut Creek,2.784,3.378,-0.595,37,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",CT-Rocky Hill,2.607,3.357,-0.75,28,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",CT-Wallingford,2.254,3.663,-1.41,205,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",DC-Washington,3.7,4.4,-0.7,10,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",DE-Wilmington,2.318,3.364,-1.045,44,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",FL-Lake Mary,3.085,3.991,-0.906,117,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",GA-Columbus,2.673,3.444,-0.771,153,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",IA-Urbandale,2.5,4.111,-1.611,18,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",IL-Chicago-Bryn Mawr,2.5,3.429,-0.929,98,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",KS-Overland Park,2.25,3.583,-1.333,12,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",KY-Louisville,2.401,3.685,-1.284,197,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",LA-Harvey,3.13,2.957,0.174,23,Slightly Under-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",MA-Woburn,2.614,3.591,-0.977,44,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",MD-Hanover,2.448,3.655,-1.207,58,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",MN-Mendota Heights,2.035,3.503,-1.468,171,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",MO-St. Louis,2.291,3.776,-1.485,165,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",NC-Durham,2.182,3.473,-1.291,55,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",NC-Winston-Salem,2.125,2.667,-0.542,24,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",NH-Manchester,2.4,3.494,-1.094,85,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",NJ-Iselin,2.506,3.759,-1.253,79,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",NV-Las Vegas-Maryland Pkwy,2.561,3.293,-0.732,41,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",NV-Las Vegas-Russell,2.404,3.404,-1.0,52,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",NY-Lake Success,2.833,3.208,-0.375,48,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",NY-Latham,2.426,2.944,-0.518,195,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",PA-Seven Fields,1.75,3.0,-1.25,8,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",TN-Nashville,2.203,3.797,-1.594,64,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",VA-Ashburn,2.595,3.714,-1.119,42,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",WA-Seattle,2.35,3.7,-1.35,20,Over-supported
+Physical Space,Physical Environment,"Availability of community spaces (i.e. gathering, event spaces, café)",WI-Waukesha,2.262,3.685,-1.423,130,Over-supported
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),CA-Costa Mesa,3.923,3.554,0.369,65,Slightly Under-supported
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),CA-Walnut Creek,4.108,3.541,0.568,37,Under-supported
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),CT-Rocky Hill,3.679,3.357,0.321,28,Slightly Under-supported
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),CT-Wallingford,3.746,3.493,0.254,205,Slightly Under-supported
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),DC-Washington,4.7,4.1,0.6,10,Under-supported
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),DE-Wilmington,3.727,3.5,0.227,44,Slightly Under-supported
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),FL-Lake Mary,3.803,3.974,-0.171,117,Over-supported
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),GA-Columbus,3.935,3.34,0.595,153,Under-supported
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),IA-Urbandale,3.611,4.111,-0.5,18,Over-supported
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),IL-Chicago-Bryn Mawr,4.031,3.49,0.541,98,Under-supported
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),KS-Overland Park,3.583,3.917,-0.333,12,Over-supported
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),KY-Louisville,3.919,3.802,0.117,197,Well-matched
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),LA-Harvey,4.087,2.826,1.261,23,Severely Under-supported
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),MA-Woburn,3.977,3.432,0.545,44,Under-supported
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),MD-Hanover,3.655,3.431,0.224,58,Slightly Under-supported
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),MN-Mendota Heights,3.719,3.386,0.333,171,Slightly Under-supported
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),MO-St. Louis,3.739,3.83,-0.091,165,Well-matched
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),NC-Durham,3.909,3.527,0.382,55,Slightly Under-supported
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),NC-Winston-Salem,3.458,3.167,0.292,24,Slightly Under-supported
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),NH-Manchester,4.094,3.224,0.871,85,Under-supported
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),NJ-Iselin,3.861,3.848,0.013,79,Well-matched
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),NV-Las Vegas-Maryland Pkwy,3.61,3.0,0.61,41,Under-supported
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),NV-Las Vegas-Russell,4.25,3.173,1.077,52,Severely Under-supported
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),NY-Lake Success,4.062,3.125,0.938,48,Under-supported
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),NY-Latham,3.744,3.092,0.651,195,Under-supported
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),PA-Seven Fields,3.5,3.625,-0.125,8,Well-matched
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),TN-Nashville,3.391,3.844,-0.453,64,Over-supported
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),VA-Ashburn,3.69,3.786,-0.095,42,Well-matched
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),WA-Seattle,4.1,3.9,0.2,20,Slightly Under-supported
+Physical Space,Physical Environment,Furniture comfort and ergonomics (including adjustability of chair and workstation),WI-Waukesha,3.738,3.585,0.154,130,Slightly Under-supported
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",CA-Costa Mesa,3.015,3.169,-0.154,65,Over-supported
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",CA-Walnut Creek,3.486,3.216,0.27,37,Slightly Under-supported
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",CT-Rocky Hill,2.929,3.071,-0.143,28,Well-matched
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",CT-Wallingford,2.737,3.517,-0.78,205,Over-supported
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",DC-Washington,3.9,4.0,-0.1,10,Well-matched
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",DE-Wilmington,3.023,2.841,0.182,44,Slightly Under-supported
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",FL-Lake Mary,3.496,3.769,-0.274,117,Over-supported
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",GA-Columbus,3.209,3.386,-0.176,153,Over-supported
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",IA-Urbandale,2.722,4.0,-1.278,18,Over-supported
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",IL-Chicago-Bryn Mawr,3.347,2.908,0.439,98,Slightly Under-supported
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",KS-Overland Park,2.917,3.417,-0.5,12,Over-supported
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",KY-Louisville,2.817,3.619,-0.802,197,Over-supported
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",LA-Harvey,4.043,2.304,1.739,23,Severely Under-supported
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",MA-Woburn,3.318,3.091,0.227,44,Slightly Under-supported
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",MD-Hanover,2.931,3.052,-0.121,58,Well-matched
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",MN-Mendota Heights,2.69,2.889,-0.199,171,Over-supported
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",MO-St. Louis,2.885,3.624,-0.739,165,Over-supported
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",NC-Durham,3.218,2.745,0.473,55,Slightly Under-supported
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",NC-Winston-Salem,2.75,2.25,0.5,24,Under-supported
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",NH-Manchester,3.0,3.294,-0.294,85,Over-supported
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",NJ-Iselin,3.152,3.367,-0.215,79,Over-supported
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",NV-Las Vegas-Maryland Pkwy,3.39,2.927,0.463,41,Slightly Under-supported
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",NV-Las Vegas-Russell,3.192,2.923,0.269,52,Slightly Under-supported
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",NY-Lake Success,3.688,2.792,0.896,48,Under-supported
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",NY-Latham,2.964,3.062,-0.097,195,Well-matched
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",PA-Seven Fields,2.25,2.5,-0.25,8,Over-supported
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",TN-Nashville,2.875,3.641,-0.766,64,Over-supported
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",VA-Ashburn,3.143,3.262,-0.119,42,Well-matched
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",WA-Seattle,3.0,2.85,0.15,20,Slightly Under-supported
+Physical Space,Physical Environment,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",WI-Waukesha,2.554,3.531,-0.977,130,Over-supported
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),CA-Costa Mesa,3.831,3.585,0.246,65,Slightly Under-supported
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),CA-Walnut Creek,3.946,3.486,0.459,37,Slightly Under-supported
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),CT-Rocky Hill,3.607,2.893,0.714,28,Under-supported
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),CT-Wallingford,3.639,3.541,0.098,205,Well-matched
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),DC-Washington,4.2,3.5,0.7,10,Under-supported
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),DE-Wilmington,3.591,3.591,0.0,44,Well-matched
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),FL-Lake Mary,3.855,3.692,0.162,117,Slightly Under-supported
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),GA-Columbus,3.902,3.438,0.464,153,Slightly Under-supported
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),IA-Urbandale,3.111,3.889,-0.778,18,Over-supported
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),IL-Chicago-Bryn Mawr,3.98,3.449,0.531,98,Under-supported
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),KS-Overland Park,3.167,3.833,-0.667,12,Over-supported
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),KY-Louisville,3.726,3.802,-0.076,197,Well-matched
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),LA-Harvey,4.174,2.696,1.478,23,Severely Under-supported
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),MA-Woburn,3.841,3.432,0.409,44,Slightly Under-supported
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),MD-Hanover,3.603,3.534,0.069,58,Well-matched
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),MN-Mendota Heights,3.632,3.287,0.345,171,Slightly Under-supported
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),MO-St. Louis,3.691,3.733,-0.042,165,Well-matched
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),NC-Durham,3.727,3.636,0.091,55,Well-matched
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),NC-Winston-Salem,3.542,3.167,0.375,24,Slightly Under-supported
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),NH-Manchester,3.729,3.329,0.4,85,Slightly Under-supported
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),NJ-Iselin,3.684,3.785,-0.101,79,Well-matched
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),NV-Las Vegas-Maryland Pkwy,3.659,3.244,0.415,41,Slightly Under-supported
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),NV-Las Vegas-Russell,4.058,3.269,0.788,52,Under-supported
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),NY-Lake Success,4.104,3.375,0.729,48,Under-supported
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),NY-Latham,3.569,3.144,0.426,195,Slightly Under-supported
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),PA-Seven Fields,3.75,3.125,0.625,8,Under-supported
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),TN-Nashville,3.578,3.75,-0.172,64,Over-supported
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),VA-Ashburn,3.548,3.762,-0.214,42,Over-supported
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),WA-Seattle,3.9,3.75,0.15,20,Slightly Under-supported
+Physical Space,Physical Environment,Lighting comfort (natural and artificial),WI-Waukesha,3.538,3.646,-0.108,130,Well-matched
+Physical Space,Physical Environment,Thermal / temperature comfort,CA-Costa Mesa,3.908,3.631,0.277,65,Slightly Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,CA-Walnut Creek,3.946,3.486,0.459,37,Slightly Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,CT-Rocky Hill,3.607,3.214,0.393,28,Slightly Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,CT-Wallingford,4.049,2.859,1.19,205,Severely Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,DC-Washington,4.8,2.4,2.4,10,Severely Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,DE-Wilmington,3.886,3.295,0.591,44,Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,FL-Lake Mary,4.077,3.162,0.915,117,Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,GA-Columbus,3.98,3.307,0.673,153,Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,IA-Urbandale,3.444,3.722,-0.278,18,Over-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,IL-Chicago-Bryn Mawr,4.153,3.02,1.133,98,Severely Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,KS-Overland Park,3.5,3.333,0.167,12,Slightly Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,KY-Louisville,4.005,3.244,0.761,197,Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,LA-Harvey,4.13,2.478,1.652,23,Severely Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,MA-Woburn,3.909,3.523,0.386,44,Slightly Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,MD-Hanover,3.759,3.293,0.466,58,Slightly Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,MN-Mendota Heights,3.813,3.058,0.754,171,Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,MO-St. Louis,3.806,3.545,0.261,165,Slightly Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,NC-Durham,3.782,3.582,0.2,55,Slightly Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,NC-Winston-Salem,3.75,2.667,1.083,24,Severely Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,NH-Manchester,3.918,3.106,0.812,85,Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,NJ-Iselin,3.81,3.633,0.177,79,Slightly Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,NV-Las Vegas-Maryland Pkwy,3.878,2.756,1.122,41,Severely Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,NV-Las Vegas-Russell,4.269,3.077,1.192,52,Severely Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,NY-Lake Success,4.229,3.188,1.042,48,Severely Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,NY-Latham,3.908,2.815,1.092,195,Severely Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,PA-Seven Fields,3.75,3.0,0.75,8,Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,TN-Nashville,3.703,3.688,0.016,64,Well-matched
+Physical Space,Physical Environment,Thermal / temperature comfort,VA-Ashburn,3.857,3.69,0.167,42,Slightly Under-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,WA-Seattle,3.65,4.1,-0.45,20,Over-supported
+Physical Space,Physical Environment,Thermal / temperature comfort,WI-Waukesha,3.8,3.346,0.454,130,Slightly Under-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),CA-Costa Mesa,3.4,3.754,-0.354,65,Over-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),CA-Walnut Creek,3.568,3.703,-0.135,37,Well-matched
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),CT-Rocky Hill,3.143,3.786,-0.643,28,Over-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),CT-Wallingford,3.361,3.605,-0.244,205,Over-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),DC-Washington,3.9,3.9,0.0,10,Well-matched
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),DE-Wilmington,3.136,3.841,-0.705,44,Over-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),FL-Lake Mary,3.701,3.88,-0.179,117,Over-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),GA-Columbus,3.595,3.686,-0.092,153,Well-matched
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),IA-Urbandale,3.111,4.167,-1.056,18,Over-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),IL-Chicago-Bryn Mawr,3.551,3.755,-0.204,98,Over-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),KS-Overland Park,3.333,3.75,-0.417,12,Over-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),KY-Louisville,3.492,3.599,-0.107,197,Well-matched
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),LA-Harvey,3.261,3.522,-0.261,23,Over-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),MA-Woburn,3.295,3.841,-0.545,44,Over-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),MD-Hanover,3.414,3.741,-0.328,58,Over-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),MN-Mendota Heights,2.93,3.608,-0.678,171,Over-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),MO-St. Louis,3.4,3.885,-0.485,165,Over-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),NC-Durham,3.236,3.8,-0.564,55,Over-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),NC-Winston-Salem,3.125,3.542,-0.417,24,Over-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),NH-Manchester,3.2,3.718,-0.518,85,Over-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),NJ-Iselin,3.608,3.873,-0.266,79,Over-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),NV-Las Vegas-Maryland Pkwy,3.512,3.366,0.146,41,Well-matched
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),NV-Las Vegas-Russell,3.365,3.712,-0.346,52,Over-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),NY-Lake Success,3.688,3.625,0.062,48,Well-matched
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),NY-Latham,3.118,3.467,-0.349,195,Over-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),PA-Seven Fields,3.0,4.0,-1.0,8,Over-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),TN-Nashville,3.219,3.922,-0.703,64,Over-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),VA-Ashburn,3.595,3.857,-0.262,42,Over-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),WA-Seattle,3.05,4.05,-1.0,20,Over-supported
+Physical Space,Physical Environment,Ease of navigating and finding spaces (directions and signage),WI-Waukesha,3.115,3.877,-0.762,130,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,CA-Costa Mesa,2.723,3.662,-0.938,65,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,CA-Walnut Creek,2.919,3.919,-1.0,37,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,CT-Rocky Hill,2.429,4.214,-1.786,28,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,CT-Wallingford,2.639,3.854,-1.215,205,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,DC-Washington,3.5,4.6,-1.1,10,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,DE-Wilmington,2.205,3.864,-1.659,44,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,FL-Lake Mary,3.188,4.085,-0.897,117,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,GA-Columbus,3.013,3.856,-0.843,153,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,IA-Urbandale,2.111,3.722,-1.611,18,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,IL-Chicago-Bryn Mawr,2.796,3.867,-1.071,98,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,KS-Overland Park,2.667,3.667,-1.0,12,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,KY-Louisville,2.756,3.949,-1.193,197,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,LA-Harvey,3.043,3.87,-0.826,23,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,MA-Woburn,2.545,3.75,-1.205,44,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,MD-Hanover,2.345,3.5,-1.155,58,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,MN-Mendota Heights,2.234,4.012,-1.778,171,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,MO-St. Louis,2.503,4.152,-1.648,165,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,NC-Durham,2.564,3.909,-1.345,55,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,NC-Winston-Salem,2.25,3.75,-1.5,24,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,NH-Manchester,2.718,3.929,-1.212,85,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,NJ-Iselin,2.709,4.051,-1.342,79,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,NV-Las Vegas-Maryland Pkwy,3.122,4.0,-0.878,41,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,NV-Las Vegas-Russell,2.788,4.231,-1.442,52,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,NY-Lake Success,3.062,3.875,-0.812,48,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,NY-Latham,2.467,3.6,-1.133,195,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,PA-Seven Fields,2.25,4.125,-1.875,8,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,TN-Nashville,2.312,4.078,-1.766,64,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,VA-Ashburn,2.5,4.071,-1.571,42,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,WA-Seattle,2.95,3.35,-0.4,20,Over-supported
+Workplace Services,Amenities & Services,Entry and reception,WI-Waukesha,2.446,4.154,-1.708,130,Over-supported
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,CA-Costa Mesa,3.215,3.169,0.046,65,Well-matched
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,CA-Walnut Creek,3.514,2.378,1.135,37,Severely Under-supported
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,CT-Rocky Hill,2.821,3.071,-0.25,28,Over-supported
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,CT-Wallingford,3.044,3.063,-0.02,205,Well-matched
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,DC-Washington,4.4,3.6,0.8,10,Under-supported
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,DE-Wilmington,3.068,3.068,0.0,44,Well-matched
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,FL-Lake Mary,3.325,3.479,-0.154,117,Over-supported
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,GA-Columbus,3.379,2.601,0.778,153,Under-supported
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,IA-Urbandale,2.611,3.222,-0.611,18,Over-supported
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,IL-Chicago-Bryn Mawr,3.173,3.173,0.0,98,Well-matched
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,KS-Overland Park,2.583,2.583,0.0,12,Well-matched
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,KY-Louisville,2.924,3.401,-0.477,197,Over-supported
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,LA-Harvey,3.565,2.304,1.261,23,Severely Under-supported
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,MA-Woburn,3.023,3.409,-0.386,44,Over-supported
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,MD-Hanover,2.724,3.121,-0.397,58,Over-supported
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,MN-Mendota Heights,2.567,2.977,-0.409,171,Over-supported
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,MO-St. Louis,2.915,3.327,-0.412,165,Over-supported
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,NC-Durham,2.945,2.964,-0.018,55,Well-matched
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,NC-Winston-Salem,3.0,2.833,0.167,24,Slightly Under-supported
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,NH-Manchester,2.859,2.953,-0.094,85,Well-matched
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,NJ-Iselin,3.038,3.519,-0.481,79,Over-supported
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,NV-Las Vegas-Maryland Pkwy,3.122,3.024,0.098,41,Well-matched
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,NV-Las Vegas-Russell,2.904,2.827,0.077,52,Well-matched
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,NY-Lake Success,3.729,2.354,1.375,48,Severely Under-supported
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,NY-Latham,3.482,2.231,1.251,195,Severely Under-supported
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,PA-Seven Fields,2.5,3.25,-0.75,8,Over-supported
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,TN-Nashville,2.531,3.203,-0.672,64,Over-supported
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,VA-Ashburn,3.119,3.595,-0.476,42,Over-supported
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,WA-Seattle,3.5,2.35,1.15,20,Severely Under-supported
+Workplace Services,Amenities & Services,Availability of on-site food and beverage options,WI-Waukesha,2.569,3.354,-0.785,130,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",CA-Costa Mesa,2.877,3.215,-0.338,65,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",CA-Walnut Creek,3.162,3.108,0.054,37,Well-matched
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",CT-Rocky Hill,3.107,3.536,-0.429,28,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",CT-Wallingford,2.761,3.337,-0.576,205,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",DC-Washington,4.5,3.9,0.6,10,Under-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",DE-Wilmington,2.591,3.545,-0.955,44,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",FL-Lake Mary,3.359,3.94,-0.581,117,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",GA-Columbus,2.837,3.444,-0.608,153,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",IA-Urbandale,2.5,3.667,-1.167,18,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",IL-Chicago-Bryn Mawr,3.051,3.153,-0.102,98,Well-matched
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",KS-Overland Park,2.5,3.75,-1.25,12,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",KY-Louisville,2.736,3.467,-0.731,197,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",LA-Harvey,3.348,3.043,0.304,23,Slightly Under-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",MA-Woburn,3.0,3.523,-0.523,44,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",MD-Hanover,2.759,3.31,-0.552,58,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",MN-Mendota Heights,2.579,3.456,-0.877,171,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",MO-St. Louis,2.491,3.509,-1.018,165,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",NC-Durham,2.745,3.309,-0.564,55,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",NC-Winston-Salem,2.417,3.333,-0.917,24,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",NH-Manchester,2.518,3.471,-0.953,85,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",NJ-Iselin,2.899,3.595,-0.696,79,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",NV-Las Vegas-Maryland Pkwy,3.0,3.585,-0.585,41,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",NV-Las Vegas-Russell,3.077,3.577,-0.5,52,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",NY-Lake Success,3.292,3.396,-0.104,48,Well-matched
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",NY-Latham,2.718,2.99,-0.272,195,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",PA-Seven Fields,2.25,3.75,-1.5,8,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",TN-Nashville,2.438,3.578,-1.141,64,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",VA-Ashburn,3.048,3.524,-0.476,42,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",WA-Seattle,3.05,3.25,-0.2,20,Over-supported
+Workplace Services,Amenities & Services,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",WI-Waukesha,2.538,3.592,-1.054,130,Over-supported
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,CA-Costa Mesa,4.169,3.908,0.262,65,Slightly Under-supported
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,CA-Walnut Creek,4.027,3.838,0.189,37,Slightly Under-supported
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,CT-Rocky Hill,3.821,4.0,-0.179,28,Over-supported
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,CT-Wallingford,4.171,3.956,0.215,205,Slightly Under-supported
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,DC-Washington,4.5,4.5,0.0,10,Well-matched
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,DE-Wilmington,3.841,3.977,-0.136,44,Well-matched
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,FL-Lake Mary,4.231,4.171,0.06,117,Well-matched
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,GA-Columbus,4.301,3.458,0.843,153,Under-supported
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,IA-Urbandale,3.722,4.333,-0.611,18,Over-supported
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,IL-Chicago-Bryn Mawr,4.286,3.551,0.735,98,Under-supported
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,KS-Overland Park,3.75,4.167,-0.417,12,Over-supported
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,KY-Louisville,4.086,3.69,0.396,197,Slightly Under-supported
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,LA-Harvey,4.304,3.522,0.783,23,Under-supported
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,MA-Woburn,3.795,3.727,0.068,44,Well-matched
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,MD-Hanover,3.862,3.5,0.362,58,Slightly Under-supported
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,MN-Mendota Heights,3.795,3.678,0.117,171,Well-matched
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,MO-St. Louis,3.958,4.024,-0.067,165,Well-matched
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,NC-Durham,4.036,3.909,0.127,55,Well-matched
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,NC-Winston-Salem,4.292,3.375,0.917,24,Under-supported
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,NH-Manchester,3.871,3.965,-0.094,85,Well-matched
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,NJ-Iselin,4.025,4.165,-0.139,79,Well-matched
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,NV-Las Vegas-Maryland Pkwy,4.098,4.22,-0.122,41,Well-matched
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,NV-Las Vegas-Russell,4.058,3.904,0.154,52,Slightly Under-supported
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,NY-Lake Success,4.333,3.583,0.75,48,Under-supported
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,NY-Latham,4.0,3.467,0.533,195,Under-supported
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,PA-Seven Fields,3.625,3.75,-0.125,8,Well-matched
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,TN-Nashville,3.766,4.141,-0.375,64,Over-supported
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,VA-Ashburn,3.881,4.31,-0.429,42,Over-supported
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,WA-Seattle,3.5,3.7,-0.2,20,Over-supported
+Workplace Services,Amenities & Services,Cleanliness and upkeep of PulsePoint,WI-Waukesha,3.838,4.038,-0.2,130,Over-supported
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",CA-Costa Mesa,4.323,4.092,0.231,65,Slightly Under-supported
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",CA-Walnut Creek,4.108,4.081,0.027,37,Well-matched
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",CT-Rocky Hill,3.786,4.036,-0.25,28,Over-supported
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",CT-Wallingford,4.151,3.907,0.244,205,Slightly Under-supported
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",DC-Washington,4.4,4.0,0.4,10,Slightly Under-supported
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",DE-Wilmington,3.818,4.068,-0.25,44,Over-supported
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",FL-Lake Mary,4.205,4.111,0.094,117,Well-matched
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",GA-Columbus,4.255,3.856,0.399,153,Slightly Under-supported
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",IA-Urbandale,3.778,4.167,-0.389,18,Over-supported
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",IL-Chicago-Bryn Mawr,4.306,4.02,0.286,98,Slightly Under-supported
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",KS-Overland Park,3.833,4.167,-0.333,12,Over-supported
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",KY-Louisville,4.183,3.838,0.345,197,Slightly Under-supported
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",LA-Harvey,4.261,3.609,0.652,23,Under-supported
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",MA-Woburn,4.0,3.591,0.409,44,Slightly Under-supported
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",MD-Hanover,3.879,3.914,-0.034,58,Well-matched
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",MN-Mendota Heights,3.895,3.86,0.035,171,Well-matched
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",MO-St. Louis,4.255,4.115,0.139,165,Well-matched
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",NC-Durham,4.145,3.236,0.909,55,Under-supported
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",NC-Winston-Salem,4.167,3.542,0.625,24,Under-supported
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",NH-Manchester,4.012,3.941,0.071,85,Well-matched
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",NJ-Iselin,3.962,4.19,-0.228,79,Over-supported
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",NV-Las Vegas-Maryland Pkwy,4.195,4.049,0.146,41,Well-matched
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",NV-Las Vegas-Russell,4.173,4.0,0.173,52,Slightly Under-supported
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",NY-Lake Success,4.354,3.479,0.875,48,Under-supported
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",NY-Latham,3.985,3.477,0.508,195,Under-supported
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",PA-Seven Fields,4.0,4.0,0.0,8,Well-matched
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",TN-Nashville,3.906,4.156,-0.25,64,Over-supported
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",VA-Ashburn,4.071,4.214,-0.143,42,Well-matched
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",WA-Seattle,3.8,3.7,0.1,20,Well-matched
+Workplace Services,Amenities & Services,"Reliability of building operations (e.g., elevators, restrooms, etc.)",WI-Waukesha,3.938,4.0,-0.062,130,Well-matched
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",CA-Costa Mesa,3.862,3.692,0.169,65,Slightly Under-supported
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",CA-Walnut Creek,3.919,3.973,-0.054,37,Well-matched
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",CT-Rocky Hill,3.679,4.0,-0.321,28,Over-supported
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",CT-Wallingford,3.82,3.922,-0.102,205,Well-matched
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",DC-Washington,4.5,4.7,-0.2,10,Over-supported
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",DE-Wilmington,3.659,4.273,-0.614,44,Over-supported
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",FL-Lake Mary,3.983,3.889,0.094,117,Well-matched
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",GA-Columbus,3.935,3.908,0.026,153,Well-matched
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",IA-Urbandale,3.611,3.611,0.0,18,Well-matched
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",IL-Chicago-Bryn Mawr,3.98,3.776,0.204,98,Slightly Under-supported
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",KS-Overland Park,3.5,3.75,-0.25,12,Over-supported
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",KY-Louisville,3.848,3.898,-0.051,197,Well-matched
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",LA-Harvey,4.348,3.348,1.0,23,Severely Under-supported
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",MA-Woburn,3.477,3.841,-0.364,44,Over-supported
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",MD-Hanover,3.638,3.966,-0.328,58,Over-supported
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",MN-Mendota Heights,3.532,3.813,-0.281,171,Over-supported
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",MO-St. Louis,3.988,4.024,-0.036,165,Well-matched
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",NC-Durham,3.836,3.455,0.382,55,Slightly Under-supported
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",NC-Winston-Salem,3.667,3.5,0.167,24,Slightly Under-supported
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",NH-Manchester,3.835,4.071,-0.235,85,Over-supported
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",NJ-Iselin,3.911,4.013,-0.101,79,Well-matched
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",NV-Las Vegas-Maryland Pkwy,3.902,3.732,0.171,41,Slightly Under-supported
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",NV-Las Vegas-Russell,3.808,3.731,0.077,52,Well-matched
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",NY-Lake Success,4.25,3.333,0.917,48,Under-supported
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",NY-Latham,3.682,3.605,0.077,195,Well-matched
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",PA-Seven Fields,3.875,3.625,0.25,8,Slightly Under-supported
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",TN-Nashville,3.625,3.812,-0.188,64,Over-supported
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",VA-Ashburn,3.786,4.048,-0.262,42,Over-supported
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",WA-Seattle,3.65,3.65,0.0,20,Well-matched
+Workplace Services,Amenities & Services,"Communication about workplace updates, changes, or disruptions",WI-Waukesha,3.638,4.0,-0.362,130,Over-supported
