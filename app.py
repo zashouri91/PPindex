@@ -22,6 +22,8 @@ import reports as R
 from reports import (SENT_COLORS, RYG_HEX, SCORE_LABELS, OVERRIDES, themes_for_item,
                      explode_level, build_priority, exemplars, build_hotspots, build_driver)
 
+EV_COLS = ["comment_id", "themes", "sentiment", "labeler", "verified", "notes"]
+
 st.set_page_config(page_title="PulsePoint Comment Analyzer", layout="wide",
                    initial_sidebar_state="expanded")
 
@@ -750,6 +752,62 @@ with tab_tag:
                         f"*{', '.join(cl['keywords'])}*")
             for s in cl["samples"][:3]:
                 st.markdown(f"> {_html.escape(str(s))}")
+
+    # --- Gold set: confirm or correct the labels used to measure tagging accuracy -------
+    GOLD_PATH = os.path.join(R.DATA, "gold", "gold_labels.csv")
+    with st.expander("🥇 Gold set — confirm or correct the accuracy labels", expanded=False):
+        if not os.path.exists(GOLD_PATH):
+            st.info("No gold set yet. Run `python tools/make_gold_sample.py` to draw one.")
+        else:
+            import tools.eval_tagging as EV
+            gold = pd.read_csv(GOLD_PATH, dtype={"themes": str, "sentiment": str, "labeler": str, "notes": str})
+            gold["verified"] = gold["verified"].astype(str).str.lower().isin(["true", "1", "yes"])
+            for c_ in ("themes", "sentiment", "labeler", "notes"):
+                gold[c_] = gold[c_].fillna("")
+            base = comments_full.set_index("comment_id")
+            gv = gold.join(base[["comment", "source_question", "themes", "sentiment_label"]]
+                           .rename(columns={"themes": "auto_themes", "sentiment_label": "auto_sentiment"}),
+                           on="comment_id")
+            nv = int(gold["verified"].sum())
+            st.caption(f"{len(gold)} comments · **{nv} verified** · {len(gold) - nv} draft. Labels: themes from the "
+                       f"{len(R.THEMES_ALL)} taxonomy themes (pipe-separated; 'Unclassified' if none fits); sentiment: "
+                       "a complaint or an unmet-need request is **Negative**. Tick *verified* once a person has checked "
+                       "the row and put your name in *labeler*. Only verified rows count in the accuracy report.")
+            show_unver = st.checkbox("Only rows not yet verified", value=True, key="gold_unver")
+            view = gv[~gv["verified"]] if show_unver else gv
+            g_ed = st.data_editor(
+                view[["comment_id", "comment", "source_question", "auto_themes", "auto_sentiment",
+                      "themes", "sentiment", "verified", "labeler", "notes"]],
+                hide_index=True, use_container_width=True, height=420, num_rows="fixed",
+                disabled=["comment_id", "comment", "source_question", "auto_themes", "auto_sentiment"],
+                column_config={
+                    "comment": st.column_config.TextColumn("comment", width="large"),
+                    "themes": st.column_config.TextColumn("gold themes (pipe|separated)", width="medium"),
+                    "sentiment": st.column_config.SelectboxColumn(
+                        "gold sentiment", options=["Negative", "Neutral / Mixed", "Positive"], width="small"),
+                    "verified": st.column_config.CheckboxColumn("verified"),
+                },
+                key="gold_editor")
+            gc1, gc2 = st.columns([1, 2])
+            if gc1.button("💾 Save gold labels", key="gold_save"):
+                bad = sorted({t for s in g_ed["themes"] for t in str(s).split("|")
+                              if t.strip() and t.strip() not in R.THEMES_ALL})
+                if bad:
+                    st.error("Unknown theme name(s): " + ", ".join(bad))
+                else:
+                    upd = gold.set_index("comment_id")
+                    for _, r_ in g_ed.iterrows():
+                        for c_ in ("themes", "sentiment", "verified", "labeler", "notes"):
+                            upd.loc[r_["comment_id"], c_] = r_[c_]
+                    upd.reset_index()[EV_COLS].to_csv(GOLD_PATH, index=False)
+                    st.success(f"Saved {len(g_ed)} rows. Re-run `python tools/eval_tagging.py` for the full report.")
+            vg = EV.load_gold(GOLD_PATH)
+            vres = EV.score(vg[vg["verified"]], EV.load_rules())
+            if vres.get("n"):
+                gc2.metric("Rules vs verified labels", f"theme F1 {vres['micro']['f1']:.0%} · sentiment {vres['sent_acc']:.0%}",
+                           help=f"{vres['n']} verified comments")
+            else:
+                gc2.caption("No verified rows yet — accuracy is not established.")
 
     # Focused subset for editing
     e1,e2,e3 = st.columns([1,1,1])

@@ -28,6 +28,7 @@ DATA = os.path.join(HERE, "data")
 OVERRIDES = os.path.join(DATA, "overrides.csv")
 
 N_THEMES, N_CATEGORIES = len(THEMES), len(CATEGORIES)   # quoted in card copy — never hard-code
+THEMES_ALL = list(THEMES) + ["Unclassified"]
 
 
 def population_label(completers_only):
