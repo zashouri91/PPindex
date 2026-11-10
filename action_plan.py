@@ -246,14 +246,21 @@ def build_report_card_payload(data: dict, include_verbatims: bool = True) -> dic
             "comments": int(cnt), "pct_negative": _round(neg * 100, 0),
         })
 
-    # Strengths to protect (low-negative themes), generic buckets dropped.
+    # Strengths to protect: themes with a true positive majority (pct_positive is the
+    # share of comments labelled Positive, not 100 - % negative), generic buckets
+    # dropped; topped up with best-supported survey items, labelled as ratings.
     strengths = []
     for t, cnt, pos in (data.get("strengths") or []):
         if t in EXCLUDED_THEMES:
             continue
         strengths.append({
-            "theme": t, "category": _cat(t),
+            "theme": t, "category": _cat(t), "source": "comments",
             "comments": int(cnt), "pct_positive": _round(pos * 100, 0),
+        })
+    for si in (data.get("strength_items") or []):
+        strengths.append({
+            "item": si.get("item"), "dimension": si.get("dimension"), "source": "survey rating",
+            "support_0_100": _round(si.get("support_100"), 0),
         })
 
     # Benchmark vs company (theme rate)

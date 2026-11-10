@@ -390,6 +390,11 @@ def ryg_of(gap5):
         return "Over Supported"
     return "Target"
 
+# "What's working" rule (site card + action-plan payload)
+STRENGTH_MIN_COMMENTS = 10     # a theme needs at least this many comments at the site
+STRENGTH_MIN_POS_SHARE = 0.50  # ... a positive share of 50% or more
+STRENGTH_MIN_THEMES = 2        # fewer qualifying themes -> fill from best-supported items
+
 # --- Report-card grading (Composite 0–100 support score -> letter grade) -----
 GRADE_BANDS = [(80, "A", "Excellent"), (72, "B", "Good"), (64, "C", "Fair"),
                (56, "D", "Needs Work"), (0, "F", "Poor")]
@@ -525,11 +530,16 @@ def site_report_data(ctx, site):
     data["top_themes"] = tcounts.head(8)
     # theme sentiment for strengths/fixes
     tsent = tex.groupby("key")["eff_sentiment"].apply(lambda s: (s == "Negative").mean())
+    tpos = tex.groupby("key")["eff_sentiment"].apply(lambda s: (s == "Positive").mean())
     tvol = tcounts
     fixes = [(t, int(tvol[t]), float(tsent[t])) for t in tvol.index
              if tvol[t] >= 5 and tsent.get(t, 0) >= 0.45][:5]
-    strengths = [(t, int(tvol[t]), float(1 - tsent.get(t, 1))) for t in tvol.index
-                 if tvol[t] >= 5 and tsent.get(t, 1) <= 0.30][:5]
+    # What's working: the TRUE positive share (not 1 − negative). A theme qualifies with
+    # enough comments, a positive majority, and more positive than negative comments.
+    strengths = [(t, int(tvol[t]), float(tpos.get(t, 0.0))) for t in tvol.index
+                 if tvol[t] >= STRENGTH_MIN_COMMENTS
+                 and tpos.get(t, 0.0) >= STRENGTH_MIN_POS_SHARE
+                 and tpos.get(t, 0.0) > tsent.get(t, 1.0)][:5]
     data["fixes"], data["strengths"] = fixes, strengths
     # official scores (Tableau spec) — only exist for the 10 in-scope sites
     ss = scores_site[scores_site["site"] == site].dropna(subset=["friction"]) if not scores_site.empty else pd.DataFrame()
@@ -592,6 +602,14 @@ def site_report_data(ctx, site):
     imp_ss = ss[ss["mean_importance"].notna()] if len(ss) else pd.DataFrame()
     data["top_support"] = (imp_ss.sort_values("support_100", ascending=False).head(4)
                            if len(imp_ss) else pd.DataFrame())
+    # If comments give fewer than two clear strengths, fill "What's working" from the
+    # best-supported survey items — labelled as ratings, never as comment shares.
+    data["strength_items"] = []
+    if len(strengths) < STRENGTH_MIN_THEMES and len(imp_ss):
+        need = STRENGTH_MIN_THEMES - len(strengths)
+        for _, r in imp_ss.sort_values("support_100", ascending=False).head(need).iterrows():
+            data["strength_items"].append({"item": str(r["item"]), "dimension": str(r["dimension"]),
+                                           "support_100": float(r["support_100"])})
     # Demographics — who responded at this site (counts + % of site)
     rs_site_all = resp_scores[resp_scores["site"] == site] if not resp_scores.empty else pd.DataFrame()
     demo = {}
@@ -958,8 +976,12 @@ def build_site_report(ctx, site, data=None):
                               f"<span class='cct'>({len(sub)})</span></summary>{groups}</details>")
     fix_rows = "".join(f"<li><b>{_html.escape(t)}</b> — {v} comments, {int(ns*100)}% negative</li>"
                        for t, v, ns in d["fixes"]) or "<li>No clearly negative themes.</li>"
-    str_rows = "".join(f"<li><b>{_html.escape(t)}</b> — {v} comments, {int(ps*100)}% positive</li>"
-                       for t, v, ps in d["strengths"]) or "<li>No clearly positive themes.</li>"
+    str_rows = "".join(f"<li><b>{_html.escape(t)}</b> — {v} comments, {ps*100:.0f}% positive</li>"
+                       for t, v, ps in d["strengths"])
+    str_rows += "".join(f"<li><b>{_html.escape(si['item'])}</b> — survey rating: support "
+                        f"{si['support_100']:.0f}/100 (best-supported item)</li>"
+                        for si in d.get("strength_items", []))
+    str_rows = str_rows or "<li>No clearly positive themes.</li>"
     bench_rows = "".join(
         f"<tr><td>{_html.escape(t)}</td><td>{sr*100:.0f}%</td><td>{orr*100:.0f}%</td></tr>"
         for t, sr, orr in d["bench"])
