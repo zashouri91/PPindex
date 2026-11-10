@@ -11,14 +11,11 @@ by :func:`make_context`, so the builders can be called from tests and scripts:
 
 ``app.py`` keeps the Streamlit UI and wraps the expensive calls in st.cache_data.
 """
-import os, json, re, html as _html, io, base64
+import os, json, re, html as _html, io
 from collections import defaultdict
 from dataclasses import dataclass, field
 import pandas as pd
 import numpy as np
-import matplotlib
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 
 import design
 import action_plan  # Operational Action Plan — "What to Do Next" section (LLM-generated, stored per site)
@@ -78,8 +75,9 @@ def load_context(completers_only=True):
 # ---------------------------------------------------------------------------
 # Palette
 # ---------------------------------------------------------------------------
-SENT_COLORS = {"Positive": "#2E9E6B", "Neutral / Mixed": "#9AA0A6",
-               "Negative": "#D1495B", "Junk / No comment": "#D9DCE1"}
+# Sentiment has its own blue / purple pair — red / amber / green are reserved for support status
+SENT_COLORS = {"Positive": design.COLORS["--sent-pos"], "Neutral / Mixed": "#9AA0A6",
+               "Negative": design.COLORS["--sent-neg"], "Junk / No comment": "#D9DCE1"}
 GAP_SCHEME = "redyellowblue"  # high gap (under-supported) = red
 
 # Map each rating item to the comment themes that explain it (for drill-down)
@@ -437,15 +435,9 @@ def select_quotes(real, key, level, kind, n, seen_ids, seen_texts):
             break
     return out
 
-def _b64png(fig):
-    buf = io.BytesIO()
-    fig.savefig(buf, format="png", dpi=110, bbox_inches="tight")
-    plt.close(fig)
-    return base64.b64encode(buf.getvalue()).decode()
-
 # RYG colors matching the official Tableau legend
-RYG_HEX = {"Under Supported": "#C0392B", "Target": "#2E7D32",
-           "Over Supported": "#E67E22", "Agreement-only": "#9AA0A6"}
+RYG_HEX = {"Under Supported": design.COLORS["--st-under"], "Target": design.COLORS["--st-target"],
+           "Over Supported": design.COLORS["--st-over"], "Agreement-only": design.COLORS["--st-na"]}
 DIM_ORDER = {"Work Activity": 0, "Physical Feature": 1, "Service Level": 2, "Digital & Tech": 3}
 # each dimension's single summary "agreement" question (Q8/Q12/Q16/Q19) -> respondent score column
 DIM_TO_SCORECOL = {"Work Activity": "score_work", "Physical Feature": "score_space",
@@ -1059,95 +1051,8 @@ def site_report_data(ctx, site):
     data.update(site_card_extras(ctx, site, data, real, roles_ok, seen_ids, seen_texts))
     return data
 
-SENT_HEX = {"Positive": "#2E9E6B", "Neutral / Mixed": "#9AA0A6", "Negative": "#D1495B"}
-
 DIM_ABBR = {"Work Activity": "Work Activity", "Physical Feature": "Physical Feature",
             "Service Level": "Service Level", "Digital & Tech": "Digital & Tech"}
-
-def _wrap(s, w=48):
-    import textwrap
-    return "\n".join(textwrap.wrap(str(s), w)) or str(s)
-
-def _score_bar(rows, valcol, color, title, xlabel, dark, pctcol=None, xmax=None):
-    """Shared horizontal-bar renderer for Friction (red) and Strengths (green) — larger,
-    wrapped labels, consistent formatting per the reviewers' request."""
-    fig, ax = plt.subplots(figsize=(7.2, 4.1))
-    vals = [float(r[valcol]) for _, r in rows.iterrows()]
-    ax.barh(range(len(rows)), vals, color=color, height=0.62)
-    labels = [_wrap(f"[{DIM_ABBR.get(r['dimension'], r['dimension'])}] {r['item']}", 50)
-              for _, r in rows.iterrows()]
-    ax.set_yticks(range(len(rows))); ax.set_yticklabels(labels, fontsize=8)
-    vmax = xmax or (max(vals) if vals else 1)
-    for i, (_, r) in enumerate(rows.iterrows()):
-        tail = ""
-        if pctcol and pd.notna(r.get(pctcol)):
-            tail = f" · {r[pctcol]:.0f}% feel it"
-        ax.text(float(r[valcol]) + vmax * 0.02, i, f"{float(r[valcol]):.0f}/100{tail}",
-                va="center", fontsize=8.5, color=dark, weight="bold")
-    ax.set_xlim(0, vmax * (1.5 if pctcol else 1.18))
-    ax.set_xlabel(xlabel, fontsize=9); ax.tick_params(axis="x", labelsize=8)
-    ax.set_title(title, fontsize=11.5, weight="bold", color="#2b3a67", loc="left")
-    for s in ["top", "right"]: ax.spines[s].set_visible(False)
-    fig.tight_layout()
-    return _b64png(fig)
-
-def _site_charts(d):
-    """Return dict of base64 PNG charts for a site report."""
-    charts = {}
-    # donut — comment sentiment (titled)
-    fig, ax = plt.subplots(figsize=(2.7, 2.9))
-    vals = [d["pos"], d["neu"], d["neg"]]
-    ax.pie(vals, colors=[SENT_HEX["Positive"], SENT_HEX["Neutral / Mixed"], SENT_HEX["Negative"]],
-           startangle=90, wedgeprops=dict(width=0.42))
-    ax.text(0, 0, f"{d['neg']:.0f}%\nneg", ha="center", va="center", fontsize=11, weight="bold")
-    ax.set(aspect="equal")
-    ax.set_title("Comment sentiment\n(green +  ·  grey ~  ·  red −)", fontsize=9, weight="bold", color="#2b3a67")
-    charts["donut"] = _b64png(fig)
-    # top themes bar — PEOPLE raising each theme (% of respondents), comments secondary
-    tt = d["top_themes"].head(7)[::-1]
-    n_resp = max(1, int(d.get("n_respondents") or 1))
-    tcom = d["theme_stats"]["comments"] if "theme_stats" in d else {}
-    fig, ax = plt.subplots(figsize=(6.2, 3.3))
-    ax.barh(range(len(tt)), tt.values, color="#4C78A8", height=0.62)
-    ax.set_yticks(range(len(tt))); ax.set_yticklabels([_wrap(str(t), 24) for t in tt.index], fontsize=7.5)
-    tmax = float(tt.max()) if len(tt) else 1
-    for i, (name, c) in enumerate(tt.items()):
-        ax.text(c + tmax * 0.02, i, f"{int(c)} people ({c / n_resp * 100:.0f}%) · {int(tcom.get(name, 0))} comments",
-                va="center", fontsize=7.5, color="#33475b", weight="bold")
-    ax.set_xlim(0, tmax * 1.62)
-    ax.set_xlabel("people raising the theme", fontsize=8); ax.tick_params(axis="x", labelsize=8)
-    ax.set_title("Top comment themes (people, % of respondents)", fontsize=10.5,
-                 weight="bold", color="#2b3a67", loc="left")
-    for s in ["top", "right"]: ax.spines[s].set_visible(False)
-    fig.tight_layout(); charts["themes"] = _b64png(fig)
-    # Friction (red) + Strengths (green) — enlarged, wrapped, consistent formatting
-    if len(d["under"]):
-        charts["gap"] = _score_bar(d["under"].sort_values("friction"), "friction", "#D1495B",
-                                   "Where support falls short — highest-Friction items",
-                                   "Friction (0–100, higher = worse)", "#7a1f2b",
-                                   pctcol="friction_pct", xmax=100)
-    if len(d.get("top_support", [])):
-        charts["strength"] = _score_bar(d["top_support"].sort_values("support_100"), "support_100", "#2E7D32",
-                                        "PulsePoint strengths — best-supported items",
-                                        "Support (0–100, higher = better)", "#1c5024", xmax=100)
-    # Demographics visual — % of site by group (role / tenure / hybrid)
-    demo = d.get("demographics") or {}; dt = d.get("demo_total") or 0
-    if demo and dt:
-        keys = list(demo.keys())
-        fig, axes = plt.subplots(1, len(keys), figsize=(3.05 * len(keys), 2.7))
-        if len(keys) == 1:
-            axes = [axes]
-        for ax, lab in zip(axes, keys):
-            vc = demo[lab].head(6)[::-1]; pct = vc / dt * 100
-            ax.barh(range(len(vc)), pct.values, color="#5B7DB1", height=0.62)
-            ax.set_yticks(range(len(vc))); ax.set_yticklabels([_wrap(str(k), 16) for k in vc.index], fontsize=7)
-            for i, v in enumerate(pct.values):
-                ax.text(v + 1.5, i, f"{v:.0f}%", va="center", fontsize=7.5, color="#33475b")
-            ax.set_xlim(0, 112); ax.set_title(lab, fontsize=9.5, weight="bold", color="#2b3a67")
-            ax.tick_params(axis="x", labelsize=7)
-            for s in ["top", "right"]: ax.spines[s].set_visible(False)
-        fig.tight_layout(); charts["demo"] = _b64png(fig)
-    return charts
 
 def html_to_pdf(html):
     """Render report HTML to PDF so the PDF export is identical to the HTML report.
@@ -1576,106 +1481,6 @@ def build_site_pptx(ctx, sites, get_data=None):
 # ===========================================================================
 # PORTFOLIO — "10 PulsePoints Report Card" (roll-up across the in-scope sites)
 # ===========================================================================
-def _portfolio_heatmap(matrix, rows, cols, vmin, vmax, cmap, fmt, title, figsize, xrot=0,
-                       cbar_label="", cbar_ticks=None):
-    arr = np.array(matrix, dtype=float)
-    fig, ax = plt.subplots(figsize=figsize)
-    im = ax.imshow(arr, aspect="auto", cmap=plt.get_cmap(cmap), vmin=vmin, vmax=vmax)
-    ax.set_xticks(range(len(cols)))
-    ax.set_xticklabels(cols, fontsize=8, rotation=xrot, ha=("right" if xrot else "center"))
-    ax.set_yticks(range(len(rows))); ax.set_yticklabels(rows, fontsize=8)
-    for i in range(arr.shape[0]):
-        for j in range(arr.shape[1]):
-            v = arr[i, j]
-            if not np.isnan(v):
-                ax.text(j, i, fmt.format(v), ha="center", va="center", fontsize=7, color="#1a1a1a")
-    ax.set_title(title, fontsize=10.5, weight="bold", color="#2b3a67", loc="left", pad=8)
-    ax.tick_params(length=0)
-    for sp in ax.spines.values():
-        sp.set_visible(False)
-    # color key
-    cbar = fig.colorbar(im, ax=ax, fraction=0.028, pad=0.02)
-    if cbar_ticks is not None:
-        cbar.set_ticks(cbar_ticks)
-    cbar.ax.tick_params(labelsize=6.5, length=0)
-    cbar.set_label(cbar_label, fontsize=7.5, color="#555")
-    cbar.outline.set_visible(False)
-    fig.tight_layout()
-    return _b64png(fig)
-
-def _portfolio_charts(dd):
-    charts = {}
-    board = dd["board"]; sites = [b["site"] for b in board]
-    # 1) Leaderboard bar (Index Score, colored by tier; best at top)
-    if board:
-        # Alphabetical, single neutral color, no rank labels — avoid implying a good-to-bad ranking.
-        order = sorted(board, key=lambda x: x["site"], reverse=True)  # reverse -> A at top (barh idx0 = bottom)
-        fig, ax = plt.subplots(figsize=(7.4, 3.7))
-        ax.barh(range(len(order)), [b["index"] for b in order], color="#4a5a86", height=0.66)
-        ax.set_yticks(range(len(order))); ax.set_yticklabels([b["site"] for b in order], fontsize=8)
-        mx = max(b["index"] for b in board)
-        for i, b in enumerate(order):
-            ax.text(b["index"] + mx * 0.01, i, f"{b['index']:.0f}",
-                    va="center", fontsize=8, weight="bold", color="#333")
-        cx = dd.get("comp_index")
-        if pd.notna(cx):
-            ax.axvline(cx, color="#555", ls="--", lw=1)
-            ax.text(cx, len(order) - 0.4, f" company {cx:.0f}", fontsize=7.5, color="#555")
-        ax.set_xlim(0, mx * 1.2); ax.set_xlabel("Index Score (0–100)", fontsize=8.5)
-        ax.set_title("Overall PulsePoint Experience Index Score by site", fontsize=11,
-                     weight="bold", color="#2b3a67", loc="left")
-        for s in ["top", "right"]: ax.spines[s].set_visible(False)
-        fig.tight_layout(); charts["leaderboard"] = _b64png(fig)
-    # 2) Site × dimension heatmap (absolute 0–100, RdYlGn)
-    dims = ["Work Activity", "Physical Feature", "Service Level", "Digital & Tech"]
-    dbs = dd["dim_by_site"]
-    mat = [[dbs.get(dm, {}).get(s, np.nan) for dm in dims] for s in sites]
-    if sites:
-        charts["heatmap_dim"] = _portfolio_heatmap(
-            mat, sites, ["Work", "Physical", "Service", "Tech"], 50, 85, "RdYlGn", "{:.0f}",
-            "Dimension Scores by site (0–100; green = higher)", (6.8, 3.9),
-            cbar_label="Score (0–100)", cbar_ticks=[50, 60, 70, 80])
-    # 3) Site × theme heatmap (% of each site's comments; Blues)
-    themes = dd["site_theme_themes"]; sxt = dd["site_theme"]
-    if sites and themes:
-        tmat = [[sxt.get(s, {}).get(t, np.nan) for t in themes] for s in sites]
-        vmax = max([v for row in tmat for v in row if not np.isnan(v)] + [1])
-        charts["heatmap_theme"] = _portfolio_heatmap(
-            tmat, sites, [_wrap(t, 12) for t in themes], 0, vmax, "Blues", "{:.0f}",
-            "Comment theme prevalence by site (% of site's respondents raising it)", (8.6, 4.0), xrot=30,
-            cbar_label="% of site's respondents")
-    # 4) Company friction + strengths (reuse the site chart renderer)
-    if dd["friction"]:
-        fr = pd.DataFrame(dd["friction"])
-        fr["friction"] = pd.to_numeric(fr["friction"], errors="coerce")
-        fr["friction_pct"] = pd.to_numeric(fr["friction_pct"], errors="coerce")
-        charts["friction"] = _score_bar(fr.sort_values("friction"), "friction", "#D1495B",
-            "Company-wide highest-Friction items", "Friction (0–100, higher = worse)", "#7a1f2b",
-            pctcol="friction_pct", xmax=100)
-    if dd["strength"]:
-        stg = pd.DataFrame(dd["strength"])
-        stg["support_100"] = pd.to_numeric(stg["support_100"], errors="coerce")
-        charts["strength"] = _score_bar(stg.sort_values("support_100"), "support_100", "#2E7D32",
-            "Company-wide strengths — best-supported items", "Support (0–100, higher = better)", "#1c5024", xmax=100)
-    # 5) Company demographics visual
-    demo = dd["demographics"]; dt = dd.get("n_participants") or 0
-    if demo and dt:
-        keys = list(demo.keys())
-        fig, axes = plt.subplots(1, len(keys), figsize=(3.05 * len(keys), 2.6))
-        if len(keys) == 1:
-            axes = [axes]
-        for ax, lab in zip(axes, keys):
-            vc = demo[lab].head(6)[::-1]; pct = vc / dt * 100
-            ax.barh(range(len(vc)), pct.values, color="#5B7DB1", height=0.62)
-            ax.set_yticks(range(len(vc))); ax.set_yticklabels([_wrap(str(k), 16) for k in vc.index], fontsize=7)
-            for i, v in enumerate(pct.values):
-                ax.text(v + 1.5, i, f"{v:.0f}%", va="center", fontsize=7, color="#33475b")
-            ax.set_xlim(0, 112); ax.set_title(lab, fontsize=9.5, weight="bold", color="#2b3a67")
-            ax.tick_params(axis="x", labelsize=7)
-            for s in ["top", "right"]: ax.spines[s].set_visible(False)
-        fig.tight_layout(); charts["demo"] = _b64png(fig)
-    return charts
-
 def portfolio_data(ctx):
     """Roll-up data for the 10-site portfolio report card."""
     meta, scores_dim, scores = ctx.meta, ctx.scores_dim, ctx.scores
@@ -1756,18 +1561,31 @@ def portfolio_data(ctx):
             if len(vc):
                 demo[lab] = vc
     dd["demographics"] = demo
-    dd["charts"] = _portfolio_charts(dd)
+    # company interval + company dimension rows (same shape as the site card's)
+    civ = ctx.intervals[ctx.intervals["site"] == "Company (10 sites)"].set_index("measure") \
+        if ctx.intervals is not None and len(ctx.intervals) else pd.DataFrame()
+    dd["comp_margin"] = float(civ.at["Index", "margin"]) if "Index" in civ.index else np.nan
+    dim_rows = []
+    for dm in dims:
+        it = sc[sc["dimension"] == dm] if not sc.empty else pd.DataFrame()
+        if not len(it):
+            continue
+        if dm == "Digital & Tech":
+            need = int((it["mean_support"] < TECH_WATCH_BELOW).sum())
+            worst = it.sort_values("mean_support").iloc[0]
+            worst_txt = f"{worst['item']} (agreement {worst['mean_support']:.2f})"
+            need_txt = f"{need} of {len(it)} items below {TECH_WATCH_BELOW} agreement"
+        else:
+            need = int((it["ryg"] == "Under Supported").sum())
+            worst = it.sort_values("friction", ascending=False).iloc[0]
+            worst_txt = f"{worst['item']} (Friction {worst['friction']:.0f})"
+            need_txt = f"{need} of {len(it)} items need attention"
+        dim_rows.append({"dim": dm, "score": dd["dim_comp"].get(dm, np.nan),
+                         "margin": float(civ.at[dm, "margin"]) if dm in civ.index else np.nan,
+                         "need_txt": need_txt, "worst": worst_txt})
+    dd["dim_rows"] = dim_rows
+    dd["dim_standing"] = {dm: {b["site"]: site_standing(ctx, b["site"], dm)["standing"] for b in board} for dm in dims}
     return dd
-
-def _sent_mark(v, ref, thr=0.05):
-    if pd.isna(v) or pd.isna(ref):
-        return ""
-    d = v - ref
-    if d >= thr:
-        return f"<span style='color:#1E7D32'>&#9650; +{d:.2f}</span>"
-    if d <= -thr:
-        return f"<span style='color:#C0392B'>&#9660; {d:.2f}</span>"
-    return "<span style='color:#888'>&#8776;</span>"
 
 # --- Question-level detail grid (30 questions × 10 sites, all four metrics/cell) ----
 SITE_SHORT = {
@@ -1778,195 +1596,193 @@ SITE_SHORT = {
 def _short(site):
     return SITE_SHORT.get(site, "".join(w[:1] for w in re.split(r"[ \-]+", str(site))[:3]).upper())
 
-# light RYG cell tints (background) keyed by status / agreement band
-QG_BG = {"Under Supported": "#f7d6d2", "Target": "#dcefdc", "Over Supported": "#fbe8c9",
-         "Agreement-only": "#eceef1"}
-QG_TECH_BG = {"Strong": "#dcefdc", "Moderate": "#fbe8c9", "Needs attention": "#f7d6d2"}
-QG_MISS = "#f3f4f6"
+
+def _seq_class(v, vmin, vmax):
+    """Index into the sequential scale (design.SEQ_STEPS) for a value."""
+    if pd.isna(v):
+        return None
+    k = int((float(v) - vmin) / max(1e-9, vmax - vmin) * (len(design.SEQ_STEPS) - 1) + 0.5)
+    return max(0, min(len(design.SEQ_STEPS) - 1, k))
+
+
+def _seq_cell(v, vmin, vmax, txt):
+    k = _seq_class(v, vmin, vmax)
+    if k is None:
+        return "<td class='num hm'>—</td>"
+    return (f"<td class='num hm' style='background:var({design.SEQ_STEPS[k]});"
+            f"color:var({design.SEQ_TEXT[k]})'>{txt}</td>")
+
 
 def _portfolio_qgrid(ctx, site_order):
-    """Combined per-question × per-site table: each cell carries Importance, Support,
-    Gap and Friction, shaded R/Y/G by the support-vs-importance status (Digital & Tech,
-    which is agreement-only, is shaded by its agreement band)."""
+    """Question x site grid: ONE value per cell — Friction for items with an Importance
+    rating, agreement (1–5) for Digital & Tech — coloured by the official status with an
+    icon + value, the other values on hover (title)."""
     ss = ctx.scores_site if ctx.scores_site is not None else pd.DataFrame()
     if ss.empty:
         return ""
     ss = ss.copy()
-    for c in ("mean_importance", "mean_support", "friction"):
-        ss[c] = pd.to_numeric(ss[c], errors="coerce")
-    ss["gap5"] = (ss["mean_support"] - ss["mean_importance"]).round(1)
     lut = {(r["dimension"], r["item"], r["site"]): r for _, r in ss.iterrows()}
     dims = sorted(ss["dimension"].dropna().unique(), key=lambda d: DIM_ORDER.get(d, 9))
     comp_fric = ss.groupby(["dimension", "item"])["friction"].mean()
-
-    _key = ("<span class='qs-key'><span>Imp</span><span>Sup</span>"
-            "<span>Gap</span><span>Fri</span></span>")
-    heads = "".join(f"<th class='qs' title='{_html.escape(str(s))}'>"
-                    f"<span class='qs-code'>{_short(s)}</span>{_key}</th>" for s in site_order)
+    heads = "".join(f"<th class='num' title='{_html.escape(str(s))}'>{_short(s)}</th>" for s in site_order)
     body = ""
-    ncol = len(site_order) + 1
     for dm in dims:
         items = list(pd.unique(ss[ss["dimension"] == dm]["item"].dropna()))
+        tech = dm == "Digital & Tech"
         items.sort(key=lambda it: -(comp_fric.get((dm, it)) if pd.notna(comp_fric.get((dm, it), np.nan)) else -1))
-        body += f"<tr class='qg-dim'><td colspan='{ncol}'>{_html.escape(str(dm))}</td></tr>"
+        body += (f"<tr class='qg-dim'><td colspan='{len(site_order) + 1}'>{_html.escape(str(dm))} — "
+                 f"{'agreement (1–5)' if tech else 'Friction (0–100)'}</td></tr>")
         for it in items:
             cells = ""
             for s in site_order:
                 r = lut.get((dm, it, s))
-                if r is None or (pd.isna(r["mean_support"]) and pd.isna(r["friction"])):
-                    cells += f"<td class='qc qc-na' style='background:{QG_MISS}'>n/a</td>"
+                if r is None or pd.isna(r["mean_support"]):
+                    cells += "<td class='num qc st-na' title='no data'>n/a</td>"
                     continue
-                imp, sup, gap, fri = r["mean_importance"], r["mean_support"], r["gap5"], r["friction"]
-                if pd.isna(imp):                       # agreement-only (Digital & Tech)
-                    lab, _hx = tech_status(sup); bg = QG_TECH_BG.get(lab, QG_MISS)
+                if tech:
+                    lab, _hx = tech_status(r["mean_support"])
+                    tip = f"{s}: agreement {r['mean_support']:.2f} · {lab}"
+                    cls, val = "st-na", f"◇ {r['mean_support']:.1f}"
                 else:
-                    bg = QG_BG.get(item_status(r), QG_MISS)
-                fr = "—" if pd.isna(fri) else f"{fri:.0f}"
-                # 2×2 quadrant: Imp (top-left) · Sup (top-right) / Gap (bottom-left) · Fri (bottom-right)
-                cells += (f"<td class='qc' style='background:{bg}'><div class='qcw'>"
-                          f"<span class='qv tl'>{_f1(imp)}</span><span class='qv tr'>{_f1(sup)}</span>"
-                          f"<span class='qv bl'>{_gp(gap)}</span><span class='qv br'>{fr}</span></div></td>")
+                    stt = item_status(r)
+                    gap = float(r["mean_support"]) - float(r["mean_importance"])
+                    tip = (f"{s}: Importance {r['mean_importance']:.1f} · Support {r['mean_support']:.1f} · "
+                           f"Gap {gap:+.1f} · Friction {r['friction']:.0f} · {r['friction_pct']:.0f}% under-supported"
+                           f" · {status_words(r)}")
+                    cls = design.STATUS_CLASS.get(stt, "st-na")
+                    val = f"{design.STATUS_ICON.get(stt, '')} {r['friction']:.0f}"
+                cells += f"<td class='num qc {cls}' title='{_html.escape(tip)}'>{val}</td>"
             body += f"<tr><td class='qg-q'>{_html.escape(str(it))}</td>{cells}</tr>"
-
     codes = " · ".join(f"<b>{_short(s)}</b> {_html.escape(str(s).split('-', 1)[-1])}" for s in site_order)
-    legend = (
-        "<p class='lgd'>Each cell is a 2×2 block — top row <b>Importance</b> · <b>Support</b> (1–5 scale), "
-        "bottom row <b>Gap</b> (Support − Importance) · <b>Friction</b> (0–100, higher = worse); the same layout "
-        "key sits under every site code. Cell color is the support-vs-importance status: "
-        "<span style='background:#f7d6d2;padding:0 4px'>under-supported</span> "
-        "<span style='background:#dcefdc;padding:0 4px'>on track</span> "
-        "<span style='background:#fbe8c9;padding:0 4px'>exceeds needs</span>. "
-        "<b>Digital &amp; Tech</b> is agreement-only (no Importance/Gap, shown as “—”) — shaded by agreement band "
-        "(green ≥4.0 / amber 3.5–3.9 / red &lt;3.5). Questions are ordered by company Friction (worst first) "
-        "within each dimension.</p>"
-        f"<p class='lgd'>Sites (alphabetical): {codes}.</p>")
     return (
-        "<section class='qgrid-sec'>"
-        "<h3>Question-level detail — Importance / Support / Gap / Friction by site</h3>"
-        f"{legend}"
-        f"<div class='qgrid-wrap'><table class='qgrid'><tr><th class='qg-qh'>Survey question</th>{heads}</tr>{body}</table></div>"
-        "</section>")
+        "<section class='qgrid-sec'><h2>Question-level detail by site</h2>"
+        "<p class='note'>One value per cell. For the 24 items with an Importance rating the value is <b>Friction</b> "
+        "(0–100, higher = worse) and the cell carries the official status: ▼ Needs attention · ● On track · ▲ Exceeds "
+        "needs. For <b>Digital &amp; Tech</b> (no Importance rating) the value is <b>agreement</b> (1–5) with ◇ — it is "
+        "<b>not comparable</b> with Friction. Hover a cell (HTML) for Importance, Support, Gap and severity. Items are "
+        f"ordered by company Friction within each dimension. Sites (alphabetical): {codes}.</p>"
+        f"<table class='qgrid'><thead><tr><th>Survey question</th>{heads}</tr></thead>{body}</table></section>")
+
+
+PORTFOLIO_CSS = """
+ .hdr{display:flex;gap:16px;align-items:center;border:1px solid var(--rule);border-radius:10px;padding:12px 16px;
+   background:var(--panel);margin:6px 0 10px}
+ .hdr .t{font-size:14px;font-weight:700;color:var(--navy)} .hdr .s{font-size:13px;color:var(--ink-2)}
+ td.hm{font-weight:700}
+ table.qgrid{font-size:11px} table.qgrid td,table.qgrid th{padding:3px 4px;border:1px solid var(--rule)}
+ table.qgrid td.qg-q{min-width:220px} table.qgrid td.qc{white-space:nowrap;font-weight:700}
+ tr.qg-dim td{background:var(--navy);color:var(--on-navy);font-weight:700;font-size:11.5px}
+ .demo{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+ @page qgrid{size:Letter landscape;margin:9mm}
+ .qgrid-sec{page:qgrid;break-before:page}
+ @media print{ table.qgrid{font-size:9px} table.qgrid td.qg-q{min-width:0} tr.qg-dim td{font-size:9.5px} }
+"""
+
+
+def _sent_txt(v):
+    return '—' if pd.isna(v) else f'{v:.2f}'
+
 
 def build_portfolio_report(ctx, data=None):
-    """Self-contained HTML — the 10 PulsePoints portfolio report card (exec brief)."""
+    """Self-contained HTML — the 10 PulsePoints portfolio report card (no images)."""
     completers_flag = ctx.completers_only
     dd = data if data is not None else portfolio_data(ctx)
-    ch = dd["charts"]
-    img = lambda k: (f"<img src='data:image/png;base64,{ch[k]}'/>" if k in ch else "")
-    cx = dd["comp_index"]; board = dd["board"]
+    esc = _html.escape
+    pop = population_label(completers_flag)
+    cx, board = dd["comp_index"], dd["board"]
     ivals = [b["index"] for b in board]
     rng = f"{min(ivals):.0f}–{max(ivals):.0f}" if ivals else "—"
-    # Index-by-site table (alphabetical; no Rank/Tier per feedback — avoid implying good-to-bad)
-    lead = ""
-    for b in sorted(board, key=lambda x: x["site"]):
-        s = dd["sent_by_site"].get(b["site"], np.nan)
-        lead += (f"<tr><td>{_html.escape(b['site'])}</td>"
-                 f"<td style='font-weight:800'>{fmt_margin(b['index'], b.get('margin'))}</td>"
-                 f"<td>{standing_text(b.get('standing'))}</td>"
-                 f"<td>{'—' if pd.isna(s) else f'{s:.2f}'} {_sent_mark(s, dd['comp_sentiment'])}</td></tr>")
-    # dimension gaps table
-    def _dstat(g):
-        if pd.isna(g["gap"]):
-            lab, hx = tech_status(g["sup"]); return lab, hx
-        ry = ryg_of(g["gap"]); return STATUS_WORD.get(ry, ""), RYG_HEX.get(ry, "#333")
-    gap_rows = ""
-    for g in dd["dim_gaps"]:
-        lab, hx = _dstat(g)
-        gap_rows += (f"<tr><td>{_html.escape(g['dim'])}</td><td>{_f1(g['imp'])}</td><td>{_f1(g['sup'])}</td>"
-                     f"<td style='color:{hx};font-weight:700'>{_gp(g['gap'])}</td>"
-                     f"<td style='color:{hx};font-weight:600'>{lab}</td>"
-                     f"<td style='font-weight:700'>{g['support100']:.0f}</td></tr>")
-    # top themes table
+    header = (f"<div class='hdr keep'><div class='badge'>{cx:.0f}</div><div>"
+              f"<div class='t'>Company Overall PulsePoint Experience Index: {fmt_margin(cx, dd.get('comp_margin'))} (0–100)</div>"
+              f"<div class='s'>Sites range {rng} · {dd['n_participants']:,} respondents · {dd['n_comments']:,} comments "
+              f"from {dd['n_commenters']:,} people · {esc(pop)}</div>"
+              f"<div class='s'>Comment sentiment: <span class='sent-pos'>{dd['pos']:.0f}% positive</span> · "
+              f"<span class='sent-neu'>{dd['neu']:.0f}% neutral / mixed</span> · "
+              f"<span class='sent-neg'>{dd['neg']:.0f}% negative</span></div></div></div>")
+    lead = "".join(
+        f"<tr><td>{esc(b['site'])}</td><td class='num'><b>{fmt_margin(b['index'], b.get('margin'))}</b></td>"
+        f"<td class='stand'>{esc(STANDING_SHORT.get(b.get('standing'), ''))}</td>"
+        f"<td class='num'>{_sent_txt(dd['sent_by_site'].get(b['site'], np.nan))}</td></tr>"
+        for b in board)
+    bars = hbars([(esc(b["site"]), b["index"], f"{b['index']:.0f}") for b in board], 100, "Index (0–100)")
+    dims = ["Work Activity", "Physical Feature", "Service Level", "Digital & Tech"]
+    dbs, dstd = dd["dim_by_site"], dd.get("dim_standing", {})
+    allv = [v for dm in dims for v in dbs.get(dm, {}).values() if pd.notna(v)]
+    vmin, vmax = (min(allv), max(allv)) if allv else (0, 100)
+    hm_rows = ""
+    for b in board:
+        s = b["site"]
+        cells = ""
+        for dm in dims:
+            v = dbs.get(dm, {}).get(s, np.nan)
+            st_ = STANDING_SHORT.get(dstd.get(dm, {}).get(s))
+            mark = "" if st_ in (None, "In line") else f" <span style='font-weight:400'>({st_})</span>"
+            cells += _seq_cell(v, vmin, vmax, f"{v:.0f}{mark}" if pd.notna(v) else "—")
+        hm_rows += f"<tr><td>{esc(s)}</td>{cells}</tr>"
+    comp_rows = "".join(
+        f"<tr><td>{esc(r['dim'])}</td><td class='num'>{fmt_margin(r['score'], r['margin'])}</td>"
+        f"<td>{esc(r['need_txt'])}</td><td>{esc(r['worst'])}</td></tr>" for r in dd.get("dim_rows", []))
+    fr_bars = hbars([(esc(r["item"]), r["friction"], f"{r['friction']:.0f} · {r['friction_pct']:.0f}% under-supported")
+                     for r in dd.get("friction", [])], 100, "Friction (0–100, higher = worse)")
+    st_bars = hbars([(esc(r["item"]), r["support_100"], f"{r['support_100']:.0f}")
+                     for r in dd.get("strength", [])], 100, "Support (0–100, higher = better)")
     th_rows = "".join(
-        f"<tr><td>{_html.escape(t['theme'])}</td><td>{t['people']:,} ({t['pct']:.0f}%)</td><td>{t['n']:,}</td>"
-        f"<td style='color:{'#C0392B' if t['neg']>=50 else '#555'}'>{t['neg']:.0f}% neg</td></tr>"
-        for t in dd["top_themes"])
+        f"<tr><td>{esc(t['theme'])}</td><td class='num'>{t['people']:,} ({t['pct']:.0f}%)</td><td class='num'>{t['n']:,}</td>"
+        f"<td class='num'>{t['neg']:.0f}%</td></tr>" for t in dd["top_themes"])
+    themes = dd["site_theme_themes"]; sxt = dd["site_theme"]
+    tv = [v for s in sxt for v in sxt[s].values() if pd.notna(v)]
+    tmax = max(tv) if tv else 1
+    th_head = "".join(f"<th class='num'>{esc(t)}</th>" for t in themes)
+    th_hm = "".join(
+        f"<tr><td>{esc(b['site'])}</td>" + "".join(_seq_cell(sxt[b['site']].get(t, np.nan), 0, tmax,
+                                                              f"{sxt[b['site']].get(t, np.nan):.0f}%") for t in themes) + "</tr>"
+        for b in board)
+    demo = dd.get("demographics") or {}
+    dt = dd.get("n_participants") or 0
+    dcols = ""
+    for label, vc in demo.items():
+        rows = "".join(f"<tr><td>{esc(str(k))}</td><td class='num'>{'&lt;5' if v < SMALL_COUNT else int(v)}</td>"
+                       f"<td class='num'>{'' if v < SMALL_COUNT else f'{v / dt * 100:.0f}%'}</td></tr>" for k, v in vc.items())
+        dcols += (f"<div><table class='compact'><thead><tr><th>{esc(label)}</th><th class='num'>#</th>"
+                  f"<th class='num'>%</th></tr></thead>{rows}</table></div>")
     qgrid_html = _portfolio_qgrid(ctx, [b["site"] for b in board])
-    return f"""<!doctype html><html><head><meta charset="utf-8">
+    css = design.stylesheet(PORTFOLIO_CSS)
+    return f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
 <title>10 PulsePoints — Portfolio Report Card</title>
-<style>
- body{{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#1a1a2e;max-width:900px;
-   margin:22px auto;padding:0 22px;line-height:1.5}}
- h1{{font-size:23px;margin-bottom:2px}} .sub{{color:#666;font-size:13px;margin-bottom:14px}}
- h3{{border-bottom:2px solid #eee;padding-bottom:4px;margin-top:22px;font-size:14px;text-transform:uppercase;
-   letter-spacing:.03em;color:#2b3a67}}
- table{{border-collapse:collapse;width:100%;font-size:13px;margin-top:8px}}
- th,td{{text-align:left;padding:5px 8px;border-bottom:1px solid #eee}} th{{color:#555;font-weight:600}}
- td:nth-child(n+2),th:nth-child(n+2){{text-align:right}}
- .charts img{{max-width:100%;margin-top:8px}}
- .rc{{border:1px solid #e3e6ec;border-radius:10px;padding:16px 18px;margin:4px 0 14px;background:#fbfcfe;display:flex;
-   align-items:center;gap:16px}}
- .rc-badge{{width:66px;height:66px;border-radius:10px;background:#2b3a67;color:#fff;font-size:28px;font-weight:800;
-   display:flex;align-items:center;justify-content:center;flex-shrink:0}}
- .rc-t{{font-size:15px;font-weight:700;color:#2b3a67}} .rc-p{{font-size:12.5px;color:#777;margin-top:3px}}
- .lgd{{font-size:11px;color:#888;margin-top:5px}}
- .foot{{color:#888;font-size:11px;margin-top:22px;border-top:1px solid #eee;padding-top:8px}}
- .qgrid-wrap{{overflow-x:auto;margin-top:8px}}
- table.qgrid{{border-collapse:collapse;width:100%;font-size:8.5px;min-width:1000px}}
- table.qgrid th,table.qgrid td{{border:1px solid #e2e5ec;padding:2px 3px;text-align:center;vertical-align:middle}}
- table.qgrid th.qg-qh,table.qgrid td.qg-q{{text-align:left;width:24%;min-width:180px;font-size:9px;line-height:1.25;color:#2b3a42;white-space:normal}}
- table.qgrid th.qs{{font-weight:800;color:#2b3a67;background:#eef2f8;white-space:nowrap}}
- tr.qg-dim td{{background:#2b3a67;color:#fff;font-weight:700;text-align:left;font-size:9.5px;letter-spacing:.03em;text-transform:uppercase;padding:3px 6px}}
- table.qgrid td.qc{{padding:0;white-space:nowrap}}
- table.qgrid td.qc .qcw{{display:grid;grid-template-columns:1fr 1fr}}
- table.qgrid td.qc .qv{{padding:1px 2px;text-align:center;line-height:1.3;font-variant-numeric:tabular-nums}}
- table.qgrid td.qc .tl,table.qgrid td.qc .tr{{font-weight:700;color:#22303a}}
- table.qgrid td.qc .bl,table.qgrid td.qc .br{{color:#43585f}}
- table.qgrid td.qc .tl,table.qgrid td.qc .bl{{border-right:1px solid rgba(30,40,60,.11)}}
- table.qgrid td.qc .tl,table.qgrid td.qc .tr{{border-bottom:1px solid rgba(30,40,60,.11)}}
- table.qgrid td.qc-na{{color:#b9bfc9;font-style:italic}}
- table.qgrid th.qs,table.qgrid td.qc{{border-left:2.5px solid #9aa3b6}}
- table.qgrid th.qs .qs-code{{display:block;font-size:10px;font-weight:800;color:#2b3a67}}
- table.qgrid th.qs .qs-key{{display:grid;grid-template-columns:1fr 1fr;column-gap:5px;margin-top:2px;
-   font-size:6px;font-weight:700;color:#9aa2b1;text-transform:uppercase;letter-spacing:.02em;line-height:1.4}}
- @page{{size:Letter;margin:12mm}}
- @page qgrid{{ size:Letter landscape;margin:10mm }}
- .qgrid-sec{{ page:qgrid;break-before:page }}
- @media print{{ body{{max-width:100%;margin:0;padding:0}} .charts img{{max-width:100%}}
-   h1,h3{{break-after:avoid}} tr,.rc{{break-inside:avoid}}
-   table.qgrid{{min-width:0}} .qgrid-wrap{{overflow:visible}} tr.qg-dim,table.qgrid tr{{break-inside:avoid}} }}
-</style></head><body>
+<style>{css}</style></head><body>
 <h1>10 PulsePoints — Portfolio Report Card</h1>
-<div class="sub">Company-wide exec brief across the {dd['n_sites']} in-scope sites · {population_label(completers_flag)}</div>
-<div class="rc"><div class="rc-badge">{cx:.0f}</div><div>
- <div class="rc-t">Company Overall PulsePoint Experience Index Score (0–100)</div>
- <div class="rc-p">Sites range {rng} · {dd['n_participants']:,} respondents · {dd['n_comments']:,} substantive comments
-  from {dd['n_commenters']:,} associates</div>
- <div class="rc-p">Company comment sentiment:
-  <span style="color:#2E9E6B">{dd['pos']:.0f}% positive</span> ·
-  <span style="color:#7a7a7a">{dd['neu']:.0f}% neutral</span> ·
-  <span style="color:#D1495B">{dd['neg']:.0f}% negative</span></div>
-</div></div>
-<h3>Overall Index Score by site</h3>
-<table><tr><th>Site</th><th>Index ± 95% margin</th><th>Standing</th><th>Sentiment (1–5)</th></tr>{lead}</table>
-<p class="lgd">Sites are listed alphabetically. Standing: <b>Above</b> / <b>Below</b> when the company Index
-({cx:.1f}) lies outside the site's 95% interval (resampling respondents within the site); otherwise <b>In line</b>.
-{COMPANY_DEF}</p>
-<div class="charts">{img('leaderboard')}</div>
-<h3>Dimension Scores by site</h3>
-<div class="charts">{img('heatmap_dim')}</div>
-<p class="lgd">Each cell is that site's Dimension Score (0–100). Color is absolute (green = higher, red = lower);
-Work Activity is the company's weakest dimension, so it reads amber/red across most sites.</p>
-<h3>Company dimensions — Importance vs. Support</h3>
-<table><tr><th>Dimension</th><th>Importance</th><th>Support</th><th>Gap</th><th>Status</th><th>Score (0–100)</th></tr>{gap_rows}</table>
-<p class="lgd">Digital &amp; Tech is agreement-only (Strong ≥4.0 / Moderate 3.5–3.9 / Needs attention &lt;3.5).</p>
-<h3>Friction &amp; strength themes (company-wide)</h3>
-<div class="charts">{img('friction')}{img('strength')}</div>
-<h3>Open-ended comment themes</h3>
-<table><tr><th>Theme</th><th>People (% of respondents)</th><th>Comments</th><th>Sentiment</th></tr>{th_rows}</table>
-<div class="charts">{img('heatmap_theme')}</div>
-<p class="lgd">Prevalence = share of each site's respondents who raised the theme in any comment (one person can
-answer five open questions, so people are counted once); comment counts are secondary.
-Themes come from a keyword taxonomy ({N_THEMES} themes across {N_CATEGORIES} categories), kept separate from PXIP categories by design.</p>
-<h3>Demographics — respondent profile</h3>
-<p class="lgd">Provided to help readers understand the respondent mix behind the results ({dd['n_participants']:,} respondents).</p>
-<div class="charts">{img('demo')}</div>
+<div class="sub">Company-wide brief across the {dd['n_sites']} in-scope sites · {esc(pop)}</div>
+{header}
+<h2>Index Score by site</h2>
+<table><thead><tr><th>Site</th><th class='num'>Index ± 95% margin</th><th>Standing</th><th class='num'>Associate sentiment (1–5)</th></tr></thead>{lead}</table>
+<p class="note">Sites are alphabetical — no ranking. Standing: Above / Below when the company Index ({cx:.1f}) lies
+outside the site's 95% interval (resampling respondents within the site); otherwise In line. {COMPANY_DEF}</p>
+{bars}
+<h2>Dimension Scores by site</h2>
+<table><thead><tr><th>Site</th>{''.join(f"<th class='num'>{esc(d)}</th>" for d in dims)}</tr></thead>{hm_rows}</table>
+<p class="note">Each cell is the site's Dimension Score (0–100), shaded from lighter (lower) to darker (higher) on one
+colour scale; (Above) / (Below) mark scores outside the company value beyond the margin of error.</p>
+<h2>Company dimensions — Importance vs. Support</h2>
+<table><thead><tr><th>Dimension</th><th class='num'>Score ± margin</th><th>Items needing attention</th><th>Worst item</th></tr></thead>{comp_rows}</table>
+<h2>Company-wide Friction and strengths</h2>
+<h3>Highest-Friction items</h3>{fr_bars}
+<h3>Best-supported items</h3>{st_bars}
+<h2>Comment themes</h2>
+<table><thead><tr><th>Theme</th><th class='num'>People (% of respondents)</th><th class='num'>Comments</th><th class='num'>% negative</th></tr></thead>{th_rows}</table>
+<h3>Share of each site's respondents raising the theme</h3>
+<table><thead><tr><th>Site</th>{th_head}</tr></thead>{th_hm}</table>
+<p class="note">People are counted once per theme (one person can answer five open questions); comment counts are
+secondary. Themes come from a keyword taxonomy ({N_THEMES} themes across {N_CATEGORIES} categories); generic praise /
+dissatisfaction buckets are excluded.</p>
+<h2>Respondent profile</h2><div class="demo">{dcols}</div>
+<p class="note">{dt:,} respondents; counts under {SMALL_COUNT} print as “&lt;{SMALL_COUNT}” with the percentage blank.</p>
 {qgrid_html}
-<div class="foot"><b>Data source &amp; method.</b> PulsePoint survey export ·
-{'completed responses only' if completers_flag else 'all responses'} · {dd['n_sites']} in-scope sites. The Index Score is
-the unweighted average of the four Dimension Scores (0–100) — the same calculation as the Tableau deck. Friction &amp; RYG
-per the official Tableau spec. {COMPANY_DEF} {tagging_accuracy_note()}</div>
+<div class="foot"><b>Data source &amp; method.</b> PulsePoint survey export · {esc(pop)} · {dd['n_sites']} in-scope sites.
+The Index Score is the unweighted average of the four Dimension Scores (0–100) — the same calculation as the Tableau deck.
+± is the 95% margin from resampling respondents. Friction and status per the official Tableau spec. {COMPANY_DEF}
+{tagging_accuracy_note()}</div>
 </body></html>"""
+
 
 def build_portfolio_pdf(ctx, data=None):
     """PDF export = an exact render of the HTML portfolio report (identical content and layout)."""

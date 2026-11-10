@@ -39,7 +39,7 @@ def test_banned_wording(ctx, site_html):
 
 
 def test_images_have_alt_text(ctx, site_html):
-    for h in list(site_html.values()):
+    for h in list(site_html.values()) + [R.build_portfolio_report(ctx)]:
         for img in re.findall(r"<img\b[^>]*>", h):
             assert re.search(r"\balt\s*=\s*['\"][^'\"]+['\"]", img), img[:80]
 
@@ -89,3 +89,27 @@ def test_pptx_matches_card_numbers(ctx):
     assert R.standing_text(d["card"]["standing"]) in txt
     for t in d["top_items"]:
         assert t["status_words"] in cells and f"{t['friction']:.0f}" in cells
+
+
+def test_cards_have_no_chart_images(ctx, site_html):
+    for h in list(site_html.values()) + [R.build_portfolio_report(ctx)]:
+        assert "data:image/png" not in h
+
+
+def test_portfolio_grid_one_value_per_cell(ctx):
+    h = R.build_portfolio_report(ctx)
+    grid = h[h.find("<table class='qgrid'>"):h.find("</table>", h.find("<table class='qgrid'>"))]
+    cells = re.findall(r"<td class='num qc ([\w-]+)' title='([^']*)'>([^<]*)</td>", grid)
+    assert cells
+    for cls, tip, val in cells:
+        assert cls in {"st-under", "st-target", "st-over", "st-na"}
+        assert len(re.findall(r"\d+(?:\.\d+)?", val)) <= 1          # one number shown
+    assert "not comparable" in h
+    assert int(re.search(r"table\.qgrid\{font-size:(\d+)px\}", h.split("@media print")[-1]).group(1)) >= 9
+
+
+def test_portfolio_alphabetical_and_people(ctx):
+    dd = R.portfolio_data(ctx)
+    sites = [b["site"] for b in dd["board"]]
+    assert sites == sorted(sites)
+    assert all("people" in t for t in dd["top_themes"])
