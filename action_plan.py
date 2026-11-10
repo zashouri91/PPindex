@@ -67,38 +67,39 @@ def _slug(site: str) -> str:
     return re.sub(r"[^A-Za-z0-9]+", "_", str(site)).strip("_").lower()
 
 
-def plan_path(site: str) -> str:
-    return os.path.join(PLANS_DIR, f"{_slug(site)}.json")
+def plan_path(site: str, plans_dir: str = None) -> str:
+    """plans_dir: a wave's plan folder (round 2 = data/round2/action_plans); default round 1."""
+    return os.path.join(plans_dir or PLANS_DIR, f"{_slug(site)}.json")
 
 
-def plan_exists(site: str) -> bool:
-    return os.path.exists(plan_path(site))
+def plan_exists(site: str, plans_dir: str = None) -> bool:
+    return os.path.exists(plan_path(site, plans_dir))
 
 
-def load_plan(site: str):
+def load_plan(site: str, plans_dir: str = None):
     try:
-        with open(plan_path(site), "r", encoding="utf-8") as fh:
+        with open(plan_path(site, plans_dir), "r", encoding="utf-8") as fh:
             return json.load(fh)
     except Exception:
         return None
 
 
-def save_plan(site: str, plan: dict, allow_unvalidated: bool = False) -> str:
+def save_plan(site: str, plan: dict, allow_unvalidated: bool = False, plans_dir: str = None) -> str:
     """Store a plan. A NEWLY generated plan must have passed the grounding validator
     (_meta.validation.ok); allow_unvalidated is only for maintenance edits of stored plans."""
     v = (plan.get("_meta") or {}).get("validation")
     if not allow_unvalidated and not (isinstance(v, dict) and v.get("ok")):
         raise ValueError("Plan not saved: it has not passed the grounding check "
                          f"({len((v or {}).get('failures', []))} failure(s)).")
-    os.makedirs(PLANS_DIR, exist_ok=True)
-    p = plan_path(site)
+    os.makedirs(plans_dir or PLANS_DIR, exist_ok=True)
+    p = plan_path(site, plans_dir)
     with open(p, "w", encoding="utf-8") as fh:
         json.dump(plan, fh, indent=2, ensure_ascii=False)
     return p
 
 
-def plan_meta(site: str):
-    plan = load_plan(site)
+def plan_meta(site: str, plans_dir: str = None):
+    plan = load_plan(site, plans_dir)
     if not plan:
         return None
     return plan.get("_meta")

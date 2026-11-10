@@ -167,6 +167,17 @@
     "VA-Norfolk",
     "VA-Richmond"
   ],
+  "wave": {
+    "key": "round1",
+    "label": "Round 1",
+    "bench_noun": "company",
+    "bench_title": "Company",
+    "scope_phrase": "10 in-scope sites",
+    "company_row": "Company (10 sites)",
+    "card_title": "10 PulsePoints Report Card",
+    "low_n": 30
+  },
+  "items_not_asked": [],
   "dim_weights": {
     "Work Activity": 35,
     "Service Level": 25,

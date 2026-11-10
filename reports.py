@@ -18,6 +18,7 @@ import pandas as pd
 import numpy as np
 
 import design
+import waves
 import action_plan  # Operational Action Plan — "What to Do Next" section (LLM-generated, stored per site)
 from taxonomy import THEME_TO_CATEGORY, GENERIC_THEMES, THEMES, CATEGORIES
 
@@ -37,6 +38,15 @@ def population_label(completers_only):
 THEME_TO_CAT = {**THEME_TO_CATEGORY, "Unclassified": "Uncategorized"}
 
 
+def wave_data_dir(wave="round1"):
+    return waves.WAVES[wave]["data_dir"]
+
+
+def plans_dir(ctx):
+    """Stored action plans for the context's wave (round 1 = data/action_plans)."""
+    return None if ctx is None or ctx.data_dir == DATA else os.path.join(ctx.data_dir, "action_plans")
+
+
 @dataclass
 class Ctx:
     """The data a report is built from, for one population (completed-only or all)."""
@@ -49,9 +59,10 @@ class Ctx:
     completers_only: bool
     theme_friction_all: dict = field(default_factory=dict)
     intervals: pd.DataFrame = field(default_factory=pd.DataFrame)  # data/site_intervals*.csv
+    data_dir: str = DATA               # the wave's data folder (round 1 = data/)
 
 
-def make_context(comments_full, resp_scores_full, scores, meta, completers_only):
+def make_context(comments_full, resp_scores_full, scores, meta, completers_only, data_dir=DATA):
     """Select the population and bundle everything the builders read."""
     k = "comp" if completers_only else "all"
     if completers_only:
@@ -61,16 +72,17 @@ def make_context(comments_full, resp_scores_full, scores, meta, completers_only)
         c, r = comments_full.copy(), resp_scores_full.copy()
     ctx = Ctx(comments=c, resp_scores=r, scores=scores[k], scores_site=scores[k + "_site"],
               scores_dim=scores[k + "_dim"], meta=meta, completers_only=bool(completers_only),
-              intervals=scores.get(k + "_iv", pd.DataFrame()))
+              intervals=scores.get(k + "_iv", pd.DataFrame()), data_dir=data_dir)
     ctx.theme_friction_all = _theme_friction_from(ctx.scores)
     return ctx
 
 
-def load_context(completers_only=True):
-    """Convenience for scripts/tests: load everything from data/ and build a Ctx."""
-    comments_full, meta, _gaps = load_all()
-    resp_scores_full, _emg = load_extra()
-    return make_context(comments_full, resp_scores_full, load_scores(), meta, completers_only)
+def load_context(completers_only=True, wave="round1"):
+    """Convenience for scripts/tests: load one wave's data folder and build a Ctx."""
+    dd = wave_data_dir(wave)
+    comments_full, meta, _gaps = load_all(dd)
+    resp_scores_full, _emg = load_extra(dd)
+    return make_context(comments_full, resp_scores_full, load_scores(dd), meta, completers_only, data_dir=dd)
 
 # ---------------------------------------------------------------------------
 # Palette
@@ -127,16 +139,16 @@ def themes_for_item(item):
 # ---------------------------------------------------------------------------
 # Data loading (with overrides merged in)
 # ---------------------------------------------------------------------------
-def load_all():
-    comments = pd.read_csv(os.path.join(DATA, "comments.csv"))
-    with open(os.path.join(DATA, "meta.json")) as f:
+def load_all(data_dir=DATA):
+    comments = pd.read_csv(os.path.join(data_dir, "comments.csv"))
+    with open(os.path.join(data_dir, "meta.json")) as f:
         meta = json.load(f)
     gaps = {
-        "comp": pd.read_csv(os.path.join(DATA, "gap_overall.csv")),
-        "comp_site": pd.read_csv(os.path.join(DATA, "gap_by_site.csv")),
+        "comp": pd.read_csv(os.path.join(data_dir, "gap_overall.csv")),
+        "comp_site": pd.read_csv(os.path.join(data_dir, "gap_by_site.csv")),
     }
     for key, fn in [("all", "gap_overall_all.csv"), ("all_site", "gap_by_site_all.csv")]:
-        p = os.path.join(DATA, fn)
+        p = os.path.join(data_dir, fn)
         gaps[key] = pd.read_csv(p) if os.path.exists(p) else gaps["comp" if key == "all" else "comp_site"]
     if "reached_end" not in comments.columns:
         comments["reached_end"] = 1
@@ -147,8 +159,9 @@ def load_all():
             comments[col] = default
     comments["themes"] = comments["themes"].fillna("")
     # merge saved overrides
-    if os.path.exists(OVERRIDES):
-        ov = pd.read_csv(OVERRIDES)
+    ovp = os.path.join(data_dir, "overrides.csv")
+    if os.path.exists(ovp):
+        ov = pd.read_csv(ovp)
         comments = comments.drop(columns=[c for c in
                     ["themes_override","sentiment_override","junk_override","notes","reviewed"]
                     if c in comments.columns])
@@ -176,12 +189,12 @@ def load_all():
     return comments, meta, gaps
 
 
-def load_scores():
+def load_scores(data_dir=DATA):
     """Official Tableau-spec scores (Friction/Composite/RYG) for both populations."""
     numcols = ["n", "mean_importance", "mean_support", "importance_100", "support_100",
                "composite", "friction", "friction_pct", "weight"]
     def rd(fn):
-        p = os.path.join(DATA, fn)
+        p = os.path.join(data_dir, fn)
         if not os.path.exists(p):
             return pd.DataFrame()
         d = pd.read_csv(p)
@@ -306,13 +319,13 @@ def exemplars(df, key, level, n=3):
 # ---------------------------------------------------------------------------
 # Extra data: respondent-level scores (key drivers) + emerging clusters
 # ---------------------------------------------------------------------------
-def load_extra():
+def load_extra(data_dir=DATA):
     try:
-        rs = pd.read_csv(os.path.join(DATA, "respondent_scores.csv"))
+        rs = pd.read_csv(os.path.join(data_dir, "respondent_scores.csv"))
     except Exception:
         rs = pd.DataFrame()
     try:
-        with open(os.path.join(DATA, "emerging_themes.json")) as f:
+        with open(os.path.join(data_dir, "emerging_themes.json")) as f:
             emg = json.load(f)
     except Exception:
         emg = []
@@ -568,6 +581,53 @@ COMPANY_DEF = ("“Company” means the 10 in-scope sites pooled, in the selecte
                "(completed responses or all responses).")
 
 
+_ROUND1_WAVE = waves.wave_meta("round1", waves.ROUND1_SITES)
+
+
+def wave_info(ctx):
+    """The wave fields from meta.json (round 1 defaults when absent)."""
+    return {**_ROUND1_WAVE, **((ctx.meta or {}).get("wave") or {})} if ctx is not None else dict(_ROUND1_WAVE)
+
+
+def is_round1(ctx):
+    return wave_info(ctx)["key"] == "round1"
+
+
+def bench_short(ctx):
+    """Short benchmark name used beside numbers: 'company' / 'round 2 avg'."""
+    w = wave_info(ctx)
+    return "company" if w["key"] == "round1" else f"{w['label'].lower()} avg"
+
+
+def bench_title(ctx):
+    """Column-header / title form: 'Company' / 'Round 2 avg'."""
+    b = bench_short(ctx)
+    return b[0].upper() + b[1:]
+
+
+def bench_the(ctx):
+    """'the company' (round 1, unchanged wording) / 'the round 2 average'."""
+    return "the company" if is_round1(ctx) else f"the {wave_info(ctx)['bench_noun']} average"
+
+
+def not_asked_note(ctx):
+    """Round 2 left two Service Level items unasked — say so wherever its scores print."""
+    na = ((ctx.meta or {}).get("items_not_asked") or []) if ctx is not None else []
+    if not na:
+        return ""
+    names = "; ".join(f"“{_html.escape(i['item'])}” ({_html.escape(i['dimension'])})" for i in na)
+    return (f" Not asked in {wave_info(ctx)['label']}: {names} — those dimensions average the items that were "
+            f"asked, so they are not directly comparable with other rounds.")
+
+
+def company_def(ctx=None):
+    w = wave_info(ctx)
+    if w["key"] == "round1":
+        return COMPANY_DEF
+    return (f"“{w['label']} average” means the {w['scope_phrase']} pooled, in the selected population "
+            f"(completed responses or all responses). {w['label']} sites are compared only with each other.")
+
+
 def standing_label(lo, hi, company):
     """Three-way standing from a 95% interval and the printed company value."""
     if any(pd.isna(v) for v in (lo, hi, company)):
@@ -579,8 +639,8 @@ def standing_label(lo, hi, company):
     return STANDING_INLINE
 
 
-def standing_text(label):
-    return f"{label} the company average" if label else ""
+def standing_text(label, ctx=None):
+    return f"{label} the {wave_info(ctx)['bench_noun']} average" if label else ""
 
 
 def fmt_margin(est, margin, nd=0):
@@ -611,7 +671,7 @@ def tagging_accuracy_note():
     """Method-note sentence on comment-tagging accuracy: the verified gold-set figure
     when enough rows have been checked by a person, otherwise an explicit 'not yet
     validated'. Never quotes draft (AI-prefilled) labels as accuracy."""
-    path = os.path.join(DATA, "gold", "gold_labels.csv")
+    path = os.path.join(DATA, "gold", "gold_labels.csv")   # round 1 gold set; rules are shared
     try:
         import tools.eval_tagging as EV
         g = EV.load_gold(path)
@@ -842,7 +902,7 @@ def site_card_extras(ctx, site, data, real, roles_ok, seen_ids, seen_texts):
     # compact demographics
     out["demo_lines"] = {lab: demo_compact(vc, data.get("demo_total") or 0)
                          for lab, vc in (data.get("demographics") or {}).items()}
-    plan = action_plan.load_plan(site) or {}
+    plan = action_plan.load_plan(site, plans_dir(ctx)) or {}
     out["plan_top3"] = [p.get("name", "") for p in (plan.get("priorities") or [])[:3]]
     return out
 
@@ -1157,6 +1217,15 @@ def _fric_txt(v):
     return '—' if pd.isna(v) else f'{v:.0f}'
 
 
+def _lown_banner(ctx, n_resp):
+    """Round 2+ cards flag sites below waves.LOW_N responses (round 1 cards are unchanged)."""
+    W = wave_info(ctx)
+    if W["key"] == "round1" or n_resp >= W.get("low_n", 30):
+        return ""
+    return (f"<div class='s'><b>Small sample:</b> {n_resp} respondents. Margins are wide, standings rarely move off "
+            f"In line, and comment themes rest on a handful of people — read this card as indicative.</div>")
+
+
 def build_site_report(ctx, site, data=None):
     """Self-contained HTML report card for one site (Nov 2026 layout)."""
     meta, completers_only = ctx.meta, ctx.completers_only
@@ -1173,19 +1242,20 @@ def build_site_report(ctx, site, data=None):
         header = (f"<div class='hdr keep'><div class='badge' aria-label='Index score'>{cc['overall']:.0f}</div><div>"
                   f"<div class='t'>Overall PulsePoint Experience Index: {fmt_margin(cc['overall'], cc.get('margin'))} "
                   f"(0–100)</div>"
-                  f"<div class='s'><span class='stand'>{esc(standing_text(cc.get('standing')))}</span> · company "
+                  f"<div class='s'><span class='stand'>{esc(standing_text(cc.get('standing'), ctx))}</span> · {bench_short(ctx)} "
                   f"{cc['org_overall']:.1f} · 95% interval {cc['lo']:.1f}–{cc['hi']:.1f}</div>"
                   f"<div class='s'>{n_resp:,} respondents · {n_comm:,} people wrote {d['n']:,} comments · {esc(pop)}</div>"
+                  f"{_lown_banner(ctx, n_resp)}"
                   f"</div></div>")
     else:
-        header = (f"<div class='hdr'><div><div class='s'>Not one of the 10 in-scope sites — no official scores. "
+        header = (f"<div class='hdr'><div><div class='s'>Not one of the {wave_info(ctx)['scope_phrase']} — no official scores. "
                   f"{n_resp:,} respondents · {n_comm:,} people commented.</div></div></div>")
 
     # 2. At a glance -------------------------------------------------------------
     dimboxes = "".join(
         f"<div class='dimbox'><div class='n'>{esc(a['dim'])}</div><div class='v'>{a['score']:.0f}"
         f"<span style='font-size:13px;font-weight:600'> ± {max(round(a['margin']), 1) if pd.notna(a.get('margin')) else '—'}</span></div>"
-        f"<div class='m'><b class='stand'>{esc(STANDING_SHORT.get(a.get('standing'), ''))}</b> · company {a['org']:.1f}</div></div>"
+        f"<div class='m'><b class='stand'>{esc(STANDING_SHORT.get(a.get('standing'), ''))}</b> · {bench_short(ctx)} {a['org']:.1f}</div></div>"
         for a in (cc.get("areas") or []))
     top3 = "".join(
         f"<tr><td>{esc(t['item'])}</td><td class='num'>{t['friction']:.0f}</td>"
@@ -1258,8 +1328,8 @@ def build_site_report(ctx, site, data=None):
     sentiment = (
         "<h2>Associate sentiment</h2>"
         "<table><thead><tr><th>Dimension</th><th>Summary question</th><th class='num'>Site ± margin</th>"
-        f"<th class='num'>Company</th><th class='num'>Difference</th><th>Standing</th></tr></thead>{sent_rows}</table>"
-        "<p class='note'>1–5 agreement. Standing: Above / Below when the company mean lies outside the site's 95% "
+        f"<th class='num'>{bench_title(ctx)}</th><th class='num'>Difference</th><th>Standing</th></tr></thead>{sent_rows}</table>"
+        f"<p class='note'>1–5 agreement. Standing: Above / Below when the {wave_info(ctx)['bench_noun']} mean lies outside the site's 95% "
         "interval; otherwise In line. Q16 = Services and Q19 = Technology by survey position.</p>")
 
     # 5. Top priorities anchored on survey items -----------------------------------
@@ -1275,9 +1345,9 @@ def build_site_report(ctx, site, data=None):
     watch = d.get("tech_watch") or []
     watch_line = ("<p><b>Technology watch:</b> " + "; ".join(
         f"{esc(w['item'])} — agreement {w['mean']:.2f}" + (f" ± {w['margin']:.2f}" if pd.notna(w.get('margin')) else "")
-        + (f", company {w['company']:.2f}" if pd.notna(w.get('company')) else "")
+        + (f", {bench_short(ctx)} {w['company']:.2f}" if pd.notna(w.get('company')) else "")
         + (f" ({esc(STANDING_SHORT.get(w['standing'], ''))})" if w.get("standing") else "")
-        for w in watch) + "</p>") if watch else "<p><b>Technology watch:</b> no Digital &amp; Tech item is below 3.5 or below the company.</p>"
+        for w in watch) + "</p>") if watch else f"<p><b>Technology watch:</b> no Digital &amp; Tech item is below 3.5 or below {bench_the(ctx)}.</p>"
     CA = d.get("comments_add", pd.DataFrame())
     ca_rows = "".join(
         f"<tr><td>{esc(r['key'])}</td><td class='num'>{int(r['people']):,} ({r['pct_resp']:.0f}%)</td>"
@@ -1320,7 +1390,7 @@ def build_site_report(ctx, site, data=None):
                   "sites beyond chance.</p>")
 
     # 8. Operational Action Plan ------------------------------------------------------
-    plan_html = action_plan.render_action_plan_html(action_plan.load_plan(site))
+    plan_html = action_plan.render_action_plan_html(action_plan.load_plan(site, plans_dir(ctx)))
     plan_html = f"<div id='plan'>{plan_html}</div>" if plan_html else ""
 
     # 9. In their words ---------------------------------------------------------------
@@ -1375,15 +1445,16 @@ def build_site_report(ctx, site, data=None):
              f"with the percentage left blank.</p>") if cols else ""
 
     # 12. Method note -------------------------------------------------------------------
-    foot = (f"<div class='foot'><b>Data source &amp; method.</b> PulsePoint survey export · {esc(pop)} · 10 in-scope "
-            f"sites. Support responses map to 0–100; each dimension is the average of its items; the Overall PulsePoint "
+    foot = (f"<div class='foot'><b>Data source &amp; method.</b> PulsePoint survey export"
+            f"{'' if is_round1(ctx) else ' (' + wave_info(ctx)['label'] + ')'} · {esc(pop)} · "
+            f"{wave_info(ctx)['scope_phrase']}. Support responses map to 0–100; each dimension is the average of its items; the Overall PulsePoint "
             f"Experience Index is the <b>unweighted</b> average of the four Dimension Scores — the same calculation as the "
             f"Tableau deck. ± is the 95% margin from resampling this site's respondents (2,000 resamples). Friction and "
             f"status per the official Tableau spec. Theme prevalence counts people (one person can answer five open "
             f"questions); comment counts are secondary. Themes come from a keyword taxonomy ({N_THEMES} themes across "
             f"{N_CATEGORIES} categories, <code>taxonomy.py</code>). A comment shows the writer's role only when at least "
             f"{ATTRIBUTION_MIN_GROUP} respondents at the site share it; tenure is never shown beside a comment. "
-            f"{COMPANY_DEF} {tagging_accuracy_note()}</div>")
+            f"{company_def(ctx)}{not_asked_note(ctx)} {tagging_accuracy_note()}</div>")
 
     css = design.stylesheet(SITE_CSS + action_plan.ACTION_PLAN_CSS)
     return f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
@@ -1452,8 +1523,8 @@ def build_site_pptx(ctx, sites, get_data=None):
             continue
         cc = d["card"]
         text(s, 0.4, 0.85, 12.5, 0.4,
-             f"Index {fmt_margin(cc['overall'], cc.get('margin'))} · {standing_text(cc.get('standing'))} "
-             f"(company {cc['org_overall']:.1f}) · {d.get('n_respondents', 0):,} respondents · "
+             f"Index {fmt_margin(cc['overall'], cc.get('margin'))} · {standing_text(cc.get('standing'), ctx)} "
+             f"({bench_short(ctx)} {cc['org_overall']:.1f}) · {d.get('n_respondents', 0):,} respondents · "
              f"{d.get('n_commenters', 0):,} people commented · {population_label(ctx.completers_only)}", 13, False, MUTED)
         rows = [["Dimension", "Score ± margin", "Standing", "Items needing attention"]]
         rows += [[r["dim"], fmt_margin(r["score"], r["margin"]), STANDING_SHORT.get(r["standing"], "—"), r["need_txt"]]
@@ -1467,7 +1538,7 @@ def build_site_pptx(ctx, sites, get_data=None):
         text(s, 0.4, 3.35, 6.2, 0.6, "Technology watch: " + (
             "; ".join(f"{w['item'][:60]} — {w['mean']:.2f}"
                       + (f" ({STANDING_SHORT.get(w['standing'], '')})" if w.get("standing") else "") for w in watch)
-            if watch else "no Digital & Tech item below 3.5 or below the company."), 10, False, MUTED)
+            if watch else f"no Digital & Tech item below 3.5 or below {bench_the(ctx)}."), 10, False, MUTED)
         qtf = text(s, 0.4, 4.4, 12.5, 2.8, "In their words", 12, True, NAVY)
         for q in d["quotes"][:3]:
             p = qtf.add_paragraph()
@@ -1524,6 +1595,7 @@ def portfolio_data(ctx):
     dd["comp_sentiment"] = float(rs["composite"].mean()) if len(rs) else np.nan
     dd["sent_by_site"] = {s: float(g["composite"].mean()) for s, g in rs.groupby("site")} if len(rs) else {}
     dd["n_participants"] = int(len(rs)); dd["n_sites"] = len(board)
+    dd["n_by_site"] = rs.groupby("site").size().astype(int).to_dict() if len(rs) else {}
     # company friction items + strengths
     if not sc.empty:
         imp_items = sc[pd.to_numeric(sc["mean_importance"], errors="coerce").notna()].copy()
@@ -1562,7 +1634,7 @@ def portfolio_data(ctx):
                 demo[lab] = vc
     dd["demographics"] = demo
     # company interval + company dimension rows (same shape as the site card's)
-    civ = ctx.intervals[ctx.intervals["site"] == "Company (10 sites)"].set_index("measure") \
+    civ = ctx.intervals[ctx.intervals["site"] == wave_info(ctx)["company_row"]].set_index("measure") \
         if ctx.intervals is not None and len(ctx.intervals) else pd.DataFrame()
     dd["comp_margin"] = float(civ.at["Index", "margin"]) if "Index" in civ.index else np.nan
     dim_rows = []
@@ -1592,7 +1664,17 @@ SITE_SHORT = {
     "CA-Woodland Hills": "WH", "FL-Miami": "MIA", "FL-Tampa": "TPA", "GA-Atlanta": "ATL",
     "IL-Chicago-Willis Tower": "CHI", "IN-Indianapolis": "IND", "NY-New York (Penn1)": "NYC",
     "OH-Mason": "MSN", "VA-Norfolk": "NOR", "VA-Richmond": "RIC",
+    # round 2
+    "CT-Wallingford": "WAL", "NY-Latham": "LAT", "KY-Louisville": "LOU", "MO-St. Louis": "STL",
+    "MN-Mendota Heights": "MEN", "GA-Columbus": "COL", "FL-Lake Mary": "LKM", "WI-Waukesha": "WAU",
+    "NJ-Iselin": "ISE", "IL-Chicago-Bryn Mawr": "BRM", "NH-Manchester": "MAN", "TN-Nashville": "NAS",
+    "CA-Costa Mesa": "CMA", "MD-Hanover": "HAN", "NC-Durham": "DUR", "NV-Las Vegas-Russell": "LVR",
+    "NY-Lake Success": "LKS", "DE-Wilmington": "WIL", "MA-Woburn": "WOB", "NV-Las Vegas-Maryland Pkwy": "LVM",
+    "VA-Ashburn": "ASH", "CA-Walnut Creek": "WCR", "LA-Harvey": "HAR", "CT-Rocky Hill": "RKH",
+    "WA-Seattle": "SEA", "NC-Winston-Salem": "WSA", "IA-Urbandale": "URB", "KS-Overland Park": "OVP",
+    "DC-Washington": "DCW", "PA-Seven Fields": "SVF",
 }
+QGRID_MAX_COLS = 15   # wider portfolios split the question grid into several tables
 def _short(site):
     return SITE_SHORT.get(site, "".join(w[:1] for w in re.split(r"[ \-]+", str(site))[:3]).upper())
 
@@ -1624,6 +1706,23 @@ def _portfolio_qgrid(ctx, site_order):
     lut = {(r["dimension"], r["item"], r["site"]): r for _, r in ss.iterrows()}
     dims = sorted(ss["dimension"].dropna().unique(), key=lambda d: DIM_ORDER.get(d, 9))
     comp_fric = ss.groupby(["dimension", "item"])["friction"].mean()
+    n_imp = int(pd.to_numeric(ctx.scores["mean_importance"], errors="coerce").notna().sum())
+    n_tab = -(-len(site_order) // QGRID_MAX_COLS)
+    per = -(-len(site_order) // max(1, n_tab))
+    tables = "".join(_qgrid_table(ss, lut, dims, comp_fric, site_order[i:i + per])
+                     for i in range(0, len(site_order), per))
+    codes = " · ".join(f"<b>{_short(s)}</b> {_html.escape(str(s).split('-', 1)[-1])}" for s in site_order)
+    return (
+        "<section class='qgrid-sec'><h2>Question-level detail by site</h2>"
+        f"<p class='note'>One value per cell. For the {n_imp} items with an Importance rating the value is <b>Friction</b> "
+        "(0–100, higher = worse) and the cell carries the official status: ▼ Needs attention · ● On track · ▲ Exceeds "
+        "needs. For <b>Digital &amp; Tech</b> (no Importance rating) the value is <b>agreement</b> (1–5) with ◇ — it is "
+        "<b>not comparable</b> with Friction. Hover a cell (HTML) for Importance, Support, Gap and severity. Items are "
+        f"ordered by {wave_info(ctx)['bench_noun']} Friction within each dimension. Sites (alphabetical): {codes}.</p>"
+        f"{tables}</section>")
+
+
+def _qgrid_table(ss, lut, dims, comp_fric, site_order):
     heads = "".join(f"<th class='num' title='{_html.escape(str(s))}'>{_short(s)}</th>" for s in site_order)
     body = ""
     for dm in dims:
@@ -1653,15 +1752,7 @@ def _portfolio_qgrid(ctx, site_order):
                     val = f"{design.STATUS_ICON.get(stt, '')} {r['friction']:.0f}"
                 cells += f"<td class='num qc {cls}' title='{_html.escape(tip)}'>{val}</td>"
             body += f"<tr><td class='qg-q'>{_html.escape(str(it))}</td>{cells}</tr>"
-    codes = " · ".join(f"<b>{_short(s)}</b> {_html.escape(str(s).split('-', 1)[-1])}" for s in site_order)
-    return (
-        "<section class='qgrid-sec'><h2>Question-level detail by site</h2>"
-        "<p class='note'>One value per cell. For the 24 items with an Importance rating the value is <b>Friction</b> "
-        "(0–100, higher = worse) and the cell carries the official status: ▼ Needs attention · ● On track · ▲ Exceeds "
-        "needs. For <b>Digital &amp; Tech</b> (no Importance rating) the value is <b>agreement</b> (1–5) with ◇ — it is "
-        "<b>not comparable</b> with Friction. Hover a cell (HTML) for Importance, Support, Gap and severity. Items are "
-        f"ordered by company Friction within each dimension. Sites (alphabetical): {codes}.</p>"
-        f"<table class='qgrid'><thead><tr><th>Survey question</th>{heads}</tr></thead>{body}</table></section>")
+    return f"<table class='qgrid'><thead><tr><th>Survey question</th>{heads}</tr></thead>{body}</table>"
 
 
 PORTFOLIO_CSS = """
@@ -1675,6 +1766,8 @@ PORTFOLIO_CSS = """
  .demo{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
  @page qgrid{size:Letter landscape;margin:9mm}
  .qgrid-sec{page:qgrid;break-before:page}
+ table.qgrid + table.qgrid{margin-top:10px;break-before:page}
+ .lown{font-size:11px;color:var(--ink-2);font-weight:400}
  @media print{ table.qgrid{font-size:9px} table.qgrid td.qg-q{min-width:0} tr.qg-dim td{font-size:9.5px} }
 """
 
@@ -1692,15 +1785,22 @@ def build_portfolio_report(ctx, data=None):
     cx, board = dd["comp_index"], dd["board"]
     ivals = [b["index"] for b in board]
     rng = f"{min(ivals):.0f}–{max(ivals):.0f}" if ivals else "—"
+    W = wave_info(ctx)
+    r1 = W["key"] == "round1"
+    low_n = W.get("low_n", 30)
+    title = "10 PulsePoints" if r1 else f"{W['label']} PulsePoints"
+    def _lown(site):
+        n = dd.get("n_by_site", {}).get(site)
+        return (f" <span class='lown'>(small sample, n={n})</span>" if (not r1 and n is not None and n < low_n) else "")
     header = (f"<div class='hdr keep'><div class='badge'>{cx:.0f}</div><div>"
-              f"<div class='t'>Company Overall PulsePoint Experience Index: {fmt_margin(cx, dd.get('comp_margin'))} (0–100)</div>"
+              f"<div class='t'>{'Company' if r1 else esc(W['label'])} Overall PulsePoint Experience Index: {fmt_margin(cx, dd.get('comp_margin'))} (0–100)</div>"
               f"<div class='s'>Sites range {rng} · {dd['n_participants']:,} respondents · {dd['n_comments']:,} comments "
               f"from {dd['n_commenters']:,} people · {esc(pop)}</div>"
               f"<div class='s'>Comment sentiment: <span class='sent-pos'>{dd['pos']:.0f}% positive</span> · "
               f"<span class='sent-neu'>{dd['neu']:.0f}% neutral / mixed</span> · "
               f"<span class='sent-neg'>{dd['neg']:.0f}% negative</span></div></div></div>")
     lead = "".join(
-        f"<tr><td>{esc(b['site'])}</td><td class='num'><b>{fmt_margin(b['index'], b.get('margin'))}</b></td>"
+        f"<tr><td>{esc(b['site'])}{_lown(b['site'])}</td><td class='num'><b>{fmt_margin(b['index'], b.get('margin'))}</b></td>"
         f"<td class='stand'>{esc(STANDING_SHORT.get(b.get('standing'), ''))}</td>"
         f"<td class='num'>{_sent_txt(dd['sent_by_site'].get(b['site'], np.nan))}</td></tr>"
         for b in board)
@@ -1748,23 +1848,23 @@ def build_portfolio_report(ctx, data=None):
     qgrid_html = _portfolio_qgrid(ctx, [b["site"] for b in board])
     css = design.stylesheet(PORTFOLIO_CSS)
     return f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
-<title>10 PulsePoints — Portfolio Report Card</title>
+<title>{esc(title)} — Portfolio Report Card</title>
 <style>{css}</style></head><body>
-<h1>10 PulsePoints — Portfolio Report Card</h1>
-<div class="sub">Company-wide brief across the {dd['n_sites']} in-scope sites · {esc(pop)}</div>
+<h1>{esc(title)} — Portfolio Report Card</h1>
+<div class="sub">{'Company-wide brief across the ' + str(dd['n_sites']) + ' in-scope sites' if r1 else esc(W['label']) + ' brief across the ' + str(dd['n_sites']) + ' ' + esc(W['label'].lower()) + ' sites'} · {esc(pop)}</div>
 {header}
 <h2>Index Score by site</h2>
 <table><thead><tr><th>Site</th><th class='num'>Index ± 95% margin</th><th>Standing</th><th class='num'>Associate sentiment (1–5)</th></tr></thead>{lead}</table>
-<p class="note">Sites are alphabetical — no ranking. Standing: Above / Below when the company Index ({cx:.1f}) lies
-outside the site's 95% interval (resampling respondents within the site); otherwise In line. {COMPANY_DEF}</p>
+<p class="note">Sites are alphabetical — no ranking. Standing: Above / Below when the {W['bench_noun']} Index ({cx:.1f}) lies
+outside the site's 95% interval (resampling respondents within the site); otherwise In line. {company_def(ctx)}{'' if r1 else f' Sites with fewer than {low_n} responses are marked “small sample”: their margins are wide and their standings rarely move off In line.'}</p>
 {bars}
 <h2>Dimension Scores by site</h2>
 <table><thead><tr><th>Site</th>{''.join(f"<th class='num'>{esc(d)}</th>" for d in dims)}</tr></thead>{hm_rows}</table>
 <p class="note">Each cell is the site's Dimension Score (0–100), shaded from lighter (lower) to darker (higher) on one
-colour scale; (Above) / (Below) mark scores outside the company value beyond the margin of error.</p>
-<h2>Company dimensions — Importance vs. Support</h2>
+colour scale; (Above) / (Below) mark scores outside the {W['bench_noun']} value beyond the margin of error.</p>
+<h2>{'Company' if r1 else esc(W['label'])} dimensions — Importance vs. Support</h2>
 <table><thead><tr><th>Dimension</th><th class='num'>Score ± margin</th><th>Items needing attention</th><th>Worst item</th></tr></thead>{comp_rows}</table>
-<h2>Company-wide Friction and strengths</h2>
+<h2>{'Company-wide' if r1 else esc(W['label'])} Friction and strengths</h2>
 <h3>Highest-Friction items</h3>{fr_bars}
 <h3>Best-supported items</h3>{st_bars}
 <h2>Comment themes</h2>
@@ -1777,9 +1877,9 @@ dissatisfaction buckets are excluded.</p>
 <h2>Respondent profile</h2><div class="demo">{dcols}</div>
 <p class="note">{dt:,} respondents; counts under {SMALL_COUNT} print as “&lt;{SMALL_COUNT}” with the percentage blank.</p>
 {qgrid_html}
-<div class="foot"><b>Data source &amp; method.</b> PulsePoint survey export · {esc(pop)} · {dd['n_sites']} in-scope sites.
+<div class="foot"><b>Data source &amp; method.</b> PulsePoint survey export{'' if r1 else ' (' + esc(W['label']) + ')'} · {esc(pop)} · {esc(W['scope_phrase'])}.
 The Index Score is the unweighted average of the four Dimension Scores (0–100) — the same calculation as the Tableau deck.
-± is the 95% margin from resampling respondents. Friction and status per the official Tableau spec. {COMPANY_DEF}
+± is the 95% margin from resampling respondents. Friction and status per the official Tableau spec. {company_def(ctx)}{not_asked_note(ctx)}
 {tagging_accuracy_note()}</div>
 </body></html>"""
 
