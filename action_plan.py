@@ -576,31 +576,34 @@ def render_action_plan_html(plan: dict, owner: str = None) -> str:
 
 # CSS injected into the report <style> block (kept here so markup + styles live together)
 ACTION_PLAN_CSS = """
- .oap{border:1px solid #d6dcea;border-radius:10px;background:#f7f9fd;padding:16px 18px;margin:14px 0 22px}
- .oap-hd{border-bottom:1px solid #e2e7f1;padding-bottom:9px;margin-bottom:11px}
- .oap-t{font-size:17px;font-weight:800;color:#1f2d5a;letter-spacing:.01em}
- .oap-note{font-size:11.5px;color:#5b6577;margin-top:4px;line-height:1.5}
- .oap-pri{background:#fff;border:1px solid #e6e9f0;border-radius:8px;padding:11px 13px;margin:9px 0}
+ .oap{border:1px solid var(--rule);border-radius:10px;background:var(--panel);padding:16px 18px;margin:14px 0 22px}
+ .oap-hd{border-bottom:1px solid var(--rule);padding-bottom:9px;margin-bottom:11px}
+ .oap-t{font-size:17px;font-weight:800;color:var(--navy);letter-spacing:.01em}
+ .oap-note{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5}
+ .oap-pri{background:var(--bg);border:1px solid var(--rule);border-radius:8px;padding:11px 13px;margin:9px 0}
  .oap-pri-h{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
- .oap-num{background:#1f2d5a;color:#fff;font-weight:700;font-size:12px;width:22px;height:22px;border-radius:50%;
+ .oap-num{background:var(--navy);color:var(--on-navy);font-weight:700;font-size:12px;width:22px;height:22px;border-radius:50%;
    display:inline-flex;align-items:center;justify-content:center;flex:none}
- .oap-name{font-size:14.5px;font-weight:700;color:#1f2d5a}
- .oap-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:3px 8px;border-radius:20px;margin-left:auto}
- .oap-tag-local{background:#e6f0ff;color:#1c5bb8} .oap-tag-proj{background:#fff0d9;color:#a5600a}
- .oap-tag-ent{background:#efe3fb;color:#6b3fa0} .oap-tag-mon{background:#e2f4e8;color:#1f7a44}
- .oap-issue{font-size:13px;color:#26303f;margin:7px 0 4px;line-height:1.5}
- .oap-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#8a93a6;margin-right:6px}
+ .oap-name{font-size:14.5px;font-weight:700;color:var(--navy)}
+ .oap-tag{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:2px 8px;border-radius:20px;
+   margin-left:auto;background:var(--panel-2);color:var(--navy)}
+ .oap-tag-local,.oap-tag-proj,.oap-tag-ent,.oap-tag-mon{background:var(--panel-2);color:var(--navy)}
+ .oap-issue{font-size:13px;color:var(--ink);margin:7px 0 4px;line-height:1.5}
+ .oap-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-right:6px}
  .oap-look,.oap-ev{margin:5px 0}
  .oap-look ul,.oap-ev ul{margin:3px 0 3px 0;padding-left:19px}
- .oap-look li,.oap-ev li{font-size:12px;color:#3a4453;margin:2px 0;line-height:1.45}
- .oap-ev-t{font-size:9.5px;font-weight:700;text-transform:uppercase;color:#1f7a44;background:#e8f5ee;padding:1px 5px;border-radius:4px;margin-right:5px}
- .oap-line{font-size:12.5px;color:#26303f;margin:5px 0;line-height:1.5}
- .oap-sub2{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#1f2d5a;margin:14px 0 5px}
+ .oap-look li,.oap-ev li{font-size:12px;color:var(--ink-2);margin:2px 0;line-height:1.45}
+ .oap-ev-t{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--navy);background:var(--panel-2);
+   padding:0 5px;border-radius:4px;margin-right:5px}
+ .oap-line{font-size:12.5px;color:var(--ink);margin:5px 0;line-height:1.5}
+ .oap-sub2{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--navy);margin:14px 0 5px}
  ul.oap-protect,ul.oap-assume{margin:3px 0;padding-left:19px}
- ul.oap-protect li,ul.oap-assume li{font-size:12px;color:#3a4453;margin:3px 0;line-height:1.45}
- .oap-mut{color:#8a93a6;font-style:italic}
+ ul.oap-protect li,ul.oap-assume li{font-size:12px;color:var(--ink-2);margin:3px 0;line-height:1.45}
+ .oap-mut{color:var(--muted);font-style:italic}
+ .oap-flag{font-size:12px;color:var(--ink);background:var(--panel-2);border-left:3px solid var(--navy);padding:4px 8px;margin:6px 0}
  table.oap-tbl{width:100%;border-collapse:collapse;margin-top:5px;font-size:11.5px}
- table.oap-tbl th{background:#eef2f9;color:#3a4453;text-align:left;padding:5px 7px;border:1px solid #dde3ee;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em}
- table.oap-tbl td{padding:5px 7px;border:1px solid #e6e9f0;min-height:20px}
- .oap-stamp{font-size:10px;color:#9aa0ae;margin-top:11px;border-top:1px solid #e8ecf3;padding-top:7px}
+ table.oap-tbl th{background:var(--panel-2);color:var(--ink-2);text-align:left;padding:5px 7px;border:1px solid var(--rule);
+   font-size:11px;text-transform:uppercase;letter-spacing:.03em}
+ table.oap-tbl td{padding:5px 7px;border:1px solid var(--rule);min-height:20px}
+ .oap-stamp{font-size:11px;color:var(--muted);margin-top:11px;border-top:1px solid var(--rule);padding-top:7px}
 """

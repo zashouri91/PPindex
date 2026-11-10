@@ -243,7 +243,7 @@ with tab_prio:
         bar = alt.Chart(show).mark_bar().encode(
             x=alt.X("Priority:Q", title="Priority score (0–100)"),
             y=alt.Y("key:N", sort="-x", title=None),
-            color=alt.Color("neg_share:Q", scale=alt.Scale(scheme="reds"),
+            color=alt.Color("neg_share:Q", scale=alt.Scale(scheme="purples"),
                             legend=alt.Legend(title="% negative", format="%")),
             tooltip=[alt.Tooltip("key:N", title=lvl[:-1]),
                      alt.Tooltip("people:Q", title="# people"),
