@@ -672,9 +672,12 @@ with tab_report:
         oc = st.columns([3, 2, 2])
         _owner = oc[0].text_input("Primary owner (every action)", value=action_plan.default_owner(),
                                   key="oap_owner", help="The ownership model is still open per the meeting — edit freely.")
-        _incl = oc[1].checkbox("Include verbatim quotes", value=True, key="oap_incl",
+        import llm_backends as _LB
+        _text_ok = (_prov in _LB.LOCAL_PROVIDERS) or _LB.hosted_comments_allowed()
+        _incl = oc[1].checkbox("Include verbatim quotes", value=_text_ok, key="oap_incl", disabled=not _text_ok,
                                help="On = quotes ground the 'what this looks like' lines. "
-                                    "Off = aggregate-only; no comment text is sent to the model.")
+                                    "Off = aggregate-only; no comment text is sent to the model. Hosted models "
+                                    "receive comment text only with PULSEPOINT_ALLOW_HOSTED_COMMENTS=1.")
         _btn_label = "🔁 Regenerate" if _pm else "✨ Generate"
         if oc[2].button(_btn_label, type="primary", use_container_width=True,
                         disabled=(_prov is None), key="oap_gen"):

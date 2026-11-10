@@ -11,9 +11,11 @@ work-stream team. The design constraints from that review are baked in here:
                   quotes). No other location; nothing invented.
   * REPRODUCIBLE— temperature 0; generate ONCE and store the JSON per site; the
                   card renders from the stored copy, never live on every view.
-  * PRIVACY-1ST — the LLM backend is pluggable and the DEFAULT is a LOCAL Ollama
-                  model, so verbatim employee comments never leave the machine.
-                  include_verbatims=False sends aggregate-only if policy requires.
+  * PRIVACY-1ST — the LLM backend is pluggable (llm_backends.py) and the DEFAULT
+                  is a LOCAL Ollama model, so verbatim employee comments never
+                  leave the machine. A hosted provider receives comment text only
+                  with PULSEPOINT_ALLOW_HOSTED_COMMENTS=1; otherwise use
+                  include_verbatims=False (aggregate-only).
   * OWNER-CONFIG— the primary-owner label is a single variable (env-overridable
                   and editable per generation), because that org decision is open.
   * UNWEIGHTED  — only the equal/unweighted Index Score (the Tableau-matching
@@ -29,9 +31,10 @@ import json
 import os
 import re
 import time
-import urllib.request
-import urllib.error
 from datetime import datetime, timezone
+
+import llm_backends as LB
+from llm_backends import configured_provider  # re-exported for app.py
 
 from taxonomy import THEME_TO_CATEGORY, GENERIC_THEMES
 
@@ -55,42 +58,6 @@ PLANS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "ac
 
 def default_owner() -> str:
     return os.environ.get("PULSEPOINT_ACTION_OWNER", DEFAULT_OWNER)
-
-
-def _provider() -> str:
-    # Default to local Ollama — free, and keeps comments on the machine.
-    return (os.environ.get("PULSEPOINT_LLM_PROVIDER") or "ollama").strip().lower()
-
-
-def _model(provider: str) -> str:
-    m = os.environ.get("PULSEPOINT_LLM_MODEL")
-    if m:
-        return m
-    return {
-        "ollama": "llama3.1",
-        "openai": "gpt-4o",
-        "azure": os.environ.get("PULSEPOINT_AZURE_DEPLOYMENT", ""),
-        "anthropic": "claude-3-5-sonnet-latest",
-    }.get(provider, "")
-
-
-def configured_provider():
-    """Return the provider name if it is usable (keys present), else None.
-
-    Ollama needs no key (local), so it counts as configured by default; cloud
-    providers count only when their key/endpoint env vars are set. Used to gate
-    the UI so the card degrades gracefully instead of erroring."""
-    p = _provider()
-    if p == "ollama":
-        return "ollama"
-    if p == "openai" and (os.environ.get("OPENAI_API_KEY") or os.environ.get("PULSEPOINT_OPENAI_API_KEY")):
-        return "openai"
-    if p == "azure" and os.environ.get("PULSEPOINT_AZURE_ENDPOINT") and \
-            os.environ.get("PULSEPOINT_AZURE_DEPLOYMENT") and os.environ.get("PULSEPOINT_AZURE_API_KEY"):
-        return "azure"
-    if p == "anthropic" and (os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("PULSEPOINT_ANTHROPIC_API_KEY")):
-        return "anthropic"
-    return None
 
 
 # ---------------------------------------------------------------------------
@@ -404,77 +371,6 @@ def build_prompt(owner: str) -> str:
     return PROMPT_TEMPLATE.replace("{OWNER}", owner).replace("{{", "{").replace("}}", "}")
 
 
-# ---------------------------------------------------------------------------
-# LLM backends — all via stdlib urllib (no extra dependencies). temperature 0.
-# ---------------------------------------------------------------------------
-def _http_json(url: str, payload: dict, headers: dict, timeout: int = 300) -> dict:
-    body = json.dumps(payload).encode("utf-8")
-    req = urllib.request.Request(url, data=body, method="POST")
-    req.add_header("Content-Type", "application/json")
-    for k, v in headers.items():
-        req.add_header(k, v)
-    with urllib.request.urlopen(req, timeout=timeout) as resp:
-        return json.loads(resp.read().decode("utf-8"))
-
-
-def _call_ollama(system: str, user: str, model: str) -> str:
-    host = os.environ.get("PULSEPOINT_OLLAMA_HOST", "http://localhost:11434").rstrip("/")
-    out = _http_json(f"{host}/api/chat", {
-        "model": model,
-        "messages": [{"role": "system", "content": system},
-                     {"role": "user", "content": user}],
-        "stream": False,
-        "format": "json",
-        "options": {"temperature": 0},
-    }, headers={})
-    return (out.get("message") or {}).get("content", "")
-
-
-def _call_openai(system: str, user: str, model: str) -> str:
-    key = os.environ.get("OPENAI_API_KEY") or os.environ.get("PULSEPOINT_OPENAI_API_KEY")
-    base = os.environ.get("PULSEPOINT_OPENAI_BASE", "https://api.openai.com/v1").rstrip("/")
-    out = _http_json(f"{base}/chat/completions", {
-        "model": model,
-        "messages": [{"role": "system", "content": system},
-                     {"role": "user", "content": user}],
-        "temperature": 0,
-        "response_format": {"type": "json_object"},
-    }, headers={"Authorization": f"Bearer {key}"})
-    return out["choices"][0]["message"]["content"]
-
-
-def _call_azure(system: str, user: str, model: str) -> str:
-    endpoint = os.environ["PULSEPOINT_AZURE_ENDPOINT"].rstrip("/")
-    deployment = os.environ["PULSEPOINT_AZURE_DEPLOYMENT"]
-    api_version = os.environ.get("PULSEPOINT_AZURE_API_VERSION", "2024-06-01")
-    key = os.environ["PULSEPOINT_AZURE_API_KEY"]
-    url = f"{endpoint}/openai/deployments/{deployment}/chat/completions?api-version={api_version}"
-    out = _http_json(url, {
-        "messages": [{"role": "system", "content": system},
-                     {"role": "user", "content": user}],
-        "temperature": 0,
-        "response_format": {"type": "json_object"},
-    }, headers={"api-key": key})
-    return out["choices"][0]["message"]["content"]
-
-
-def _call_anthropic(system: str, user: str, model: str) -> str:
-    key = os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("PULSEPOINT_ANTHROPIC_API_KEY")
-    out = _http_json("https://api.anthropic.com/v1/messages", {
-        "model": model,
-        "max_tokens": 4096,
-        "temperature": 0,
-        "system": system,
-        "messages": [{"role": "user", "content": user}],
-    }, headers={"x-api-key": key, "anthropic-version": "2023-06-01"})
-    parts = out.get("content") or []
-    return "".join(p.get("text", "") for p in parts if p.get("type") == "text")
-
-
-_BACKENDS = {"ollama": _call_ollama, "openai": _call_openai,
-             "azure": _call_azure, "anthropic": _call_anthropic}
-
-
 def _extract_json(text: str) -> dict:
     """Robustly pull a JSON object out of a model response."""
     if not text or not text.strip():
@@ -564,7 +460,7 @@ def generate_action_plan(data: dict, owner: str = None, include_verbatims: bool 
             "comments never leave the machine — install Ollama, `ollama pull llama3.1`, then set "
             "PULSEPOINT_LLM_PROVIDER=ollama. Or configure Azure/OpenAI/Anthropic (see README).")
 
-    model = _model(provider)
+    model = LB.model_name(provider)
     if not model:
         raise RuntimeError(f"No model name set for provider '{provider}'. "
                            "Set PULSEPOINT_LLM_MODEL (or PULSEPOINT_AZURE_DEPLOYMENT for Azure).")
@@ -574,7 +470,7 @@ def generate_action_plan(data: dict, owner: str = None, include_verbatims: bool 
     user = f"<report_card>\n{json.dumps(payload, ensure_ascii=False, indent=2)}\n</report_card>"
 
     t0 = time.time()
-    raw = _BACKENDS[provider](system, user, model)
+    raw = LB.call(provider, system, user, model, sends_comment_text=bool(include_verbatims))
     plan = validate_plan(_extract_json(raw), owner)
 
     plan["_meta"] = {

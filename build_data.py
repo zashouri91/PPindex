@@ -389,6 +389,22 @@ for qcol, qlabel, qdomain in OPEN_ENDED:
         })
 
 comments = pd.DataFrame(records)
+
+# Optional model tagger — OFF unless PULSEPOINT_TAGGER=llm (see llm_tagger.py). The
+# keyword rules stay the default until the model beats them on verified gold labels.
+if os.environ.get("PULSEPOINT_TAGGER", "rules").strip().lower() == "llm":
+    import llm_tagger
+    from taxonomy import THEME_TO_CATEGORY as _T2C
+    print("[tagger] PULSEPOINT_TAGGER=llm — tagging comments with the model tagger")
+    tagged = llm_tagger.tag_comments(comments).set_index("comment_id")
+    sel = comments["comment_id"].isin(tagged.index)
+    ids = comments.loc[sel, "comment_id"]
+    comments.loc[sel, "themes"] = ids.map(tagged["themes"]).values
+    comments.loc[sel, "categories"] = ids.map(
+        lambda i: "|".join(sorted({_T2C.get(t, "Uncategorized") for t in tagged.at[i, "themes"].split("|")}))).values
+    comments.loc[sel, "n_themes"] = ids.map(lambda i: len(tagged.at[i, "themes"].split("|"))).values
+    comments.loc[sel & ~comments["is_junk"], "sentiment_label"] = ids.map(tagged["sentiment"]).values
+    comments["tagger"] = "llm"
 comments.to_csv(os.path.join(DATA, "comments.csv"), index=False)
 
 # ---------------------------------------------------------------------------
