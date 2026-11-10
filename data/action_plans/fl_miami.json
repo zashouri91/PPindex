@@ -1,7 +1,6 @@
 {
   "location": "FL-Miami",
   "indexScore": 71.7,
-  "indexTier": "Top third",
   "reviewFullReportCardRecommended": true,
   "priorities": [
     {
@@ -18,11 +17,11 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Focused / Private Work is the #1 priority category (82/100)."
+          "text": "Focused / Private Work is the #1 priority category (86/100)."
         },
         {
           "type": "Finding",
-          "text": "Noise & Distraction: 24 comments, 67% negative; focused-work friction 28/100 (56% under-supported)."
+          "text": "Noise & Distraction: 17 people (17% of respondents), 24 comments, 75% negative; focused-work friction 28/100 (56% under-supported)."
         }
       ],
       "proposedAction": "Review quiet-zone availability and etiquette in common areas before any physical change; test a designated quiet neighborhood.",
@@ -46,7 +45,7 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Temperature / Thermal: 15 comments, 80% negative — the most-negative theme at the site."
+          "text": "Temperature / Thermal: 12 people (12% of respondents), 15 comments, 80% negative — the most-negative theme at the site."
         },
         {
           "type": "Finding",
@@ -74,11 +73,11 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Connectivity is cited at 16% of comments vs. 11% company-wide."
+          "text": "Connectivity is raised by 12% of respondents vs 14% company-wide."
         },
         {
           "type": "Interpretation",
-          "text": "Connectivity issues undercut an otherwise top-tier site (Miami is #2 overall)."
+          "text": "Connectivity issues undercut an otherwise well-rated site (Index 72 ± 4, in line with the company average)."
         }
       ],
       "proposedAction": "Validate Wi-Fi coverage/quality in the reported areas and route confirmed gaps to the Technology workstream.",
@@ -111,7 +110,7 @@
         },
         {
           "type": "Finding",
-          "text": "Privacy & Confidentiality: 14 comments, 36% negative — the survey signal is stronger than the comment signal."
+          "text": "Privacy & Confidentiality: 11 people (11% of respondents), 14 comments, 43% negative — the survey signal is stronger than the comment signal."
         },
         {
           "type": "Interpretation",
@@ -141,7 +140,7 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Hardware (Monitors / Peripherals): 24 comments, 50% negative; cited in 21% of comments vs 18% company-wide."
+          "text": "Hardware (Monitors / Peripherals): 16 people (16% of respondents), 24 comments, 62% negative; raised by 16% of respondents vs 22% company-wide."
         },
         {
           "type": "Finding",
@@ -164,30 +163,30 @@
   "protectWhatIsWorking": [
     {
       "area": "Desk Availability & Reservations",
-      "evidence": "73% positive across 26 comments — reservations work well here",
+      "evidence": "33% positive and 33% negative across 6 comments from 6 people — reservations work well here",
       "note": "Maintain the current service level and monitor performance."
     },
     {
       "area": "Connectivity (WiFi / Login / Power)",
-      "evidence": "mixed: strong for many (72% positive, 18 comments) but a vocal reliability minority — protect the baseline while fixing the gaps",
+      "evidence": "mixed: 29% positive and 35% negative across 17 comments from 12 people — a reliability minority is vocal; protect the baseline while fixing the gaps",
       "note": "Maintain the current service level and monitor performance."
     },
     {
       "area": "Reception & Entry",
-      "evidence": "70% positive",
+      "evidence": "56% positive and 22% negative across 9 comments from 7 people",
       "note": "Maintain the current service level and monitor performance."
     }
   ],
   "assumptions": [
-    "Miami is a top-tier site (2 of 10); these are targeted refinements, not turnaround actions.",
+    "Miami is in line with the company average overall (Index 72 ± 4); these are targeted refinements, not turnaround actions.",
     "HVAC root cause (control vs. equipment) needs onsite validation."
   ],
   "evidenceConfidence": [
     {
       "priorityName": "Quiet space for focused work",
       "supportingDataPoints": [
-        "Focused / Private Work is the #1 priority category (82/100).",
-        "Noise & Distraction: 24 comments, 67% negative; focused-work friction 28/100 (56% under-supported)."
+        "Focused / Private Work is the #1 priority category (86/100).",
+        "Noise & Distraction: 17 people (17% of respondents), 24 comments, 75% negative; focused-work friction 28/100 (56% under-supported)."
       ],
       "needsLocalValidation": [
         "Onsite validation of the specific condition before any capital step."
@@ -196,7 +195,7 @@
     {
       "priorityName": "Thermal comfort (temperature)",
       "supportingDataPoints": [
-        "Temperature / Thermal: 15 comments, 80% negative — the most-negative theme at the site.",
+        "Temperature / Thermal: 12 people (12% of respondents), 15 comments, 80% negative — the most-negative theme at the site.",
         "Thermal comfort friction is 21/100 (47% under-supported)."
       ],
       "needsLocalValidation": [
@@ -206,7 +205,7 @@
     {
       "priorityName": "Network connectivity reliability",
       "supportingDataPoints": [
-        "Connectivity is cited at 16% of comments vs. 11% company-wide."
+        "Connectivity is raised by 12% of respondents vs 14% company-wide."
       ],
       "needsLocalValidation": [
         "Onsite validation of the specific condition before any capital step."
@@ -217,7 +216,7 @@
       "supportingDataPoints": [
         "Availability of spaces that support discretion: Under Supported — friction 19/100 (43% under-supported).",
         "Tasks requiring discretion: Under Supported — friction 19/100 (37% under-supported).",
-        "Privacy & Confidentiality: 14 comments, 36% negative — the survey signal is stronger than the comment signal."
+        "Privacy & Confidentiality: 11 people (11% of respondents), 14 comments, 43% negative — the survey signal is stronger than the comment signal."
       ],
       "needsLocalValidation": [
         "How often a private room is unavailable when needed for a confidential conversation (comment volume is small; the survey carries this signal)."
@@ -226,7 +225,7 @@
     {
       "priorityName": "Dual monitors in offices, focus rooms and single-screen desks",
       "supportingDataPoints": [
-        "Hardware (Monitors / Peripherals): 24 comments, 50% negative; cited in 21% of comments vs 18% company-wide.",
+        "Hardware (Monitors / Peripherals): 16 people (16% of respondents), 24 comments, 62% negative; raised by 16% of respondents vs 22% company-wide.",
         "Workplace-provided hardware agreement: 4.04 vs 3.80 company average (Strong)."
       ],
       "needsLocalValidation": [
@@ -285,6 +284,13 @@
     "prompt_version": "v3",
     "generated_by": "Claude Opus (Cowork session, batch)",
     "priorities": 5,
-    "revision": "Expanded to top 5 (P1–P3 unchanged; P4–P5 added from site evidence)"
-  }
+    "revision": "Expanded to top 5 (P1–P3 unchanged; P4–P5 added from site evidence)",
+    "evidence_refreshed_at": "2026-11-10",
+    "evidence_refresh_note": "Numbers in evidence, data points and protect lines refreshed to the November 2026 corrected data (people-based counts, true positive shares, standing instead of rank). Priorities, order, quotes and actions unchanged; not regenerated.",
+    "evidence_flags": [
+      "Priority 3 (Network connectivity reliability): connectivity comments are 35% negative (17 comments from 12 people) and the protect list also calls connectivity a strength for many; the case for a site-wide reliability problem is thin — confirm the specific floors or spaces before acting.",
+      "Protect item 'Desk Availability & Reservations': the true positive share is 33% (33% negative) — it no longer clears the What's-working bar"
+    ]
+  },
+  "indexStanding": "In line with the company average"
 }

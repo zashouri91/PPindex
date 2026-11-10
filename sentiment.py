@@ -126,7 +126,8 @@ INTENSIFIERS = {"very":1.5,"extremely":1.7,"really":1.35,"so":1.25,"too":1.3,
 DIMINISHERS = {"slightly":0.6,"somewhat":0.7,"a little":0.6,"kind of":0.7,
                "kinda":0.7,"sort of":0.7,"barely":0.6,"a bit":0.65,"mostly":0.85}
 
-# question-framing prior (weak nudge, not an override)
+# question-framing prior (weak nudge, not an override), keyed by the open-ended
+# question's short LABEL as defined in build_data.OPEN_ENDED (not its domain)
 QUESTION_PRIOR = {
     "Physical Limitations":       -0.12,  # "what most LIMITS your ability"
     "Work Types Not Supported":   -0.06,  # asks for gaps
@@ -188,8 +189,11 @@ def _lexicon_signal(text):
     return pos_w, neg_w
 
 
-def score_sentiment(text, question_domain=None):
-    """Return (score in [-1,1], label). label in Positive/Negative/Neutral / Mixed."""
+def score_sentiment(text, question_label=None):
+    """Return (score in [-1,1], label). label in Positive/Negative/Neutral / Mixed.
+
+    question_label is the open-ended question's short label (a QUESTION_PRIOR key,
+    e.g. "Physical Limitations"); unknown or missing labels get no prior."""
     if text is None or not str(text).strip():
         return 0.0, "Neutral / Mixed"
     txt = str(text)
@@ -197,7 +201,7 @@ def score_sentiment(text, question_domain=None):
     pos_w, neg_w = _lexicon_signal(txt)
     lex = (pos_w - neg_w) / (pos_w + neg_w + 1.5)             # smoothed, [-1,1]
 
-    prior = QUESTION_PRIOR.get(question_domain, 0.0)
+    prior = QUESTION_PRIOR.get(question_label, 0.0)
     combined = 0.45 * vader + 0.47 * lex + prior
     combined = max(-1.0, min(1.0, combined))
 

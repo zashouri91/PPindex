@@ -1,63 +1,82 @@
 [
   {
-    "size": 189,
+    "size": 268,
     "keywords": [
-      "calls",
-      "working",
-      "time",
+      "pulsepoint",
+      "technology",
+      "need",
       "rooms",
-      "meetings",
-      "options",
-      "spaces",
-      "experience"
+      "working",
+      "support",
+      "issues",
+      "nice"
     ],
     "samples": [
       "some of 2 may be 'not applicable'",
-      "More opportunities to meet with our executives. More networking.",
-      "More training Pharmacy Technician",
-      "Sometimes it is very load"
+      "Sometimes it is very load",
+      "same as my last statement",
+      "More capsules, please!"
     ]
   },
   {
-    "size": 56,
+    "size": 85,
     "keywords": [
       "office",
-      "supplies",
+      "team",
+      "home",
+      "working",
       "office supplies",
-      "able",
-      "time",
-      "going office",
-      "issues",
-      "need"
+      "supplies",
+      "team members",
+      "members"
     ],
     "samples": [
       "None. This office is very, very well run.",
-      "Office floor 10 does not have office supplies",
-      "Everything is slower at the office than at home.",
-      "Office supplies have become scarce"
+      "My team is not there at the same time or for the same length. So when I am in office i dont see collobration. It is being in office alone.",
+      "Office etiquette lessons as Not to Disturb other Staff while working in the office.",
+      "Office floor 10 does not have office supplies"
     ]
   },
   {
-    "size": 54,
+    "size": 74,
     "keywords": [
       "work",
       "home",
       "office",
-      "working",
-      "working home",
+      "feel",
+      "building",
       "station",
-      "time",
-      "productive"
+      "pulsepoint",
+      "states"
     ],
     "samples": [
-      "Priorize the work, not a policy that is not adherred to consistently accross the company.",
       "There is none for my work",
-      "The microsoft copilot license has changed my life and revolutionized my productivity and the way I work.",
-      "It is LONELY - no one I work with is in the same office. NO ONE."
+      "Although I would rather work 100% from home, I have to say the work that has been put into the building and the transition from home to office work has not been bad.",
+      "There is nothing benefiting me or my work by coming into the office with the amount of work I have to complete. Commuting into the office is only costing me more time, money, and less work/life balance.",
+      "I will be honest I work much better at home."
     ]
   },
   {
-    "size": 39,
+    "size": 74,
+    "keywords": [
+      "time",
+      "people",
+      "calls",
+      "desk",
+      "phone",
+      "need",
+      "day",
+      "meetings"
+    ],
+    "samples": [
+      "Desk layouts make it difficult when a lot of people are on calls at the same time",
+      "People need headphones for calls",
+      "No, not at this time",
+      "In my job I have a lot of conference calls. Some calls I don't speak much, while other calls I talk a lot. But I never know when I will need to demo or explain something. Most of the time the pods are occupied, so I take the calls at my desk. I don't worry about this too much since it is my job. However, there are people that get upset when you do talk. (They don't remember the old days when being on a conference call at your desk was normal.)"
+    ]
+  },
+  {
+    "size": 40,
     "keywords": [
       "think",
       "think time",
@@ -66,7 +85,7 @@
       "right",
       "currently",
       "limitations",
-      "help"
+      "space"
     ],
     "samples": [
       "I can't think of anything.",
@@ -76,64 +95,26 @@
     ]
   },
   {
-    "size": 39,
+    "size": 37,
     "keywords": [
-      "pulsepoint",
-      "location",
-      "support",
-      "pulsepoint location",
-      "team",
-      "experience",
-      "work",
-      "overall"
-    ],
-    "samples": [
-      "The PulsePoint functions well and is maintained well.",
-      "PulsePoint is easy to use, however to perform my daily work tasks, it is not necessary for me to go to a PulsePoint location. Duties/meetings can be done virtually, and if not at a PulsePoint, the risk of disturbing other adjacent cubes is less likely.",
-      "Truly appreciative of the thought leadership and sustained support of the Miami PulsePoint location.",
-      "I think the PulsePoint space is very accomodating- well designed and planned."
-    ]
-  },
-  {
-    "size": 27,
-    "keywords": [
+      "point",
       "pulse point",
       "pulse",
-      "point",
       "work",
-      "come",
-      "work pulse",
       "team",
-      "come office"
+      "associates",
+      "working",
+      "collaboration"
     ],
     "samples": [
-      "No. Pulse point offers no benefit to my work.",
       "associates at the pulse point do not flush toilets",
       "I find I am less productive at a pulse point.",
-      "There is nothing that i do in the pulse point that i can't do remotely."
+      "There is nothing that i do in the pulse point that i can't do remotely.",
+      "No. Pulse point offers no benefit to my work."
     ]
   },
   {
-    "size": 24,
-    "keywords": [
-      "space",
-      "needed",
-      "availability",
-      "open",
-      "work space",
-      "open space",
-      "nice",
-      "meeting"
-    ],
-    "samples": [
-      "Dedicated work space needed",
-      "No. It's a very nice space.",
-      "- Reserving a workspace has never worked, or let me clarify, you can book a space easily, but when you arrive more than likely someone is sitting in that space so then you just do the same and hop to another space because you need to get to work and do not want to confront the person. Or the opposite also happens all spaces are booked and noone is there.",
-      "Space that my meeting wont bother others"
-    ]
-  },
-  {
-    "size": 19,
+    "size": 22,
     "keywords": [
       "bar",
       "tech bar",
@@ -146,9 +127,28 @@
     ],
     "samples": [
       "- Tech bar is nice to have",
-      "A tech bar will be helpful",
       "Tech Bar staff are very helpful",
-      "Having a tech bar would be helpful"
+      "A tech bar will be helpful",
+      "No, but Ricky downstairs at the Tech Bar is amazing!"
+    ]
+  },
+  {
+    "size": 9,
+    "keywords": [
+      "works",
+      "just",
+      "print",
+      "printers",
+      "laptop",
+      "computer",
+      "wellpoint federal",
+      "federal"
+    ],
+    "samples": [
+      "Everything works as it should.",
+      "Everything works well enough.",
+      "Everything works okay, but nothing works extraordinarily.",
+      "Just would be nice to have a desk that i come to and it just works"
     ]
   }
 ]

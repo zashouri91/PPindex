@@ -11,9 +11,11 @@ work-stream team. The design constraints from that review are baked in here:
                   quotes). No other location; nothing invented.
   * REPRODUCIBLE— temperature 0; generate ONCE and store the JSON per site; the
                   card renders from the stored copy, never live on every view.
-  * PRIVACY-1ST — the LLM backend is pluggable and the DEFAULT is a LOCAL Ollama
-                  model, so verbatim employee comments never leave the machine.
-                  include_verbatims=False sends aggregate-only if policy requires.
+  * PRIVACY-1ST — the LLM backend is pluggable (llm_backends.py) and the DEFAULT
+                  is a LOCAL Ollama model, so verbatim employee comments never
+                  leave the machine. A hosted provider receives comment text only
+                  with PULSEPOINT_ALLOW_HOSTED_COMMENTS=1; otherwise use
+                  include_verbatims=False (aggregate-only).
   * OWNER-CONFIG— the primary-owner label is a single variable (env-overridable
                   and editable per generation), because that org decision is open.
   * UNWEIGHTED  — only the equal/unweighted Index Score (the Tableau-matching
@@ -29,24 +31,20 @@ import json
 import os
 import re
 import time
-import urllib.request
-import urllib.error
 from datetime import datetime, timezone
 
-try:
-    from taxonomy import THEME_TO_CATEGORY
-except Exception:  # taxonomy always ships alongside; fall back to empty map
-    THEME_TO_CATEGORY = {}
+import llm_backends as LB
+from llm_backends import configured_provider  # re-exported for app.py
+
+from taxonomy import THEME_TO_CATEGORY, GENERIC_THEMES
 
 # ---------------------------------------------------------------------------
 # Config (all read at call time from the environment, never at import)
 # ---------------------------------------------------------------------------
 DEFAULT_OWNER = "Regional Director + Local Team"
 
-# Themes that are generic keyword catch-alls with no specific, actionable
-# content. Excluded from every input the model sees (recommendation #4 /
-# Ala's "Positive / Appreciation is just a generic AI header" point).
-EXCLUDED_THEMES = {"Positive / Appreciation", "Overall Dissatisfaction"}
+# Generic keyword catch-alls (taxonomy.GENERIC_THEMES) are excluded from every
+# input the model sees.
 
 ACTION_TYPES = ["LOCAL ACTION", "LOCAL PROJECT", "WORKSTREAM / ENTERPRISE", "MONITOR / PROTECT"]
 
@@ -60,42 +58,6 @@ PLANS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "ac
 
 def default_owner() -> str:
     return os.environ.get("PULSEPOINT_ACTION_OWNER", DEFAULT_OWNER)
-
-
-def _provider() -> str:
-    # Default to local Ollama — free, and keeps comments on the machine.
-    return (os.environ.get("PULSEPOINT_LLM_PROVIDER") or "ollama").strip().lower()
-
-
-def _model(provider: str) -> str:
-    m = os.environ.get("PULSEPOINT_LLM_MODEL")
-    if m:
-        return m
-    return {
-        "ollama": "llama3.1",
-        "openai": "gpt-4o",
-        "azure": os.environ.get("PULSEPOINT_AZURE_DEPLOYMENT", ""),
-        "anthropic": "claude-3-5-sonnet-latest",
-    }.get(provider, "")
-
-
-def configured_provider():
-    """Return the provider name if it is usable (keys present), else None.
-
-    Ollama needs no key (local), so it counts as configured by default; cloud
-    providers count only when their key/endpoint env vars are set. Used to gate
-    the UI so the card degrades gracefully instead of erroring."""
-    p = _provider()
-    if p == "ollama":
-        return "ollama"
-    if p == "openai" and (os.environ.get("OPENAI_API_KEY") or os.environ.get("PULSEPOINT_OPENAI_API_KEY")):
-        return "openai"
-    if p == "azure" and os.environ.get("PULSEPOINT_AZURE_ENDPOINT") and \
-            os.environ.get("PULSEPOINT_AZURE_DEPLOYMENT") and os.environ.get("PULSEPOINT_AZURE_API_KEY"):
-        return "azure"
-    if p == "anthropic" and (os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("PULSEPOINT_ANTHROPIC_API_KEY")):
-        return "anthropic"
-    return None
 
 
 # ---------------------------------------------------------------------------
@@ -121,7 +83,13 @@ def load_plan(site: str):
         return None
 
 
-def save_plan(site: str, plan: dict) -> str:
+def save_plan(site: str, plan: dict, allow_unvalidated: bool = False) -> str:
+    """Store a plan. A NEWLY generated plan must have passed the grounding validator
+    (_meta.validation.ok); allow_unvalidated is only for maintenance edits of stored plans."""
+    v = (plan.get("_meta") or {}).get("validation")
+    if not allow_unvalidated and not (isinstance(v, dict) and v.get("ok")):
+        raise ValueError("Plan not saved: it has not passed the grounding check "
+                         f"({len((v or {}).get('failures', []))} failure(s)).")
     os.makedirs(PLANS_DIR, exist_ok=True)
     p = plan_path(site)
     with open(p, "w", encoding="utf-8") as fh:
@@ -151,6 +119,11 @@ def _round(x, n=1):
         return None
 
 
+def _standing(label):
+    """'Above' / 'In line with' / 'Below' -> '... the company average' (None if missing)."""
+    return f"{label} the company average" if label else None
+
+
 def _cat(theme: str) -> str:
     return THEME_TO_CATEGORY.get(theme, "")
 
@@ -169,15 +142,15 @@ def build_report_card_payload(data: dict, include_verbatims: bool = True) -> dic
             out.append({k: r[v] for k, v in cols.items() if v in r})
         return out
 
-    # Dimension scores (0-100) + company average + rank/tier
+    # Dimension scores (0-100) + company average + 95% margin + standing (no rank)
     dimension_scores = []
     for a in (card.get("areas") or []):
         dimension_scores.append({
             "dimension": a.get("dim"),
             "score_0_100": _round(a.get("score")),
+            "margin_95": _round(a.get("margin")),
             "company_avg": _round(a.get("org")),
-            "rank_of_sites": a.get("rank"),
-            "tier": a.get("tier"),
+            "standing_vs_company": _standing(a.get("standing")),
         })
 
     # Importance vs Support, per dimension (1-5, Gap, status)
@@ -203,21 +176,40 @@ def build_report_card_payload(data: dict, include_verbatims: bool = True) -> dic
     if det is not None and len(det) and {"mean_importance", "friction"} <= set(det.columns):
         under = det[det["mean_importance"].notna()].sort_values("friction", ascending=False).head(8)
     if under is not None and len(under):
+        import reports as _R
         for _, r in under.iterrows():
+            sv = _R.item_severity(r) if "ryg" in r.index else {}
             highest_friction.append({
                 "item": r.get("item"),
                 "dimension": r.get("dimension"),
                 "friction_0_100": _round(r.get("friction"), 0),
                 "pct_under_supported": _round(r.get("friction_pct"), 0),
+                "status": _R.item_status(r) if "ryg" in r.index else None,
+                "severity": sv.get("severity"),
+                "borderline": sv.get("borderline"),
+                "on_track_low_support": sv.get("low_support"),
             })
 
-    # Computed priority ranking (by comment CATEGORY) — the anchor.
+    # Survey items the priorities start from (v3.2): the five highest-Friction items with
+    # their linked comment themes counted in people.
+    top_survey_items = [{
+        "item": t["item"], "dimension": t["dimension"], "friction_0_100": _round(t["friction"], 0),
+        "pct_under_supported": _round(t["friction_pct"], 0), "status": t["status"], "severity": t["severity"],
+        "borderline": t["borderline"],
+        "linked_comment_themes": [{"theme": l["theme"], "people": l["people"],
+                                   "pct_of_respondents": _round(l["pct_resp"], 0),
+                                   "pct_negative": _round(l["neg"] * 100, 0)} for l in t["themes"]],
+    } for t in (data.get("top_items") or [])]
+
+    # Computed priority ranking (by comment CATEGORY) — supporting evidence.
     priority_ranking = []
     P = data.get("P")
     if P is not None and len(P):
         for _, r in P.iterrows():
             priority_ranking.append({
                 "category": r.get("key"),
+                "people": int(r.get("people")) if r.get("people") == r.get("people") else None,
+                "pct_of_respondents": _round(r.get("pct_resp"), 0),
                 "comments": int(r.get("volume")) if r.get("volume") == r.get("volume") else None,
                 "pct_negative": _round((r.get("neg_share") or 0) * 100, 0),
                 "friction_0_100": _round(r.get("friction"), 0),
@@ -231,49 +223,63 @@ def build_report_card_payload(data: dict, include_verbatims: bool = True) -> dic
         if site_v is None or site_v != site_v:  # missing / NaN
             continue
         band = ("Strong" if site_v >= 4.0 else "Moderate" if site_v >= 3.5 else "Needs attention")
+        w = next((x for x in (data.get("tech_watch") or []) if x["item"] == item), None)
         tech_items.append({"item": item, "agreement_1_5": _round(site_v, 2),
-                           "company_avg_1_5": _round(org_v, 2), "band": band})
+                           "company_avg_1_5": _round(org_v, 2), "band": band,
+                           "on_technology_watch": w is not None,
+                           "standing_vs_company": _standing(w.get("standing")) if w else None})
 
     # Candidate priority THEMES (theme-level, high-negative), generic buckets dropped.
     # Prefer the longer list (up to 10) so the model has enough distinct candidates for
     # five priorities; fall back to the card's 5-item list.
     candidate_themes = []
-    for t, cnt, neg in (data.get("fix_candidates") or data.get("fixes") or []):
-        if t in EXCLUDED_THEMES:
+    for c in (data.get("fix_candidates") or data.get("fixes") or []):
+        t = c["theme"]
+        if t in GENERIC_THEMES:
             continue
         candidate_themes.append({
-            "theme": t, "category": _cat(t),
-            "comments": int(cnt), "pct_negative": _round(neg * 100, 0),
+            "theme": t, "category": _cat(t), "people": c["people"],
+            "pct_of_respondents": _round(c["pct_resp"], 0),
+            "comments": c["comments"], "pct_negative": _round(c["neg"] * 100, 0),
         })
 
-    # Strengths to protect (low-negative themes), generic buckets dropped.
+    # Strengths to protect: themes with a true positive majority (pct_positive is the
+    # share of comments labelled Positive, not 100 - % negative), generic buckets
+    # dropped; topped up with best-supported survey items, labelled as ratings.
     strengths = []
-    for t, cnt, pos in (data.get("strengths") or []):
-        if t in EXCLUDED_THEMES:
+    for s in (data.get("strengths") or []):
+        t = s["theme"]
+        if t in GENERIC_THEMES:
             continue
         strengths.append({
-            "theme": t, "category": _cat(t),
-            "comments": int(cnt), "pct_positive": _round(pos * 100, 0),
+            "theme": t, "category": _cat(t), "source": "comments", "people": s["people"],
+            "pct_of_respondents": _round(s["pct_resp"], 0),
+            "comments": s["comments"], "pct_positive": _round(s["pos"] * 100, 0),
+        })
+    for si in (data.get("strength_items") or []):
+        strengths.append({
+            "item": si.get("item"), "dimension": si.get("dimension"), "source": "survey rating",
+            "support_0_100": _round(si.get("support_100"), 0),
         })
 
     # Benchmark vs company (theme rate)
     bench = []
     for t, site_rate, org_rate in (data.get("bench") or []):
-        if t in EXCLUDED_THEMES:
+        if t in GENERIC_THEMES:
             continue
         bench.append({
-            "theme": t, "site_rate_pct": _round(site_rate * 100, 0),
-            "company_rate_pct": _round(org_rate * 100, 0),
+            "theme": t, "site_pct_of_respondents": _round(site_rate * 100, 0),
+            "company_pct_of_respondents": _round(org_rate * 100, 0),
         })
 
     payload = {
         "location": data.get("site"),
-        "respondents_at_site": data.get("all_participants") or data.get("participation"),
+        "respondents_at_site": data.get("participation"),
+        "respondents_all_10_sites": data.get("all_participants"),
         "comments_analyzed": data.get("n"),
         "overall_index_score_0_100_unweighted": _round(card.get("overall")),
-        "overall_index_tier": card.get("tier"),
-        "overall_index_rank": (f"{card.get('rank')} of {card.get('n_sites')}"
-                               if card.get("rank") else None),
+        "overall_index_margin_95": _round(card.get("margin")),
+        "overall_index_standing": _standing(card.get("standing")),
         "company_index_score_0_100": _round(card.get("org_overall")),
         "overall_comment_sentiment": {
             "pct_negative": _round(data.get("neg"), 0),
@@ -281,6 +287,7 @@ def build_report_card_payload(data: dict, include_verbatims: bool = True) -> dic
         },
         "dimension_scores": dimension_scores,
         "importance_vs_support": imp_vs_sup,
+        "top_survey_items": top_survey_items,
         "highest_friction_items": highest_friction,
         "digital_tech_agreement_items": tech_items,
         "computed_priority_ranking_by_category": priority_ranking,
@@ -290,9 +297,11 @@ def build_report_card_payload(data: dict, include_verbatims: bool = True) -> dic
         "reference": {
             "action_types": ACTION_TYPES,
             "support_teams": SUPPORT_TEAMS,
-            "note": ("Index & dimension scores are 0-100. Gap = Support - Importance (1-5). "
-                     "Friction is 0-100 (higher = worse). The priority ranking is by comment "
-                     "category; define priorities at the theme level within the top categories. "
+            "note": ("Index & dimension scores are 0-100 with a 95% margin; standing vs the company is Above / "
+                     "In line with / Below (no ranks). Gap = Support - Importance (1-5). Friction is 0-100 "
+                     "(higher = worse); severity = slight / moderate / severe; borderline = the gap's 95% "
+                     "interval includes 0. Priorities start from top_survey_items; comment themes (counted in "
+                     "people) are supporting evidence. "
                      "Digital & Tech items are agreement-only (1-5): cite the score, band and "
                      "company average, never a friction or under-supported figure."),
         },
@@ -304,7 +313,7 @@ def build_report_card_payload(data: dict, include_verbatims: bool = True) -> dic
         reps, seen = [], set()
         for q in list(data.get("quotes") or []) + list(data.get("cand_quotes") or []):
             txt = q.get("text")
-            if q.get("theme") in EXCLUDED_THEMES or not txt or txt in seen:
+            if q.get("theme") in GENERIC_THEMES or not txt or txt in seen:
                 continue
             seen.add(txt)
             reps.append({"theme": q.get("theme"), "sentiment": q.get("sentiment"),
@@ -312,7 +321,7 @@ def build_report_card_payload(data: dict, include_verbatims: bool = True) -> dic
         payload["representative_comments"] = reps
         payload["positive_comments"] = [
             {"theme": q.get("theme"), "role": q.get("role"), "text": q.get("text")}
-            for q in (data.get("pos_quotes") or []) if q.get("theme") not in EXCLUDED_THEMES
+            for q in (data.get("pos_quotes") or []) if q.get("theme") not in GENERIC_THEMES
         ]
     else:
         payload["representative_comments"] = "OMITTED — aggregate-only mode (no verbatim text sent)"
@@ -333,22 +342,26 @@ PURPOSE
 This is NOT a re-summary of the survey. Translate the findings into a top 5 of clear, location-specific recommendations telling the owner what is happening, what to prioritize, what to do, what evidence supports it, who should support, and what they must do next.
 
 DATA VOCABULARY (use these exact structures; do not invent others)
+- Standing: every score carries a 95% margin and a standing vs the company average (Above / In line with / Below). Never rank sites. Do not use "rank", "N of 10", "top/bottom", or "lowest/highest of all sites" wording; you may say a score is above or below the company average ONLY when its standing says Above or Below.
 - Overall PulsePoint Experience Index Score (0-100): the unweighted average of the four Dimension Scores. This is the only Index figure you may cite. Never reference any "weighted" variant.
 - Four Dimension Scores (0-100): Work Activity, Physical Feature, Service Level, Digital & Tech. When you cite a "score", it is a Dimension Score, not a category.
+- Each score carries a 95% margin and a standing vs the company average (Above / In line with / Below), decided by the margin of error. Never rank sites, never say "lowest"/"highest" of all sites or "N of 10", and never call a site above or below the company unless its standing says so.
 - Importance vs. Support items: each has Support and Importance (1-5), a Gap (Support - Importance), and a status. Under-supported % and Friction (0-100) come from here.
 - Digital & Tech items are agreement-only (1-5, no Importance): cite the agreement score, its band (Strong >= 4.0, Moderate 3.5-3.9, Needs attention < 3.5) and the company average. Never quote a Gap, Friction or under-supported % for them.
 - 7 Comment Categories (groupings) and 29 Themes (the atomic unit). Themes are the level at which you define priorities.
-- Computed Priority ranking: the card ranks comment CATEGORIES by 0.40*volume + 0.35*%negative + 0.25*friction. Use this ranking to identify the most material areas; then define priorities at the THEME level within/across the top categories.
+- Top survey items (top_survey_items): the five highest-Friction survey items at the site, each with status, severity and the comment themes linked to it (counted in people). PRIORITIES START FROM THESE ITEMS; comment themes are supporting evidence. A "borderline" item's gap may be zero — say so.
+- Computed Priority ranking (supporting): the card ranks comment CATEGORIES by 0.40*people raising it + 0.35*%negative + 0.25*friction. Prevalence is counted in PEOPLE (one person can write up to five comments); comment counts are secondary. Use this ranking to identify the most material areas; then define priorities at the THEME level within/across the top categories.
 - Representative quotes: the only source for concrete examples.
 - Ignore the themes "Positive / Appreciation" and "Overall Dissatisfaction" — they are generic and non-actionable (they are already excluded from the data you were given).
 
 EXPECTATIONS
-1. Start from the computed Priority ranking and the candidate priority themes provided; do not re-rank from scratch. Weigh frequency + severity + impact + quantitative + qualitative evidence together. Volume is already 40% of the ranking, so do not lean on volume alone.
+1. Start from the top survey items (highest Friction first), then use the linked comment themes, the candidate themes and the category ranking as supporting evidence; do not re-rank from scratch. Weigh frequency + severity + impact + quantitative + qualitative evidence together. People raising an issue are already 40% of the ranking, so do not lean on volume alone.
 2. Preserve THEME integrity: do not merge two distinct themes into one priority just because they sound related or share a parent category (e.g. Furniture & Ergonomics vs. Temperature/Thermal are separate even though both sit under Physical Environment). Combine only if this location's own evidence clearly shows one underlying problem. Do not create artificial groupings to fit the five priorities; list extra material issues as secondary/monitor items.
 3. Identify the actual workplace problem, not the theme label. Say what is happening, who/what work is affected, and how it shows up day-to-day.
 4. Recommend the top 5 priorities: five distinct, material issues with no overlap between them. Return fewer only if this location's evidence does not support five distinct issues, and say why under assumptions; never pad with weak, duplicate or overlapping items.
 5. For each priority give: a specific name; the source theme(s); the issue (<= 2 sentences); what it looks like here (<= 3 items, drawn ONLY from the representative quotes provided — never extrapolate; if the quotes lack detail, say local validation is required); evidence (real fields only, each tagged Finding/Interpretation/Recommendation); a specific proposed action (no vague verbs); the proposed team (Primary is always the owner, plus appropriate Support); a direct "site team must do" instruction in action verbs; and one action type.
 6. Do not jump straight to a capital solution: prefer utilization / space allocation / booking rules / operations / behavior / technology / maintenance / communication first, and recommend a validation step where the root cause is not established.
+6b. Every number you write in an evidence line must appear in the report card data (or in a supplied quote). Every "what it looks like" line must be copied from a supplied quote (you may shorten with "..."), or say that local validation is required. Lines that fail this check cause the whole plan to be rejected.
 7. Action types (choose one): LOCAL ACTION, LOCAL PROJECT, WORKSTREAM / ENTERPRISE, MONITOR / PROTECT. Do NOT use "Quick Win".
 8. Protect What Is Working: 2-5 real, specific strengths (from strengths_to_protect); for each say "Maintain the current service level and monitor performance." Never build this from the excluded generic buckets.
 
@@ -359,7 +372,7 @@ OUTPUT — return ONE valid JSON object and nothing else, matching exactly this 
 {{
   "location": "string",
   "indexScore": number,
-  "indexTier": "string",
+  "indexStanding": "Above|In line with|Below the company average",
   "reviewFullReportCardRecommended": true,
   "priorities": [
     {{
@@ -381,84 +394,18 @@ OUTPUT — return ONE valid JSON object and nothing else, matching exactly this 
   "evidenceConfidence": [{{"priorityName": "string", "supportingDataPoints": ["string"], "needsLocalValidation": ["string"]}}]
 }}
 
-Rules for the JSON: 5 priorities (fewer only when the evidence does not support five distinct issues), ordered by the computed ranking; one operationalResponseTable row per priority with the decision fields (actionType, finalOwner, cost, targetOrEscalation) left blank; reviewFullReportCardRecommended always true; evidenceConfidence replaces any 1-10 score. Output JSON only — no prose, no code fences."""
+Rules for the JSON: 5 priorities (fewer only when the evidence does not support five distinct issues), ordered from the highest-Friction survey item down; one operationalResponseTable row per priority with the decision fields (actionType, finalOwner, cost, targetOrEscalation) left blank; reviewFullReportCardRecommended always true; evidenceConfidence replaces any 1-10 score. Output JSON only — no prose, no code fences."""
+
+
+PROMPT_VERSION = "v3.2 (top 5; survey-item anchored; standing, no rank)"
+PROMPT_SIGNOFF_NOTE = ("Prompt v3.2 is a DRAFT pending work-stream sign-off — do not regenerate stored "
+                       "plans with it until the work stream has approved it.")
 
 
 def build_prompt(owner: str) -> str:
     # The template escapes literal JSON braces as {{ }} (str.format style); since the
     # owner is filled with replace(), un-escape them too so the model sees valid JSON.
     return PROMPT_TEMPLATE.replace("{OWNER}", owner).replace("{{", "{").replace("}}", "}")
-
-
-# ---------------------------------------------------------------------------
-# LLM backends — all via stdlib urllib (no extra dependencies). temperature 0.
-# ---------------------------------------------------------------------------
-def _http_json(url: str, payload: dict, headers: dict, timeout: int = 300) -> dict:
-    body = json.dumps(payload).encode("utf-8")
-    req = urllib.request.Request(url, data=body, method="POST")
-    req.add_header("Content-Type", "application/json")
-    for k, v in headers.items():
-        req.add_header(k, v)
-    with urllib.request.urlopen(req, timeout=timeout) as resp:
-        return json.loads(resp.read().decode("utf-8"))
-
-
-def _call_ollama(system: str, user: str, model: str) -> str:
-    host = os.environ.get("PULSEPOINT_OLLAMA_HOST", "http://localhost:11434").rstrip("/")
-    out = _http_json(f"{host}/api/chat", {
-        "model": model,
-        "messages": [{"role": "system", "content": system},
-                     {"role": "user", "content": user}],
-        "stream": False,
-        "format": "json",
-        "options": {"temperature": 0},
-    }, headers={})
-    return (out.get("message") or {}).get("content", "")
-
-
-def _call_openai(system: str, user: str, model: str) -> str:
-    key = os.environ.get("OPENAI_API_KEY") or os.environ.get("PULSEPOINT_OPENAI_API_KEY")
-    base = os.environ.get("PULSEPOINT_OPENAI_BASE", "https://api.openai.com/v1").rstrip("/")
-    out = _http_json(f"{base}/chat/completions", {
-        "model": model,
-        "messages": [{"role": "system", "content": system},
-                     {"role": "user", "content": user}],
-        "temperature": 0,
-        "response_format": {"type": "json_object"},
-    }, headers={"Authorization": f"Bearer {key}"})
-    return out["choices"][0]["message"]["content"]
-
-
-def _call_azure(system: str, user: str, model: str) -> str:
-    endpoint = os.environ["PULSEPOINT_AZURE_ENDPOINT"].rstrip("/")
-    deployment = os.environ["PULSEPOINT_AZURE_DEPLOYMENT"]
-    api_version = os.environ.get("PULSEPOINT_AZURE_API_VERSION", "2024-06-01")
-    key = os.environ["PULSEPOINT_AZURE_API_KEY"]
-    url = f"{endpoint}/openai/deployments/{deployment}/chat/completions?api-version={api_version}"
-    out = _http_json(url, {
-        "messages": [{"role": "system", "content": system},
-                     {"role": "user", "content": user}],
-        "temperature": 0,
-        "response_format": {"type": "json_object"},
-    }, headers={"api-key": key})
-    return out["choices"][0]["message"]["content"]
-
-
-def _call_anthropic(system: str, user: str, model: str) -> str:
-    key = os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("PULSEPOINT_ANTHROPIC_API_KEY")
-    out = _http_json("https://api.anthropic.com/v1/messages", {
-        "model": model,
-        "max_tokens": 4096,
-        "temperature": 0,
-        "system": system,
-        "messages": [{"role": "user", "content": user}],
-    }, headers={"x-api-key": key, "anthropic-version": "2023-06-01"})
-    parts = out.get("content") or []
-    return "".join(p.get("text", "") for p in parts if p.get("type") == "text")
-
-
-_BACKENDS = {"ollama": _call_ollama, "openai": _call_openai,
-             "azure": _call_azure, "anthropic": _call_anthropic}
 
 
 def _extract_json(text: str) -> dict:
@@ -536,6 +483,77 @@ def validate_plan(plan: dict, owner: str) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# Grounding validator — every number and every quoted line must trace to the input
+# ---------------------------------------------------------------------------
+_NUM_RX = re.compile(r"(?<![\w.])(\d+(?:,\d{3})*(?:\.\d+)?)(?![\w])")
+# scale anchors and band thresholds the prompt itself defines
+_STRUCTURAL_NUMBERS = {0.0, 1.0, 5.0, 100.0, 3.5, 4.0, 3.9, 95.0, 10.0}
+
+
+def _numbers_in(obj, out):
+    if isinstance(obj, bool) or obj is None:
+        return out
+    if isinstance(obj, (int, float)):
+        out.add(float(obj))
+    elif isinstance(obj, str):
+        out.update(float(x.replace(",", "")) for x in _NUM_RX.findall(obj))
+    elif isinstance(obj, dict):
+        for v in obj.values():
+            _numbers_in(v, out)
+    elif isinstance(obj, (list, tuple)):
+        for v in obj:
+            _numbers_in(v, out)
+    return out
+
+
+def _norm(s: str) -> str:
+    s = str(s).lower().replace("’", "'").replace("‘", "'").replace("“", '"').replace("”", '"')
+    s = re.sub(r"\s+", " ", s)
+    return s.strip(" \"'.,;:!?-–—")
+
+
+def _quote_texts(payload: dict):
+    out = []
+    for key in ("representative_comments", "positive_comments"):
+        for q in payload.get(key) or []:
+            if isinstance(q, dict) and q.get("text"):
+                out.append(q["text"])
+    return out
+
+
+def validate_grounding(plan: dict, payload: dict) -> dict:
+    """Check every number in each evidence line against the payload (or a supplied quote)
+    and every 'what it looks like' line against the supplied quotes (normalised; '...' or
+    '…' may join fragments). Returns {"ok", "failures", "checked"}."""
+    quotes = _quote_texts(payload)
+    allowed = _numbers_in(payload, set()) | _numbers_in(quotes, set()) | _STRUCTURAL_NUMBERS
+    nq = [_norm(q) for q in quotes]
+    failures, checked = [], 0
+
+    def num_ok(n: float, raw: str) -> bool:
+        tol = 0.05 if "." in raw else 0.5
+        return any(abs(n - a) <= tol for a in allowed)
+
+    for i, p in enumerate(plan.get("priorities") or [], 1):
+        for e in p.get("evidence") or []:
+            txt = str(e.get("text", ""))
+            for raw in _NUM_RX.findall(txt):
+                checked += 1
+                if not num_ok(float(raw.replace(",", "")), raw):
+                    failures.append(f"P{i} evidence: number {raw} is not in the report-card data — “{txt[:90]}”")
+        for line in p.get("whatItLooksLike") or []:
+            checked += 1
+            s = _norm(line)
+            if "local validation" in s or "validate locally" in s:
+                continue
+            frags = [f for f in (_norm(x) for x in re.split(r"\.\.\.|…", s)) if len(f) >= 8]
+            if not frags or not any(all(f in q for f in frags) for q in nq):
+                failures.append(f"P{i} 'what it looks like': not found in the supplied quotes — “{line[:90]}”")
+    return {"ok": not failures, "failures": failures, "checked": checked,
+            "checked_at": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")}
+
+
+# ---------------------------------------------------------------------------
 # Public entry point
 # ---------------------------------------------------------------------------
 def generate_action_plan(data: dict, owner: str = None, include_verbatims: bool = True) -> dict:
@@ -550,7 +568,7 @@ def generate_action_plan(data: dict, owner: str = None, include_verbatims: bool 
             "comments never leave the machine — install Ollama, `ollama pull llama3.1`, then set "
             "PULSEPOINT_LLM_PROVIDER=ollama. Or configure Azure/OpenAI/Anthropic (see README).")
 
-    model = _model(provider)
+    model = LB.model_name(provider)
     if not model:
         raise RuntimeError(f"No model name set for provider '{provider}'. "
                            "Set PULSEPOINT_LLM_MODEL (or PULSEPOINT_AZURE_DEPLOYMENT for Azure).")
@@ -560,8 +578,9 @@ def generate_action_plan(data: dict, owner: str = None, include_verbatims: bool 
     user = f"<report_card>\n{json.dumps(payload, ensure_ascii=False, indent=2)}\n</report_card>"
 
     t0 = time.time()
-    raw = _BACKENDS[provider](system, user, model)
+    raw = LB.call(provider, system, user, model, sends_comment_text=bool(include_verbatims))
     plan = validate_plan(_extract_json(raw), owner)
+    validation = validate_grounding(plan, payload)
 
     plan["_meta"] = {
         "generated_at": datetime.now(timezone.utc).astimezone().strftime("%Y-%m-%d %H:%M %Z"),
@@ -570,7 +589,9 @@ def generate_action_plan(data: dict, owner: str = None, include_verbatims: bool 
         "owner": owner,
         "include_verbatims": bool(include_verbatims),
         "elapsed_s": round(time.time() - t0, 1),
-        "prompt_version": "v3.1 (top 5)",
+        "validation": validation,
+        "prompt_version": PROMPT_VERSION,
+        "prompt_signoff": PROMPT_SIGNOFF_NOTE,
     }
     return plan
 
@@ -645,11 +666,18 @@ def render_action_plan_html(plan: dict, owner: str = None) -> str:
         lis = "".join(f"<li>{_esc(a)}</li>" for a in plan["assumptions"])
         assumptions = f"<div class='oap-sub2'>Assumptions</div><ul class='oap-assume'>{lis}</ul>"
 
+    flags = ""
+    if meta.get("evidence_flags"):
+        lis = "".join(f"<li>{_esc(x)}</li>" for x in meta["evidence_flags"])
+        flags = (f"<div class='oap-flag'><b>Evidence check ({_esc(meta.get('evidence_refreshed_at', ''))}):</b> "
+                 f"the corrected data weakens the support for the items below. They are left in place for the "
+                 f"site team to confirm, modify or reject.<ul class='oap-assume'>{lis}</ul></div>")
     stamp = ""
     if meta:
         stamp = (f"<div class='oap-stamp'>Auto-generated draft · {_esc(meta.get('provider'))}/"
                  f"{_esc(meta.get('model'))} · {_esc(meta.get('generated_at'))}"
-                 f"{' · aggregate-only' if meta.get('include_verbatims') is False else ''}</div>")
+                 f"{' · aggregate-only' if meta.get('include_verbatims') is False else ''}"
+                 f"{' · evidence refreshed ' + _esc(meta['evidence_refreshed_at']) if meta.get('evidence_refreshed_at') else ''}</div>")
 
     return (
         "<section class='oap'>"
@@ -659,38 +687,41 @@ def render_action_plan_html(plan: dict, owner: str = None) -> str:
         f"Primary owner for every action: <b>{_esc(owner)}</b>. A full read of the report card below "
         "is still recommended. The team's job: Confirm / Modify / Reject, then assign owner, cost, and timing.</div>"
         "</div>"
-        f"{''.join(blocks)}{protect}{table}{assumptions}{stamp}"
+        f"{flags}{''.join(blocks)}{protect}{table}{assumptions}{stamp}"
         "</section>"
     )
 
 
 # CSS injected into the report <style> block (kept here so markup + styles live together)
 ACTION_PLAN_CSS = """
- .oap{border:1px solid #d6dcea;border-radius:10px;background:#f7f9fd;padding:16px 18px;margin:14px 0 22px}
- .oap-hd{border-bottom:1px solid #e2e7f1;padding-bottom:9px;margin-bottom:11px}
- .oap-t{font-size:17px;font-weight:800;color:#1f2d5a;letter-spacing:.01em}
- .oap-note{font-size:11.5px;color:#5b6577;margin-top:4px;line-height:1.5}
- .oap-pri{background:#fff;border:1px solid #e6e9f0;border-radius:8px;padding:11px 13px;margin:9px 0}
+ .oap{border:1px solid var(--rule);border-radius:10px;background:var(--panel);padding:16px 18px;margin:14px 0 22px}
+ .oap-hd{border-bottom:1px solid var(--rule);padding-bottom:9px;margin-bottom:11px}
+ .oap-t{font-size:17px;font-weight:800;color:var(--navy);letter-spacing:.01em}
+ .oap-note{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5}
+ .oap-pri{background:var(--bg);border:1px solid var(--rule);border-radius:8px;padding:11px 13px;margin:9px 0}
  .oap-pri-h{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
- .oap-num{background:#1f2d5a;color:#fff;font-weight:700;font-size:12px;width:22px;height:22px;border-radius:50%;
+ .oap-num{background:var(--navy);color:var(--on-navy);font-weight:700;font-size:12px;width:22px;height:22px;border-radius:50%;
    display:inline-flex;align-items:center;justify-content:center;flex:none}
- .oap-name{font-size:14.5px;font-weight:700;color:#1f2d5a}
- .oap-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:3px 8px;border-radius:20px;margin-left:auto}
- .oap-tag-local{background:#e6f0ff;color:#1c5bb8} .oap-tag-proj{background:#fff0d9;color:#a5600a}
- .oap-tag-ent{background:#efe3fb;color:#6b3fa0} .oap-tag-mon{background:#e2f4e8;color:#1f7a44}
- .oap-issue{font-size:13px;color:#26303f;margin:7px 0 4px;line-height:1.5}
- .oap-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#8a93a6;margin-right:6px}
+ .oap-name{font-size:14.5px;font-weight:700;color:var(--navy)}
+ .oap-tag{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:2px 8px;border-radius:20px;
+   margin-left:auto;background:var(--panel-2);color:var(--navy)}
+ .oap-tag-local,.oap-tag-proj,.oap-tag-ent,.oap-tag-mon{background:var(--panel-2);color:var(--navy)}
+ .oap-issue{font-size:13px;color:var(--ink);margin:7px 0 4px;line-height:1.5}
+ .oap-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-right:6px}
  .oap-look,.oap-ev{margin:5px 0}
  .oap-look ul,.oap-ev ul{margin:3px 0 3px 0;padding-left:19px}
- .oap-look li,.oap-ev li{font-size:12px;color:#3a4453;margin:2px 0;line-height:1.45}
- .oap-ev-t{font-size:9.5px;font-weight:700;text-transform:uppercase;color:#1f7a44;background:#e8f5ee;padding:1px 5px;border-radius:4px;margin-right:5px}
- .oap-line{font-size:12.5px;color:#26303f;margin:5px 0;line-height:1.5}
- .oap-sub2{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#1f2d5a;margin:14px 0 5px}
+ .oap-look li,.oap-ev li{font-size:12px;color:var(--ink-2);margin:2px 0;line-height:1.45}
+ .oap-ev-t{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--navy);background:var(--panel-2);
+   padding:0 5px;border-radius:4px;margin-right:5px}
+ .oap-line{font-size:12.5px;color:var(--ink);margin:5px 0;line-height:1.5}
+ .oap-sub2{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--navy);margin:14px 0 5px}
  ul.oap-protect,ul.oap-assume{margin:3px 0;padding-left:19px}
- ul.oap-protect li,ul.oap-assume li{font-size:12px;color:#3a4453;margin:3px 0;line-height:1.45}
- .oap-mut{color:#8a93a6;font-style:italic}
+ ul.oap-protect li,ul.oap-assume li{font-size:12px;color:var(--ink-2);margin:3px 0;line-height:1.45}
+ .oap-mut{color:var(--muted);font-style:italic}
+ .oap-flag{font-size:12px;color:var(--ink);background:var(--panel-2);border-left:3px solid var(--navy);padding:4px 8px;margin:6px 0}
  table.oap-tbl{width:100%;border-collapse:collapse;margin-top:5px;font-size:11.5px}
- table.oap-tbl th{background:#eef2f9;color:#3a4453;text-align:left;padding:5px 7px;border:1px solid #dde3ee;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em}
- table.oap-tbl td{padding:5px 7px;border:1px solid #e6e9f0;min-height:20px}
- .oap-stamp{font-size:10px;color:#9aa0ae;margin-top:11px;border-top:1px solid #e8ecf3;padding-top:7px}
+ table.oap-tbl th{background:var(--panel-2);color:var(--ink-2);text-align:left;padding:5px 7px;border:1px solid var(--rule);
+   font-size:11px;text-transform:uppercase;letter-spacing:.03em}
+ table.oap-tbl td{padding:5px 7px;border:1px solid var(--rule);min-height:20px}
+ .oap-stamp{font-size:11px;color:var(--muted);margin-top:11px;border-top:1px solid var(--rule);padding-top:7px}
 """

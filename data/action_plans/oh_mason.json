@@ -1,7 +1,6 @@
 {
   "location": "OH-Mason",
   "indexScore": 68.4,
-  "indexTier": "Middle third",
   "reviewFullReportCardRecommended": true,
   "priorities": [
     {
@@ -19,11 +18,11 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Focused / Private Work is the #1 priority category (80/100); focused-space friction 34/100 (61% under-supported)."
+          "text": "Focused / Private Work is the #1 priority category (88/100); focused-space friction 34/100 (61% under-supported)."
         },
         {
           "type": "Finding",
-          "text": "Noise & Distraction: 137 comments (64% neg); Privacy & Confidentiality: 124 comments (60% neg); Focus/Concentration: 96 (55%)."
+          "text": "Noise & Distraction: 105 people (29% of respondents), 137 comments, 69% negative; Privacy & Confidentiality: 90 people (25% of respondents), 124 comments, 67% negative; Focus/Concentration: 64 people (18% of respondents), 96 comments, 60% negative."
         }
       ],
       "proposedAction": "Assess enclosed/manager-suitable space and the cube-density change against demand; validate whether zoning or added enclosed rooms is warranted before build-out.",
@@ -49,7 +48,7 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Hardware: 115 comments, 56% negative; Technology priority score 56/100."
+          "text": "Hardware: 82 people (23% of respondents), 115 comments, 58% negative; Technology priority score 60/100."
         }
       ],
       "proposedAction": "Map demand for enclosed, monitor-equipped workstations and standardize desk equipment/checks.",
@@ -73,7 +72,7 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Connectivity: 67 comments, 66% negative."
+          "text": "Connectivity: 52 people (15% of respondents), 65 comments, 69% negative."
         }
       ],
       "proposedAction": "Validate coverage/reliability in the reported areas and route to Technology.",
@@ -98,7 +97,7 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Temperature / Thermal: 48 comments, 62% negative."
+          "text": "Temperature / Thermal: 37 people (10% of respondents), 40 comments, 75% negative."
         },
         {
           "type": "Finding",
@@ -128,7 +127,7 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Meeting & Conference Rooms: 58 comments, 50% negative; AV / Video Conferencing: 35 comments, 46% negative."
+          "text": "Meeting & Conference Rooms: 44 people (12% of respondents), 58 comments, 59% negative; AV / Video Conferencing: 10 people (3% of respondents), 10 comments, 70% negative."
         },
         {
           "type": "Finding",
@@ -156,17 +155,17 @@
   "protectWhatIsWorking": [
     {
       "area": "Community & Events",
-      "evidence": "83% positive",
+      "evidence": "33% positive and 17% negative across 24 comments from 21 people",
       "note": "Maintain the current service level and monitor performance."
     },
     {
       "area": "Support / Help Services",
-      "evidence": "85% positive",
+      "evidence": "54% positive and 15% negative across 13 comments from 12 people",
       "note": "Maintain the current service level and monitor performance."
     },
     {
       "area": "Reception & Entry",
-      "evidence": "77% positive",
+      "evidence": "63% positive and 26% negative across 19 comments from 19 people",
       "note": "Maintain the current service level and monitor performance."
     }
   ],
@@ -177,8 +176,8 @@
     {
       "priorityName": "Quiet, private space for meeting-heavy and technical work",
       "supportingDataPoints": [
-        "Focused / Private Work is the #1 priority category (80/100); focused-space friction 34/100 (61% under-supported).",
-        "Noise & Distraction: 137 comments (64% neg); Privacy & Confidentiality: 124 comments (60% neg); Focus/Concentration: 96 (55%)."
+        "Focused / Private Work is the #1 priority category (88/100); focused-space friction 34/100 (61% under-supported).",
+        "Noise & Distraction: 105 people (29% of respondents), 137 comments, 69% negative; Privacy & Confidentiality: 90 people (25% of respondents), 124 comments, 67% negative; Focus/Concentration: 64 people (18% of respondents), 96 comments, 60% negative."
       ],
       "needsLocalValidation": [
         "Onsite validation of the specific condition before any capital step."
@@ -187,7 +186,7 @@
     {
       "priorityName": "Manager workstations with monitors and a door",
       "supportingDataPoints": [
-        "Hardware: 115 comments, 56% negative; Technology priority score 56/100."
+        "Hardware: 82 people (23% of respondents), 115 comments, 58% negative; Technology priority score 60/100."
       ],
       "needsLocalValidation": [
         "Onsite validation of the specific condition before any capital step."
@@ -196,7 +195,7 @@
     {
       "priorityName": "Connectivity reliability",
       "supportingDataPoints": [
-        "Connectivity: 67 comments, 66% negative."
+        "Connectivity: 52 people (15% of respondents), 65 comments, 69% negative."
       ],
       "needsLocalValidation": [
         "Onsite validation of the specific condition before any capital step."
@@ -205,7 +204,7 @@
     {
       "priorityName": "Thermal comfort (temperature)",
       "supportingDataPoints": [
-        "Temperature / Thermal: 48 comments, 62% negative.",
+        "Temperature / Thermal: 37 people (10% of respondents), 40 comments, 75% negative.",
         "Thermal / temperature comfort: Under Supported — friction 19/100 (43% under-supported)."
       ],
       "needsLocalValidation": [
@@ -215,7 +214,7 @@
     {
       "priorityName": "Meeting-room booking discipline and in-room connections",
       "supportingDataPoints": [
-        "Meeting & Conference Rooms: 58 comments, 50% negative; AV / Video Conferencing: 35 comments, 46% negative.",
+        "Meeting & Conference Rooms: 44 people (12% of respondents), 58 comments, 59% negative; AV / Video Conferencing: 10 people (3% of respondents), 10 comments, 70% negative.",
         "Virtual collaboration with remote/hybrid colleagues: Under Supported — friction 21/100 (44% under-supported).",
         "Availability of meeting & collaboration spaces: on Target — friction 8/100 (18% under-supported)."
       ],
@@ -275,6 +274,13 @@
     "prompt_version": "v3",
     "generated_by": "Claude Opus (Cowork session, batch)",
     "priorities": 5,
-    "revision": "Expanded to top 5 (P1–P3 unchanged; P4–P5 added from site evidence)"
-  }
+    "revision": "Expanded to top 5 (P1–P3 unchanged; P4–P5 added from site evidence)",
+    "evidence_refreshed_at": "2026-11-10",
+    "evidence_refresh_note": "Numbers in evidence, data points and protect lines refreshed to the November 2026 corrected data (people-based counts, true positive shares, standing instead of rank). Priorities, order, quotes and actions unchanged; not regenerated.",
+    "evidence_flags": [
+      "Priority 5 (Meeting-room booking discipline and in-room connections): AV / Video Conferencing comments fall from 35 to 10 (10 people) after the re-tag; the in-room connections half of this priority is thinly supported by comments — the booking-discipline half (Meeting & Conference Rooms, 44 people) is not affected.",
+      "Protect item 'Community & Events': the true positive share is 33% (17% negative) — it no longer clears the What's-working bar"
+    ]
+  },
+  "indexStanding": "In line with the company average"
 }

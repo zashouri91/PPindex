@@ -8,25 +8,35 @@ review and correct the auto-tagging.
 ## What's in the box
 
 ```
-pulsepoint_tool/
-├── app.py              # the Streamlit app
-├── build_data.py       # regenerates the processed data from a raw export
-├── taxonomy.py         # the theme taxonomy + junk detection (edit to tune tags)
-├── sentiment.py        # domain-tuned ensemble sentiment model (edit to tune)
-├── requirements.txt    # dependencies
+PPindex/
+├── app.py              # the Streamlit UI (tabs, filters, cache wrappers)
+├── reports.py          # data loading, computation and the site / portfolio / PowerPoint builders
+│                       #   (importable without Streamlit: reports.load_context(), build_site_report(), ...)
+├── design.py           # the one colour system (CSS variables), contrast helpers, base stylesheet
+├── build_data.py       # regenerates everything in data/ from the de-identified raw export
+├── taxonomy.py         # theme keyword rules + junk detection + GENERIC_THEMES
+├── sentiment.py        # domain-tuned sentiment model (VADER + facilities lexicon + question prior)
+├── action_plan.py      # Operational Action Plan: payload, prompt v3.2, grounding check, rendering
+├── llm_backends.py     # shared model backends (Ollama default; hosted providers opt-in)
+├── llm_tagger.py       # optional model-based comment tagger — OFF unless PULSEPOINT_TAGGER=llm
+├── deid.py             # the identifying columns dropped from the raw export
+├── tools/              # deidentify_raw.py, make_gold_sample.py, eval_tagging.py, refresh_plan_evidence.py
+├── tests/              # pytest — baseline, de-identification guard, card checks, contrast, rules
 ├── data/
-│   ├── raw.xlsx               # your raw survey export
+│   ├── raw_deid.xlsx          # de-identified survey export (tracked); the original raw.xlsx is NOT tracked
 │   ├── comments.csv           # one row per comment, auto-tagged (theme, sentiment, junk)
-│   ├── scores_overall.csv     # Tableau-spec Friction/Composite/RYG per item (completers, 10 sites)
+│   ├── scores_overall.csv     # Tableau-spec Friction / Composite / status per item (+ paired-gap SE & 95% CI)
 │   ├── scores_by_site.csv     # same, per in-scope site
 │   ├── scores_dimension.csv   # dimension composites + weighted/equal overall
-│   ├── scores_*_all.csv       # same three, all-responses population (for the toggle)
-│   ├── gap_overall.csv        # legacy signed gap (retained; app now uses Friction)
-│   ├── gap_by_site.csv        # legacy signed gap by site
-│   ├── respondent_scores.csv  # per-respondent overall-agreement scores (key drivers)
-│   ├── emerging_themes.json   # auto-discovered clusters of Unclassified comments
+│   ├── site_intervals.csv     # 95% intervals for each site's Index and Dimension Scores (bootstrap)
+│   ├── *_all.csv              # the same files for the all-responses population (for the toggle)
+│   ├── respondent_scores.csv  # per-respondent overall-agreement scores (sentiment table, key drivers)
+│   ├── gold/                  # gold_labels.csv (IDs + labels only) and eval_report.md
+│   ├── action_plans/          # stored Operational Action Plans, one JSON per site
+│   ├── emerging_themes.json   # clusters of Unclassified comments
 │   └── meta.json              # filter option lists
-└── README.md
+├── docs/CHANGES-2026-11.md    # what the November 2026 review pass changed, with before/after
+└── samples/                   # example site and portfolio cards (HTML + PDF)
 ```
 
 ## Running it (first time)
@@ -75,12 +85,13 @@ including the importance-vs-support gaps (computed for both populations).
 Everything responds to the sidebar filters.
 
 **🎯 Action Priorities** — the synthesis view. Ranks every theme (or category) by a
-single **priority score** that combines comment volume, share negative, and the
-importance-vs-support gap, so you see *where to act first* instead of eyeballing three
-charts. Colored by % negative, with a table of the components and 2–3 representative
-negative quotes per item. Filter to one site in the sidebar to get that site's own
-priority list (the gap becomes site-specific too). Score = 40% volume + 35% share
-negative + 25% importance-gap, each rescaled 0–1.
+single **priority score** that combines how many **people** raised it, the share of its
+comments that are negative, and the Tableau-spec Friction score. Filter to one site in the
+sidebar to get that site's own list (Friction becomes site-specific too). Score = 40% people
++ 35% share of comments negative + 25% Friction, each rescaled 0–1. Volume counts people,
+not comments — one person can answer five open questions — and % negative is computed on
+unique comments. The generic buckets "Positive / Appreciation" and "Overall Dissatisfaction"
+are excluded from every ranking (`taxonomy.GENERIC_THEMES`).
 
 **⚖️ Scores & Friction** — matches the official **Tableau dashboard methodology**
 exactly. **Composite** = average Support on a 0–100 scale (Importance not factored).
@@ -94,7 +105,7 @@ comments whose themes explain its Friction. **Scope: completed responses across 
 in-scope sites**, per the spec — so the numbers reconcile with the Tableau report.
 
 **🏷️ Theme & Sentiment Explorer** — three controls drive everything: **View by**
-Categories (the 7 roll-ups) or Themes (the 28 granular tags); **Break down by** Site,
+Categories (the 7 roll-ups) or Themes (the 29 granular tags); **Break down by** Site,
 Role, Tenure, or Hybrid category; and **Heatmap metric** — *% of group* (rate-
 normalized, so a 30-response site is comparable to a 900-response one) or raw Counts.
 Plus theme/category frequency, sentiment mix, and a searchable comment table. Multi-
@@ -114,39 +125,62 @@ the sidebar filters). *Hotspots* flags site/role/tenure groups whose mention rat
 theme is significantly above the rest of the org, using a two-proportion z-test (p<0.05)
 so small groups don't create false alarms — it answers "where is this *unusually* bad?"
 *Key drivers* uses the survey's own overall-agreement scores (1–5) to show which themes
-actually move overall satisfaction: for each theme, the average score of people who
-raised it vs everyone else. A negative delta means the theme drags satisfaction down;
-"impact" weights that by how many people it affects. The punchline in this data: desk
-availability, noise, and privacy are big drags, while reception and community events
-barely move the needle.
+are associated with lower or higher agreement: for each theme, the average score of
+commenters who raised it vs **other commenters**, with a 95% interval. People who wrote
+nothing are left out — as a group they score higher than commenters (4.08 vs 3.57), which
+made almost every theme look like a drag. It is an association, not evidence that fixing a
+theme would raise the score.
 
-**📄 Site Reports** — generate a leadership-ready one-pager for any site, laid out in seven
-sections. **(1) Overall PulsePoint Experience Index Score** — the 0–100 headline, computed as the
-**unweighted** average of the four Dimension Scores so it **matches the Tableau deck exactly**;
-shown with the site's **rank among the 10 in-scope sites** and its **tier** (top/middle/bottom
-third of the distribution — a relative standing, not an arbitrary A–F cutoff). **(2) Dimension
-Scores** — the four dimension composites (0–100) with per-dimension rank. **(3) Importance vs.
-Support gaps** — the summary and by-question detail (1–5), including **Digital & Tech** with a real
-status band (Strong ≥4.0 / Moderate 3.5–3.9 / Needs attention <3.5, since it is agreement-only).
-**(4) Associate Sentiment Score** — a standalone section for the survey's summary sentiment items
-(Q8/Q12/Q16/Q19; Q16 = Services, Q19 = Technology by survey position), each with a **Welch t-test**
-verdict vs. the other in-scope sites. **(5) Friction & strength themes** — a large red Friction chart
-and green Strengths chart, dimension-labeled, with wrapped question text and the score + % on each
-bar. **(6) Open-ended comment themes** — the comment-sentiment headline, sentiment and theme charts
-(theme bars labeled `% | N comments`), top priorities, a what's-working vs what-to-fix split, a
-benchmark vs the org, representative quotes, a categorization methodology note, and the full
-comments-by-category-and-sentiment appendix. **(7) Demographics — respondent profile** — a visual
-rollup (role, tenure, hybrid category) above a detailed backup table. A **data source & method**
-footer documents the pipeline. Each card can also open with an optional, auto-generated
-**Operational Action Plan — "What to Do Next"** band (see its own section below). Download per site as
-**HTML, PDF, or PowerPoint**, build a full deck of all sites at once, or export a site's complete
-verbatim bank as CSV.
+**📄 Site Reports** — a leadership-ready report card for any in-scope site, in this order:
 
-At the top of the tab is the **10 PulsePoints — Portfolio Report Card**: a company-wide exec brief
-(2–3 pages) that rolls the same elements up across all ten sites — the company Index Score, a ranked
-**site leaderboard**, a **site × dimension heatmap**, company Importance-vs-Support gaps, company-wide
-Friction and strength themes, the top comment themes with a **site × theme heatmap**, and the overall
-respondent profile. Download as HTML or PDF.
+1. **Header** — the Overall PulsePoint Experience Index as "68 ± 1" (95% margin from resampling
+   the site's respondents), its **standing** (Above / In line with / Below the company average),
+   the company value, respondents and people who commented. The Index is the **unweighted**
+   average of the four Dimension Scores, so it **matches the Tableau deck exactly**.
+2. **At a glance** (fits page 1 with the header) — the four Dimension Scores with margin and
+   standing; the three highest-Friction items with % under-supported and severity; the three
+   best-supported items; the top three action-plan priorities; one line each for role, tenure
+   and hybrid mix.
+3. **Importance vs. Support** — per dimension: score ± margin, standing, "k of n items need
+   attention", worst item; then every question with its official status and a severity word.
+4. **Associate sentiment** — the Q8/Q12/Q16/Q19 summary items: site mean ± margin, company
+   mean, difference, standing.
+5. **Top priorities — survey items** — the five highest-Friction items, each with its linked
+   comment themes (in people) and one illustrative comment; a **Technology watch** line for
+   Digital & Tech items under 3.5 agreement or below the company; a secondary "What comments
+   add" table by category.
+6. **What needs attention / What's working** — themes by people; "% positive" is the true
+   positive share (a theme needs ≥10 comments, ≥50% positive and more positive than negative;
+   otherwise the list is filled from best-supported survey items, labelled as ratings).
+7. **Themes that differ here** — only themes whose share of people differs from the other nine
+   sites beyond chance (two-proportion test, Benjamini–Hochberg across themes).
+8. **Operational Action Plan** (see below). 9. **In their words** — representative quotes.
+10. **All comments by category** — in the HTML only; print and PDF show a one-line pointer.
+11. **Respondent profile** — counts under 5 print as "<5" with the percentage blank.
+12. **Method note**, including whether comment tagging has been validated.
+
+**Standing, not rank.** Cards never rank sites or sort them into thirds. A score is Above or
+Below the company average only when the printed company value lies outside the site's 95%
+interval; otherwise it is In line. "Company" always means the 10 in-scope sites pooled, in the
+selected population. **Severity** (slight / moderate / severe from the rounded gap; *borderline*
+when the gap's 95% interval includes 0; "On track, low support" for Target items under 60/100)
+is added next to the official status and never replaces it. **Attribution:** a comment shows
+the writer's role only when at least 10 respondents at the site share it; tenure is never shown
+beside a comment. Download per site as **HTML, PDF or PowerPoint** (the slide carries the same
+numbers and labels as the card), build a deck of all sites, or export a site's verbatims (CSV —
+internal analysis only).
+
+At the top of the tab is the **10 PulsePoints — Portfolio Report Card**: the company Index with
+its margin, each site's Index ± margin and standing (alphabetical — no ranking), Dimension Scores
+by site, company Importance vs. Support (score ± margin, items needing attention, worst item),
+company Friction and strengths, comment themes by people with a site × theme table, the
+respondent profile, and a question × site grid with **one value per cell** (Friction for items
+with an Importance rating, agreement for Digital & Tech — not comparable), coloured by status
+with an icon, other values on hover, printed on a landscape page.
+
+All cards use one colour system (`design.py`): red / amber / green mean support status only,
+score badges are neutral, sentiment has its own blue / purple pair, every status carries a word
+or icon, and all text meets WCAG AA contrast (tested).
 
 **✏️ Tagging Workspace** — starts with a **"Discover missing themes"** panel that
 auto-clusters the Unclassified comments so you can spot themes the taxonomy is missing
@@ -155,30 +189,34 @@ auto-tags and override them. Edit the
 `sentiment_override`, `themes_override` (pipe-separated, e.g. `Privacy & Confidentiality|Noise & Distraction`),
 and `junk_override` columns, add notes, tick *reviewed*, then **Save changes**.
 Saves to `data/overrides.csv` and updates every tab. Export the fully-tagged
-dataset (with your edits applied) to CSV or Excel.
+dataset (with your edits applied) to CSV or Excel. The **Gold set** panel lists the 300
+comments in `data/gold/gold_labels.csv` so a person can confirm or correct each label and tick
+*verified*; only verified rows count as evidence of accuracy.
 
 ## Operational Action Plan — "What to Do Next"
 
-Each site card carries an auto-generated **Operational Action Plan**, placed just below the *Vs. org —
-theme rates* table — the bridge between the survey read-out and execution, per the work-stream review. It
-is **not** a re-summary: it converts the site's own evidence into a **top 5 of prioritized,
-validate-before-acting recommendations** (five distinct issues, ordered by the card's computed category
-ranking; fewer only if the evidence doesn't support five), each with the
-specific issue, what it looks like at that site (quoted from real comments), the supporting evidence, a
-proposed action, the proposed support team, and a required next step — plus a "Protect what's working"
-block and a blank operational-response table for the team to complete (Confirm/Modify/Reject → owner →
-cost → timing). The primary owner for every action defaults to **Regional Director + Local Team** and is
-editable (the ownership model is still an open decision).
+Each site card carries an auto-generated **Operational Action Plan** after the theme tables and before
+the quotes — the bridge between the survey read-out and execution. It is **not** a re-summary: it
+converts the site's own evidence into a **top 5 of validate-before-acting recommendations**, each with
+the specific issue, what it looks like at that site (quoted from real comments), the supporting
+evidence, a proposed action, the proposed support team, and a required next step — plus "Protect what's
+working" and a blank operational-response table (Confirm/Modify/Reject → owner → cost → timing). The
+primary owner defaults to **Regional Director + Local Team** and is editable.
 
-The plan is generated **once and stored** per site (`data/action_plans/<site>.json`), so the text is
-stable — it does not shift each time the card is opened. Regenerate any time from the **Site Reports**
-tab (*🧭 Operational Action Plan — generate / regenerate*), per site or for all ten at once. The section
-is grounded strictly in that site's report card (unweighted Index only; the generic "Positive /
-Appreciation" and "Overall Dissatisfaction" buckets are excluded), and the model is told to use only the
-supplied quotes for examples and never to fabricate. To give it enough to work with for five priorities,
-the model receives up to 10 candidate themes (not just the card's top 5), up to two real example quotes
-per candidate theme, the eight highest-Friction survey items, and the Digital & Tech items as agreement
-scores against the company average (never as Friction, which isn't comparable for those items).
+Plans are generated **once and stored** per site (`data/action_plans/<site>.json`). **Prompt v3.2**
+starts priorities from the site's highest-Friction survey items, with comment themes (counted in people)
+as supporting evidence, and forbids rank or "lowest/highest of all sites" wording unless the standing is
+Above or Below. **v3.2 is a draft that needs work-stream sign-off before anyone regenerates plans.**
+
+**Grounding check.** After generation every number in each evidence line is checked against the data
+sent to the model (or a supplied quote), and every "what it looks like" line against the supplied quotes
+(normalised; "…" may join fragments). Failures are shown in the Site Reports tab and the plan is **not
+saved**.
+
+**The stored plans were not regenerated in November 2026.** `tools/refresh_plan_evidence.py` updated the
+numbers inside their evidence lines to the corrected data, replaced the "% positive" protect lines (they
+were 100 − % negative), removed rank wording, and flagged the priorities the corrected evidence no longer
+clearly supports (shown on each card). Every edit: `docs/plan-evidence-refresh-2026-11.md`.
 
 ### Configuring the model (privacy-first)
 
@@ -199,12 +237,17 @@ To use a hosted model instead, set environment variables before launching Stream
 |----------|---------------------------|-------------------|
 | Ollama (local, default) | `ollama` | *(none)* — optional `PULSEPOINT_OLLAMA_HOST`, `PULSEPOINT_LLM_MODEL` |
 | Azure OpenAI | `azure` | `PULSEPOINT_AZURE_ENDPOINT`, `PULSEPOINT_AZURE_DEPLOYMENT`, `PULSEPOINT_AZURE_API_KEY` (opt. `PULSEPOINT_AZURE_API_VERSION`) |
-| OpenAI | `openai` | `OPENAI_API_KEY` (opt. `PULSEPOINT_LLM_MODEL`, default `gpt-4o`) |
-| Anthropic | `anthropic` | `ANTHROPIC_API_KEY` (opt. `PULSEPOINT_LLM_MODEL`, default `claude-3-5-sonnet-latest`) |
+| OpenAI | `openai` | `OPENAI_API_KEY` (opt. `PULSEPOINT_LLM_MODEL`, default `gpt-6.1-sol`) |
+| Anthropic | `anthropic` | `ANTHROPIC_API_KEY` (opt. `PULSEPOINT_LLM_MODEL`, default `claude-sonnet-5-5`) |
+
+Defaults were checked against each vendor's model documentation in November 2026. Hosted calls have not
+been exercised from this repository; newer reasoning models may reject `temperature: 0`, so test once.
 
 Other knobs: `PULSEPOINT_ACTION_OWNER` sets the default owner label; the **Include verbatim quotes**
-toggle can be turned off to send the model **aggregate numbers only** (no comment text) if policy
-requires. Requests run at **temperature 0**. If no backend is configured, the card renders without the
+toggle can be turned off to send the model **aggregate numbers only** (no comment text).
+**A hosted provider never receives comment text unless `PULSEPOINT_ALLOW_HOSTED_COMMENTS=1` is set** —
+without it, a hosted request with quotes is refused before anything is sent (`llm_backends.py`), and the
+toggle defaults to aggregate-only. Requests run at **temperature 0**. If no backend is configured, the card renders without the
 section and the tab shows a one-line setup hint — nothing breaks.
 
 > **Hosted providers:** sending comments to a cloud API means employee text leaves your environment —
@@ -217,42 +260,89 @@ section and the tab shows a one-line setup hint — nothing breaks.
   are flagged so they don't pollute the trends. Toggle "Include junk" in the sidebar
   to see them.
 - **Themes** are assigned by a transparent keyword taxonomy in `taxonomy.py`
-  (28 themes across 7 categories). Each comment can carry multiple themes — this is
-  the "split multi-topic comments" behavior. Granular details roll up into the parent
-  theme (e.g. a specific broken elevator → *Building Operations*).
+  (29 themes across 7 categories). Each comment can carry multiple themes. In November
+  2026 the rules were tightened so a bare word no longer tags a theme on its own: Desk
+  Availability needs a booking / availability / assignment sense (a help desk or "my desk"
+  is not enough), AV needs an audio / video / room-technology sense (Microsoft Teams the app
+  is not AV), Collaboration Space needs a physical space ("nobody I collaborate with is here"
+  goes to In-Person / Team Presence), and substring bugs (Indianapolis → "nap", industry →
+  "dust", data entry, sign in, …) are fixed. Every false-positive family has a test with
+  invented sentences (`tests/test_taxonomy.py`). The Unclassified share rose from 9.4% to
+  12.3%; no catch-all patterns were added to hide it. Precision before and after each rule
+  change is in `docs/CHANGES-2026-11.md`.
+- **Optional model tagger.** `llm_tagger.py` labels comments with a local model (themes from
+  the 29 only, sentiment, and intent) when `PULSEPOINT_TAGGER=llm` is set at build time. It is
+  **off** and should stay off unless it beats the rules on verified gold labels
+  (`python llm_tagger.py --gold --export …` then `tools/eval_tagging.py --pred llm=…`).
 - **Sentiment** uses a **domain-tuned ensemble** built for this survey (in
   `sentiment.py`), not plain VADER. It combines VADER's general polarity with a
   facilities-specific lexicon, clause-aware negation, intensifier handling, a light
-  question-framing prior (Q13 asks what "limits" you, so it leans negative), and
+  question-framing prior (the "what limits you" and "work types not supported" questions
+  lean negative — the prior is keyed by question label; before November 2026 it never fired), and
   explicit *mixed* detection (a comment that's positive AND negative — "great office
   but freezing" — is flagged Neutral / Mixed). Crucially it recognizes **improvement
   requests** ("better monitor stands", "more quiet spaces", "would be helpful if…")
   as unmet needs rather than praise — the single biggest thing generic sentiment gets
   wrong on this data.
 
-  On a hand-labeled validation sample it scored **~60% accurate vs ~31% for plain
-  VADER** (nearly 2×), and its output is internally coherent: the "what limits you"
-  question comes out most negative, and the most under-supported themes (noise,
-  temperature, privacy) skew 55–65% negative. It still isn't perfect on genuinely
-  ambiguous polite requests — which is exactly what the Tagging Workspace override is
-  for. Lean on theme + gap context alongside sentiment, not sentiment alone.
+  **Accuracy is not yet established.** An earlier claim of "~60% accurate vs ~31% for
+  plain VADER" could not be reproduced and has been removed. A 300-comment gold set now
+  lives in `data/gold/gold_labels.csv` (IDs and labels only); its rows were pre-filled by an
+  AI assistant and must be confirmed by a person in the Tagging Workspace (*Gold set*).
+  `python tools/eval_tagging.py` writes `data/gold/eval_report.md` with per-theme
+  precision/recall/F1 and sentiment accuracy, separately for verified and draft labels.
+  Until at least 30 rows are verified, every card's method note says the comment themes
+  and sentiment are automated and not yet validated. Against the draft labels the known
+  bias is clear: nearly every sentiment error is *more positive* than the comment, so
+  read sentiment shares as a floor on negativity. Lean on theme + Friction context
+  alongside sentiment, not sentiment alone.
 
   *(We evaluated a full RoBERTa transformer too, but chose this offline model so the
   tool needs no ~500MB model download or GPU/torch install and runs anywhere.)*
 
 ## Re-tagging or updating the data
 
-- To **tune the themes** (add keywords, add a theme, adjust junk rules) or the
-  **sentiment lexicon** (add facilities terms to `sentiment.py`), edit the file and
-  rebuild:
+- The tracked raw file is the **de-identified** export `data/raw_deid.xlsx`. The original export
+  (with network IDs, IPs and locations) stays on disk only and is in `.gitignore`. To refresh it:
 
   ```
-  python build_data.py data/raw.xlsx
+  python tools/deidentify_raw.py data/raw.xlsx data/raw_deid.xlsx
   ```
 
-  ⚠️ Rebuilding regenerates `comments.csv`. Your manual edits live separately in
-  `data/overrides.csv` and are re-applied on top, so they survive a rebuild as long
-  as `comment_id`s stay stable (they will if you use the same raw file).
+  `build_data.py` drops those columns on load whatever file it is given, and a test fails if any
+  tracked file under `data/` carries one of them.
 
-- To load a **new survey export**, drop it in `data/` and run
-  `python build_data.py data/your_new_file.xlsx`.
+- To **tune the themes** or the **sentiment lexicon**, edit `taxonomy.py` / `sentiment.py`, bump
+  `TAXONOMY_VERSION` if the rules changed, and rebuild:
+
+  ```
+  python build_data.py            # reads data/raw_deid.xlsx
+  pytest                          # the section-4 baseline must not move
+  ```
+
+  ⚠️ Rebuilding regenerates `comments.csv`. Manual edits live in `data/overrides.csv` and are
+  re-applied on top as long as `comment_id`s stay stable (same raw file, same row order).
+
+- To load a **new survey export**, de-identify it first, then `python build_data.py data/your_file_deid.xlsx`.
+
+## Privacy and sharing
+
+- Leadership cards apply the attribution rule (role only for groups of 10 or more at the site, never
+  tenure). The **offline dashboard, CSV and Excel exports keep role and tenure** and are marked
+  **internal analysis only** — do not share them outside the analysis team.
+- Comment text itself is not redacted: names that appear inside comments still appear in quotes,
+  the comment list and the exports.
+- Comment text goes to a hosted model only with `PULSEPOINT_ALLOW_HOSTED_COMMENTS=1`.
+
+## Tests
+
+```
+pip install -r requirements-dev.txt
+pytest
+```
+
+Covers the section-4 baseline (Index by site, company Index, dimension composites, 76/148/11 status
+split), the de-identification guard, card content rules (standing, people counts, attribution, "<5",
+print-only sections, no rank wording), colour contrast and minimum sizes, the keyword-rule regressions,
+sentiment prior, intervals, the gold-set harness, and the model-backend privacy gate (all model calls
+stubbed).

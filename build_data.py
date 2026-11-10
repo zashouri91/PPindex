@@ -7,24 +7,29 @@ Reads the raw survey export, produces:
   data/gap_by_site.csv     - same, broken out by site
   data/meta.json           - filter option lists + counts
 
-Run:  python build_data.py <raw_xlsx_path>
+Run:  python build_data.py [raw_xlsx_path]      (default: data/raw_deid.xlsx)
+
+Identifying columns (network-ID contact question, IP, location, browser, OS,
+response date, referring sites) are dropped on load whatever file is given —
+see deid.py and tools/deidentify_raw.py.
 """
 import sys, os, json, re
 import pandas as pd
 import numpy as np
 from taxonomy import tag_themes, is_junk, CATEGORIES, THEMES, THEME_TO_CATEGORY
 from sentiment import score_sentiment  # domain-tuned ensemble (VADER + facilities lexicon)
+from deid import drop_pii_columns
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(HERE, "data")
 os.makedirs(DATA, exist_ok=True)
 
-RAW = sys.argv[1] if len(sys.argv) > 1 else os.path.join(DATA, "raw.xlsx")
+RAW = sys.argv[1] if len(sys.argv) > 1 else os.path.join(DATA, "raw_deid.xlsx")
 
 # ---------------------------------------------------------------------------
-# 1. Load
+# 1. Load (identifying columns are never carried past this point)
 # ---------------------------------------------------------------------------
-df = pd.read_excel(RAW, sheet_name=0)
+df = drop_pii_columns(pd.read_excel(RAW, sheet_name=0))
 cols = list(df.columns)
 
 def find(prefix):
@@ -157,6 +162,27 @@ def ryg_class(support_minus_importance):
 def to100(numeric_series):
     return (numeric_series - 1) / 4 * 100
 
+def paired_gap_stats(sup, imp):
+    """Mean, standard error and 95% t-interval of the paired gap (Support − Importance,
+    1–5) over respondents who rated both. Appended as NEW columns; the official status
+    still comes from the means (ryg)."""
+    from scipy.stats import t as _t
+    d = (sup - imp).dropna().astype(float)
+    n = len(d)
+    if n < 2:
+        return {"gap": np.nan, "gap_se": np.nan, "gap_lo": np.nan, "gap_hi": np.nan}
+    m, se = float(d.mean()), float(d.std(ddof=1) / np.sqrt(n))
+    h = float(_t.ppf(0.975, n - 1)) * se
+    return {"gap": round(m, 3), "gap_se": round(se, 4), "gap_lo": round(m - h, 3), "gap_hi": round(m + h, 3)}
+
+GAP_EMPTY = {"gap": "", "gap_se": "", "gap_lo": "", "gap_hi": ""}
+
+def support_se(values):
+    """Standard error of mean Support (1–5) — new column used for item-level standing
+    of agreement-only (Digital & Tech) items. Existing columns are untouched."""
+    v = pd.Series(values).dropna().astype(float)
+    return {"support_se": round(float(v.std(ddof=1) / np.sqrt(len(v))), 4) if len(v) > 1 else np.nan}
+
 def official_scores(sub):
     """Per-item + per-site Friction/Composite/RYG for a respondent subset (10 sites)."""
     item_rows, site_rows, dim_pool = [], [], {}
@@ -193,6 +219,8 @@ def official_scores(sub):
                    "friction": round(friction, 1) if pd.notna(friction) else "",
                    "friction_pct": round(fpct, 0) if pd.notna(fpct) else "",
                    "ryg": ryg}
+            row.update(paired_gap_stats(sup[both], imp[both]) if has_imp else GAP_EMPTY)
+            row.update(support_se(sup[both] if has_imp else sup[sup_ok]))
             item_rows.append(row)
             # per site
             for site, g in sub.groupby(site_col):
@@ -210,7 +238,8 @@ def official_scores(sub):
                         "mean_support": round(float(gsup[gboth].mean()), 3),
                         "importance_100": round(to100(gimp[gboth]).mean(), 1),
                         "support_100": round(comp_s, 1), "composite": round(comp_s, 1),
-                        "friction": round(fr, 1), "friction_pct": round(fp, 0), "ryg": ry})
+                        "friction": round(fr, 1), "friction_pct": round(fp, 0), "ryg": ry,
+                        **paired_gap_stats(gsup[gboth], gimp[gboth]), **support_se(gsup[gboth])})
                 else:
                     if not gok.any():
                         continue
@@ -218,7 +247,8 @@ def official_scores(sub):
                         "n": int(gok.sum()), "mean_importance": "", "mean_support": round(float(gsup[gok].mean()), 3),
                         "importance_100": "", "support_100": round(comp_s, 1), "composite": round(comp_s, 1),
                         "friction": round(float((100 - gsup100)[gok].mean()), 1),
-                        "friction_pct": round(float((gsup100 < 100)[gok].mean() * 100), 0), "ryg": ""})
+                        "friction_pct": round(float((gsup100 < 100)[gok].mean() * 100), 0), "ryg": "",
+                        **GAP_EMPTY, **support_se(gsup[gok])})
     # dimension composites (pooled avg support#) + weighted overall
     dim_rows = []
     for dim, series_list in dim_pool.items():
@@ -235,11 +265,79 @@ def official_scores(sub):
         ignore_index=True)
     return pd.DataFrame(item_rows), pd.DataFrame(site_rows), dim_df
 
+# ---------------------------------------------------------------------------
+# 2c. Uncertainty: 95% intervals for each site's Index and Dimension Scores by
+#     resampling respondents within the site (percentile bootstrap). Same method
+#     as reports.site_standings: dimension = mean of its items' Support (0–100),
+#     Index = unweighted mean of the four dimensions. The company row resamples
+#     within every site and pools, matching scores_dimension.csv.
+# ---------------------------------------------------------------------------
+BOOT_N, BOOT_SEED = 2000, 20261110
+DIM_NAMES = [d[3] for d in DIMENSIONS]
+
+def _support_matrix(sub):
+    """(respondents × items) Support on 0–100 (NaN = no answer) + each item's dimension."""
+    cols, dims = [], []
+    for _imp, del_block, del_map, dim, _n in DIMENSIONS:
+        for del_col, _item in del_block:
+            cols.append(to100(to_num(sub[del_col], del_map)).astype(float).to_numpy())
+            dims.append(dim)
+    return np.column_stack(cols), np.array(dims)
+
+def _scores_from_weights(W, S, dims, pooled):
+    """Dimension scores + Index for each bootstrap weight row in W (B × n)."""
+    ok = ~np.isnan(S)
+    sums, cnts = W @ np.where(ok, S, 0.0), W @ ok.astype(float)
+    out = {}
+    with np.errstate(invalid="ignore", divide="ignore"):
+        for dm in DIM_NAMES:
+            k = dims == dm
+            if pooled:   # company composite pools every valid response in the dimension
+                out[dm] = sums[:, k].sum(1) / cnts[:, k].sum(1)
+            else:        # site dimension score = mean of its item means
+                out[dm] = np.nanmean(np.where(cnts[:, k] > 0, sums[:, k] / cnts[:, k], np.nan), axis=1)
+    out["Index"] = np.nanmean(np.column_stack([out[d] for d in DIM_NAMES]), axis=1)
+    return out
+
+def _interval_rows(label, boot, point):
+    rows = []
+    for measure in ["Index"] + DIM_NAMES:
+        b = boot[measure][~np.isnan(boot[measure])]
+        lo, hi = np.percentile(b, [2.5, 97.5])
+        rows.append({"site": label, "measure": measure, "estimate": round(float(point[measure]), 2),
+                     "lo": round(float(lo), 2), "hi": round(float(hi), 2),
+                     "margin": round(float(hi - lo) / 2, 2), "se": round(float(b.std(ddof=1)), 3),
+                     "n": int(point["_n"]), "n_boot": BOOT_N})
+    return rows
+
+def site_intervals(sub):
+    rng = np.random.default_rng(BOOT_SEED)
+    rows, comp_w, comp_S = [], [], []
+    for site in TEN_SITES:
+        g = sub[sub[site_col] == site]
+        if not len(g):
+            continue
+        S, dims = _support_matrix(g)
+        n = len(g)
+        W = rng.multinomial(n, np.full(n, 1.0 / n), size=BOOT_N).astype(float)
+        point = {k: float(v[0]) for k, v in _scores_from_weights(np.ones((1, n)), S, dims, False).items()}
+        point["_n"] = n
+        rows += _interval_rows(site, _scores_from_weights(W, S, dims, False), point)
+        comp_w.append(W); comp_S.append(S)
+    # company: stratified (resample within each site), pooled like scores_dimension.csv
+    W, S = np.hstack(comp_w), np.vstack(comp_S)
+    point = {k: float(v[0]) for k, v in _scores_from_weights(np.ones((1, S.shape[0])), S, dims, True).items()}
+    point["_n"] = S.shape[0]
+    rows += _interval_rows("Company (10 sites)", _scores_from_weights(W, S, dims, True), point)
+    return pd.DataFrame(rows)
+
 # Official population = completers, 10 in-scope sites
 comp10 = df[(df["_reached"] == 1) & (df[site_col].isin(TEN_SITES))]
 all10  = df[df[site_col].isin(TEN_SITES)]
 sc_item, sc_site, sc_dim = official_scores(comp10)
 sa_item, sa_site, sa_dim = official_scores(all10)
+site_intervals(comp10).to_csv(os.path.join(DATA, "site_intervals.csv"), index=False)
+site_intervals(all10).to_csv(os.path.join(DATA, "site_intervals_all.csv"), index=False)
 sc_item.to_csv(os.path.join(DATA, "scores_overall.csv"), index=False)
 sc_site.to_csv(os.path.join(DATA, "scores_by_site.csv"), index=False)
 sc_dim.to_csv(os.path.join(DATA, "scores_dimension.csv"), index=False)
@@ -250,9 +348,10 @@ sa_dim.to_csv(os.path.join(DATA, "scores_dimension_all.csv"), index=False)
 # ---------------------------------------------------------------------------
 # 3. Open-ended -> long, tagged
 # ---------------------------------------------------------------------------
-def sentiment(text, domain=None):
-    # domain-tuned ensemble; returns (signed score in [-1,1], label)
-    return score_sentiment(text, domain)
+def sentiment(text, question_label=None):
+    # domain-tuned ensemble; returns (signed score in [-1,1], label). The question
+    # prior is keyed by the question LABEL (sentiment.QUESTION_PRIOR).
+    return score_sentiment(text, question_label)
 
 records = []
 cid = 0
@@ -265,7 +364,7 @@ for qcol, qlabel, qdomain in OPEN_ENDED:
         text = str(row[qcol]).strip()
         junk = is_junk(text)
         themes, cats = tag_themes(text)
-        sc, slab = sentiment(text, qdomain)
+        sc, slab = sentiment(text, qlabel)
         # If nothing matched but it's a real comment, mark Unclassified
         if not junk and not themes:
             themes, cats = ["Unclassified"], ["Uncategorized"]
@@ -297,6 +396,22 @@ for qcol, qlabel, qdomain in OPEN_ENDED:
         })
 
 comments = pd.DataFrame(records)
+
+# Optional model tagger — OFF unless PULSEPOINT_TAGGER=llm (see llm_tagger.py). The
+# keyword rules stay the default until the model beats them on verified gold labels.
+if os.environ.get("PULSEPOINT_TAGGER", "rules").strip().lower() == "llm":
+    import llm_tagger
+    from taxonomy import THEME_TO_CATEGORY as _T2C
+    print("[tagger] PULSEPOINT_TAGGER=llm — tagging comments with the model tagger")
+    tagged = llm_tagger.tag_comments(comments).set_index("comment_id")
+    sel = comments["comment_id"].isin(tagged.index)
+    ids = comments.loc[sel, "comment_id"]
+    comments.loc[sel, "themes"] = ids.map(tagged["themes"]).values
+    comments.loc[sel, "categories"] = ids.map(
+        lambda i: "|".join(sorted({_T2C.get(t, "Uncategorized") for t in tagged.at[i, "themes"].split("|")}))).values
+    comments.loc[sel, "n_themes"] = ids.map(lambda i: len(tagged.at[i, "themes"].split("|"))).values
+    comments.loc[sel & ~comments["is_junk"], "sentiment_label"] = ids.map(tagged["sentiment"]).values
+    comments["tagger"] = "llm"
 comments.to_csv(os.path.join(DATA, "comments.csv"), index=False)
 
 # ---------------------------------------------------------------------------

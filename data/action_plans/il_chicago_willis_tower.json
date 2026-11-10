@@ -1,7 +1,6 @@
 {
   "location": "IL-Chicago-Willis Tower",
   "indexScore": 70.2,
-  "indexTier": "Top third",
   "reviewFullReportCardRecommended": true,
   "priorities": [
     {
@@ -18,15 +17,15 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Focused / Private Work is the #1 priority category (75/100); focused-work friction 29/100 (60% under-supported)."
+          "text": "Focused / Private Work is the #1 priority category (86/100); focused-work friction 29/100 (60% under-supported)."
         },
         {
           "type": "Finding",
-          "text": "Noise & Distraction: 27 comments (59% neg); Privacy & Confidentiality: 32 comments (47% neg)."
+          "text": "Noise & Distraction: 19 people (22% of respondents), 27 comments, 63% negative; Privacy & Confidentiality: 19 people (22% of respondents), 32 comments, 59% negative."
         },
         {
           "type": "Interpretation",
-          "text": "Work Activity is the site's weakest dimension (60.5, rank 8) despite strong Service and Physical scores."
+          "text": "Work Activity is the site's weakest dimension (60.5 ± 4, in line with the company 62.5), while Service Level is above the company average (81.0 vs 75.6)."
         }
       ],
       "proposedAction": "Map which roles need sustained quiet/private space and match them to quiet neighborhoods or bookable enclosed space; validate capacity before build-out.",
@@ -52,11 +51,11 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Desk Availability & Reservations: 45 comments, 60% negative (cited at 30% of comments vs. 28% company)."
+          "text": "Desk Availability & Reservations: 19 people (22% of respondents), 25 comments, 68% negative (raised by 22% of respondents vs 18% company-wide)."
         },
         {
           "type": "Finding",
-          "text": "Hardware: 39 comments, 49% negative — the mirrored dual-monitor issue is a concrete, fixable defect."
+          "text": "Hardware: 23 people (26% of respondents), 39 comments, 54% negative — the mirrored dual-monitor issue is a concrete, fixable defect."
         }
       ],
       "proposedAction": "Fix the dual-monitor extend/mirror configuration as an immediate technical correction, and review whether high-attendance teams warrant assigned/neighborhood seating.",
@@ -79,7 +78,7 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Temperature / Thermal: 17 comments, 82% negative — the most-negative theme at the site."
+          "text": "Temperature / Thermal: 14 people (16% of respondents), 16 comments, 88% negative — the most-negative theme at the site."
         }
       ],
       "proposedAction": "Facilities to check set-points/balancing in the cold zones and confirm the fix.",
@@ -108,7 +107,7 @@
         },
         {
           "type": "Finding",
-          "text": "AV / Video Conferencing: 11 comments, 73% negative; Meeting & Conference Rooms: 12 comments, 75% negative."
+          "text": "AV / Video Conferencing: 8 people (9% of respondents), 10 comments, 70% negative; Meeting & Conference Rooms: 10 people (11% of respondents), 12 comments, 75% negative."
         },
         {
           "type": "Finding",
@@ -145,7 +144,7 @@
         },
         {
           "type": "Finding",
-          "text": "Food & Beverage: 14 comments, 57% negative."
+          "text": "Food & Beverage: 11 people (12% of respondents), 14 comments, 64% negative."
         }
       ],
       "proposedAction": "Review the pantry/market range and pricing with Food & Beverage, and test a pre-order or delivery option with the building's main-level vendors.",
@@ -160,12 +159,12 @@
   "protectWhatIsWorking": [
     {
       "area": "Service Level",
-      "evidence": "81/100, rank 2 — a strength (food & beverage availability is the exception — see priority 5)",
+      "evidence": "81 ± 3, above the company average (75.6) — a strength (food & beverage availability is the exception — see priority 5)",
       "note": "Maintain the current service level and monitor performance."
     },
     {
       "area": "Community & Events",
-      "evidence": "100% positive (the community manager is named)",
+      "evidence": "62% positive and 0% negative across 8 comments from 8 people (the community manager is named)",
       "note": "Maintain the current service level and monitor performance."
     }
   ],
@@ -176,8 +175,8 @@
     {
       "priorityName": "Quiet, private space for focused and customer-facing work",
       "supportingDataPoints": [
-        "Focused / Private Work is the #1 priority category (75/100); focused-work friction 29/100 (60% under-supported).",
-        "Noise & Distraction: 27 comments (59% neg); Privacy & Confidentiality: 32 comments (47% neg)."
+        "Focused / Private Work is the #1 priority category (86/100); focused-work friction 29/100 (60% under-supported).",
+        "Noise & Distraction: 19 people (22% of respondents), 27 comments, 63% negative; Privacy & Confidentiality: 19 people (22% of respondents), 32 comments, 59% negative."
       ],
       "needsLocalValidation": [
         "Onsite validation of the specific condition before any capital step."
@@ -186,8 +185,8 @@
     {
       "priorityName": "Desk reservation model and dual-monitor setup",
       "supportingDataPoints": [
-        "Desk Availability & Reservations: 45 comments, 60% negative (cited at 30% of comments vs. 28% company).",
-        "Hardware: 39 comments, 49% negative — the mirrored dual-monitor issue is a concrete, fixable defect."
+        "Desk Availability & Reservations: 19 people (22% of respondents), 25 comments, 68% negative (raised by 22% of respondents vs 18% company-wide).",
+        "Hardware: 23 people (26% of respondents), 39 comments, 54% negative — the mirrored dual-monitor issue is a concrete, fixable defect."
       ],
       "needsLocalValidation": [
         "Onsite validation of the specific condition before any capital step."
@@ -196,7 +195,7 @@
     {
       "priorityName": "Thermal comfort (temperature)",
       "supportingDataPoints": [
-        "Temperature / Thermal: 17 comments, 82% negative — the most-negative theme at the site."
+        "Temperature / Thermal: 14 people (16% of respondents), 16 comments, 88% negative — the most-negative theme at the site."
       ],
       "needsLocalValidation": [
         "Onsite validation of the specific condition before any capital step."
@@ -206,7 +205,7 @@
       "priorityName": "Virtual-meeting readiness: webcams and room screen-sharing",
       "supportingDataPoints": [
         "Virtual collaboration with remote/hybrid colleagues: Under Supported — friction 26/100 (51% under-supported), the highest-friction item at the site after the focus and discretion items covered by P1.",
-        "AV / Video Conferencing: 11 comments, 73% negative; Meeting & Conference Rooms: 12 comments, 75% negative.",
+        "AV / Video Conferencing: 8 people (9% of respondents), 10 comments, 70% negative; Meeting & Conference Rooms: 10 people (11% of respondents), 12 comments, 75% negative.",
         "Video conferencing & meeting-room technology agreement: 3.75 vs 3.72 company average (Moderate)."
       ],
       "needsLocalValidation": [
@@ -217,7 +216,7 @@
       "priorityName": "Food options without leaving the tower",
       "supportingDataPoints": [
         "Availability of on-site food and beverage options: Under Supported — friction 17/100 (35% under-supported).",
-        "Food & Beverage: 14 comments, 57% negative."
+        "Food & Beverage: 11 people (12% of respondents), 14 comments, 64% negative."
       ],
       "needsLocalValidation": [
         "What associates would actually buy on site, and at what price."
@@ -275,6 +274,10 @@
     "prompt_version": "v3",
     "generated_by": "Claude Opus (Cowork session, batch)",
     "priorities": 5,
-    "revision": "Expanded to top 5 (P1–P3 unchanged; P4–P5 added from site evidence)"
-  }
+    "revision": "Expanded to top 5 (P1–P3 unchanged; P4–P5 added from site evidence)",
+    "evidence_refreshed_at": "2026-11-10",
+    "evidence_refresh_note": "Numbers in evidence, data points and protect lines refreshed to the November 2026 corrected data (people-based counts, true positive shares, standing instead of rank). Priorities, order, quotes and actions unchanged; not regenerated.",
+    "evidence_flags": []
+  },
+  "indexStanding": "In line with the company average"
 }

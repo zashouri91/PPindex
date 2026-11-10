@@ -1,7 +1,6 @@
 {
   "location": "GA-Atlanta",
   "indexScore": 76.5,
-  "indexTier": "Top third",
   "reviewFullReportCardRecommended": true,
   "priorities": [
     {
@@ -18,11 +17,11 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Focused / Private Work is the #1 priority category (74/100)."
+          "text": "Focused / Private Work is the #1 priority category (85/100)."
         },
         {
           "type": "Finding",
-          "text": "Noise & Distraction: 58 comments (52% neg); Privacy & Confidentiality: 57 comments (49% neg)."
+          "text": "Noise & Distraction: 41 people (15% of respondents), 58 comments, 57% negative; Privacy & Confidentiality: 41 people (15% of respondents), 57 comments, 63% negative."
         },
         {
           "type": "Finding",
@@ -50,7 +49,7 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Hardware: 55 comments, 47% negative. Connectivity: 31 comments, 52% negative."
+          "text": "Hardware: 39 people (14% of respondents), 55 comments, 51% negative. Connectivity: 26 people (9% of respondents), 29 comments, 59% negative."
         }
       ],
       "proposedAction": "Standardize monitor/dock setup, run routine checks, and address the shared-peripheral hygiene concern (wipes or personal-kit option).",
@@ -73,7 +72,7 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Temperature / Thermal: 30 comments, 57% negative; thermal friction 16/100 (37% under-supported)."
+          "text": "Temperature / Thermal: 23 people (8% of respondents), 28 comments, 68% negative; thermal friction 16/100 (37% under-supported)."
         }
       ],
       "proposedAction": "Check HVAC set-points/balancing in the flagged zones; confirm a durable fix.",
@@ -98,7 +97,7 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Desk Availability & Reservations: 98 comments, 45% negative — the highest-volume theme at the site not already covered by P1–P3."
+          "text": "Desk Availability & Reservations: 39 people (14% of respondents), 44 comments, 57% negative — the 2nd most-raised theme by people not already covered by P1–P3 (after Food & Beverage)."
         },
         {
           "type": "Finding",
@@ -132,7 +131,7 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Furniture & Ergonomics: 21 comments, 62% negative."
+          "text": "Furniture & Ergonomics: 15 people (5% of respondents), 20 comments, 65% negative."
         },
         {
           "type": "Finding",
@@ -155,34 +154,34 @@
   "protectWhatIsWorking": [
     {
       "area": "Service Level",
-      "evidence": "highest of all sites (82.5/100) — the whole service experience is a model to protect",
+      "evidence": "82.5 ± 2, above the company average (75.6) — the whole service experience is a model to protect",
       "note": "Maintain the current service level and monitor performance."
     },
     {
       "area": "Collaboration Space",
-      "evidence": "72% positive",
+      "evidence": "20% positive and 20% negative across 5 comments from 5 people",
       "note": "Maintain the current service level and monitor performance."
     },
     {
       "area": "AV / Video Conferencing",
-      "evidence": "70% positive",
+      "evidence": "9% positive and 55% negative across 11 comments from 10 people",
       "note": "Maintain the current service level and monitor performance."
     },
     {
       "area": "Parking & Commute",
-      "evidence": "73% positive",
+      "evidence": "30% positive and 33% negative across 33 comments from 29 people",
       "note": "Maintain the current service level and monitor performance."
     }
   ],
   "assumptions": [
-    "Atlanta ranks #1 overall; these are optimizations of an already-strong site, not fixes for systemic problems."
+    "Atlanta is above the company average overall (Index 77 ± 2 vs 69.0); these are optimizations of an already-strong site, not fixes for systemic problems."
   ],
   "evidenceConfidence": [
     {
       "priorityName": "Enclosed space for focus and discretion",
       "supportingDataPoints": [
-        "Focused / Private Work is the #1 priority category (74/100).",
-        "Noise & Distraction: 58 comments (52% neg); Privacy & Confidentiality: 57 comments (49% neg).",
+        "Focused / Private Work is the #1 priority category (85/100).",
+        "Noise & Distraction: 41 people (15% of respondents), 58 comments, 57% negative; Privacy & Confidentiality: 41 people (15% of respondents), 57 comments, 63% negative.",
         "Focused-space friction 23/100 (46% under-supported); the 2-hour capsule limit is called out."
       ],
       "needsLocalValidation": [
@@ -192,7 +191,7 @@
     {
       "priorityName": "Workstation hardware standardization",
       "supportingDataPoints": [
-        "Hardware: 55 comments, 47% negative. Connectivity: 31 comments, 52% negative."
+        "Hardware: 39 people (14% of respondents), 55 comments, 51% negative. Connectivity: 26 people (9% of respondents), 29 comments, 59% negative."
       ],
       "needsLocalValidation": [
         "Onsite validation of the specific condition before any capital step."
@@ -201,7 +200,7 @@
     {
       "priorityName": "Thermal comfort (temperature)",
       "supportingDataPoints": [
-        "Temperature / Thermal: 30 comments, 57% negative; thermal friction 16/100 (37% under-supported)."
+        "Temperature / Thermal: 23 people (8% of respondents), 28 comments, 68% negative; thermal friction 16/100 (37% under-supported)."
       ],
       "needsLocalValidation": [
         "Onsite validation of the specific condition before any capital step."
@@ -210,7 +209,7 @@
     {
       "priorityName": "Reserved-desk etiquette and visibility",
       "supportingDataPoints": [
-        "Desk Availability & Reservations: 98 comments, 45% negative — the highest-volume theme at the site not already covered by P1–P3.",
+        "Desk Availability & Reservations: 39 people (14% of respondents), 44 comments, 57% negative — the 2nd most-raised theme by people not already covered by P1–P3 (after Food & Beverage).",
         "'Reservation tools are easy to use' agreement: 4.23 vs 4.03 company average (Strong)."
       ],
       "needsLocalValidation": [
@@ -220,7 +219,7 @@
     {
       "priorityName": "Chair condition and adjustability",
       "supportingDataPoints": [
-        "Furniture & Ergonomics: 21 comments, 62% negative.",
+        "Furniture & Ergonomics: 15 people (5% of respondents), 20 comments, 65% negative.",
         "Furniture comfort & ergonomics: on Target — friction 10/100 (28% under-supported)."
       ],
       "needsLocalValidation": [
@@ -279,6 +278,14 @@
     "prompt_version": "v3",
     "generated_by": "Claude Opus (Cowork session, batch)",
     "priorities": 5,
-    "revision": "Expanded to top 5 (P1–P3 unchanged; P4–P5 added from site evidence)"
-  }
+    "revision": "Expanded to top 5 (P1–P3 unchanged; P4–P5 added from site evidence)",
+    "evidence_refreshed_at": "2026-11-10",
+    "evidence_refresh_note": "Numbers in evidence, data points and protect lines refreshed to the November 2026 corrected data (people-based counts, true positive shares, standing instead of rank). Priorities, order, quotes and actions unchanged; not regenerated.",
+    "evidence_flags": [
+      "Protect item 'Collaboration Space': the true positive share is 20% (20% negative) — it no longer clears the What's-working bar",
+      "Protect item 'AV / Video Conferencing': the true positive share is 9% (55% negative) — it no longer clears the What's-working bar",
+      "Protect item 'Parking & Commute': the true positive share is 30% (33% negative) — it no longer clears the What's-working bar"
+    ]
+  },
+  "indexStanding": "Above the company average"
 }

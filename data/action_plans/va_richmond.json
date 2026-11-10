@@ -1,7 +1,6 @@
 {
   "location": "VA-Richmond",
   "indexScore": 66.5,
-  "indexTier": "Bottom third",
   "reviewFullReportCardRecommended": true,
   "priorities": [
     {
@@ -16,11 +15,11 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Focused / Private Work is the #1 priority category (74/100); focused-work friction 27/100 (56% under-supported)."
+          "text": "Focused / Private Work is the #1 priority category (87/100); focused-work friction 27/100 (56% under-supported)."
         },
         {
           "type": "Finding",
-          "text": "Noise & Distraction: 90 comments, 63% negative."
+          "text": "Noise & Distraction: 65 people (22% of respondents), 90 comments, 68% negative."
         }
       ],
       "proposedAction": "Assess call/quiet-space capacity and etiquette against demand before adding enclosed space.",
@@ -44,11 +43,11 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Food & Beverage: 101 comments, 46% negative; cited at 19% of comments vs. 14% company-wide."
+          "text": "Food & Beverage: 77 people (26% of respondents), 101 comments, 46% negative; raised by 26% of respondents vs 19% company-wide."
         },
         {
           "type": "Finding",
-          "text": "On-site food/beverage availability friction is 25/100 (46% under-supported); Service Level is the site's weakest dimension (68.4, rank 10)."
+          "text": "On-site food/beverage availability friction is 25/100 (46% under-supported); Service Level is below the company average (68.4 ± 2 vs 75.6)."
         }
       ],
       "proposedAction": "Review the F&B vendor's offering, hours and stocking with the Food & Beverage team against what associates actually want.",
@@ -73,7 +72,7 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Hardware: 88 comments, 56% negative; Desk Availability: 141 comments, 54% negative."
+          "text": "Hardware: 59 people (20% of respondents), 88 comments, 61% negative; Desk Availability: 52 people (18% of respondents), 67 comments, 57% negative."
         }
       ],
       "proposedAction": "Institute routine equipment checks and confirm desk-height adjustability options for smaller associates.",
@@ -106,7 +105,7 @@
         },
         {
           "type": "Finding",
-          "text": "Privacy & Confidentiality: 80 comments, 56% negative."
+          "text": "Privacy & Confidentiality: 59 people (20% of respondents), 80 comments, 60% negative."
         },
         {
           "type": "Interpretation",
@@ -136,7 +135,7 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Building Operations: 53 comments, 62% negative — cited in 10% of comments vs 5% company-wide."
+          "text": "Building Operations: 34 people (12% of respondents), 41 comments, 63% negative — raised by 12% of respondents vs 4% company-wide."
         },
         {
           "type": "Finding",
@@ -155,20 +154,20 @@
   "protectWhatIsWorking": [
     {
       "area": "Community & Events",
-      "evidence": "80% positive — community managers are praised by name",
+      "evidence": "44% positive and 24% negative across 25 comments from 20 people — community managers are praised by name",
       "note": "Maintain the current service level and monitor performance."
     }
   ],
   "assumptions": [
-    "Richmond is near the bottom overall (9 of 10) with the weakest Service Level; food/beverage is an unusually strong signal here vs. other sites.",
+    "Richmond is below the company average overall (Index 67 ± 2 vs 69.0) and on Service Level (68.4 vs 75.6); food and beverage is raised by 26% of respondents here, more than at the other sites beyond chance.",
     "The Richmond↔Norfolk comparison (outdoor walking areas, escalators) is associate-reported and worth an onsite check."
   ],
   "evidenceConfidence": [
     {
       "priorityName": "Quiet space for calls and focused work",
       "supportingDataPoints": [
-        "Focused / Private Work is the #1 priority category (74/100); focused-work friction 27/100 (56% under-supported).",
-        "Noise & Distraction: 90 comments, 63% negative."
+        "Focused / Private Work is the #1 priority category (87/100); focused-work friction 27/100 (56% under-supported).",
+        "Noise & Distraction: 65 people (22% of respondents), 90 comments, 68% negative."
       ],
       "needsLocalValidation": [
         "Onsite validation of the specific condition before any capital step."
@@ -177,8 +176,8 @@
     {
       "priorityName": "On-site food and beverage options",
       "supportingDataPoints": [
-        "Food & Beverage: 101 comments, 46% negative; cited at 19% of comments vs. 14% company-wide.",
-        "On-site food/beverage availability friction is 25/100 (46% under-supported); Service Level is the site's weakest dimension (68.4, rank 10)."
+        "Food & Beverage: 77 people (26% of respondents), 101 comments, 46% negative; raised by 26% of respondents vs 19% company-wide.",
+        "On-site food/beverage availability friction is 25/100 (46% under-supported); Service Level is below the company average (68.4 ± 2 vs 75.6)."
       ],
       "needsLocalValidation": [
         "Onsite validation of the specific condition before any capital step."
@@ -187,7 +186,7 @@
     {
       "priorityName": "Workstation equipment and desk adjustability",
       "supportingDataPoints": [
-        "Hardware: 88 comments, 56% negative; Desk Availability: 141 comments, 54% negative."
+        "Hardware: 59 people (20% of respondents), 88 comments, 61% negative; Desk Availability: 52 people (18% of respondents), 67 comments, 57% negative."
       ],
       "needsLocalValidation": [
         "Onsite validation of the specific condition before any capital step."
@@ -198,7 +197,7 @@
       "supportingDataPoints": [
         "Availability of spaces that support discretion: Under Supported — friction 28/100 (50% under-supported).",
         "Tasks requiring discretion: Under Supported — friction 23/100 (42% under-supported).",
-        "Privacy & Confidentiality: 80 comments, 56% negative."
+        "Privacy & Confidentiality: 59 people (20% of respondents), 80 comments, 60% negative."
       ],
       "needsLocalValidation": [
         "How often a private room is unavailable for a confidential conversation; how the enclosed rooms are actually used."
@@ -207,7 +206,7 @@
     {
       "priorityName": "Escalator and entry-door reliability",
       "supportingDataPoints": [
-        "Building Operations: 53 comments, 62% negative — cited in 10% of comments vs 5% company-wide.",
+        "Building Operations: 34 people (12% of respondents), 41 comments, 63% negative — raised by 12% of respondents vs 4% company-wide.",
         "Reliability of building operations: Under Supported — friction 18/100 (42% under-supported)."
       ],
       "needsLocalValidation": [
@@ -266,6 +265,12 @@
     "prompt_version": "v3",
     "generated_by": "Claude Opus (Cowork session, batch)",
     "priorities": 5,
-    "revision": "Expanded to top 5 (P1–P3 unchanged; P4–P5 added from site evidence)"
-  }
+    "revision": "Expanded to top 5 (P1–P3 unchanged; P4–P5 added from site evidence)",
+    "evidence_refreshed_at": "2026-11-10",
+    "evidence_refresh_note": "Numbers in evidence, data points and protect lines refreshed to the November 2026 corrected data (people-based counts, true positive shares, standing instead of rank). Priorities, order, quotes and actions unchanged; not regenerated.",
+    "evidence_flags": [
+      "Protect item 'Community & Events': the true positive share is 44% (24% negative) — it no longer clears the What's-working bar"
+    ]
+  },
+  "indexStanding": "Below the company average"
 }

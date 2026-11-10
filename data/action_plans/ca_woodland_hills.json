@@ -1,7 +1,6 @@
 {
   "location": "CA-Woodland Hills",
   "indexScore": 65.8,
-  "indexTier": "Bottom third",
   "reviewFullReportCardRecommended": true,
   "priorities": [
     {
@@ -19,15 +18,15 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Focused / Private Work is the #1 priority category (priority score 79/100)."
+          "text": "Focused / Private Work is the #1 priority category (89/100)."
         },
         {
           "type": "Finding",
-          "text": "Friction for focused individual work is 37/100 — 64% feel under-supported; discretion 27/100 (50%)."
+          "text": "Friction for focused individual work is 37/100 — 64% under-supported; discretion 27/100 (50% under-supported)."
         },
         {
           "type": "Finding",
-          "text": "Noise & Distraction: 137 comments, 68% negative. Privacy & Confidentiality: 100 comments, 55% negative."
+          "text": "Noise & Distraction: 105 people (27% of respondents), 137 comments, 74% negative. Privacy & Confidentiality: 75 people (19% of respondents), 100 comments, 62% negative."
         },
         {
           "type": "Interpretation",
@@ -55,11 +54,11 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Desk Availability & Reservations is the highest-volume theme: 174 comments, 53% negative."
+          "text": "Desk Availability & Reservations: 66 people (17% of respondents), 84 comments, 57% negative — the 5th most-raised theme by people (it was the highest-volume theme before the November 2026 re-tag, which stopped counting every mention of a desk)."
         },
         {
           "type": "Finding",
-          "text": "Physical Environment ranks #2 by priority score (71/100)."
+          "text": "Physical Environment is the #2 priority category (68/100)."
         }
       ],
       "proposedAction": "Review booking rules and no-show behavior, and stand up a clear, visible path for reporting a desk found missing equipment on arrival.",
@@ -83,7 +82,7 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Hardware (Monitors / Peripherals): 98 comments, 59% negative."
+          "text": "Hardware (Monitors / Peripherals): 74 people (19% of respondents), 98 comments, 65% negative."
         },
         {
           "type": "Interpretation",
@@ -112,7 +111,7 @@
       "evidence": [
         {
           "type": "Finding",
-          "text": "Temperature / Thermal: 55 comments, 53% negative."
+          "text": "Temperature / Thermal: 36 people (9% of respondents), 40 comments, 68% negative."
         },
         {
           "type": "Finding",
@@ -150,7 +149,7 @@
         },
         {
           "type": "Finding",
-          "text": "Meeting & Conference Rooms: 45 comments, 47% negative; AV / Video Conferencing: 39 comments, 44% negative."
+          "text": "Meeting & Conference Rooms: 35 people (9% of respondents), 45 comments, 58% negative; AV / Video Conferencing: 14 people (4% of respondents), 14 comments, 64% negative."
         }
       ],
       "proposedAction": "Have Technology test every conference and huddle room end-to-end (laptop connection, display, audio, camera, power), repair or replace worn cables and connectors, and post a short in-room quick-start guide.",
@@ -165,31 +164,31 @@
   "protectWhatIsWorking": [
     {
       "area": "Reception & Entry",
-      "evidence": "91% positive across 22 comments — security/front-desk is a genuine strength",
+      "evidence": "35% positive and 9% negative across 23 comments from 22 people — most comments are neutral or mixed rather than praise",
       "note": "Maintain the current service level and monitor performance."
     },
     {
       "area": "Community & Events",
-      "evidence": "84% positive across 31 comments",
+      "evidence": "29% positive and 19% negative across 31 comments from 26 people",
       "note": "Maintain the current service level and monitor performance."
     },
     {
       "area": "Cleanliness & Upkeep",
-      "evidence": "72% positive across 43 comments",
+      "evidence": "47% positive and 28% negative across 43 comments from 33 people",
       "note": "Maintain the current service level and monitor performance."
     }
   ],
   "assumptions": [
     "Quiet/enclosed-space utilization data isn't in the survey; an onsite walkthrough is needed to size any capacity gap before recommending build-out.",
-    "Woodland Hills is the lowest-ranked site overall (10 of 10); these priorities target its largest, most-cited gaps first."
+    "Woodland Hills is below the company average overall (Index 66 ± 2 vs 69.0); these priorities target its largest, most-cited gaps first."
   ],
   "evidenceConfidence": [
     {
       "priorityName": "Quiet, private space for focus and confidential work",
       "supportingDataPoints": [
-        "Focused / Private Work is the #1 priority category (priority score 79/100).",
-        "Friction for focused individual work is 37/100 — 64% feel under-supported; discretion 27/100 (50%).",
-        "Noise & Distraction: 137 comments, 68% negative. Privacy & Confidentiality: 100 comments, 55% negative."
+        "Focused / Private Work is the #1 priority category (89/100).",
+        "Friction for focused individual work is 37/100 — 64% under-supported; discretion 27/100 (50% under-supported).",
+        "Noise & Distraction: 105 people (27% of respondents), 137 comments, 74% negative. Privacy & Confidentiality: 75 people (19% of respondents), 100 comments, 62% negative."
       ],
       "needsLocalValidation": [
         "Onsite validation of the specific condition before any capital step."
@@ -198,8 +197,8 @@
     {
       "priorityName": "Desk reservation reliability and arrival readiness",
       "supportingDataPoints": [
-        "Desk Availability & Reservations is the highest-volume theme: 174 comments, 53% negative.",
-        "Physical Environment ranks #2 by priority score (71/100)."
+        "Desk Availability & Reservations: 66 people (17% of respondents), 84 comments, 57% negative — the 5th most-raised theme by people (it was the highest-volume theme before the November 2026 re-tag, which stopped counting every mention of a desk).",
+        "Physical Environment is the #2 priority category (68/100)."
       ],
       "needsLocalValidation": [
         "Onsite validation of the specific condition before any capital step."
@@ -208,7 +207,7 @@
     {
       "priorityName": "Workstation equipment reliability",
       "supportingDataPoints": [
-        "Hardware (Monitors / Peripherals): 98 comments, 59% negative."
+        "Hardware (Monitors / Peripherals): 74 people (19% of respondents), 98 comments, 65% negative."
       ],
       "needsLocalValidation": [
         "Onsite validation of the specific condition before any capital step."
@@ -217,7 +216,7 @@
     {
       "priorityName": "Thermal comfort (temperature)",
       "supportingDataPoints": [
-        "Temperature / Thermal: 55 comments, 53% negative.",
+        "Temperature / Thermal: 36 people (9% of respondents), 40 comments, 68% negative.",
         "Thermal / temperature comfort: Under Supported — friction 19/100 (41% under-supported)."
       ],
       "needsLocalValidation": [
@@ -229,7 +228,7 @@
       "supportingDataPoints": [
         "Video conferencing & meeting-room technology agreement: 3.58 vs 3.72 company average (Moderate) — close to the 3.5 'Needs attention' line.",
         "Virtual collaboration with remote/hybrid colleagues: Under Supported — friction 20/100 (39% under-supported).",
-        "Meeting & Conference Rooms: 45 comments, 47% negative; AV / Video Conferencing: 39 comments, 44% negative."
+        "Meeting & Conference Rooms: 35 people (9% of respondents), 45 comments, 58% negative; AV / Video Conferencing: 14 people (4% of respondents), 14 comments, 64% negative."
       ],
       "needsLocalValidation": [
         "Room-by-room failure log — which rooms fail, and whether it is cabling, the room system, or network."
@@ -287,6 +286,14 @@
     "prompt_version": "v3",
     "generated_by": "Claude Opus (Cowork session, batch)",
     "priorities": 5,
-    "revision": "Expanded to top 5 (P1–P3 unchanged; P4–P5 added from site evidence)"
-  }
+    "revision": "Expanded to top 5 (P1–P3 unchanged; P4–P5 added from site evidence)",
+    "evidence_refreshed_at": "2026-11-10",
+    "evidence_refresh_note": "Numbers in evidence, data points and protect lines refreshed to the November 2026 corrected data (people-based counts, true positive shares, standing instead of rank). Priorities, order, quotes and actions unchanged; not regenerated.",
+    "evidence_flags": [
+      "Priority 5 (Meeting-room and video-conferencing reliability): the AV / Video Conferencing comments behind it fall from 39 to 14 (14 people) once bare mentions of Microsoft Teams stop counting; the priority now rests on the Under Supported virtual-collaboration item and Meeting & Conference Rooms comments.",
+      "Protect item 'Community & Events': the true positive share is 29% (19% negative) — it no longer clears the What's-working bar",
+      "Protect item 'Cleanliness & Upkeep': the true positive share is 47% (28% negative) — it no longer clears the What's-working bar"
+    ]
+  },
+  "indexStanding": "Below the company average"
 }

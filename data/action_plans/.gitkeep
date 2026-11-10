@@ -1,2 +1,2 @@
-# Generated Operational Action Plan JSONs live here (one per site, e.g. woodland_hills.json).
-# They are gitignored by default — see ../.gitignore.
+# Generated Operational Action Plan JSONs live here (one per site, e.g. ca_woodland_hills.json).
+# They are tracked in git so the whole team sees the same plans — see ../../.gitignore.

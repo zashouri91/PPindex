@@ -1,0 +1,56 @@
+site,measure,estimate,lo,hi,margin,se,n,n_boot
+CA-Woodland Hills,Index,65.74,64.16,67.34,1.59,0.817,392,2000
+CA-Woodland Hills,Work Activity,55.79,53.35,58.5,2.57,1.32,392,2000
+CA-Woodland Hills,Physical Feature,63.61,61.8,65.49,1.85,0.93,392,2000
+CA-Woodland Hills,Service Level,72.9,71.36,74.39,1.51,0.775,392,2000
+CA-Woodland Hills,Digital & Tech,70.65,68.85,72.37,1.76,0.889,392,2000
+FL-Miami,Index,71.7,67.94,75.34,3.7,1.914,100,2000
+FL-Miami,Work Activity,66.39,60.82,71.86,5.52,2.86,100,2000
+FL-Miami,Physical Feature,70.44,66.08,74.7,4.31,2.182,100,2000
+FL-Miami,Service Level,73.25,69.92,76.67,3.38,1.741,100,2000
+FL-Miami,Digital & Tech,76.71,72.83,80.54,3.85,1.926,100,2000
+FL-Tampa,Index,67.75,65.23,70.24,2.5,1.248,177,2000
+FL-Tampa,Work Activity,59.81,55.89,63.7,3.9,1.991,177,2000
+FL-Tampa,Physical Feature,66.85,64.09,69.74,2.83,1.417,177,2000
+FL-Tampa,Service Level,74.27,71.89,76.53,2.32,1.197,177,2000
+FL-Tampa,Digital & Tech,70.08,67.44,72.62,2.59,1.32,177,2000
+GA-Atlanta,Index,76.54,74.72,78.42,1.85,0.948,276,2000
+GA-Atlanta,Work Activity,71.03,67.99,73.91,2.96,1.524,276,2000
+GA-Atlanta,Physical Feature,74.15,71.94,76.32,2.19,1.116,276,2000
+GA-Atlanta,Service Level,82.53,80.89,84.23,1.67,0.842,276,2000
+GA-Atlanta,Digital & Tech,78.46,76.48,80.54,2.03,1.041,276,2000
+IL-Chicago-Willis Tower,Index,70.24,67.77,72.87,2.55,1.322,88,2000
+IL-Chicago-Willis Tower,Work Activity,60.47,56.21,64.77,4.28,2.222,88,2000
+IL-Chicago-Willis Tower,Physical Feature,68.4,65.59,71.46,2.94,1.508,88,2000
+IL-Chicago-Willis Tower,Service Level,81.01,78.21,83.81,2.8,1.434,88,2000
+IL-Chicago-Willis Tower,Digital & Tech,71.07,67.66,74.57,3.46,1.755,88,2000
+IN-Indianapolis,Index,68.17,67.06,69.28,1.11,0.57,690,2000
+IN-Indianapolis,Work Activity,62.73,61.0,64.37,1.68,0.863,690,2000
+IN-Indianapolis,Physical Feature,63.02,61.74,64.32,1.29,0.657,690,2000
+IN-Indianapolis,Service Level,77.0,75.91,78.09,1.09,0.576,690,2000
+IN-Indianapolis,Digital & Tech,69.95,68.7,71.17,1.24,0.636,690,2000
+NY-New York (Penn1),Index,71.36,67.85,74.7,3.42,1.777,101,2000
+NY-New York (Penn1),Work Activity,64.71,59.65,69.56,4.95,2.571,101,2000
+NY-New York (Penn1),Physical Feature,70.79,67.27,74.48,3.6,1.885,101,2000
+NY-New York (Penn1),Service Level,78.06,74.85,81.25,3.2,1.631,101,2000
+NY-New York (Penn1),Digital & Tech,71.86,67.7,75.91,4.11,2.117,101,2000
+OH-Mason,Index,68.44,66.86,70.01,1.57,0.819,358,2000
+OH-Mason,Work Activity,60.56,58.07,62.99,2.46,1.266,358,2000
+OH-Mason,Physical Feature,66.34,64.66,68.07,1.7,0.901,358,2000
+OH-Mason,Service Level,75.95,74.45,77.47,1.51,0.767,358,2000
+OH-Mason,Digital & Tech,70.91,69.18,72.67,1.75,0.906,358,2000
+VA-Norfolk,Index,69.77,68.22,71.21,1.49,0.761,453,2000
+VA-Norfolk,Work Activity,64.49,62.25,66.75,2.25,1.147,453,2000
+VA-Norfolk,Physical Feature,65.77,64.07,67.53,1.73,0.884,453,2000
+VA-Norfolk,Service Level,75.12,73.55,76.59,1.52,0.776,453,2000
+VA-Norfolk,Digital & Tech,73.7,72.17,75.19,1.51,0.779,453,2000
+VA-Richmond,Index,66.54,64.8,68.34,1.77,0.903,293,2000
+VA-Richmond,Work Activity,62.29,59.45,65.18,2.86,1.488,293,2000
+VA-Richmond,Physical Feature,64.83,62.83,66.91,2.04,1.036,293,2000
+VA-Richmond,Service Level,68.37,66.66,70.09,1.72,0.856,293,2000
+VA-Richmond,Digital & Tech,70.66,68.9,72.54,1.82,0.942,293,2000
+Company (10 sites),Index,69.02,68.45,69.6,0.58,0.295,2928,2000
+Company (10 sites),Work Activity,62.5,61.58,63.39,0.9,0.455,2928,2000
+Company (10 sites),Physical Feature,66.08,65.41,66.74,0.66,0.334,2928,2000
+Company (10 sites),Service Level,75.57,75.0,76.13,0.56,0.287,2928,2000
+Company (10 sites),Digital & Tech,71.95,71.34,72.55,0.61,0.319,2928,2000
