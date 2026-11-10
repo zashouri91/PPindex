@@ -651,8 +651,9 @@ with tab_report:
     # --- Operational Action Plan — What to Do Next (generate / regenerate) -----------
     with st.expander("🧭 Operational Action Plan — generate / regenerate",
                      expanded=not action_plan.plan_exists(rsite)):
-        st.caption("An auto-generated, validate-before-acting **What to Do Next** section that renders at the "
-                   "top of the card. Grounded only in this site's evidence; generated once and stored.")
+        st.caption("An auto-generated, validate-before-acting **What to Do Next** section. On the site card it "
+                   "renders after the theme tables and before the quotes. Grounded only in this site's evidence; "
+                   "generated once and stored.")
         _prov = action_plan.configured_provider()
         _pm = action_plan.plan_meta(rsite)
         if _pm:

@@ -88,3 +88,14 @@ def test_item_status_comes_from_stored_column(ctx):
     imp = ss[ss["mean_importance"].notna()]
     for _, r in imp.iterrows():
         assert R.item_status(r) == r["ryg"]
+
+
+def test_copy_theme_count_and_population():
+    from taxonomy import THEMES
+    for flag in (True, False):
+        c = R.load_context(completers_only=flag)
+        site_html = R.build_site_report(c, "FL-Miami")
+        port_html = R.build_portfolio_report(c)
+        for html in (site_html, port_html):
+            assert f"{len(THEMES)} themes" in html and "28 themes" not in html
+            assert R.population_label(flag) in html

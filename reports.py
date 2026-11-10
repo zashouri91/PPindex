@@ -21,11 +21,18 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 import action_plan  # Operational Action Plan — "What to Do Next" section (LLM-generated, stored per site)
-from taxonomy import THEME_TO_CATEGORY, GENERIC_THEMES
+from taxonomy import THEME_TO_CATEGORY, GENERIC_THEMES, THEMES, CATEGORIES
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(HERE, "data")
 OVERRIDES = os.path.join(DATA, "overrides.csv")
+
+N_THEMES, N_CATEGORIES = len(THEMES), len(CATEGORIES)   # quoted in card copy — never hard-code
+
+
+def population_label(completers_only):
+    return "completed responses" if completers_only else "all responses (including partial)"
+
 
 # theme -> category (Unclassified rolls up to Uncategorized), same as meta["theme_to_category"]
 THEME_TO_CAT = {**THEME_TO_CATEGORY, "Unclassified": "Uncategorized"}
@@ -1098,7 +1105,7 @@ def build_site_report(ctx, site, data=None):
 {action_plan.ACTION_PLAN_CSS}
 </style></head><body>
 <h1>PulsePoint Experience — {_html.escape(site)}</h1>
-<div class="sub">Workplace experience report card · completed responses</div>
+<div class="sub">Workplace experience report card · {population_label(completers_only)}</div>
 {card_html}
 <h3>Demographics — respondent profile</h3>
 {demo_html or '<p style="color:#888">No demographic data.</p>'}
@@ -1129,7 +1136,7 @@ by survey position). “Company” is the other in-scope sites; “vs company”
 <h3>Vs. org — theme rates</h3>
 <table><tr><th>Theme</th><th>site</th><th>org</th></tr>{bench_rows}</table>
 <p class="lgd"><b>How comments are categorized:</b> themes are assigned by a transparent keyword taxonomy built for this
-survey (28 themes across 7 categories), kept separate from the PXIP category set by design so the open-ended read stands
+survey ({N_THEMES} themes across {N_CATEGORIES} categories), kept separate from the PXIP category set by design so the open-ended read stands
 on its own. The mapping lives in <code>taxonomy.py</code> and can be tuned without touching the scores.</p>
 {action_plan_html}
 <h3>In their words — what to fix</h3>{neg_quotes}
@@ -1548,7 +1555,7 @@ def build_portfolio_report(ctx, data=None):
    table.qgrid{{min-width:0}} .qgrid-wrap{{overflow:visible}} tr.qg-dim,table.qgrid tr{{break-inside:avoid}} }}
 </style></head><body>
 <h1>10 PulsePoints — Portfolio Report Card</h1>
-<div class="sub">Company-wide exec brief across the {dd['n_sites']} in-scope sites · completed responses</div>
+<div class="sub">Company-wide exec brief across the {dd['n_sites']} in-scope sites · {population_label(completers_flag)}</div>
 <div class="rc"><div class="rc-badge">{cx:.0f}</div><div>
  <div class="rc-t">Company Overall PulsePoint Experience Index Score (0–100)</div>
  <div class="rc-p">Sites range {rng} · {dd['n_participants']:,} respondents · {dd['n_comments']:,} substantive comments
@@ -1574,7 +1581,7 @@ Work Activity is the company's weakest dimension, so it reads amber/red across m
 <table><tr><th>Theme</th><th>% of comments</th><th>Mentions</th><th>Sentiment</th></tr>{th_rows}</table>
 <div class="charts">{img('heatmap_theme')}</div>
 <p class="lgd">Prevalence = share of each site's comments mentioning the theme (a comment can touch several).
-Themes come from a keyword taxonomy (29 themes across 7 categories), kept separate from PXIP categories by design.</p>
+Themes come from a keyword taxonomy ({N_THEMES} themes across {N_CATEGORIES} categories), kept separate from PXIP categories by design.</p>
 <h3>Demographics — respondent profile</h3>
 <p class="lgd">Provided to help readers understand the respondent mix behind the results ({dd['n_participants']:,} respondents).</p>
 <div class="charts">{img('demo')}</div>

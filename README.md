@@ -94,7 +94,7 @@ comments whose themes explain its Friction. **Scope: completed responses across 
 in-scope sites**, per the spec — so the numbers reconcile with the Tableau report.
 
 **🏷️ Theme & Sentiment Explorer** — three controls drive everything: **View by**
-Categories (the 7 roll-ups) or Themes (the 28 granular tags); **Break down by** Site,
+Categories (the 7 roll-ups) or Themes (the 29 granular tags); **Break down by** Site,
 Role, Tenure, or Hybrid category; and **Heatmap metric** — *% of group* (rate-
 normalized, so a 30-response site is comparable to a 900-response one) or raw Counts.
 Plus theme/category frequency, sentiment mix, and a searchable comment table. Multi-
@@ -217,7 +217,7 @@ section and the tab shows a one-line setup hint — nothing breaks.
   are flagged so they don't pollute the trends. Toggle "Include junk" in the sidebar
   to see them.
 - **Themes** are assigned by a transparent keyword taxonomy in `taxonomy.py`
-  (28 themes across 7 categories). Each comment can carry multiple themes — this is
+  (29 themes across 7 categories). Each comment can carry multiple themes — this is
   the "split multi-topic comments" behavior. Granular details roll up into the parent
   theme (e.g. a specific broken elevator → *Building Operations*).
 - **Sentiment** uses a **domain-tuned ensemble** built for this survey (in
