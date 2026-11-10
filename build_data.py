@@ -177,6 +177,12 @@ def paired_gap_stats(sup, imp):
 
 GAP_EMPTY = {"gap": "", "gap_se": "", "gap_lo": "", "gap_hi": ""}
 
+def support_se(values):
+    """Standard error of mean Support (1–5) — new column used for item-level standing
+    of agreement-only (Digital & Tech) items. Existing columns are untouched."""
+    v = pd.Series(values).dropna().astype(float)
+    return {"support_se": round(float(v.std(ddof=1) / np.sqrt(len(v))), 4) if len(v) > 1 else np.nan}
+
 def official_scores(sub):
     """Per-item + per-site Friction/Composite/RYG for a respondent subset (10 sites)."""
     item_rows, site_rows, dim_pool = [], [], {}
@@ -214,6 +220,7 @@ def official_scores(sub):
                    "friction_pct": round(fpct, 0) if pd.notna(fpct) else "",
                    "ryg": ryg}
             row.update(paired_gap_stats(sup[both], imp[both]) if has_imp else GAP_EMPTY)
+            row.update(support_se(sup[both] if has_imp else sup[sup_ok]))
             item_rows.append(row)
             # per site
             for site, g in sub.groupby(site_col):
@@ -232,7 +239,7 @@ def official_scores(sub):
                         "importance_100": round(to100(gimp[gboth]).mean(), 1),
                         "support_100": round(comp_s, 1), "composite": round(comp_s, 1),
                         "friction": round(fr, 1), "friction_pct": round(fp, 0), "ryg": ry,
-                        **paired_gap_stats(gsup[gboth], gimp[gboth])})
+                        **paired_gap_stats(gsup[gboth], gimp[gboth]), **support_se(gsup[gboth])})
                 else:
                     if not gok.any():
                         continue
@@ -241,7 +248,7 @@ def official_scores(sub):
                         "importance_100": "", "support_100": round(comp_s, 1), "composite": round(comp_s, 1),
                         "friction": round(float((100 - gsup100)[gok].mean()), 1),
                         "friction_pct": round(float((gsup100 < 100)[gok].mean() * 100), 0), "ryg": "",
-                        **GAP_EMPTY})
+                        **GAP_EMPTY, **support_se(gsup[gok])})
     # dimension composites (pooled avg support#) + weighted overall
     dim_rows = []
     for dim, series_list in dim_pool.items():

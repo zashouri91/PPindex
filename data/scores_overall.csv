@@ -1,31 +1,31 @@
-dimension,item,n,mean_importance,mean_support,importance_100,support_100,composite,friction,friction_pct,ryg,gap,gap_se,gap_lo,gap_hi
-Work Activity,Focused individual work that requires concentration and minimal interruption,2928,4.194,3.297,79.8,57.4,57.4,28.9,56.0,Under Supported,-0.897,0.0299,-0.956,-0.838
-Work Activity,Tasks requiring discretion,2928,3.759,3.298,69.0,57.5,57.5,22.7,44.0,Under Supported,-0.461,0.0319,-0.523,-0.398
-Work Activity,Planned in-person meetings at a PulsePoint,2928,2.062,3.782,26.5,69.5,69.5,1.2,3.0,Over Supported,1.72,0.0251,1.671,1.769
-Work Activity,Informal or spontaneous collaboration with colleagues,2928,2.589,3.517,39.7,62.9,62.9,5.4,13.0,Target,0.928,0.0274,0.874,0.982
-Work Activity,Working with others on shared tasks or problem-solving,2928,2.888,3.46,47.2,61.5,61.5,8.4,20.0,Target,0.572,0.0287,0.516,0.629
-Work Activity,Virtual collaboration with remote or hybrid colleagues,2928,4.011,3.647,75.3,66.2,66.2,19.2,40.0,Under Supported,-0.364,0.0293,-0.422,-0.307
-Work Activity,"Learning, training, or skill development",2928,3.256,3.498,56.4,62.4,62.4,10.1,24.0,Target,0.242,0.0262,0.191,0.294
-Physical Feature,Availability of spaces that support focused work,2928,4.252,3.376,81.3,59.4,59.4,27.3,51.0,Under Supported,-0.876,0.0287,-0.933,-0.82
-Physical Feature,Availability of spaces that support discretion,2928,4.038,3.282,76.0,57.1,57.1,27.0,49.0,Under Supported,-0.756,0.0315,-0.818,-0.694
-Physical Feature,Availability of meeting and collaboration spaces (individual and group),2928,3.143,3.723,53.6,68.1,68.1,7.8,18.0,Target,0.581,0.0271,0.528,0.634
-Physical Feature,"Availability of community spaces (i.e. gathering, event spaces, café)",2928,2.659,3.935,41.5,73.4,73.4,1.9,5.0,Target,1.276,0.0228,1.232,1.321
-Physical Feature,Furniture comfort and ergonomics (including adjustability of chair and workstation),2928,3.895,3.782,72.4,69.6,69.6,13.1,32.0,Under Supported,-0.113,0.0245,-0.161,-0.065
-Physical Feature,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",2928,3.163,3.645,54.1,66.1,66.1,8.6,20.0,Target,0.483,0.0268,0.43,0.535
-Physical Feature,Lighting comfort (natural and artificial),2928,3.786,3.807,69.7,70.2,70.2,11.1,27.0,Target,0.021,0.0242,-0.026,0.069
-Physical Feature,Thermal / temperature comfort,2928,3.987,3.456,74.7,61.4,61.4,20.8,43.0,Under Supported,-0.532,0.0274,-0.586,-0.478
-Physical Feature,Ease of navigating and finding spaces (directions and signage),2928,3.561,3.78,64.0,69.5,69.5,9.3,23.0,Target,0.219,0.0243,0.172,0.267
-Service Level,Entry and reception,2928,2.893,4.327,47.3,83.2,83.2,1.3,3.0,Target,1.434,0.0232,1.388,1.479
-Service Level,Ability to get help resolving workplace or technology issues while on site,2563,3.972,4.137,74.3,78.4,78.4,7.1,20.0,Target,0.165,0.0213,0.123,0.207
-Service Level,Support from a community manager,2651,2.969,3.961,49.2,74.0,74.0,1.8,5.0,Target,0.992,0.0208,0.952,1.033
-Service Level,Availability of on-site food and beverage options,2928,3.291,3.405,57.3,60.1,60.1,14.5,29.0,Target,0.114,0.0307,0.054,0.175
-Service Level,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",2928,3.027,3.759,50.7,69.0,69.0,4.8,12.0,Target,0.732,0.0234,0.686,0.778
-Service Level,Cleanliness and upkeep of PulsePoint,2928,4.138,4.256,78.5,81.4,81.4,7.8,21.0,Target,0.117,0.0207,0.077,0.158
-Service Level,"Reliability of building operations (e.g., elevators, restrooms, etc.)",2928,4.251,4.237,81.3,80.9,80.9,8.1,23.0,Target,-0.013,0.0187,-0.05,0.023
-Service Level,"Communication about workplace updates, changes, or disruptions",2928,3.941,4.109,73.5,77.7,77.7,6.5,19.0,Target,0.169,0.0187,0.132,0.205
-Digital & Tech,"I can connect and start working at a PulsePoint without unnecessary technical friction (WiFi, power or cabling, monitors or peripherals, log-in/system access)",2928,,3.85,,71.3,71.3,28.7,70.0,,,,,
-Digital & Tech,Video conferencing and meeting room technology reliably support in-person and virtual meetings,2928,,3.72,,68.0,68.0,32.0,79.0,,,,,
-Digital & Tech,"Workplace-provided hardware (e.g., monitors, keyboards, mice, power) is readily available and works as expected",2928,,3.802,,70.0,70.0,30.0,75.0,,,,,
-Digital & Tech,"Digital collaboration tools (e.g., Microsoft tools) support effective work with remote or hybrid colleagues",2928,,4.057,,76.4,76.4,23.6,70.0,,,,,
-Digital & Tech,Technical issues that affect my ability to work are resolved in a timely manner,2928,,3.808,,70.2,70.2,29.8,78.0,,,,,
-Digital & Tech,Reservation tools are easy to use,2928,,4.032,,75.8,75.8,24.2,68.0,,,,,
+dimension,item,n,mean_importance,mean_support,importance_100,support_100,composite,friction,friction_pct,ryg,gap,gap_se,gap_lo,gap_hi,support_se
+Work Activity,Focused individual work that requires concentration and minimal interruption,2928,4.194,3.297,79.8,57.4,57.4,28.9,56.0,Under Supported,-0.897,0.0299,-0.956,-0.838,0.0226
+Work Activity,Tasks requiring discretion,2928,3.759,3.298,69.0,57.5,57.5,22.7,44.0,Under Supported,-0.461,0.0319,-0.523,-0.398,0.0222
+Work Activity,Planned in-person meetings at a PulsePoint,2928,2.062,3.782,26.5,69.5,69.5,1.2,3.0,Over Supported,1.72,0.0251,1.671,1.769,0.0218
+Work Activity,Informal or spontaneous collaboration with colleagues,2928,2.589,3.517,39.7,62.9,62.9,5.4,13.0,Target,0.928,0.0274,0.874,0.982,0.023
+Work Activity,Working with others on shared tasks or problem-solving,2928,2.888,3.46,47.2,61.5,61.5,8.4,20.0,Target,0.572,0.0287,0.516,0.629,0.0229
+Work Activity,Virtual collaboration with remote or hybrid colleagues,2928,4.011,3.647,75.3,66.2,66.2,19.2,40.0,Under Supported,-0.364,0.0293,-0.422,-0.307,0.0224
+Work Activity,"Learning, training, or skill development",2928,3.256,3.498,56.4,62.4,62.4,10.1,24.0,Target,0.242,0.0262,0.191,0.294,0.0219
+Physical Feature,Availability of spaces that support focused work,2928,4.252,3.376,81.3,59.4,59.4,27.3,51.0,Under Supported,-0.876,0.0287,-0.933,-0.82,0.0219
+Physical Feature,Availability of spaces that support discretion,2928,4.038,3.282,76.0,57.1,57.1,27.0,49.0,Under Supported,-0.756,0.0315,-0.818,-0.694,0.022
+Physical Feature,Availability of meeting and collaboration spaces (individual and group),2928,3.143,3.723,53.6,68.1,68.1,7.8,18.0,Target,0.581,0.0271,0.528,0.634,0.017
+Physical Feature,"Availability of community spaces (i.e. gathering, event spaces, café)",2928,2.659,3.935,41.5,73.4,73.4,1.9,5.0,Target,1.276,0.0228,1.232,1.321,0.0153
+Physical Feature,Furniture comfort and ergonomics (including adjustability of chair and workstation),2928,3.895,3.782,72.4,69.6,69.6,13.1,32.0,Under Supported,-0.113,0.0245,-0.161,-0.065,0.017
+Physical Feature,"Availability of spaces that support personal wellbeing or restoration (quiet space, wellness rooms, walking treadmills, etc.)",2928,3.163,3.645,54.1,66.1,66.1,8.6,20.0,Target,0.483,0.0268,0.43,0.535,0.0174
+Physical Feature,Lighting comfort (natural and artificial),2928,3.786,3.807,69.7,70.2,70.2,11.1,27.0,Target,0.021,0.0242,-0.026,0.069,0.0166
+Physical Feature,Thermal / temperature comfort,2928,3.987,3.456,74.7,61.4,61.4,20.8,43.0,Under Supported,-0.532,0.0274,-0.586,-0.478,0.0197
+Physical Feature,Ease of navigating and finding spaces (directions and signage),2928,3.561,3.78,64.0,69.5,69.5,9.3,23.0,Target,0.219,0.0243,0.172,0.267,0.0164
+Service Level,Entry and reception,2928,2.893,4.327,47.3,83.2,83.2,1.3,3.0,Target,1.434,0.0232,1.388,1.479,0.0137
+Service Level,Ability to get help resolving workplace or technology issues while on site,2563,3.972,4.137,74.3,78.4,78.4,7.1,20.0,Target,0.165,0.0213,0.123,0.207,0.017
+Service Level,Support from a community manager,2651,2.969,3.961,49.2,74.0,74.0,1.8,5.0,Target,0.992,0.0208,0.952,1.033,0.017
+Service Level,Availability of on-site food and beverage options,2928,3.291,3.405,57.3,60.1,60.1,14.5,29.0,Target,0.114,0.0307,0.054,0.175,0.0211
+Service Level,"Access to workplace support services that support daily needs (e.g., office supplies, printing, mail)",2928,3.027,3.759,50.7,69.0,69.0,4.8,12.0,Target,0.732,0.0234,0.686,0.778,0.0166
+Service Level,Cleanliness and upkeep of PulsePoint,2928,4.138,4.256,78.5,81.4,81.4,7.8,21.0,Target,0.117,0.0207,0.077,0.158,0.0152
+Service Level,"Reliability of building operations (e.g., elevators, restrooms, etc.)",2928,4.251,4.237,81.3,80.9,80.9,8.1,23.0,Target,-0.013,0.0187,-0.05,0.023,0.015
+Service Level,"Communication about workplace updates, changes, or disruptions",2928,3.941,4.109,73.5,77.7,77.7,6.5,19.0,Target,0.169,0.0187,0.132,0.205,0.0143
+Digital & Tech,"I can connect and start working at a PulsePoint without unnecessary technical friction (WiFi, power or cabling, monitors or peripherals, log-in/system access)",2928,,3.85,,71.3,71.3,28.7,70.0,,,,,,0.0196
+Digital & Tech,Video conferencing and meeting room technology reliably support in-person and virtual meetings,2928,,3.72,,68.0,68.0,32.0,79.0,,,,,,0.0163
+Digital & Tech,"Workplace-provided hardware (e.g., monitors, keyboards, mice, power) is readily available and works as expected",2928,,3.802,,70.0,70.0,30.0,75.0,,,,,,0.0184
+Digital & Tech,"Digital collaboration tools (e.g., Microsoft tools) support effective work with remote or hybrid colleagues",2928,,4.057,,76.4,76.4,23.6,70.0,,,,,,0.0144
+Digital & Tech,Technical issues that affect my ability to work are resolved in a timely manner,2928,,3.808,,70.2,70.2,29.8,78.0,,,,,,0.0164
+Digital & Tech,Reservation tools are easy to use,2928,,4.032,,75.8,75.8,24.2,68.0,,,,,,0.0161

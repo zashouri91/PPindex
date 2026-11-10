@@ -521,6 +521,9 @@ with tab_browse:
 
     with b_export:
         st.caption("Take the analysis with you — no Streamlit required.")
+        st.warning("**Internal analysis only.** The workbook, CSV exports and offline dashboard keep role and tenure "
+                   "beside comments, so small groups can be identifiable. Do not share them outside the analysis team; "
+                   "use the site and portfolio report cards for leadership audiences.")
         e1, e2 = st.columns(2)
         with e1:
             st.markdown("**📊 Excel analysis workbook**")

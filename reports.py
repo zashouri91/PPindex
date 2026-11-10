@@ -20,6 +20,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
+import design
 import action_plan  # Operational Action Plan — "What to Do Next" section (LLM-generated, stored per site)
 from taxonomy import THEME_TO_CATEGORY, GENERIC_THEMES, THEMES, CATEGORIES
 
@@ -110,6 +111,13 @@ ITEM_THEME_MAP = {
     "Cleanliness and upkeep": ["Cleanliness & Upkeep"],
     "building operations": ["Building Operations", "Parking & Commute"],
     "Communication about workplace": ["Communication & Updates"],
+    # Digital & Tech (agreement-only items)
+    "connect and start working": ["Connectivity (WiFi / Login / Power)", "Hardware (Monitors / Peripherals)"],
+    "Video conferencing and meeting room technology": ["AV / Video Conferencing", "Meeting & Conference Rooms"],
+    "Workplace-provided hardware": ["Hardware (Monitors / Peripherals)"],
+    "Digital collaboration tools": ["Software / Tools", "AV / Video Conferencing"],
+    "Technical issues that affect my ability to work are resolved": ["Support / Help Services"],
+    "Reservation tools are easy to use": ["Software / Tools", "Desk Availability & Reservations"],
 }
 
 def themes_for_item(item):
@@ -199,8 +207,8 @@ def _theme_friction_from(sdf):
         return {}
     for _, r in sdf.iterrows():
         fr = r.get("friction")
-        if pd.isna(fr):
-            continue
+        if pd.isna(fr) or pd.isna(pd.to_numeric(r.get("mean_importance"), errors="coerce")):
+            continue   # agreement-only (Digital & Tech) items carry no comparable Friction
         for th in themes_for_item(r["item"]):
             tmp[th].append(float(fr))
     return {th: float(np.mean(v)) for th, v in tmp.items()}
@@ -697,6 +705,156 @@ def agreement_sig(ctx, site, col, ten_sites=None):
                p=float(stats.ttest_1samp(a, om).pvalue))
     return out
 
+ATTRIBUTION_MIN_GROUP = 10   # show a writer's role only if at least this many site respondents share it
+SMALL_COUNT = 5              # demographic counts under this print as "<5"
+TECH_WATCH_BELOW = 3.5       # Digital & Tech items under this agreement (1–5) go on the watch line
+
+
+def attributable_roles(ctx, site):
+    rs = ctx.resp_scores
+    if rs is None or rs.empty:
+        return set()
+    vc = rs[rs["site"] == site]["role"].dropna().astype(str).value_counts()
+    return set(vc[vc >= ATTRIBUTION_MIN_GROUP].index)
+
+
+def shown_role(role, roles_ok):
+    """The role to print beside a comment, or '' when the group is too small to show."""
+    r = "" if role is None or (isinstance(role, float) and np.isnan(role)) else str(role)
+    return r if r in roles_ok else ""
+
+
+def item_standing_vs_company(r, company_mean):
+    """Standing of a site item's mean (1–5) vs the company mean, using its 95% t-interval
+    (support_se from build_data). Used for agreement-only (Digital & Tech) items."""
+    from scipy import stats
+    se, n, m = r.get("support_se"), r.get("n"), r.get("mean_support")
+    if any(pd.isna(x) for x in (se, n, m, company_mean)) or n < 2:
+        return {"lo": np.nan, "hi": np.nan, "margin": np.nan, "standing": None}
+    h = float(stats.t.ppf(0.975, int(n) - 1)) * float(se)
+    return {"lo": m - h, "hi": m + h, "margin": h,
+            "standing": standing_label(m - h, m + h, round(float(company_mean), 2))}
+
+
+def themes_differ(ctx, site, alpha=0.05):
+    """Themes whose share of PEOPLE at the site differs from the other in-scope sites beyond
+    chance: two-proportion z-test per theme, Benjamini–Hochberg across themes."""
+    from scipy.stats import norm
+    comp = company_comments(ctx)
+    resp = company_respondents(ctx)
+    n1 = int((resp["site"] == site).sum()); n2 = int((resp["site"] != site).sum())
+    if n1 < 10 or n2 < 10:
+        return [], 0
+    ex = explode_level(comp, "Themes", exclude_generic=True)
+    rows = []
+    for th, g in ex.groupby("key"):
+        x1 = g[g["site"] == site]["respondent"].nunique(); x2 = g[g["site"] != site]["respondent"].nunique()
+        p1, p2 = x1 / n1, x2 / n2
+        pool = (x1 + x2) / (n1 + n2)
+        se = np.sqrt(pool * (1 - pool) * (1 / n1 + 1 / n2))
+        if se == 0:
+            continue
+        z = (p1 - p2) / se
+        rows.append({"theme": th, "site_pct": p1 * 100, "other_pct": p2 * 100, "site_people": x1,
+                     "p": float(2 * (1 - norm.cdf(abs(z))))})
+    if not rows:
+        return [], 0
+    df = pd.DataFrame(rows).sort_values("p").reset_index(drop=True)
+    m = len(df)
+    df["q"] = (df["p"] * m / (df.index + 1)).iloc[::-1].cummin().iloc[::-1].clip(upper=1.0)   # BH
+    sig = df[df["q"] < alpha].sort_values("site_pct", ascending=False)
+    return sig.to_dict("records"), m
+
+
+def demo_compact(vc, total, k=3):
+    """'Associate 46% · Manager 21% · Director 12% · other 21%' — groups under SMALL_COUNT folded into other."""
+    if not total:
+        return ""
+    big = vc[vc >= SMALL_COUNT]
+    parts = [f"{_html.escape(str(g))} {v / total * 100:.0f}%" for g, v in big.head(k).items()]
+    rest = total - int(big.head(k).sum())
+    if rest > 0:
+        pct = rest / total * 100
+        parts.append("other <1%" if pct < 1 else f"other {pct:.0f}%")
+    return " · ".join(parts)
+
+
+def site_card_extras(ctx, site, data, real, roles_ok, seen_ids, seen_texts):
+    """Phase 5 site-card pieces built on top of site_report_data."""
+    out = {}
+    ss = ctx.scores_site[ctx.scores_site["site"] == site].copy() if not ctx.scores_site.empty else pd.DataFrame()
+    sc_all = ctx.scores.set_index("item") if not ctx.scores.empty else pd.DataFrame()
+    TS = data.get("theme_stats", pd.DataFrame())
+    n_resp = max(1, int(data.get("n_respondents") or 0))
+    dims = ["Work Activity", "Physical Feature", "Service Level", "Digital & Tech"]
+    areas = {a["dim"]: a for a in ((data.get("card") or {}).get("areas") or [])}
+    # Importance vs Support by dimension: score ± margin, standing, k of n need attention, worst item
+    dim_rows = []
+    for dm in dims:
+        it = ss[ss["dimension"] == dm] if len(ss) else pd.DataFrame()
+        a = areas.get(dm, {})
+        if not len(it):
+            continue
+        if dm == "Digital & Tech":
+            need = int((it["mean_support"] < TECH_WATCH_BELOW).sum())
+            worst = it.sort_values("mean_support").iloc[0]
+            worst_txt = f"{worst['item']} (agreement {worst['mean_support']:.2f})"
+            need_txt = f"{need} of {len(it)} items below {TECH_WATCH_BELOW} agreement"
+        else:
+            need = int((it["ryg"] == "Under Supported").sum())
+            worst = it.sort_values("friction", ascending=False).iloc[0]
+            worst_txt = f"{worst['item']} (Friction {worst['friction']:.0f})"
+            need_txt = f"{need} of {len(it)} items need attention"
+        dim_rows.append({"dim": dm, "score": a.get("score"), "margin": a.get("margin"),
+                         "standing": a.get("standing"), "company": a.get("org"),
+                         "need": need, "n_items": len(it), "need_txt": need_txt, "worst": worst_txt})
+    out["dim_rows"] = dim_rows
+    # Top priorities anchored on survey items: five highest-Friction (importance) items
+    imp = ss[ss["mean_importance"].notna()] if len(ss) else pd.DataFrame()
+    top = []
+    for _, r in (imp.sort_values("friction", ascending=False).head(5).iterrows() if len(imp) else []):
+        links = []
+        for th in themes_for_item(r["item"]):
+            if th in TS.index:
+                links.append({"theme": th, "people": int(TS.at[th, "people"]),
+                              "pct_resp": float(TS.at[th, "pct_resp"]), "neg": float(TS.at[th, "neg"])})
+        quote = None
+        for lk in sorted(links, key=lambda x: -x["people"]):
+            qs = select_quotes(real, lk["theme"], "Themes", "representative", 1, seen_ids, seen_texts)
+            if qs:
+                q = qs[0]
+                quote = {"theme": lk["theme"], "text": str(q["comment"]), "role": shown_role(q["role"], roles_ok)}
+                break
+        sv = item_severity(r)
+        top.append({"item": r["item"], "dimension": r["dimension"], "friction": float(r["friction"]),
+                    "friction_pct": float(r["friction_pct"]), "status": item_status(r),
+                    "status_words": status_words(r), "severity": sv["severity"], "borderline": sv["borderline"],
+                    "themes": links, "quote": quote})
+    out["top_items"] = top
+    # Technology watch: Digital & Tech items under 3.5 agreement or Below the company
+    watch = []
+    tech = ss[ss["mean_importance"].isna()] if len(ss) else pd.DataFrame()
+    for _, r in tech.iterrows():
+        comp_m = sc_all["mean_support"].get(r["item"], np.nan) if len(sc_all) else np.nan
+        st_ = item_standing_vs_company(r, comp_m)
+        if r["mean_support"] < TECH_WATCH_BELOW or st_["standing"] == STANDING_BELOW:
+            watch.append({"item": r["item"], "mean": float(r["mean_support"]), "margin": st_["margin"],
+                          "company": comp_m, "standing": st_["standing"]})
+    out["tech_watch"] = watch
+    # What comments add: every category, people / % negative / Friction / priority score
+    out["comments_add"] = build_priority(ctx.comments[ctx.comments["site"] == site], "Categories",
+                                         theme_friction_map(ctx, site))
+    if len(out["comments_add"]):
+        out["comments_add"]["pct_resp"] = out["comments_add"]["people"] / n_resp * 100
+    out["differ"], out["differ_tested"] = themes_differ(ctx, site)
+    # compact demographics
+    out["demo_lines"] = {lab: demo_compact(vc, data.get("demo_total") or 0)
+                         for lab, vc in (data.get("demographics") or {}).items()}
+    plan = action_plan.load_plan(site) or {}
+    out["plan_top3"] = [p.get("name", "") for p in (plan.get("priorities") or [])[:3]]
+    return out
+
+
 def site_report_data(ctx, site):
     """All computed pieces for a site's report."""
     comments, scores_site, resp_scores = ctx.comments, ctx.scores_site, ctx.resp_scores
@@ -768,7 +926,7 @@ def site_report_data(ctx, site):
     data["participation"] = int((resp_scores["site"] == site).sum()) if not resp_scores.empty else data["n"]
     data["all_participants"] = int(len(company_respondents(ctx)))
     # full comment log for the appendix (all real comments at this site)
-    data["real_df"] = real[["respondent", "comment", "eff_sentiment", "eff_themes", "role", "tenure"]].reset_index(drop=True)
+    data["real_df"] = real[["respondent", "comment", "eff_sentiment", "eff_themes", "role"]].reset_index(drop=True)
     ten = meta.get("ten_sites", [])
     standings = site_standings(ctx)
     if len(ss):
@@ -855,7 +1013,11 @@ def site_report_data(ctx, site):
         ds = data["dim_summary"]
         ds["agree"] = ds["dimension"].map(lambda dm: amap.get(dm, {}).get("site_mean", np.nan))
         ds["agree_standing"] = ds["dimension"].map(lambda dm: amap.get(dm, {}).get("standing"))
-    # verbatims: top themes -> representative negative quote each; + positives
+    # verbatims: top themes -> representative negative quote each; + positives.
+    # Attribution rule: a role is shown only when >= ATTRIBUTION_MIN_GROUP respondents at the
+    # site share it; tenure is never shown beside a comment.
+    roles_ok = attributable_roles(ctx, site)
+    data["roles_ok"] = roles_ok
     seen_ids, seen_texts = set(), set()
     quotes = []
     for t in TS.index[:6]:
@@ -865,9 +1027,8 @@ def site_report_data(ctx, site):
             # how many negative comments carry this theme (the quote is one of them) —
             # a count of the pool it was drawn from, not a claim that they say the same
             n_neg = int(((tex["key"] == t) & (tex["eff_sentiment"] == "Negative")).sum())
-            quotes.append({"theme": t, "text": str(r["comment"]), "role": str(r["role"]),
-                           "tenure": str(r["tenure"]), "sentiment": r["eff_sentiment"],
-                           "n_negative_in_theme": n_neg})
+            quotes.append({"theme": t, "text": str(r["comment"]), "role": shown_role(r["role"], roles_ok),
+                           "sentiment": r["eff_sentiment"], "n_negative_in_theme": n_neg})
         if len(quotes) >= 5:
             break
     data["quotes"] = quotes
@@ -876,8 +1037,7 @@ def site_report_data(ctx, site):
         qs = select_quotes(real, t, "Themes", "positive", 1, seen_ids, seen_texts)
         if qs:
             r = qs[0]
-            pos_quotes.append({"theme": t, "text": str(r["comment"]), "role": str(r["role"]),
-                               "tenure": str(r["tenure"])})
+            pos_quotes.append({"theme": t, "text": str(r["comment"]), "role": shown_role(r["role"], roles_ok)})
         if len(pos_quotes) >= 2:
             break
     data["pos_quotes"] = pos_quotes
@@ -887,7 +1047,8 @@ def site_report_data(ctx, site):
     data["fix_candidates"] = [_row(t) for t in TS.index if tvol[t] >= 5 and tsent[t] >= 0.45][:10]
     cq_ids, cq_txt = set(), set()
     data["cand_quotes"] = [
-        {"theme": t, "text": str(r["comment"]), "role": str(r["role"]), "sentiment": r["eff_sentiment"]}
+        {"theme": t, "text": str(r["comment"]), "role": shown_role(r["role"], roles_ok),
+         "sentiment": r["eff_sentiment"]}
         for t in [c["theme"] for c in data["fix_candidates"]]
         for r in select_quotes(real, t, "Themes", "representative", 2, cq_ids, cq_txt)]
     _tech = ss[ss["mean_importance"].isna()] if len(ss) else pd.DataFrame()
@@ -895,7 +1056,7 @@ def site_report_data(ctx, site):
               if not scores.empty and "item" in scores.columns else pd.Series(dtype=float))
     data["tech_items"] = [(r["item"], float(r["mean_support"]), float(_org_t.get(r["item"], np.nan)))
                           for _, r in _tech.iterrows()]
-    data["charts"] = _site_charts(data)
+    data.update(site_card_extras(ctx, site, data, real, roles_ok, seen_ids, seen_texts))
     return data
 
 SENT_HEX = {"Positive": "#2E9E6B", "Neutral / Mixed": "#9AA0A6", "Negative": "#D1495B"}
@@ -1024,365 +1185,393 @@ def html_to_pdf(html):
             "Print → Save as PDF (identical output). To enable the in-app button, install Chrome or "
             f"Edge, or run `python -m playwright install chromium`. (renderer error: {exc})")
 
+# ---------------------------------------------------------------------------
+# HTML helpers shared by both cards (no images: bars are HTML with real text)
+# ---------------------------------------------------------------------------
+def status_html(status, words=None):
+    """Status chip: colour from the support status only, always with a word + icon."""
+    cls = design.STATUS_CLASS.get(status, "st-na")
+    icon = design.STATUS_ICON.get(status, "")
+    return f"<span class='st {cls}'>{icon} {_html.escape(words or STATUS_WORD.get(status, status))}</span>"
+
+
+def tech_status_html(mean_1to5):
+    lab, _hx = tech_status(mean_1to5)
+    return f"<span class='st st-na'>◇ {_html.escape(lab)} (agreement)</span>"
+
+
+def hbars(rows, vmax=100.0, axis=None):
+    """rows: [(label_html, value, text)] -> HTML horizontal bars on a 0..vmax scale."""
+    out = []
+    for lab, v, txt in rows:
+        w = 0 if pd.isna(v) else max(0.0, min(100.0, float(v) / vmax * 100))
+        out.append(f"<div class='bar-row'><div class='bar-lab'>{lab}</div>"
+                   f"<div class='bar-track' role='img' aria-label='{_html.escape(re.sub('<[^>]+>', '', txt))}'>"
+                   f"<div class='bar-fill' style='width:{w:.1f}%'></div>"
+                   f"<div class='bar-val' style='left:calc({w:.1f}% + 6px)'>{txt}</div></div></div>")
+    ax = (f"<div class='bar-axis'><div></div><span><span>0</span><span>{axis}</span>"
+          f"<span>{vmax:.0f}</span></span></div>") if axis else ""
+    return f"<div class='bars'>{''.join(out)}{ax}</div>"
+
+
+def _quote_html(q, extra=""):
+    who = q.get("role") or ""
+    meta = " · ".join(x for x in [_html.escape(who) if who else "", extra] if x)
+    return f"<blockquote>{_html.escape(q['text'])}<cite>{meta}</cite></blockquote>"
+
+
+SITE_CSS = """
+ .hdr{display:flex;gap:16px;align-items:center;border:1px solid var(--rule);border-radius:10px;padding:12px 16px;
+   background:var(--panel);margin:6px 0 10px}
+ .hdr .t{font-size:14px;font-weight:700;color:var(--navy)} .hdr .s{font-size:13px;color:var(--ink-2)}
+ .glance{border:1px solid var(--rule);border-radius:10px;padding:8px 14px 10px;margin-bottom:8px}
+ .glance h2{margin-top:6px}
+ .dimgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:4px 0 8px}
+ .dimbox{border:1px solid var(--rule);border-radius:8px;padding:6px 8px;text-align:center}
+ .dimbox .n{font-size:11.5px;color:var(--ink-2)} .dimbox .v{font-size:20px;font-weight:800;color:var(--navy)}
+ .dimbox .m{font-size:11.5px;color:var(--muted)}
+ .g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+ .glance .g2{grid-template-columns:3fr 2fr}
+ table.compact td,table.compact th{padding:3px 6px;font-size:12px}
+ table.compact .st{white-space:normal}
+ .pri{border:1px solid var(--rule);border-radius:8px;padding:8px 12px;margin:8px 0}
+ .pri .h{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+ .pri .num{background:var(--navy);color:var(--on-navy);border-radius:50%;width:20px;height:20px;display:inline-flex;
+   align-items:center;justify-content:center;font-size:11.5px;font-weight:700;flex:none}
+ .pri .it{font-weight:700;color:var(--navy);font-size:13.5px}
+ .pri ul{margin:4px 0 2px;padding-left:18px} .pri li{font-size:12.5px}
+ ul.clist{margin:2px 0 6px;padding-left:18px} ul.clist li{font-size:12.5px;margin:3px 0}
+ details.catblk{border:1px solid var(--rule);border-radius:7px;margin:6px 0;padding:2px 10px}
+ details.catblk>summary{cursor:pointer;font-weight:700;color:var(--navy);padding:6px 0;font-size:13px}
+ .demo{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+ @media print{ .glance{break-inside:avoid} .dimgrid{gap:4px} .pri{break-inside:avoid} }
+"""
+
+
+def _fric_txt(v):
+    return '—' if pd.isna(v) else f'{v:.0f}'
+
+
 def build_site_report(ctx, site, data=None):
-    """Self-contained HTML one-pager for one site. `data` = precomputed site_report_data."""
+    """Self-contained HTML report card for one site (Nov 2026 layout)."""
     meta, completers_only = ctx.meta, ctx.completers_only
     d = data if data is not None else site_report_data(ctx, site)
+    esc = _html.escape
     if d["n"] == 0:
-        return f"<html><body style='font-family:sans-serif'><h2>{_html.escape(site)}</h2><p>No comments for this site.</p></body></html>"
-    charts = d["charts"]
-    # Operational Action Plan — "What to Do Next": rendered from the stored per-site
-    # plan (empty string until one is generated, so exports stay clean).
-    action_plan_html = action_plan.render_action_plan_html(action_plan.load_plan(site))
-    P, tops = d["P"], d["P"]["key"].tolist()
-    _ncommenters = int(d["real_df"]["respondent"].nunique()) if d.get("real_df") is not None and len(d.get("real_df", [])) else 0
-    narrative = (f"We received <b>{d['n']:,} substantive comments</b>"
-                 + (f" from {_ncommenters:,} associates" if _ncommenters else "")
-                 + f" at <b>{_html.escape(site)}</b> (associates could answer up to five open-ended questions). "
-                 f"Overall comment sentiment is <b>{d['neg']:.0f}% negative</b> and {d['pos']:.0f}% positive. ")
-    if tops:
-        narrative += (f"The top area to address is <b>{_html.escape(tops[0])}</b> "
-                      f"(raised by {int(P.iloc[0]['people']):,} people, {P.iloc[0]['neg_share']*100:.0f}% of "
-                      f"{int(P.iloc[0]['volume']):,} comments negative)")
-        if len(tops) > 1: narrative += f", then {_html.escape(tops[1])}"
-        if len(tops) > 2: narrative += f" and {_html.escape(tops[2])}"
-        narrative += ". "
-    if len(d["under"]):
-        u0 = d["under"].iloc[0]
-        narrative += (f"The highest-Friction item is <b>{_html.escape(str(u0['item']))}</b> "
-                      f"(Friction {u0['friction']:.0f}/100, {int(u0['friction_pct'])}% feel under-supported).")
+        return f"<html><body style='font-family:sans-serif'><h2>{esc(site)}</h2><p>No comments for this site.</p></body></html>"
+    cc = d.get("card") or {}
+    pop = population_label(completers_only)
+    n_resp, n_comm = d.get("n_respondents") or d.get("participation") or 0, d.get("n_commenters") or 0
 
-    prio_rows = "".join(
-        f"<tr><td>{_html.escape(r['key'])}</td>"
-        f"<td>{int(r['people']):,} ({r.get('pct_resp', 0):.0f}%)</td><td>{int(r['volume']):,}</td>"
-        f"<td>{r['neg_share']*100:.0f}%</td></tr>"
-        for _, r in P.iterrows()) or "<tr><td colspan='4'>Not enough tagged comments to rank.</td></tr>"
-    def _status_color(r):
-        """Status word + color: importance dims use RYG; agreement-only (Tech) use the band.
-        Item rows use the stored status; dimension-summary rows (no stored status) fall
-        back to the threshold rule on their mean gap."""
-        if pd.isna(r["gap5"]):
-            lab, hx = tech_status(r["mean_support"])
-            return lab, hx
-        if "ryg" in r.index:     # item row: stored status + severity cue
-            return status_words(r), RYG_HEX.get(item_status(r), "#333")
-        st_ = ryg_of(r["gap5"])  # dimension summary row (no stored status)
-        return STATUS_WORD.get(st_, ""), RYG_HEX.get(st_, "#333")
-    dsum_rows = ""
-    for _, r in d["dim_summary"].iterrows():
-        gpv = r["gap5"]; status, col = _status_color(r)
-        dsum_rows += (f"<tr><td>{_html.escape(r['dimension'])}</td>"
-                      f"<td>{_f1(r['mean_importance'])}</td>"
-                      f"<td>{_f1(r['mean_support'])}</td>"
-                      f"<td style='color:{col};font-weight:700'>{_gp(gpv)}</td>"
-                      f"<td style='color:{col};font-weight:600'>{status}</td></tr>")
-    dsum_rows = dsum_rows or "<tr><td colspan='5'>Not one of the 10 in-scope sites.</td></tr>"
-    # Associate Sentiment section rows (standalone) — the Q8/Q12/Q16/Q19 summary items
+    # 1. Header ------------------------------------------------------------------
+    if cc:
+        header = (f"<div class='hdr keep'><div class='badge' aria-label='Index score'>{cc['overall']:.0f}</div><div>"
+                  f"<div class='t'>Overall PulsePoint Experience Index: {fmt_margin(cc['overall'], cc.get('margin'))} "
+                  f"(0–100)</div>"
+                  f"<div class='s'><span class='stand'>{esc(standing_text(cc.get('standing')))}</span> · company "
+                  f"{cc['org_overall']:.1f} · 95% interval {cc['lo']:.1f}–{cc['hi']:.1f}</div>"
+                  f"<div class='s'>{n_resp:,} respondents · {n_comm:,} people wrote {d['n']:,} comments · {esc(pop)}</div>"
+                  f"</div></div>")
+    else:
+        header = (f"<div class='hdr'><div><div class='s'>Not one of the 10 in-scope sites — no official scores. "
+                  f"{n_resp:,} respondents · {n_comm:,} people commented.</div></div></div>")
+
+    # 2. At a glance -------------------------------------------------------------
+    dimboxes = "".join(
+        f"<div class='dimbox'><div class='n'>{esc(a['dim'])}</div><div class='v'>{a['score']:.0f}"
+        f"<span style='font-size:13px;font-weight:600'> ± {max(round(a['margin']), 1) if pd.notna(a.get('margin')) else '—'}</span></div>"
+        f"<div class='m'><b class='stand'>{esc(STANDING_SHORT.get(a.get('standing'), ''))}</b> · company {a['org']:.1f}</div></div>"
+        for a in (cc.get("areas") or []))
+    top3 = "".join(
+        f"<tr><td>{esc(t['item'])}</td><td class='num'>{t['friction']:.0f}</td>"
+        f"<td class='num'>{t['friction_pct']:.0f}%</td><td>{status_html(t['status'], t['status_words'])}</td></tr>"
+        for t in d.get("top_items", [])[:3])
+    best = d.get("top_support", pd.DataFrame())
+    best3 = "".join(f"<tr><td>{esc(str(r['item']))}</td><td class='num'>{r['support_100']:.0f}</td></tr>"
+                    for _, r in best.head(3).iterrows()) if len(best) else ""
+    plan3 = d.get("plan_top3") or []
+    plan_line = ("<p><b>Action plan priorities:</b> " + " · ".join(
+        f"<a href='#plan'>{i}. {esc(n)}</a>" for i, n in enumerate(plan3, 1)) + "</p>") if plan3 else ""
+    demo_line = "".join(f"<div><b>{esc(lab)}:</b> {txt}</div>" for lab, txt in (d.get("demo_lines") or {}).items() if txt)
+    glance = (
+        "<section class='glance'><h2>At a glance</h2>"
+        f"<div class='dimgrid'>{dimboxes}</div>"
+        "<div class='g2'>"
+        "<div><h3>Highest Friction</h3><table class='compact'><thead><tr><th>Item</th><th class='num'>Friction</th>"
+        f"<th class='num'>Under-supported</th><th>Status</th></tr></thead>{top3}</table></div>"
+        "<div><h3>Best supported</h3><table class='compact'><thead><tr><th>Item</th><th class='num'>Support</th></tr>"
+        f"</thead>{best3}</table></div></div>"
+        f"{plan_line}<div class='note'>{demo_line}</div></section>")
+
+    # 3. Importance vs Support -----------------------------------------------------
+    dim_rows = "".join(
+        f"<tr><td>{esc(r['dim'])}</td><td class='num'>{fmt_margin(r['score'], r['margin'])}</td>"
+        f"<td>{esc(STANDING_SHORT.get(r['standing'], '—'))}</td><td>{esc(r['need_txt'])}</td>"
+        f"<td>{esc(r['worst'])}</td></tr>" for r in d.get("dim_rows", []))
+    det_rows = ""
+    if len(d["detail"]):
+        for dim in d["detail"]["dimension"].drop_duplicates():
+            det_rows += f"<tr><th colspan='5'>{esc(dim)}</th></tr>"
+            for _, r in d["detail"][d["detail"]["dimension"] == dim].iterrows():
+                cell = (tech_status_html(r["mean_support"]) if pd.isna(r["gap5"])
+                        else status_html(item_status(r), status_words(r)))
+                det_rows += (f"<tr><td>{esc(str(r['item']))}</td><td class='num'>{_f1(r['mean_importance'])}</td>"
+                             f"<td class='num'>{_f1(r['mean_support'])}</td><td class='num'>{_gp(r['gap5'])}</td>"
+                             f"<td>{cell}</td></tr>")
+    ivs = (
+        "<h2>Importance vs. Support</h2>"
+        "<table><thead><tr><th>Dimension</th><th class='num'>Score ± margin</th><th>Standing</th>"
+        f"<th>Items needing attention</th><th>Worst item</th></tr></thead>{dim_rows}</table>"
+        "<h3>By question</h3>"
+        "<table><thead><tr><th>Question</th><th class='num'>Importance</th><th class='num'>Support</th>"
+        f"<th class='num'>Gap</th><th>Status</th></tr></thead>{det_rows}</table>"
+        "<p class='note'>Gap = Support − Importance (1–5). Status is the official support status: ▼ Needs attention "
+        "(Under Supported) · ● On track (Target) · ▲ Exceeds needs (Over Supported). Needs-attention items carry a "
+        "severity from the rounded gap (−0.1 to −0.4 slight, −0.5 to −0.9 moderate, −1.0 or worse severe) and are "
+        "marked <i>borderline</i> when the gap's 95% interval includes 0; “On track, low support” = on track but "
+        "Support under 60/100. Digital &amp; Tech has no Importance rating: ◇ shows its agreement band (Strong ≥ 4.0 · "
+        "Moderate 3.5–3.9 · Needs attention &lt; 3.5).</p>")
+
+    # 4. Associate sentiment -------------------------------------------------------
     AREA_SHORT2 = {"Work Activity": "Work Activity", "Physical Feature": "Physical space",
                    "Service Level": "Services", "Digital & Tech": "Technology"}
+
     def _sent_row(label, q, a, cls=""):
         sm, om = a.get("site_mean"), a.get("org_mean")
         if pd.isna(sm):
             return ""
-        site_s = (f"{sm:.2f} ± {a['margin']:.2f}" if pd.notna(a.get("margin")) else f"{sm:.2f}")
-        stand = (standing_text(a.get("standing")) if a.get("standing")
-                 else a.get("standing_note", ""))
-        return (f"<tr{cls}><td>{label}</td><td class='q'>{_html.escape(q)}</td>"
-                f"<td style='font-weight:700'>{site_s}</td>"
-                f"<td>{'' if pd.isna(om) else f'{om:.2f}'}</td>"
-                f"<td>{'' if pd.isna(om) else f'{sm - om:+.2f}'}</td>"
-                f"<td style='font-weight:600'>{stand}</td></tr>")
-    sent_rows = "".join(_sent_row(_html.escape(AREA_SHORT2.get(a["dim"], a["dim"])), a.get("q", ""), a)
+        site_s = f"{sm:.2f} ± {a['margin']:.2f}" if pd.notna(a.get("margin")) else f"{sm:.2f}"
+        stand = STANDING_SHORT.get(a.get("standing")) or a.get("standing_note", "")
+        return (f"<tr{cls}><td>{label}</td><td>{esc(q)}</td><td class='num'>{site_s}</td>"
+                f"<td class='num'>{'' if pd.isna(om) else f'{om:.2f}'}</td>"
+                f"<td class='num'>{'' if pd.isna(om) else f'{sm - om:+.2f}'}</td><td class='stand'>{esc(stand)}</td></tr>")
+    sent_rows = "".join(_sent_row(esc(AREA_SHORT2.get(a["dim"], a["dim"])), a.get("q", ""), a)
                         for a in d.get("agreement", []))
     so = d.get("sentiment_overall")
     if so:
-        sent_rows += _sent_row("<b>Overall</b>", "Average of the four items", so, " class='ovr'")
-    sent_rows = sent_rows or "<tr><td colspan='6'>Not one of the 10 in-scope sites.</td></tr>"
-    if len(d["detail"]):
-        detail_rows = ""
-        for dim in d["detail"]["dimension"].drop_duplicates():
-            detail_rows += f"<tr class='dh'><td colspan='5'>{_html.escape(dim)}</td></tr>"
-            for _, r in d["detail"][d["detail"]["dimension"] == dim].iterrows():
-                status, col = _status_color(r)
-                detail_rows += (f"<tr><td class='tp'>{_html.escape(str(r['item']))}</td>"
-                                f"<td style='color:{col}'>{_f1(r['mean_importance'])}</td>"
-                                f"<td style='color:{col}'>{_f1(r['mean_support'])}</td>"
-                                f"<td style='color:{col};font-weight:700'>{_gp(r['gap5'])}</td>"
-                                f"<td style='color:{col};font-weight:600'>{status}</td></tr>")
+        sent_rows += _sent_row("<b>Overall</b>", "Average of the four items", so)
+    sentiment = (
+        "<h2>Associate sentiment</h2>"
+        "<table><thead><tr><th>Dimension</th><th>Summary question</th><th class='num'>Site ± margin</th>"
+        f"<th class='num'>Company</th><th class='num'>Difference</th><th>Standing</th></tr></thead>{sent_rows}</table>"
+        "<p class='note'>1–5 agreement. Standing: Above / Below when the company mean lies outside the site's 95% "
+        "interval; otherwise In line. Q16 = Services and Q19 = Technology by survey position.</p>")
+
+    # 5. Top priorities anchored on survey items -----------------------------------
+    pri = ""
+    for i, t in enumerate(d.get("top_items", []), 1):
+        links = "; ".join(f"{esc(l['theme'])} — {fmt_people(l['people'], l['pct_resp'])}" for l in t["themes"]) or "—"
+        q = t.get("quote")
+        qh = _quote_html(q, f"comment tagged {esc(q['theme'])}") if q else ""
+        pri += (f"<div class='pri'><div class='h'><span class='num'>{i}</span><span class='it'>{esc(t['item'])}</span>"
+                f"{status_html(t['status'], t['status_words'])}</div>"
+                f"<ul><li>Friction <b>{t['friction']:.0f}</b>/100 · <b>{t['friction_pct']:.0f}% under-supported</b> "
+                f"({esc(t['dimension'])})</li><li>Comment themes: {links}</li></ul>{qh}</div>")
+    watch = d.get("tech_watch") or []
+    watch_line = ("<p><b>Technology watch:</b> " + "; ".join(
+        f"{esc(w['item'])} — agreement {w['mean']:.2f}" + (f" ± {w['margin']:.2f}" if pd.notna(w.get('margin')) else "")
+        + (f", company {w['company']:.2f}" if pd.notna(w.get('company')) else "")
+        + (f" ({esc(STANDING_SHORT.get(w['standing'], ''))})" if w.get("standing") else "")
+        for w in watch) + "</p>") if watch else "<p><b>Technology watch:</b> no Digital &amp; Tech item is below 3.5 or below the company.</p>"
+    CA = d.get("comments_add", pd.DataFrame())
+    ca_rows = "".join(
+        f"<tr><td>{esc(r['key'])}</td><td class='num'>{int(r['people']):,} ({r['pct_resp']:.0f}%)</td>"
+        f"<td class='num'>{r['neg_share'] * 100:.0f}%</td>"
+        f"<td class='num'>{_fric_txt(r['friction'])}</td>"
+        f"<td class='num'>{r['Priority']:.0f}</td></tr>" for _, r in CA.iterrows()) if len(CA) else ""
+    priorities = (
+        "<h2>Top priorities — survey items</h2>"
+        "<p class='note'>The five survey items with the highest Friction at this site, with the comment themes linked "
+        "to each and one illustrative comment.</p>"
+        f"{pri}{watch_line}"
+        "<h3>What comments add — by category</h3>"
+        "<table><thead><tr><th>Category</th><th class='num'>People (% of respondents)</th><th class='num'>% negative</th>"
+        f"<th class='num'>Friction</th><th class='num'>Score</th></tr></thead>{ca_rows}</table>"
+        "<p class='note'>Score = 40% people raising it + 35% share of comments negative + 25% Friction (each rescaled). "
+        "Generic praise / dissatisfaction buckets are excluded.</p>")
+
+    # 6. What needs attention / What's working ---------------------------------------
+    fix_rows = "".join(f"<li><b>{esc(f['theme'])}</b> — {fmt_people(f['people'], f['pct_resp'], f['comments'])}, "
+                       f"{f['neg'] * 100:.0f}% negative</li>" for f in d["fixes"]) or "<li>No clearly negative themes.</li>"
+    str_rows = "".join(f"<li><b>{esc(s['theme'])}</b> — {fmt_people(s['people'], s['pct_resp'], s['comments'])}, "
+                       f"{s['pos'] * 100:.0f}% positive</li>" for s in d["strengths"])
+    str_rows += "".join(f"<li><b>{esc(si['item'])}</b> — survey rating: support {si['support_100']:.0f}/100 "
+                        f"(best-supported item)</li>" for si in d.get("strength_items", []))
+    attention = (f"<div class='g2'><div><h2>What needs attention</h2><ul>{fix_rows}</ul></div>"
+                 f"<div><h2>What's working</h2><ul>{str_rows or '<li>No clearly positive themes.</li>'}</ul></div></div>")
+
+    # 7. Themes that differ here ------------------------------------------------------
+    dif = d.get("differ") or []
+    if dif:
+        dif_rows = "".join(
+            f"<tr><td>{esc(x['theme'])}</td><td class='num'>{x['site_pct']:.0f}%</td><td class='num'>{x['other_pct']:.0f}%</td>"
+            f"<td>{'more common here' if x['site_pct'] > x['other_pct'] else 'less common here'}</td></tr>" for x in dif)
+        differ = ("<h2>Themes that differ here</h2><table><thead><tr><th>Theme</th><th class='num'>Here (% of respondents)</th>"
+                  f"<th class='num'>Other 9 sites</th><th></th></tr></thead>{dif_rows}</table>"
+                  f"<p class='note'>Only themes whose share of people differs from the other in-scope sites beyond chance "
+                  f"(two-proportion test, Benjamini–Hochberg across {d.get('differ_tested', 0)} themes, q &lt; 0.05).</p>")
     else:
-        detail_rows = ("<tr><td colspan='5'>Not one of the 10 in-scope sites — no official "
-                       "scores. The comment analysis above still applies.</td></tr>")
+        differ = ("<h2>Themes that differ here</h2><p>No theme's share of people differs from the other in-scope "
+                  "sites beyond chance.</p>")
 
-    # Report-card header — raw composite + relative standing (no absolute letter grade)
-    AREA_SHORT = {"Work Activity": "Work Activity", "Physical Feature": "Physical",
-                  "Service Level": "Services", "Digital & Tech": "Technology"}
-    card_html = ""
-    if d.get("card"):
-        cc = d["card"]
-        oh = "#2b3a67"   # neutral badge: standing is carried by the text label, not colour
-        badges = ""
-        for a in cc["areas"]:
-            margin = "—" if pd.isna(a.get("margin")) else f"{max(round(a['margin']), 1)}"
-            comp = "" if pd.isna(a.get("org")) else f" · company {a['org']:.1f}"
-            badges += (f"<div class='area'><div class='an'>{_html.escape(AREA_SHORT.get(a['dim'], a['dim']))}</div>"
-                       f"<div class='ab' style='background:{oh}'>{a['score']:.0f}</div>"
-                       f"<div class='as'>± {margin}</div>"
-                       f"<div class='am'><b>{STANDING_SHORT.get(a.get('standing'), '')}</b>{comp}</div></div>")
-        rank_str = (f"<b>{standing_text(cc.get('standing'))}</b> · 95% interval "
-                    f"{cc['lo']:.1f}–{cc['hi']:.1f}" if cc.get("standing") else "")
-        org_str = f"Company average {cc['org_overall']:.1f}/100" if pd.notna(cc.get("org_overall")) else ""
-        rng = (f" · sites range {cc['dist_min']:.0f}–{cc['dist_max']:.0f}"
-               if pd.notna(cc.get("dist_min")) else "")
-        allp = d.get("all_participants") or 0
-        part_str = (f"<b>{d['participation']:,}</b> of {allp:,} respondents (this site vs. all 10 sites)"
-                    if allp else f"{d['participation']:,} survey participants")
-        card_html = (
-            f"<div class='rc'><div class='rc-o'>"
-            f"<div class='rc-badge' style='background:{oh}'>{cc['overall']:.0f}</div>"
-            f"<div><div class='rc-t'>Overall PulsePoint Experience Index Score (0–100): "
-            f"{fmt_margin(cc['overall'], cc.get('margin'))}</div>"
-            f"<div class='rc-s'>{rank_str}</div>"
-            f"<div class='rc-p'>{org_str}{rng}</div>"
-            f"<div class='rc-p'>{part_str} · {d['n']:,} written comments</div>"
-            f"</div></div>"
-            f"<div class='rc-dimlab'>Dimension Scores (0–100)</div>"
-            f"<div class='rc-areas'>{badges}</div>"
-            f"<div class='rc-key'>The <b>Index Score</b> is the average of the four Dimension Scores (0–100) — the "
-            f"same calculation as the Tableau deck. <b>±</b> is the 95% margin of error from resampling this site's "
-            f"respondents. <b>Above</b> / <b>Below</b> means the company value lies outside the site's 95% interval; "
-            f"otherwise the site is <b>In line</b> with the company. {COMPANY_DEF}</div></div>")
+    # 8. Operational Action Plan ------------------------------------------------------
+    plan_html = action_plan.render_action_plan_html(action_plan.load_plan(site))
+    plan_html = f"<div id='plan'>{plan_html}</div>" if plan_html else ""
 
-    # All-comments appendix — by category then sentiment (collapsible)
-    appendix_html = ""
+    # 9. In their words ---------------------------------------------------------------
+    def _nq(q):
+        n_neg = q.get("n_negative_in_theme", 0)
+        tag = (f"one of {n_neg:,} negative comments tagged {esc(q['theme'])}" if n_neg > 1 else esc(q["theme"]))
+        return _quote_html(q, tag)
+    words = ("<h2>In their words</h2>" + ("".join(_nq(q) for q in d["quotes"]) or "<p>No representative quotes.</p>")
+             + "".join(_quote_html(q, f"{esc(q['theme'])} · positive") for q in d.get("pos_quotes", [])))
+
+    # 10. All comments (HTML only) ----------------------------------------------------
+    appendix = ""
     rdf = d.get("real_df")
+    roles_ok = d.get("roles_ok", set())
     if rdf is not None and len(rdf):
-        _r = rdf.reset_index(drop=True).copy(); _r["_rid"] = range(len(_r))
-        ex = _r.assign(_cat=_r["eff_themes"].str.split("|")).explode("_cat")
+        ex = rdf.assign(_cat=rdf["eff_themes"].str.split("|")).explode("_cat")
         ex["_cat"] = ex["_cat"].str.strip().map(lambda t: THEME_TO_CAT.get(t, "Uncategorized"))
         ex = ex[ex["_cat"] != "Uncategorized"].drop_duplicates(subset=["respondent", "comment", "_cat"])
-        cat_order = [c for c in (meta.get("categories") or []) if c in set(ex["_cat"])]
-        SENTS = [("Negative", "#C0392B"), ("Neutral / Mixed", "#7A7A7A"), ("Positive", "#2E7D32")]
-        for cat in cat_order:
+        for cat in [c for c in (meta.get("categories") or []) if c in set(ex["_cat"])]:
             sub = ex[ex["_cat"] == cat]
             groups = ""
-            for sname, scol in SENTS:
+            for sname, scls in (("Negative", "sent-neg"), ("Neutral / Mixed", "sent-neu"), ("Positive", "sent-pos")):
                 ssub = sub[sub["eff_sentiment"] == sname]
                 if not len(ssub):
                     continue
                 lis = "".join(
-                    f"<li>{_html.escape(str(r['comment']))}"
-                    f"<span class='cmeta'> — {_html.escape(str(r['role']))}, {_html.escape(str(r['tenure']))}</span></li>"
+                    f"<li>{esc(str(r['comment']))}"
+                    + (f" <span class='note'>— {esc(shown_role(r['role'], roles_ok))}</span>"
+                       if shown_role(r["role"], roles_ok) else "") + "</li>"
                     for _, r in ssub.iterrows())
-                groups += (f"<div class='sgrp'><div class='slab' style='color:{scol}'>"
-                           f"{sname} · {len(ssub)}</div><ul class='clist'>{lis}</ul></div>")
-            appendix_html += (f"<details class='catblk'><summary>{_html.escape(cat)} "
-                              f"<span class='cct'>({len(sub)})</span></summary>{groups}</details>")
-    fix_rows = "".join(f"<li><b>{_html.escape(f['theme'])}</b> — {fmt_people(f['people'], f['pct_resp'], f['comments'])}, "
-                       f"{f['neg']*100:.0f}% negative</li>"
-                       for f in d["fixes"]) or "<li>No clearly negative themes.</li>"
-    str_rows = "".join(f"<li><b>{_html.escape(s['theme'])}</b> — {fmt_people(s['people'], s['pct_resp'], s['comments'])}, "
-                       f"{s['pos']*100:.0f}% positive</li>"
-                       for s in d["strengths"])
-    str_rows += "".join(f"<li><b>{_html.escape(si['item'])}</b> — survey rating: support "
-                        f"{si['support_100']:.0f}/100 (best-supported item)</li>"
-                        for si in d.get("strength_items", []))
-    str_rows = str_rows or "<li>No clearly positive themes.</li>"
-    bench_rows = "".join(
-        f"<tr><td>{_html.escape(t)}</td><td>{sr*100:.0f}%</td><td>{orr*100:.0f}%</td></tr>"
-        for t, sr, orr in d["bench"])
-    score_rows = "".join(
-        f"<tr><td>{_html.escape(lab)}</td><td>{sv:.2f}</td><td>{ov:.2f}</td>"
-        f"<td style='color:{'#D1495B' if sv<ov-0.05 else ('#2E9E6B' if sv>ov+0.05 else '#888')}'>"
-        f"{sv-ov:+.2f}</td></tr>" for lab, sv, ov in d["scores"])
+                groups += f"<div class='{scls}' style='font-size:12px;margin-top:6px'>{sname} · {len(ssub)}</div><ul class='clist'>{lis}</ul>"
+            appendix += f"<details class='catblk'><summary>{esc(cat)} ({len(sub)})</summary>{groups}</details>"
+    allc = ("<section class='screen-only'><h2>All comments by category</h2>"
+            "<p class='note'>Every comment at this site, by category then sentiment. Click a category to expand. A comment "
+            "that touches more than one category appears under each.</p>"
+            f"{appendix or '<p>No comments to list.</p>'}</section>"
+            "<p class='print-only note'>The full list of comments by category is in the HTML version of this card "
+            "(left out of print and PDF).</p>")
 
-    def quote_html(q):
-        n_neg = q.get("n_negative_in_theme", 0)
-        tag = (f"one of {n_neg:,} negative comments tagged <b>{_html.escape(q['theme'])}</b>"
-               if n_neg > 1 else f"<b>{_html.escape(q['theme'])}</b>")
-        return (f"<blockquote>{_html.escape(q['text'])}"
-                f"<cite>— {_html.escape(q['role'])}, {_html.escape(q['tenure'])} · {tag}</cite></blockquote>")
-    neg_quotes = "".join(quote_html(q) for q in d["quotes"]) or "<p style='color:#888'>No representative critical quotes.</p>"
-    pos_quotes = "".join(
-        f"<blockquote class='pos'>{_html.escape(q['text'])}"
-        f"<cite>— {_html.escape(q['role'])}, {_html.escape(q['tenure'])} · <b>{_html.escape(q['theme'])}</b></cite></blockquote>"
-        for q in d["pos_quotes"])
-    img = lambda k: (f"<img src='data:image/png;base64,{charts[k]}'/>" if k in charts else "")
-
-    # demographics — visual rollup first, detailed table second (+ explanatory note)
+    # 11. Full demographics -----------------------------------------------------------
     demo = d.get("demographics") or {}
-    demo_total = d.get("demo_total") or 0
-    demo_html = ""
-    if demo and demo_total:
-        cols = ""
-        for label, vc in demo.items():
-            rows = "".join(
-                f"<tr><td>{_html.escape(str(k))}</td><td>{int(v)}</td>"
-                f"<td>{v / demo_total * 100:.0f}%</td></tr>" for k, v in vc.items())
-            cols += (f"<div><table><tr><th>{_html.escape(label)}</th><th>#</th><th>%</th></tr>{rows}</table></div>")
-        demo_html = (f"<p class='lgd'>Demographics are provided to help readers understand the respondent mix behind "
-                     f"the results — {demo_total:,} respondents at this site; % is each group's share of the site.</p>"
-                     f"<div class='charts'>{img('demo')}</div>"
-                     f"<div class='demo'>{cols}</div>")
-    # comment-sentiment headline (used in the Open-ended comment themes section)
-    cs = (f"<span style='color:{SENT_HEX['Positive']}'>{d['pos']:.0f}% positive</span> · "
-          f"<span style='color:#7a7a7a'>{d['neu']:.0f}% neutral</span> · "
-          f"<span style='color:{SENT_HEX['Negative']}'>{d['neg']:.0f}% negative</span>")
+    dt = d.get("demo_total") or 0
+    cols = ""
+    for label, vc in demo.items():
+        rows = "".join(
+            f"<tr><td>{esc(str(k))}</td><td class='num'>{'&lt;5' if v < SMALL_COUNT else int(v)}</td>"
+            f"<td class='num'>{'' if v < SMALL_COUNT else f'{v / dt * 100:.0f}%'}</td></tr>" for k, v in vc.items())
+        cols += (f"<div><table class='compact'><thead><tr><th>{esc(label)}</th><th class='num'>#</th>"
+                 f"<th class='num'>%</th></tr></thead>{rows}</table></div>")
+    demos = (f"<h2>Respondent profile</h2><div class='demo'>{cols}</div>"
+             f"<p class='note'>{dt:,} respondents at this site; counts under {SMALL_COUNT} print as “&lt;{SMALL_COUNT}” "
+             f"with the percentage left blank.</p>") if cols else ""
 
-    return f"""<!doctype html><html><head><meta charset="utf-8">
-<title>PulsePoint — {_html.escape(site)}</title>
-<style>
- body{{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#1a1a2e;
-   max-width:860px;margin:24px auto;padding:0 22px;line-height:1.5}}
- h1{{font-size:24px;margin-bottom:2px}} .sub{{color:#666;font-size:13px;margin-bottom:14px}}
- h3{{border-bottom:2px solid #eee;padding-bottom:4px;margin-top:24px;font-size:15px;text-transform:uppercase;letter-spacing:.03em;color:#2b3a67}}
- .narr{{background:#f6f8fb;border-left:4px solid #4C78A8;padding:12px 14px;border-radius:4px;font-size:14px}}
- .charts{{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:10px}}
- .charts img{{max-height:200px}}
- table{{border-collapse:collapse;width:100%;font-size:13px;margin-top:8px}}
- th,td{{text-align:left;padding:5px 8px;border-bottom:1px solid #eee}} th{{color:#555;font-weight:600}}
- td:nth-child(n+2),th:nth-child(n+2){{text-align:right}}
- .two{{display:flex;gap:26px}} .two>div{{flex:1}}
- ul{{margin:6px 0;padding-left:18px;font-size:13px}} li{{margin:3px 0}}
- blockquote{{margin:7px 0;padding:8px 12px;background:#fafafa;border-left:3px solid #D1495B;font-size:13px;font-style:italic}}
- blockquote.pos{{border-left-color:#2E9E6B}}
- cite{{display:block;font-style:normal;color:#888;font-size:11px;margin-top:4px}}
- tr.dh td{{background:#eef1f7;font-weight:700;color:#2b3a67;text-align:left}}
- table.detail td.tp{{max-width:380px}}
- .lgd{{font-size:11px;color:#888;margin-top:5px}}
- .rc{{border:1px solid #e3e6ec;border-radius:10px;padding:16px 18px;margin:4px 0 16px;background:#fbfcfe}}
- .rc-o{{display:flex;align-items:center;gap:14px}}
- .rc-badge{{width:62px;height:62px;border-radius:10px;color:#fff;font-size:27px;font-weight:800;
-   display:flex;align-items:center;justify-content:center;flex-shrink:0}}
- .rc-t{{font-size:15px;font-weight:700;color:#2b3a67}} .rc-s{{font-size:14px;margin-top:1px}}
- .rc-p{{font-size:12px;color:#777;margin-top:3px}}
- .rc-sent{{font-size:13px;font-weight:600;margin:6px 0}}
- .rc-dimlab{{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:#6b7280;margin-top:14px;margin-bottom:2px}}
- table.sent td.q{{color:#555;font-size:12px;max-width:360px;white-space:normal;text-align:left}}
- table.sent th:nth-child(2){{text-align:left}}
- table.sent tr.ovr td{{border-top:2px solid #cbd5e1;background:#f7f9fc}}
- .rc-areas{{display:flex;gap:10px;margin-top:4px;flex-wrap:wrap}}
- .area{{flex:1;min-width:104px;text-align:center;border:1px solid #eee;border-radius:8px;padding:9px 6px}}
- .an{{font-size:11.5px;color:#555;margin-bottom:6px;height:26px;display:flex;align-items:center;justify-content:center}}
- .ab{{width:40px;height:34px;border-radius:7px;color:#fff;font-weight:800;font-size:15px;
-   display:flex;align-items:center;justify-content:center;margin:0 auto}}
- .as{{font-size:13px;margin-top:5px;font-weight:600}} .am{{font-size:11px;margin-top:2px}}
- .rc-key{{font-size:10.5px;color:#999;margin-top:12px;border-top:1px solid #eee;padding-top:8px}}
- details.catblk{{border:1px solid #e6e8ee;border-radius:7px;margin:6px 0;padding:2px 10px;background:#fcfcfd}}
- details.catblk>summary{{cursor:pointer;font-weight:700;color:#2b3a67;padding:7px 0;font-size:13px}}
- .cct{{color:#999;font-weight:400;font-size:12px}}
- .sgrp{{margin:4px 0 8px}} .slab{{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;margin:6px 0 2px}}
- ul.clist{{margin:2px 0 6px;padding-left:18px}} ul.clist li{{font-size:12.5px;margin:3px 0;line-height:1.45}}
- .cmeta{{color:#999;font-size:11px}}
- .demo{{display:flex;gap:18px;flex-wrap:wrap;margin-top:8px}} .demo>div{{flex:1;min-width:210px}}
- .demo table{{font-size:12px}}
- .foot{{color:#888;font-size:11px;margin-top:24px;border-top:1px solid #eee;padding-top:8px}}
- @page{{size:Letter;margin:12mm}}
- @media print{{ body{{max-width:100%;margin:0;padding:0}} .charts img{{max-width:100%}}
-   h1,h3{{break-after:avoid}} tr,blockquote,.rc,.area,details.catblk,.oap-pri{{break-inside:avoid}} }}
-{action_plan.ACTION_PLAN_CSS}
-</style></head><body>
-<h1>PulsePoint Experience — {_html.escape(site)}</h1>
-<div class="sub">Workplace experience report card · {population_label(completers_only)}</div>
-{card_html}
-<h3>Demographics — respondent profile</h3>
-{demo_html or '<p style="color:#888">No demographic data.</p>'}
-<h3>Importance vs. Support gaps</h3>
-<table><tr><th>Dimension</th><th>Importance</th><th>Support</th><th>Gap</th><th>Status</th></tr>{dsum_rows}</table>
-<div class="rc-dimlab">Detail — by question</div>
-<table class="detail"><tr><th>Dimension topic (question)</th><th>Importance</th><th>Support</th><th>Gap</th><th>Status</th></tr>{detail_rows}</table>
-<p class="lgd">Gap = Support − Importance (1–5). Status:
-<span style="color:#C0392B">■</span> Needs attention · <span style="color:#2E7D32">■</span> On track ·
-<span style="color:#E67E22">■</span> Exceeds needs. Needs-attention items carry a severity from the rounded gap
-(−0.1 to −0.4 slight, −0.5 to −0.9 moderate, −1.0 or worse severe) and are marked <i>borderline</i> when the gap's 95%
-interval includes 0; “On track, low support” = on track but Support under 60/100. <b>Digital &amp; Tech</b> is agreement-only (no Importance/Gap); it's
-rated on the 1–5 agreement level — <span style="color:#2E7D32">■</span> Strong (≥4.0) ·
-<span style="color:#E0A400">■</span> Moderate (3.5–3.9) · <span style="color:#C0392B">■</span> Needs attention (&lt;3.5).</p>
-<h3>Associate Sentiment Score</h3>
-<p class="lgd">The survey's summary sentiment items — one per dimension (Q8/Q12/Q16/Q19, 1–5; Q16 = Services, Q19 = Technology
-by survey position). Site = mean ± 95% margin. Standing: <b>Above</b> / <b>Below</b> when the company mean lies outside
-the site's 95% interval; otherwise <b>In line</b>. Company = the 10 in-scope sites pooled.</p>
-<table class="sent"><tr><th>Dimension</th><th>Summary sentiment question</th><th>Site</th><th>Company</th><th>Difference</th><th>Standing</th></tr>{sent_rows}</table>
-<h3>Friction &amp; strength themes</h3>
-<div class="charts">{img('gap')}{img('strength')}</div>
-<h3>Open-ended comment themes</h3>
-<div class="rc-sent">Comment sentiment: {cs}</div>
-<div class="narr">{narrative}</div>
-<div class="charts">{img('donut')}{img('themes')}</div>
-<h3>Top priorities to address</h3>
-<table><tr><th>Category</th><th>People (% of respondents)</th><th>Comments</th><th>%&nbsp;negative</th></tr>{prio_rows}</table>
-<div class="two"><div>
-<h3>What needs attention</h3><ul>{fix_rows}</ul></div><div>
-<h3>What's working</h3><ul>{str_rows}</ul></div></div>
-<h3>Vs. org — theme rates</h3>
-<table><tr><th>Theme</th><th>site (% of respondents)</th><th>company (% of respondents)</th></tr>{bench_rows}</table>
-<p class="lgd"><b>How comments are categorized:</b> themes are assigned by a transparent keyword taxonomy built for this
-survey ({N_THEMES} themes across {N_CATEGORIES} categories), kept separate from the PXIP category set by design so the open-ended read stands
-on its own. The mapping lives in <code>taxonomy.py</code> and can be tuned without touching the scores.</p>
-{action_plan_html}
-<h3>In their words — what to fix</h3>{neg_quotes}
-{('<h3>In their words — what’s working</h3>'+pos_quotes) if pos_quotes else ''}
-<h3>All comments — by category &amp; sentiment</h3>
-<p class="lgd">Every open-ended comment at this site, grouped by category then sentiment. Click a category to expand.
-A comment that touches more than one category appears under each.</p>
-{appendix_html or '<p style="color:#888">No comments to list.</p>'}
-<div class="foot"><b>Data source &amp; method.</b> Built from the PulsePoint survey export ·
-{'completed responses only' if completers_only else 'all responses'} · 10 in-scope sites. Support responses map to a
-0–100 scale; each dimension is the average of its items; the <b>Overall PulsePoint Experience Index Score</b> is the
-<b>unweighted</b> average of the four Dimension Scores — the same calculation as the Tableau deck. Friction &amp; RYG per
-the official Tableau spec · Priority = 40% people raising it + 35% share of comments negative + 25% Friction.
-Theme prevalence counts people (one person can answer five open questions), with comment counts secondary. {COMPANY_DEF}
-{tagging_accuracy_note()}</div>
+    # 12. Method note -------------------------------------------------------------------
+    foot = (f"<div class='foot'><b>Data source &amp; method.</b> PulsePoint survey export · {esc(pop)} · 10 in-scope "
+            f"sites. Support responses map to 0–100; each dimension is the average of its items; the Overall PulsePoint "
+            f"Experience Index is the <b>unweighted</b> average of the four Dimension Scores — the same calculation as the "
+            f"Tableau deck. ± is the 95% margin from resampling this site's respondents (2,000 resamples). Friction and "
+            f"status per the official Tableau spec. Theme prevalence counts people (one person can answer five open "
+            f"questions); comment counts are secondary. Themes come from a keyword taxonomy ({N_THEMES} themes across "
+            f"{N_CATEGORIES} categories, <code>taxonomy.py</code>). A comment shows the writer's role only when at least "
+            f"{ATTRIBUTION_MIN_GROUP} respondents at the site share it; tenure is never shown beside a comment. "
+            f"{COMPANY_DEF} {tagging_accuracy_note()}</div>")
+
+    css = design.stylesheet(SITE_CSS + action_plan.ACTION_PLAN_CSS)
+    return f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
+<title>PulsePoint — {esc(site)}</title>
+<style>{css}</style></head><body>
+<h1>PulsePoint Experience — {esc(site)}</h1>
+<div class="sub">Workplace experience report card · {esc(pop)}</div>
+{header}
+{glance}
+{ivs}
+{sentiment}
+{priorities}
+{attention}
+{differ}
+{plan_html}
+{words}
+{allc}
+{demos}
+{foot}
 </body></html>"""
+
 
 def build_site_pdf(ctx, site, data=None):
     """PDF export = an exact render of the HTML site report (identical content and layout)."""
     return html_to_pdf(build_site_report(ctx, site, data))
 
 def build_site_pptx(ctx, sites, get_data=None):
-    """One slide per site. `get_data(site)` may supply cached site_report_data."""
-    get_data = get_data or (lambda s: site_report_data(ctx, s))
+    """One slide per site carrying the same numbers and labels as the site card:
+    Index ± margin and standing, dimension scores, the five highest-Friction items with
+    severity, the Technology watch line, and quotes under the attribution rule."""
     from pptx import Presentation
     from pptx.util import Inches, Pt
     from pptx.dml.color import RGBColor
+    get_data = get_data or (lambda s: site_report_data(ctx, s))
+    NAVY, MUTED = RGBColor(0x1F, 0x2D, 0x5A), RGBColor(0x55, 0x60, 0x7A)
     prs = Presentation()
     prs.slide_width = Inches(13.33); prs.slide_height = Inches(7.5)
     blank = prs.slide_layouts[6]
+
+    def text(slide, x, y, w, h, s, size=12, bold=False, color=None):
+        tf = slide.shapes.add_textbox(Inches(x), Inches(y), Inches(w), Inches(h)).text_frame
+        tf.word_wrap = True
+        tf.text = s
+        p = tf.paragraphs[0]; p.font.size = Pt(size); p.font.bold = bold
+        if color is not None:
+            p.font.color.rgb = color
+        return tf
+
+    def table(slide, x, y, w, rows, widths, size=10):
+        tb = slide.shapes.add_table(len(rows), len(rows[0]), Inches(x), Inches(y), Inches(w),
+                                    Inches(0.3 * len(rows))).table
+        for j, wd in enumerate(widths):
+            tb.columns[j].width = Inches(wd)
+        for i, row in enumerate(rows):
+            for j, v in enumerate(row):
+                c = tb.cell(i, j); c.text = str(v)
+                for p in c.text_frame.paragraphs:
+                    p.font.size = Pt(size); p.font.bold = (i == 0)
+        return tb
+
     for site in sites:
         d = get_data(site)
         s = prs.slides.add_slide(blank)
-        tb = s.shapes.add_textbox(Inches(0.4), Inches(0.25), Inches(12.5), Inches(0.8)).text_frame
-        tb.text = f"PulsePoint — {site}"
-        tb.paragraphs[0].font.size = Pt(26); tb.paragraphs[0].font.bold = True
-        if d["n"] == 0:
+        text(s, 0.4, 0.2, 12.5, 0.6, f"PulsePoint — {site}", 26, True, NAVY)
+        if d["n"] == 0 or not d.get("card"):
             continue
-        sub = s.shapes.add_textbox(Inches(0.4), Inches(0.95), Inches(12.5), Inches(0.4)).text_frame
-        sub.text = (f"{d['n']} comments · {d['neg']:.0f}% negative, {d['pos']:.0f}% positive · "
-                    f"top area: {d['P']['key'].tolist()[0] if len(d['P']) else '—'}")
-        sub.paragraphs[0].font.size = Pt(12); sub.paragraphs[0].font.color.rgb = RGBColor(0x66, 0x66, 0x66)
-        charts = d["charts"]
-        x = Inches(0.4)
-        for k in ("donut", "themes", "gap"):
-            if k in charts:
-                s.shapes.add_picture(io.BytesIO(base64.b64decode(charts[k])), x, Inches(1.5), height=Inches(2.1))
-                x += Inches(4.3)
-        # priorities table
-        rows = min(6, len(d["P"]) + 1)
-        tbl = s.shapes.add_table(rows, 4, Inches(0.4), Inches(4.0), Inches(6.0), Inches(2.6)).table
-        for j, h in enumerate(["Category", "People", "% neg", "priority"]):
-            c = tbl.cell(0, j); c.text = h; c.text_frame.paragraphs[0].font.size = Pt(11); c.text_frame.paragraphs[0].font.bold = True
-        for i, (_, r) in enumerate(d["P"].head(5).iterrows(), 1):
-            for j, v in enumerate([r["key"], int(r["people"]), f"{r['neg_share']*100:.0f}%", int(round(r["Priority"]))]):
-                c = tbl.cell(i, j); c.text = str(v); c.text_frame.paragraphs[0].font.size = Pt(10)
-        # top quotes
-        qtf = s.shapes.add_textbox(Inches(6.7), Inches(4.0), Inches(6.2), Inches(3.0)).text_frame
-        qtf.word_wrap = True
-        qtf.text = "In their words:"
-        qtf.paragraphs[0].font.bold = True; qtf.paragraphs[0].font.size = Pt(12)
+        cc = d["card"]
+        text(s, 0.4, 0.85, 12.5, 0.4,
+             f"Index {fmt_margin(cc['overall'], cc.get('margin'))} · {standing_text(cc.get('standing'))} "
+             f"(company {cc['org_overall']:.1f}) · {d.get('n_respondents', 0):,} respondents · "
+             f"{d.get('n_commenters', 0):,} people commented · {population_label(ctx.completers_only)}", 13, False, MUTED)
+        rows = [["Dimension", "Score ± margin", "Standing", "Items needing attention"]]
+        rows += [[r["dim"], fmt_margin(r["score"], r["margin"]), STANDING_SHORT.get(r["standing"], "—"), r["need_txt"]]
+                 for r in d.get("dim_rows", [])]
+        table(s, 0.4, 1.4, 6.2, rows, [1.6, 1.3, 0.9, 2.4])
+        rows = [["Highest-Friction item", "Friction", "Under-supported", "Status"]]
+        rows += [[t["item"], f"{t['friction']:.0f}", f"{t['friction_pct']:.0f}%", t["status_words"]]
+                 for t in d.get("top_items", [])]
+        table(s, 6.9, 1.4, 6.0, rows, [3.0, 0.8, 1.0, 1.2], size=9)
+        watch = d.get("tech_watch") or []
+        text(s, 0.4, 3.35, 6.2, 0.6, "Technology watch: " + (
+            "; ".join(f"{w['item'][:60]} — {w['mean']:.2f}"
+                      + (f" ({STANDING_SHORT.get(w['standing'], '')})" if w.get("standing") else "") for w in watch)
+            if watch else "no Digital & Tech item below 3.5 or below the company."), 10, False, MUTED)
+        qtf = text(s, 0.4, 4.4, 12.5, 2.8, "In their words", 12, True, NAVY)
         for q in d["quotes"][:3]:
-            p = qtf.add_paragraph(); p.text = f"“{q['text'][:150]}” — {q['role']} · {q['theme']}"
-            p.font.size = Pt(9); p.font.color.rgb = RGBColor(0x44, 0x44, 0x44)
+            p = qtf.add_paragraph()
+            who = f" — {q['role']}" if q.get("role") else ""
+            p.text = f"“{q['text'][:220]}”{who} · {q['theme']}"
+            p.font.size = Pt(10); p.font.color.rgb = RGBColor(0x33, 0x41, 0x5C)
     buf = io.BytesIO(); prs.save(buf)
     return buf.getvalue()
+
 
 # ===========================================================================
 # PORTFOLIO — "10 PulsePoints Report Card" (roll-up across the in-scope sites)
@@ -1865,7 +2054,8 @@ def build_standalone_dashboard(ctx):
  .pill{font-weight:600;font-size:11px;padding:1px 7px;border-radius:10px;color:#fff}
  .pill.Negative{background:#D1495B}.pill.Positive{background:#2E9E6B}.pill{background:#9AA0A6}
 </style></head><body>
-<header><h1>PulsePoint — Comment Browser</h1><div class="sub">Self-contained · """ + scope + """ · filter, search, and read every comment offline</div></header>
+<header><h1>PulsePoint — Comment Browser</h1><div class="sub">Self-contained · """ + scope + """ · filter, search, and read every comment offline</div>
+<div class="sub" style="opacity:1;font-weight:700;margin-top:4px">INTERNAL ANALYSIS ONLY — shows role and tenure beside comments; small groups can be identifiable. Do not share outside the analysis team.</div></header>
 <div class="wrap">
  <div class="filters">
   <label>Search text</label><input id="kw" placeholder="keyword…" oninput="render()">

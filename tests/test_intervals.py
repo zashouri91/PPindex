@@ -30,7 +30,7 @@ def test_interval_files(fn, flag):
 def test_gap_columns_appended_without_touching_existing():
     for fn in ("scores_by_site.csv", "scores_overall.csv"):
         new = pd.read_csv(os.path.join(ROOT, "data", fn))
-        assert list(new.columns[-4:]) == ["gap", "gap_se", "gap_lo", "gap_hi"]
+        assert list(new.columns[-5:]) == ["gap", "gap_se", "gap_lo", "gap_hi", "support_se"]
         imp = new[new["mean_importance"].notna()]
         g = imp["mean_support"] - imp["mean_importance"]
         assert (abs(imp["gap"] - g) < 0.002).all()        # paired gap = difference of means
