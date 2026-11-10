@@ -189,3 +189,28 @@ def test_category_negative_share_counts_each_comment_once():
     P = R.build_priority(df, "Categories", {}).set_index("key")
     assert P.loc["Physical Environment", "neg_share"] == pytest.approx(0.5)   # not 2/3
     assert P.loc["Physical Environment", "people"] == 2
+
+
+def test_severity_counts_match_review(ctx):
+    ss = ctx.scores_site
+    imp = ss[ss["mean_importance"].notna()]
+    sev = [R.item_severity(r) for _, r in imp.iterrows()]
+    red = [s for s, (_, r) in zip(sev, imp.iterrows()) if r["ryg"] == "Under Supported"]
+    assert len(red) == 76 and sum(s["borderline"] for s in red) == 12
+    assert sum(s["low_support"] for s in sev) == 13
+    # status itself is untouched
+    assert [R.item_status(r) for _, r in imp.iterrows()] == imp["ryg"].tolist()
+
+
+def test_severity_bands():
+    import pandas as pd
+    def row(imp, sup, lo=-1, hi=-0.5, ryg="Under Supported", s100=50):
+        return pd.Series({"ryg": ryg, "mean_importance": imp, "mean_support": sup,
+                          "gap_lo": lo, "gap_hi": hi, "support_100": s100})
+    assert R.item_severity(row(4.0, 3.7))["severity"] == "slight"
+    assert R.item_severity(row(4.0, 3.5))["severity"] == "moderate"
+    assert R.item_severity(row(4.0, 3.12))["severity"] == "moderate"   # -0.88 -> -0.9
+    assert R.item_severity(row(4.0, 3.04))["severity"] == "severe"     # -0.96 -> -1.0
+    assert R.item_severity(row(4.0, 2.9))["severity"] == "severe"
+    assert R.item_severity(row(4.0, 3.7, lo=-0.6, hi=0.05))["borderline"]
+    assert R.item_severity(row(3.0, 3.2, ryg="Target", s100=55))["low_support"]

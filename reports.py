@@ -452,6 +452,46 @@ def item_status(r):
     return "Agreement-only"
 
 
+# --- Severity (added to, never replacing, the official status) ---------------------
+# For Under Supported items, from the gap rounded to 1 dp:
+SEVERITY_MODERATE_AT = -0.5    # -0.1 .. -0.4 -> slight
+SEVERITY_SEVERE_AT = -1.0      # -0.5 .. -0.9 -> moderate; -1.0 or worse -> severe
+LOW_SUPPORT_BELOW = 60.0       # Target items with Support (0–100) under this are flagged
+SEV_SLIGHT, SEV_MODERATE, SEV_SEVERE = "slight", "moderate", "severe"
+LOW_SUPPORT_LABEL = "On track, low support"
+
+
+def item_severity(r):
+    """{'severity', 'borderline', 'low_support'} for an item row with the stored status.
+    severity: slight / moderate / severe for Under Supported items (else None);
+    borderline: the paired gap's 95% interval includes 0;
+    low_support: status is Target but Support is under LOW_SUPPORT_BELOW (0–100)."""
+    status = item_status(r)
+    out = {"severity": None, "borderline": False, "low_support": False}
+    if status == "Under Supported":
+        g = round(float(r["mean_support"]) - float(r["mean_importance"]), 1)
+        out["severity"] = (SEV_SEVERE if g <= SEVERITY_SEVERE_AT else
+                           SEV_MODERATE if g <= SEVERITY_MODERATE_AT else SEV_SLIGHT)
+        lo, hi = r.get("gap_lo"), r.get("gap_hi")
+        out["borderline"] = bool(pd.notna(lo) and pd.notna(hi) and lo <= 0 <= hi)
+    elif status == "Target":
+        sup = pd.to_numeric(r.get("support_100"), errors="coerce")
+        out["low_support"] = bool(pd.notna(sup) and sup < LOW_SUPPORT_BELOW)
+    return out
+
+
+def status_words(r):
+    """Status text for an item: official word + severity / borderline / low-support cue."""
+    st_ = item_status(r)
+    sv = item_severity(r)
+    if sv["low_support"]:
+        return LOW_SUPPORT_LABEL
+    word = STATUS_WORD.get(st_, "")
+    if sv["severity"]:
+        word += f" · {sv['severity']}" + (" (borderline)" if sv["borderline"] else "")
+    return word
+
+
 def ryg_of(gap5):
     """RYG status from Support − Importance (1–5), per the Tableau spec thresholds.
     Use only for DIMENSION-level averages, which have no stored status; item rows
@@ -1001,7 +1041,9 @@ def build_site_report(ctx, site, data=None):
         if pd.isna(r["gap5"]):
             lab, hx = tech_status(r["mean_support"])
             return lab, hx
-        st_ = item_status(r) if "ryg" in r.index else ryg_of(r["gap5"])
+        if "ryg" in r.index:     # item row: stored status + severity cue
+            return status_words(r), RYG_HEX.get(item_status(r), "#333")
+        st_ = ryg_of(r["gap5"])  # dimension summary row (no stored status)
         return STATUS_WORD.get(st_, ""), RYG_HEX.get(st_, "#333")
     dsum_rows = ""
     for _, r in d["dim_summary"].iterrows():
@@ -1227,7 +1269,9 @@ def build_site_report(ctx, site, data=None):
 <table class="detail"><tr><th>Dimension topic (question)</th><th>Importance</th><th>Support</th><th>Gap</th><th>Status</th></tr>{detail_rows}</table>
 <p class="lgd">Gap = Support − Importance (1–5). Status:
 <span style="color:#C0392B">■</span> Needs attention · <span style="color:#2E7D32">■</span> On track ·
-<span style="color:#E67E22">■</span> Exceeds needs. <b>Digital &amp; Tech</b> is agreement-only (no Importance/Gap); it's
+<span style="color:#E67E22">■</span> Exceeds needs. Needs-attention items carry a severity from the rounded gap
+(−0.1 to −0.4 slight, −0.5 to −0.9 moderate, −1.0 or worse severe) and are marked <i>borderline</i> when the gap's 95%
+interval includes 0; “On track, low support” = on track but Support under 60/100. <b>Digital &amp; Tech</b> is agreement-only (no Importance/Gap); it's
 rated on the 1–5 agreement level — <span style="color:#2E7D32">■</span> Strong (≥4.0) ·
 <span style="color:#E0A400">■</span> Moderate (3.5–3.9) · <span style="color:#C0392B">■</span> Needs attention (&lt;3.5).</p>
 <h3>Associate Sentiment Score</h3>
