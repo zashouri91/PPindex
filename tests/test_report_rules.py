@@ -35,3 +35,38 @@ def test_whats_working_prints_true_positive_share(ctx, site_data):
 def test_woodland_hills_reception_no_longer_91(site_data):
     d = site_data["CA-Woodland Hills"]
     assert all(t != "Reception & Entry" for t, _n, _p in d["strengths"])
+
+
+def _toy_comments():
+    import pandas as pd
+    rows = [  # invented: themes and sentiment only, no text needed
+        (1, "Positive / Appreciation", "Positive"),
+        (2, "Positive / Appreciation|RTO / Hybrid Policy", "Positive"),
+        (3, "Overall Dissatisfaction", "Negative"),
+        (4, "Temperature / Thermal", "Negative"),
+        (5, "Temperature / Thermal|Lighting", "Negative"),
+    ]
+    return pd.DataFrame([{"comment_id": i, "eff_themes": th, "eff_sentiment": s, "eff_junk": False,
+                          "respondent": i, "site": "X"} for i, th, s in rows])
+
+
+def test_generic_themes_defined_once_and_used_by_action_plan():
+    import action_plan
+    from taxonomy import GENERIC_THEMES
+    assert GENERIC_THEMES == {"Positive / Appreciation", "Overall Dissatisfaction"}
+    assert action_plan.GENERIC_THEMES is GENERIC_THEMES
+    assert not hasattr(action_plan, "EXCLUDED_THEMES")
+
+
+def test_priorities_exclude_generic_buckets():
+    df = _toy_comments()
+    themes = R.build_priority(df, "Themes", {})["key"].tolist()
+    assert not set(themes) & {"Positive / Appreciation", "Overall Dissatisfaction"}
+    cats = R.build_priority(df, "Categories", {})
+    pe = cats[cats["key"] == "Policy / Experience"]
+    assert len(pe) == 1 and int(pe["volume"].iloc[0]) == 1   # only the RTO comment counts
+
+
+def test_generic_comments_still_count_in_browser_views():
+    df = _toy_comments()
+    assert set(R.explode_level(df, "Themes")["key"]) >= {"Positive / Appreciation"}

@@ -33,20 +33,15 @@ import urllib.request
 import urllib.error
 from datetime import datetime, timezone
 
-try:
-    from taxonomy import THEME_TO_CATEGORY
-except Exception:  # taxonomy always ships alongside; fall back to empty map
-    THEME_TO_CATEGORY = {}
+from taxonomy import THEME_TO_CATEGORY, GENERIC_THEMES
 
 # ---------------------------------------------------------------------------
 # Config (all read at call time from the environment, never at import)
 # ---------------------------------------------------------------------------
 DEFAULT_OWNER = "Regional Director + Local Team"
 
-# Themes that are generic keyword catch-alls with no specific, actionable
-# content. Excluded from every input the model sees (recommendation #4 /
-# Ala's "Positive / Appreciation is just a generic AI header" point).
-EXCLUDED_THEMES = {"Positive / Appreciation", "Overall Dissatisfaction"}
+# Generic keyword catch-alls (taxonomy.GENERIC_THEMES) are excluded from every
+# input the model sees.
 
 ACTION_TYPES = ["LOCAL ACTION", "LOCAL PROJECT", "WORKSTREAM / ENTERPRISE", "MONITOR / PROTECT"]
 
@@ -239,7 +234,7 @@ def build_report_card_payload(data: dict, include_verbatims: bool = True) -> dic
     # five priorities; fall back to the card's 5-item list.
     candidate_themes = []
     for t, cnt, neg in (data.get("fix_candidates") or data.get("fixes") or []):
-        if t in EXCLUDED_THEMES:
+        if t in GENERIC_THEMES:
             continue
         candidate_themes.append({
             "theme": t, "category": _cat(t),
@@ -251,7 +246,7 @@ def build_report_card_payload(data: dict, include_verbatims: bool = True) -> dic
     # dropped; topped up with best-supported survey items, labelled as ratings.
     strengths = []
     for t, cnt, pos in (data.get("strengths") or []):
-        if t in EXCLUDED_THEMES:
+        if t in GENERIC_THEMES:
             continue
         strengths.append({
             "theme": t, "category": _cat(t), "source": "comments",
@@ -266,7 +261,7 @@ def build_report_card_payload(data: dict, include_verbatims: bool = True) -> dic
     # Benchmark vs company (theme rate)
     bench = []
     for t, site_rate, org_rate in (data.get("bench") or []):
-        if t in EXCLUDED_THEMES:
+        if t in GENERIC_THEMES:
             continue
         bench.append({
             "theme": t, "site_rate_pct": _round(site_rate * 100, 0),
@@ -311,7 +306,7 @@ def build_report_card_payload(data: dict, include_verbatims: bool = True) -> dic
         reps, seen = [], set()
         for q in list(data.get("quotes") or []) + list(data.get("cand_quotes") or []):
             txt = q.get("text")
-            if q.get("theme") in EXCLUDED_THEMES or not txt or txt in seen:
+            if q.get("theme") in GENERIC_THEMES or not txt or txt in seen:
                 continue
             seen.add(txt)
             reps.append({"theme": q.get("theme"), "sentiment": q.get("sentiment"),
@@ -319,7 +314,7 @@ def build_report_card_payload(data: dict, include_verbatims: bool = True) -> dic
         payload["representative_comments"] = reps
         payload["positive_comments"] = [
             {"theme": q.get("theme"), "role": q.get("role"), "text": q.get("text")}
-            for q in (data.get("pos_quotes") or []) if q.get("theme") not in EXCLUDED_THEMES
+            for q in (data.get("pos_quotes") or []) if q.get("theme") not in GENERIC_THEMES
         ]
     else:
         payload["representative_comments"] = "OMITTED — aggregate-only mode (no verbatim text sent)"

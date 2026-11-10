@@ -212,6 +212,12 @@ _COMPILED = {
 
 THEME_TO_CATEGORY = {t: c for t, (c, _) in THEMES.items()}
 
+# Generic buckets: keyword catch-alls with no specific, actionable content.
+# Excluded wherever themes are ranked or rolled up for priorities (site card,
+# portfolio, Action Priorities, key drivers, hotspots, action-plan payload).
+# Their comments still count toward sentiment totals and the comment browser.
+GENERIC_THEMES = frozenset({"Positive / Appreciation", "Overall Dissatisfaction"})
+
 # Junk / no-comment detection
 _JUNK_EXACT = {
     "", "no", "no.", "none", "na", "n/a", "nope", "nothing", "nada", "no thanks",

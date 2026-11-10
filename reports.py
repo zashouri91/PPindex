@@ -21,7 +21,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 import action_plan  # Operational Action Plan — "What to Do Next" section (LLM-generated, stored per site)
-from taxonomy import THEME_TO_CATEGORY
+from taxonomy import THEME_TO_CATEGORY, GENERIC_THEMES
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(HERE, "data")
@@ -208,11 +208,15 @@ def category_friction_map(tfric):
         tmp[THEME_TO_CAT.get(th, "Uncategorized")].append(g)
     return {c: float(np.mean(v)) for c, v in tmp.items()}
 
-def explode_level(df, level):
-    """Explode eff_themes to one row per theme; roll up to category if requested."""
+def explode_level(df, level, exclude_generic=False):
+    """Explode eff_themes to one row per theme; roll up to category if requested.
+    exclude_generic drops taxonomy.GENERIC_THEMES before any roll-up — use it
+    wherever themes are ranked or rolled up for priorities."""
     t = df.assign(_k=df["eff_themes"].str.split("|")).explode("_k")
     t["_k"] = t["_k"].str.strip()
     t = t[(t["_k"] != "") & (t["_k"] != "Unclassified")]
+    if exclude_generic:
+        t = t[~t["_k"].isin(GENERIC_THEMES)]
     if level == "Categories":
         t["_k"] = t["_k"].map(lambda x: THEME_TO_CAT.get(x, "Uncategorized"))
         t = t[t["_k"] != "Uncategorized"]
@@ -223,7 +227,7 @@ def build_priority(df, level, tfric):
     real = df[~df["eff_junk"]]
     if real.empty:
         return pd.DataFrame()
-    ex = explode_level(real, level)
+    ex = explode_level(real, level, exclude_generic=True)
     fmap = category_friction_map(tfric) if level == "Categories" else tfric
     rows = []
     for k, gg in ex.groupby("key"):
@@ -242,7 +246,8 @@ def exemplars(df, key, level, n=3):
     real = df[~df["eff_junk"]]
     if level == "Categories":
         mask = real["eff_themes"].apply(
-            lambda s: any(THEME_TO_CAT.get(t.strip()) == key for t in str(s).split("|")))
+            lambda s: any(THEME_TO_CAT.get(t.strip()) == key for t in str(s).split("|")
+                          if t.strip() not in GENERIC_THEMES))
     else:
         mask = real["eff_themes"].str.contains(re.escape(key), na=False)
     sub = real[mask & (real["eff_sentiment"] == "Negative")]
@@ -272,7 +277,7 @@ def build_hotspots(comments_df, dim="site", min_n=40, min_lift=1.15, alpha=0.05)
     """Theme rates in a group significantly above the rest (two-proportion z-test)."""
     from scipy.stats import norm
     real = comments_df[~comments_df["eff_junk"]]
-    ex = explode_level(real, "Themes")
+    ex = explode_level(real, "Themes", exclude_generic=True)
     org_tot = real["comment_id"].nunique()
     org_theme = ex.groupby("key")["comment_id"].nunique()
     grp_tot = real.groupby(dim)["comment_id"].nunique()
@@ -304,7 +309,8 @@ def build_hotspots(comments_df, dim="site", min_n=40, min_lift=1.15, alpha=0.05)
 def _theme_sets(comments_df):
     real = comments_df[~comments_df["eff_junk"]]
     return real.groupby("respondent")["eff_themes"].apply(
-        lambda s: set(t for t in "|".join(s).split("|") if t and t != "Unclassified"))
+        lambda s: set(t for t in "|".join(s).split("|")
+                      if t and t != "Unclassified" and t not in GENERIC_THEMES))
 
 def build_driver(comments_df, rs, score_col="composite"):
     from scipy import stats
@@ -339,7 +345,8 @@ def select_quotes(real, key, level, kind, n, seen_ids, seen_texts):
     kind: 'critical' (most negative), 'representative' (typical negative), 'positive'."""
     if level == "Categories":
         mask = real["eff_themes"].apply(
-            lambda s: any(THEME_TO_CAT.get(t.strip()) == key for t in str(s).split("|")))
+            lambda s: any(THEME_TO_CAT.get(t.strip()) == key for t in str(s).split("|")
+                          if t.strip() not in GENERIC_THEMES))
     else:
         mask = real["eff_themes"].str.contains(re.escape(key), na=False)
     pool = real[mask].copy()
@@ -521,11 +528,9 @@ def site_report_data(ctx, site):
     data["neu"] = 100 - data["neg"] - data["pos"]
     # priorities (categories) + top themes
     data["P"] = build_priority(sc, "Categories", theme_friction_map(ctx, site)).head(5)
-    tex = explode_level(real, "Themes")
-    # Hide the generic "Positive / Appreciation" bucket from all theme-level card
-    # views — it's a non-actionable catch-all (per stakeholder feedback). The
-    # underlying comments still count toward sentiment and the category appendix.
-    tex = tex[~tex["key"].isin({"Positive / Appreciation"})]
+    # Generic buckets (taxonomy.GENERIC_THEMES) are hidden from every theme ranking on
+    # the card; their comments still count toward sentiment and the comment appendix.
+    tex = explode_level(real, "Themes", exclude_generic=True)
     tcounts = tex["key"].value_counts()
     data["top_themes"] = tcounts.head(8)
     # theme sentiment for strengths/fixes
@@ -1336,7 +1341,7 @@ def portfolio_data(ctx):
     dd["pos"] = float((real10["eff_sentiment"] == "Positive").mean() * 100) if len(real10) else 0.0
     dd["neg"] = float((real10["eff_sentiment"] == "Negative").mean() * 100) if len(real10) else 0.0
     dd["neu"] = 100 - dd["pos"] - dd["neg"]
-    tex = explode_level(real10, "Themes")
+    tex = explode_level(real10, "Themes", exclude_generic=True)
     tcounts = tex["key"].value_counts()
     tops = list(tcounts.head(8).index)
     dd["top_themes"] = [{"theme": t, "n": int(tcounts[t]), "pct": tcounts[t] / max(1, len(real10)) * 100,
