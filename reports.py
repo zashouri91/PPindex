@@ -323,10 +323,18 @@ def _theme_sets(comments_df):
                       if t and t != "Unclassified" and t not in GENERIC_THEMES))
 
 def build_driver(comments_df, rs, score_col="composite"):
+    """Association between raising a theme and an overall-agreement score (1–5).
+
+    Compares people who raised the theme with OTHER COMMENTERS only — people who wrote
+    nothing are excluded, because commenters as a group score lower than non-commenters
+    and including them made almost every theme look like a drag. Returns the difference
+    with a 95% Welch interval. This is an association, not a causal effect."""
     from scipy import stats
     if rs.empty or score_col not in rs.columns:
         return pd.DataFrame()
-    d = rs.set_index("respondent").join(_theme_sets(comments_df).rename("ts"))
+    d = rs.set_index("respondent").join(_theme_sets(comments_df).rename("ts"), how="inner")
+    real = comments_df[~comments_df["eff_junk"]]
+    d = d[d.index.isin(set(real["respondent"]))]          # commenters only
     d = d.dropna(subset=[score_col])
     N = len(d)
     themes = sorted({t for S in d["ts"].dropna() for t in S})
@@ -335,17 +343,22 @@ def build_driver(comments_df, rs, score_col="composite"):
         has = d["ts"].apply(lambda S: isinstance(S, set) and th in S)
         a = d.loc[has, score_col].dropna()
         b = d.loc[~has, score_col].dropna()
-        if len(a) < 20:
+        if len(a) < 20 or len(b) < 20:
             continue
         delta = a.mean() - b.mean()
+        va, vb = a.var(ddof=1) / len(a), b.var(ddof=1) / len(b)
+        se = float(np.sqrt(va + vb))
+        df_w = (va + vb) ** 2 / (va ** 2 / (len(a) - 1) + vb ** 2 / (len(b) - 1))
+        h = float(stats.t.ppf(0.975, df_w)) * se
         try:
             _, p = stats.ttest_ind(a, b, equal_var=False)
         except Exception:
             p = np.nan
         rows.append((th, len(a), round(a.mean(), 2), round(b.mean(), 2),
-                     round(delta, 2), p, round(delta * len(a) / N, 3)))
+                     round(delta, 2), round(delta - h, 2), round(delta + h, 2), p,
+                     round(delta * len(a) / N, 3)))
     return pd.DataFrame(rows, columns=["theme", "n", "sat_with", "sat_without",
-                        "delta", "p", "impact"]).sort_values("impact")
+                        "delta", "lo", "hi", "p", "impact"]).sort_values("impact")
 
 def _norm_text(t):
     return re.sub(r"\s+", " ", str(t).strip().lower())[:90]

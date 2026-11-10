@@ -114,11 +114,11 @@ the sidebar filters). *Hotspots* flags site/role/tenure groups whose mention rat
 theme is significantly above the rest of the org, using a two-proportion z-test (p<0.05)
 so small groups don't create false alarms — it answers "where is this *unusually* bad?"
 *Key drivers* uses the survey's own overall-agreement scores (1–5) to show which themes
-actually move overall satisfaction: for each theme, the average score of people who
-raised it vs everyone else. A negative delta means the theme drags satisfaction down;
-"impact" weights that by how many people it affects. The punchline in this data: desk
-availability, noise, and privacy are big drags, while reception and community events
-barely move the needle.
+are associated with lower or higher agreement: for each theme, the average score of
+commenters who raised it vs **other commenters**, with a 95% interval. People who wrote
+nothing are left out — as a group they score higher than commenters (4.08 vs 3.57), which
+made almost every theme look like a drag. It is an association, not evidence that fixing a
+theme would raise the score.
 
 **📄 Site Reports** — generate a leadership-ready one-pager for any site, laid out in seven
 sections. **(1) Overall PulsePoint Experience Index Score** — the 0–100 headline, computed as the

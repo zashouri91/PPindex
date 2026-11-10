@@ -149,3 +149,15 @@ def test_sentiment_table_uses_margin_and_company(ctx, site_data):
     from conftest import strip_comment_text
     html = strip_comment_text(R.build_site_report(ctx, "GA-Atlanta"))
     assert "Welch" not in html and "p=" not in html and "significant" not in html
+
+
+def test_key_drivers_compare_commenters_only(ctx):
+    D = R.build_driver(ctx.comments, ctx.resp_scores, "composite").set_index("theme")
+    for th in ["Temperature / Thermal", "Food & Beverage", "Building Operations",
+               "Meeting & Conference Rooms", "Wellbeing / Wellness Spaces", "Support / Help Services"]:
+        assert abs(D.loc[th, "delta"]) <= 0.1, th
+    assert ((D["lo"] <= D["delta"]) & (D["delta"] <= D["hi"])).all()
+    commenters = set(ctx.comments.loc[~ctx.comments["eff_junk"], "respondent"])
+    th = D.index[0]
+    n_without = (D.loc[th, "n"])
+    assert n_without < len(commenters)

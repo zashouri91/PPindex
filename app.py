@@ -573,11 +573,13 @@ with tab_diag:
                        "Example reading: a 1.4× lift means that group raises the theme 40% more often than the org.")
 
     with d_tab:
-        st.markdown("**Which themes actually move overall satisfaction?**")
+        st.markdown("**Which themes are associated with lower or higher overall agreement?**")
         st.caption("Uses the survey's own overall-agreement scores (1–5). For each theme, the average "
-                   "score of people who raised it vs everyone else. A negative delta means raising the "
-                   "theme goes with *lower* overall satisfaction; 'impact' weights that by how many "
-                   "people it affects. This tells you which complaints are worth fixing first.")
+                   "score of commenters who raised it vs **other commenters** (people who wrote nothing are "
+                   "left out — as a group they score higher, which would make every theme look like a drag). "
+                   "A negative difference means raising the theme is associated with *lower* agreement; "
+                   "the interval is 95%. This is an association, not proof that fixing the theme would "
+                   "raise the score.")
         if resp_scores.empty:
             st.info("Overall-agreement scores weren't found in the source data.")
         else:
@@ -590,24 +592,25 @@ with tab_diag:
             else:
                 worst = D.head(12)
                 bar = alt.Chart(worst).mark_bar().encode(
-                    x=alt.X("delta:Q", title="Satisfaction delta (raised theme − did not)"),
+                    x=alt.X("delta:Q", title="Difference in agreement (raised theme − other commenters)"),
                     y=alt.Y("theme:N", sort="x", title=None),
                     color=alt.Color("delta:Q", scale=alt.Scale(scheme="redblue", domainMid=0), legend=None),
                     tooltip=["theme", alt.Tooltip("n:Q", title="# people"),
                              alt.Tooltip("sat_with:Q", title="score if raised"),
                              alt.Tooltip("sat_without:Q", title="score if not"),
-                             alt.Tooltip("delta:Q"), alt.Tooltip("impact:Q"),
-                             alt.Tooltip("p:Q", format=".3f")])
-                st.altair_chart(bar, use_container_width=True)
-                disp = D.assign(**{"significant (p<.05)": D["p"] < 0.05})
+                             alt.Tooltip("delta:Q"), alt.Tooltip("lo:Q", title="95% low"),
+                             alt.Tooltip("hi:Q", title="95% high"), alt.Tooltip("impact:Q")])
+                rule = alt.Chart(worst).mark_rule(color="#33475b").encode(
+                    x="lo:Q", x2="hi:Q", y=alt.Y("theme:N", sort="x"))
+                st.altair_chart(bar + rule, use_container_width=True)
+                disp = D.assign(**{"95% interval": D.apply(lambda r: f"{r['lo']:+.2f} to {r['hi']:+.2f}", axis=1)})
                 disp = disp.rename(columns={"n": "# people", "sat_with": "score if raised",
-                                            "sat_without": "score if not"})
-                st.dataframe(disp[["theme", "# people", "score if raised", "score if not",
-                                   "delta", "impact", "significant (p<.05)"]].sort_values("impact"),
+                                            "sat_without": "other commenters", "delta": "difference"})
+                st.dataframe(disp[["theme", "# people", "score if raised", "other commenters",
+                                   "difference", "95% interval", "impact"]].sort_values("impact"),
                              hide_index=True, use_container_width=True)
-                st.caption("Most-negative impact = biggest drag on overall satisfaction. Themes with "
-                           "near-zero, non-significant deltas (e.g. reception, community events) barely "
-                           "move the needle — useful to know before investing there.")
+                st.caption("Impact = difference × share of commenters who raised the theme. An interval "
+                           "that spans 0 means no clear association either way.")
 
 # ===========================================================================
 # TAB — SITE REPORTS (one-pager export)
