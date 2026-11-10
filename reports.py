@@ -387,8 +387,20 @@ DIM_ORDER = {"Work Activity": 0, "Physical Feature": 1, "Service Level": 2, "Dig
 DIM_TO_SCORECOL = {"Work Activity": "score_work", "Physical Feature": "score_space",
                    "Service Level": "score_services", "Digital & Tech": "score_tech"}
 
+def item_status(r):
+    """Official status for one item row: the stored `ryg` column from build_data.py
+    (computed on unrounded means). This is the single source for item-level status —
+    never recompute it from a rounded gap. Agreement-only items return "Agreement-only"."""
+    v = r.get("ryg") if hasattr(r, "get") else None
+    if isinstance(v, str) and v.strip():
+        return v.strip()
+    return "Agreement-only"
+
+
 def ryg_of(gap5):
-    """RYG status from Support − Importance (1–5), per the Tableau spec thresholds."""
+    """RYG status from Support − Importance (1–5), per the Tableau spec thresholds.
+    Use only for DIMENSION-level averages, which have no stored status; item rows
+    must use item_status()."""
     if pd.isna(gap5):
         return "Agreement-only"
     if gap5 < -0.049:
@@ -865,14 +877,15 @@ def build_site_report(ctx, site, data=None):
         f"<tr><td>{_html.escape(r['key'])}</td><td>{int(r['volume'])}</td>"
         f"<td>{int(r['neg_share']*100)}%</td></tr>"
         for _, r in P.iterrows()) or "<tr><td colspan='3'>Not enough tagged comments to rank.</td></tr>"
-    def _c(v):
-        return RYG_HEX.get(ryg_of(v), "#333")
     def _status_color(r):
-        """Status word + color: importance dims use RYG; agreement-only (Tech) use the band."""
+        """Status word + color: importance dims use RYG; agreement-only (Tech) use the band.
+        Item rows use the stored status; dimension-summary rows (no stored status) fall
+        back to the threshold rule on their mean gap."""
         if pd.isna(r["gap5"]):
             lab, hx = tech_status(r["mean_support"])
             return lab, hx
-        return STATUS_WORD.get(ryg_of(r["gap5"]), ""), _c(r["gap5"])
+        st_ = item_status(r) if "ryg" in r.index else ryg_of(r["gap5"])
+        return STATUS_WORD.get(st_, ""), RYG_HEX.get(st_, "#333")
     dsum_rows = ""
     for _, r in d["dim_summary"].iterrows():
         gpv = r["gap5"]; status, col = _status_color(r)
@@ -1428,7 +1441,7 @@ def _portfolio_qgrid(ctx, site_order):
                 if pd.isna(imp):                       # agreement-only (Digital & Tech)
                     lab, _hx = tech_status(sup); bg = QG_TECH_BG.get(lab, QG_MISS)
                 else:
-                    bg = QG_BG.get(ryg_of(gap), QG_MISS)
+                    bg = QG_BG.get(item_status(r), QG_MISS)
                 fr = "—" if pd.isna(fri) else f"{fri:.0f}"
                 # 2×2 quadrant: Imp (top-left) · Sup (top-right) / Gap (bottom-left) · Fri (bottom-right)
                 cells += (f"<td class='qc' style='background:{bg}'><div class='qcw'>"

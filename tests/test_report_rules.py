@@ -76,3 +76,15 @@ def test_no_represents_similar_comments_claim(ctx):
     html = R.build_site_report(ctx, "IN-Indianapolis")
     assert "represents ~" not in html
     assert "similar comments" not in html
+
+
+def test_item_status_comes_from_stored_column(ctx):
+    import re
+    html = R.build_site_report(ctx, "NY-New York (Penn1)")
+    # gap +1.515 rounds to +1.5 (Target by threshold) but the official status is Over Supported
+    row = re.search(r"Planned in-person meetings at a PulsePoint</td>(.*?)</tr>", html).group(1)
+    assert "Exceeds needs" in row
+    ss = ctx.scores_site
+    imp = ss[ss["mean_importance"].notna()]
+    for _, r in imp.iterrows():
+        assert R.item_status(r) == r["ryg"]
