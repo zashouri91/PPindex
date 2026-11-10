@@ -7,7 +7,9 @@ Reads the raw survey export, produces:
   data/gap_by_site.csv     - same, broken out by site
   data/meta.json           - filter option lists + counts
 
-Run:  python build_data.py [raw_xlsx_path]      (default: data/raw_deid.xlsx)
+Run:  python build_data.py [raw_xlsx_path] [--wave round1|round2]
+      Round 1 (default) reads data/raw_deid.xlsx and writes to data/.
+      Round 2 reads data/round2/raw_deid.xlsx and writes to data/round2/ (see waves.py).
 
 Identifying columns (network-ID contact question, IP, location, browser, OS,
 response date, referring sites) are dropped on load whatever file is given —
@@ -20,11 +22,19 @@ from taxonomy import tag_themes, is_junk, CATEGORIES, THEMES, THEME_TO_CATEGORY
 from sentiment import score_sentiment  # domain-tuned ensemble (VADER + facilities lexicon)
 from deid import drop_pii_columns
 
+from waves import WAVES, wave_meta, normalise_round2_site
+
 HERE = os.path.dirname(os.path.abspath(__file__))
-DATA = os.path.join(HERE, "data")
+_args = [a for a in sys.argv[1:]]
+WAVE = "round1"
+if "--wave" in _args:
+    i = _args.index("--wave"); WAVE = _args[i + 1]; del _args[i:i + 2]
+if WAVE not in WAVES:
+    sys.exit(f"unknown wave {WAVE!r}; choose one of {sorted(WAVES)}")
+DATA = WAVES[WAVE]["data_dir"]
 os.makedirs(DATA, exist_ok=True)
 
-RAW = sys.argv[1] if len(sys.argv) > 1 else os.path.join(DATA, "raw_deid.xlsx")
+RAW = _args[0] if _args else WAVES[WAVE]["raw"]
 
 # ---------------------------------------------------------------------------
 # 1. Load (identifying columns are never carried past this point)
@@ -46,6 +56,12 @@ SEG = {
     "tenure": find("4. How long have you worked"),
 }
 RESP = cols[0]  # Respondent
+
+if WAVE == "round2":   # address-style site names -> short names (waves.py)
+    df[SEG["site"]] = df[SEG["site"]].map(normalise_round2_site)
+    _unmapped = sorted({str(x) for x in df[SEG["site"]].dropna() if "," in str(x)})
+    if _unmapped:
+        sys.exit(f"[waves] unmapped round 2 site name(s): {_unmapped}")
 
 # Open-ended questions -> (short label, domain)
 OPEN_ENDED = [
@@ -141,9 +157,9 @@ gap_site_all_df.to_csv(os.path.join(DATA, "gap_by_site_all.csv"), index=False)
 #     Mirrors "Tableau Survey Analytics & Dashboard Design Specification".
 # ===========================================================================
 AGREEMENT = {"Strongly Disagree":1, "Disagree":2, "Neutral":3, "Agree":4, "Strongly Agree":5}
-TEN_SITES = ["CA-Woodland Hills", "FL-Miami", "FL-Tampa", "GA-Atlanta",
-             "IL-Chicago-Willis Tower", "IN-Indianapolis", "NY-New York (Penn1)",
-             "OH-Mason", "VA-Norfolk", "VA-Richmond"]
+# In-scope sites for this wave (name kept for history: round 1 has ten).
+TEN_SITES = WAVES[WAVE]["sites"] or sorted(str(x) for x in df[site_col].dropna().unique())
+WAVE_META = wave_meta(WAVE, TEN_SITES)
 # dimension: (importance_block|None, delivery_block, delivery_map, dimension_name, n_items)
 DIMENSIONS = [
     (block("6", 7),  block("7", 7),  SUPPORT,      "Work Activity",   7),
@@ -192,6 +208,8 @@ def official_scores(sub):
             imp_col = imp_block[idx][0] if has_imp else None
             sup = to_num(sub[del_col], del_map)
             sup_ok = sup.notna()
+            if not sup_ok.any():     # item not asked in this wave (round 2: two Service items) —
+                continue             # leave it out rather than give an empty item a status
             sup100 = to100(sup)
             composite = float(sup100[sup_ok].mean()) if sup_ok.any() else np.nan
             dim_pool.setdefault(dim, []).append(sup100[sup_ok])
@@ -328,7 +346,7 @@ def site_intervals(sub):
     W, S = np.hstack(comp_w), np.vstack(comp_S)
     point = {k: float(v[0]) for k, v in _scores_from_weights(np.ones((1, S.shape[0])), S, dims, True).items()}
     point["_n"] = S.shape[0]
-    rows += _interval_rows("Company (10 sites)", _scores_from_weights(W, S, dims, True), point)
+    rows += _interval_rows(WAVE_META["company_row"], _scores_from_weights(W, S, dims, True), point)
     return pd.DataFrame(rows)
 
 # Official population = completers, 10 in-scope sites
@@ -344,6 +362,20 @@ sc_dim.to_csv(os.path.join(DATA, "scores_dimension.csv"), index=False)
 sa_item.to_csv(os.path.join(DATA, "scores_overall_all.csv"), index=False)
 sa_site.to_csv(os.path.join(DATA, "scores_by_site_all.csv"), index=False)
 sa_dim.to_csv(os.path.join(DATA, "scores_dimension_all.csv"), index=False)
+
+# Items with no Support answers at all in this wave (not asked) — named on the cards.
+ITEMS_NOT_ASKED = [{"dimension": dim, "item": item}
+                   for _i, del_block, del_map, dim, _n in DIMENSIONS for del_col, item in del_block
+                   if to_num(df[del_col], del_map).notna().sum() == 0]
+
+# Respondent-level Support (0–100) per rating item, in-scope sites — lets the combined
+# (round 1 + round 2) card bootstrap like-for-like averages on the items both rounds asked.
+_S, _dims = _support_matrix(all10)
+_item_names = [f"{dim}|{item}" for _i, blk, _m, dim, _n in DIMENSIONS for _c, item in blk]
+item_support = pd.DataFrame(np.round(_S, 2), columns=_item_names)
+item_support.insert(0, "reached_end", all10["_reached"].to_numpy())
+item_support.insert(0, "site", all10[site_col].to_numpy())
+item_support.to_csv(os.path.join(DATA, "item_support.csv"), index=False)
 
 # ---------------------------------------------------------------------------
 # 3. Open-ended -> long, tagged
@@ -502,6 +534,8 @@ meta = {
     "category_score": CATEGORY_SCORE,
     "n_emerging_clusters": len(emerging),
     "ten_sites": TEN_SITES,
+    "wave": WAVE_META,
+    "items_not_asked": ITEMS_NOT_ASKED,
     "dim_weights": DIM_WEIGHTS,
 }
 with open(os.path.join(DATA, "meta.json"), "w") as f:
