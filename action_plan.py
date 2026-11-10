@@ -270,7 +270,8 @@ def build_report_card_payload(data: dict, include_verbatims: bool = True) -> dic
 
     payload = {
         "location": data.get("site"),
-        "respondents_at_site": data.get("all_participants") or data.get("participation"),
+        "respondents_at_site": data.get("participation"),
+        "respondents_all_10_sites": data.get("all_participants"),
         "comments_analyzed": data.get("n"),
         "overall_index_score_0_100_unweighted": _round(card.get("overall")),
         "overall_index_tier": card.get("tier"),
